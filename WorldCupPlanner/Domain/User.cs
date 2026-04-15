@@ -25,6 +25,11 @@ public class User
             throw new ArgumentException("Email cannot be empty.");
         }
         
+        if (birthDate > DateTime.Today)
+        {
+            throw new ArgumentException("Birth date cannot be in the future.");
+        }
+        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
