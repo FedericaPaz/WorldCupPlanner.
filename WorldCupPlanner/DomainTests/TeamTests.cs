@@ -50,4 +50,15 @@ public class TeamTests
         var confederation = new Confederation("AFC");
         Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", confederation, 2501));
     }
+
+    [TestMethod]
+    public void CreateTeam_WithRankingAboveMinimum_ShouldSucceed()
+    {
+        var confederation = new Confederation("AFC");
+        var team = new Team("Uruguay", confederation, 300);
+        Assert.IsNotNull(team);
+        Assert.AreEqual("Uruguay", team.Name);
+        Assert.AreEqual(confederation, team.Confederation);
+        Assert.AreEqual(300, team.FifaRanking);
+    }
 }
