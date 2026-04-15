@@ -24,17 +24,18 @@ public class Stadium
             throw new ArgumentException("Name must be between 80 and 80 characters long.");
     }
 
-    private void ValidateCity(string city)
+    public void ValidateCity(string city)
     {
-        if(string.IsNullOrWhiteSpace(city))
-            throw new ArgumentException("City cannot be empty.");
+        if(string.IsNullOrWhiteSpace(city) || city.Length > 60)
+            throw new ArgumentException("Name must be between 1 and 60 characters long.");
     }
 
-    public void ValidateLocativeCapacity(int locativeCapacity)
+    private void ValidateLocativeCapacity(int locativeCapacity)
     {
         if(locativeCapacity <= 0)
             throw new ArgumentException("Locative capacity must be greater than 0.");
     }
+    
     
     
 }
