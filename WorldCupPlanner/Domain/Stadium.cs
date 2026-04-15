@@ -18,6 +18,9 @@ public class Stadium
         if(locativeCapacity == 0)
             throw new ArgumentException("Locative capacity cannot be zero.");
         
+        if(locativeCapacity < 0)
+            throw new ArgumentException("Locative capacity cannot be negative.");
+        
         _name = name;
         _city = city;
         _description = description;
