@@ -48,5 +48,12 @@ public class StadiumTests
         string city = new string('a', 61);
         Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", city, "Estadio de Peniarol", 40700));
     }
+
+    [TestMethod]
+    public void createStadium_WithTooLongDescpription_ShouldThrowException()
+    {
+        string description = new string('a', 401);
+        Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", description, 40700));
+    }
     
 }
