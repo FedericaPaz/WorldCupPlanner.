@@ -11,6 +11,9 @@ public class Stadium
     {
         if(string.IsNullOrEmpty(name))
             throw new ArgumentException("Name cannot be empty.");
+        
+        if(string.IsNullOrEmpty(city))
+            throw new ArgumentException("City cannot be empty.");
         _name = name;
         _city = city;
         _description = description;
