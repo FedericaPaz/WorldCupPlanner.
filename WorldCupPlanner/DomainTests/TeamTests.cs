@@ -83,4 +83,14 @@ public class TeamTests
         Assert.AreEqual(_defaultConfederation, team.Confederation);
         Assert.AreEqual(2500, team.FifaRanking);
     }
+    
+    [TestMethod]
+    public void CreateTeam_WithMinimumRanking_ShouldSucceed()
+    {
+        var team = new Team("Uruguay", _defaultConfederation, 300);
+        Assert.IsNotNull(team);
+        Assert.AreEqual("Uruguay", team.Name);
+        Assert.AreEqual(_defaultConfederation, team.Confederation);
+        Assert.AreEqual(300, team.FifaRanking);
+    }
 }
