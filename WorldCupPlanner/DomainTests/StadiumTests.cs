@@ -10,4 +10,11 @@ public class StadiumTests
         var stadium = new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
         Assert.IsNotNull(stadium);
     }
+
+    [TestMethod]
+    public void createStadium_WithInvalidName_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Stadium("", "Montevideo", "Estadio de Peniarol", 40700));
+    }
+    
 }
