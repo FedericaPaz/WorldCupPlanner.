@@ -1,3 +1,4 @@
+using Domain;
 namespace DomainTests;
 
 [TestClass]
