@@ -30,6 +30,11 @@ public class User
             throw new ArgumentException("Birth date cannot be in the future.");
         }
         
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            throw new ArgumentException("Password cannot be empty.");
+        }
+        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
