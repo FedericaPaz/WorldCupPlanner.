@@ -48,4 +48,16 @@ public class UserTests
         Assert.ThrowsException<ArgumentException>(() =>
             new User(firstName, lastName, email, birthDate, password));
     }
+
+    [TestMethod]
+    public void CreateUser_WithEmptyEmail_ShouldFail()
+    {
+        var firstName = "Juan";
+        var lastName = "Perez";
+        var email = "";
+        var birthDate = new DateTime(2000, 1, 1);
+        var password = "Password1!";
+        Assert.ThrowsException<ArgumentException>(() =>
+            new User(firstName, lastName, email, birthDate, password));
+    }
 }
