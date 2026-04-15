@@ -10,6 +10,10 @@ public class Team
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Team name cannot be empty.");
+        
+        if (string.IsNullOrWhiteSpace(confederation))
+            throw new ArgumentException("Team confederation cannot be empty.");
+        
         Name = name;
         Confederation = confederation;
         FifaRanking = fifaRanking;
