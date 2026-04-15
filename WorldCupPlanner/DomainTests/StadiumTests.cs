@@ -22,5 +22,11 @@ public class StadiumTests
     {
         Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "", "Estadio de Peniarol", 40700));
     }
+
+    [TestMethod]
+    public void createStadium_WithZeroLocativeCapacity_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 0));
+    }
     
 }
