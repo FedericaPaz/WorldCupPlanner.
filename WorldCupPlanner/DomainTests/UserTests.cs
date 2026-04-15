@@ -60,4 +60,17 @@ public class UserTests
         Assert.ThrowsException<ArgumentException>(() =>
             new User(firstName, lastName, email, birthDate, password));
     }
+
+    [TestMethod]
+    public void CreateUser_WithFutureBirthDate_ShouldThrowException()
+    {
+        var firstName = "Juan";
+        var lastName = "Perez";
+        var email = "juan.perez@gmail.com";
+        var birthDate = DateTime.Today.AddDays(1);
+        var password = "Password1!";
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            new User(firstName, lastName, email, birthDate, password));
+    }
 }
