@@ -33,8 +33,8 @@ public class Stadium
 
     private void ValidateLocativeCapacity(int locativeCapacity)
     {
-        if(locativeCapacity <= 0)
-            throw new ArgumentException("Locative capacity must be greater than 0.");
+        if(locativeCapacity < 20000)
+            throw new ArgumentException("Locative capacity must be at least 20000.");
     }
 
     private void ValidateDescription(string description)
@@ -42,6 +42,8 @@ public class Stadium
         if(description.Length > 400)
             throw new ArgumentException("Description must be between 1 and 400 characters long.");
     }
+    
+    
     
     
     
