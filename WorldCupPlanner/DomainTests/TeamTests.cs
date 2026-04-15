@@ -22,6 +22,12 @@ public class TeamTests
     }
 
     [TestMethod]
+    public void CreateTeam_WithNameTooLong_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Team("AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEEEEEEEFFFFFFFFFFG", "AFC", 301));
+    }
+
+    [TestMethod]
     public void CreateTeam_WithEmptyConfederation_ShouldThrowException()
     {
         Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", "", 301));
