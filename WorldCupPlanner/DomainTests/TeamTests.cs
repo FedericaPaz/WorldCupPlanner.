@@ -1,4 +1,6 @@
-﻿namespace DomainTests;
+﻿using Domain;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace DomainTests;
 
 [TestClass]
 public class TeamTests
