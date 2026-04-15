@@ -36,7 +36,7 @@ public class TeamTests
     }
 
     [TestMethod]
-    public void CreateTeam_WithEmptyConfederation_ShouldThrowException()
+    public void CreateTeam_WithNullConfederation_ShouldThrowException()
     {
         Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", null, 301));
     }
