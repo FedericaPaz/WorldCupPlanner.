@@ -16,7 +16,7 @@ public class TeamTests
     }
     
     [TestMethod]
-    public void CreateTeam_WithInvalidName_ShouldThrowException()
+    public void CreateTeam_WithEmptyName_ShouldThrowException()
     {
         Assert.ThrowsException<ArgumentException>(() => new Team("", "AFC", 301));
     }
