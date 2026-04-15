@@ -14,4 +14,10 @@ public class TeamTests
         Assert.AreEqual("AFC", team.Confederation);
         Assert.AreEqual(301, team.FifaRanking);
     }
+    
+    [TestMethod]
+    public void CreateTeam_WithInvalidName_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Team("", "AFC", 301));
+    }
 }
