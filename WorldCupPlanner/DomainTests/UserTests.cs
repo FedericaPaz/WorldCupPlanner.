@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Domain;
 
 namespace DomainTests;
 
@@ -8,11 +9,11 @@ public class UserTests
     [TestMethod]
     public void CreateUser_WithValidData_ShouldSucceed()
     {
-        string firstName = "Juan";
-        string lastName = "Perez";
-        string email = "juan.perez@gmail.com";
-        DateTime birthDate = new DateTime(2000, 1, 1);
-        string password = "Password1!";
+        var firstName = "Juan";
+        var lastName = "Perez";
+        var email = "juan.perez@gmail.com";
+        var birthDate = new DateTime(2000, 1, 1);
+        var password = "Password1!";
 
         User user = new User(firstName, lastName, email, birthDate, password);
 
