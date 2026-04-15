@@ -35,4 +35,12 @@ public class TeamTests
     {
         Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", null, 301));
     }
+
+    [TestMethod]
+    public void CreateTeam_WithRankingBelowMinimum_ShouldThrowException()
+    {
+        var confederation = new Confederation("AFC");
+        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", confederation, 299));
+        
+    }
 }
