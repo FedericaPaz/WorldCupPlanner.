@@ -28,7 +28,7 @@ public class Stadium
     private void ValidateCity(string city)
     {
         if(string.IsNullOrWhiteSpace(city) || city.Length > 60)
-            throw new ArgumentException("Name must be between 1 and 60 characters long.");
+            throw new ArgumentException("City must be between 1 and 60 characters long.");
     }
 
     private void ValidateLocativeCapacity(int locativeCapacity)
@@ -39,7 +39,7 @@ public class Stadium
 
     private void ValidateDescription(string description)
     {
-        if(description.Length > 400)
+        if(string.IsNullOrWhiteSpace(description) || description.Length > 400)
             throw new ArgumentException("Description must be between 1 and 400 characters long.");
     }
     
