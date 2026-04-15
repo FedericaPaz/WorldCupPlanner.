@@ -9,6 +9,8 @@ public class Stadium
 
     public Stadium(string name, string city, string description, int locativeCapacity)
     {
+        if(string.IsNullOrEmpty(name))
+            throw new ArgumentException("Name cannot be empty.");
         _name = name;
         _city = city;
         _description = description;
