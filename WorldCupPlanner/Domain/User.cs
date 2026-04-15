@@ -10,6 +10,11 @@ public class User
 
     public User(string firstName, string lastName, string email, DateTime birthDate, string password)
     {
+        if (string.IsNullOrWhiteSpace(firstName))
+        {
+            throw new ArgumentException("First name cannot be empty.");
+        }
+        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
