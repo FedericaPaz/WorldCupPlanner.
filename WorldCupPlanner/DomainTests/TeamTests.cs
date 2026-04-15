@@ -57,11 +57,11 @@ public class TeamTests
     [TestMethod]
     public void CreateTeam_WithRankingAboveMinimum_ShouldSucceed()
     {
-        var team = new Team("Uruguay", _defaultConfederation, 300);
+        var team = new Team("Uruguay", _defaultConfederation, 301);
         Assert.IsNotNull(team);
         Assert.AreEqual("Uruguay", team.Name);
         Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(300, team.FifaRanking);
+        Assert.AreEqual(301, team.FifaRanking);
     }
 
     [TestMethod]
