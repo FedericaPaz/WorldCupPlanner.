@@ -12,6 +12,7 @@ public class Stadium
         ValidateName(name);
         ValidateCity(city);
         ValidateLocativeCapacity(locativeCapacity);
+        ValidateDescription(description);
         _name = name;
         _city = city;
         _description = description;
@@ -34,6 +35,12 @@ public class Stadium
     {
         if(locativeCapacity <= 0)
             throw new ArgumentException("Locative capacity must be greater than 0.");
+    }
+
+    private void ValidateDescription(string description)
+    {
+        if(description.Length > 400)
+            throw new ArgumentException("Description must be between 1 and 400 characters long.");
     }
     
     
