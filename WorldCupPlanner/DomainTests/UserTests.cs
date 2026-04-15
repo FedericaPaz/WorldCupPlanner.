@@ -22,4 +22,17 @@ public class UserTests
         Assert.AreEqual(email, user.Email);
         Assert.AreEqual(birthDate, user.BirthDate);
     }
+    
+    [TestMethod]
+    public void CreateUser_WithEmptyFirstName_ShouldFail()
+    {
+        var firstName = "";
+        var lastName = "Perez";
+        var email = "juan.perez@gmail.com";
+        var birthDate = new DateTime(2000, 1, 1);
+        var password = "Password1!";
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            new User(firstName, lastName, email, birthDate, password));
+    }
 }
