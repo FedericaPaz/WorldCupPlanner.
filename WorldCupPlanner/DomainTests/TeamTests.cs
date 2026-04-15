@@ -20,4 +20,10 @@ public class TeamTests
     {
         Assert.ThrowsException<ArgumentException>(() => new Team("", "AFC", 301));
     }
+
+    [TestMethod]
+    public void CreateTeam_WithEmptyConfederation_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", "", 301));
+    }
 }
