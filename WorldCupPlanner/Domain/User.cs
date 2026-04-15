@@ -19,6 +19,11 @@ public class User
         {
             throw new ArgumentException("Last name cannot be empty.");
         }
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new ArgumentException("Email cannot be empty.");
+        }
         
         FirstName = firstName;
         LastName = lastName;
