@@ -17,6 +17,9 @@ public class Team
         if (confederation == null)
             throw new ArgumentException("Confederation cannot be null.");
         
+        if (fifaRanking < 300)
+            throw new ArgumentException("Fifa ranking cannot be less than 300.");
+        
         Name = name;
         Confederation = confederation;
         FifaRanking = fifaRanking;
