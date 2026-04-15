@@ -24,7 +24,7 @@ public class Stadium
             throw new ArgumentException("Name must be between 80 and 80 characters long.");
     }
 
-    public void ValidateCity(string city)
+    private void ValidateCity(string city)
     {
         if(string.IsNullOrWhiteSpace(city) || city.Length > 60)
             throw new ArgumentException("Name must be between 1 and 60 characters long.");
