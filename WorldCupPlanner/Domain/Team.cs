@@ -20,6 +20,9 @@ public class Team
         if (fifaRanking < 300)
             throw new ArgumentException("Fifa ranking cannot be less than 300.");
         
+        if (fifaRanking > 2500)
+            throw new ArgumentException("Fifa ranking cannot be more than 2500.");
+        
         Name = name;
         Confederation = confederation;
         FifaRanking = fifaRanking;
