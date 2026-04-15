@@ -43,4 +43,11 @@ public class TeamTests
         Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", confederation, 299));
         
     }
+
+    [TestMethod]
+    public void CreateTeam_WithRankingAboveMaximum_ShouldThrowException()
+    {
+        var confederation = new Confederation("AFC");
+        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", confederation, 2501));
+    }
 }
