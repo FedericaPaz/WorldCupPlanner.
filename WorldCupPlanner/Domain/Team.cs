@@ -8,6 +8,8 @@ public class Team
     
     public Team(string name, string confederation, int fifaRanking)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Team name cannot be empty.");
         Name = name;
         Confederation = confederation;
         FifaRanking = fifaRanking;
