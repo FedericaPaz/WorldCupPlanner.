@@ -14,8 +14,8 @@ public class Team
         if (name.Length > 60)
             throw new ArgumentException("Team name cannot be longer than 60 characters.");
         
-        if (string.IsNullOrWhiteSpace(confederation))
-            throw new ArgumentException("Team confederation cannot be empty.");
+        if (confederation == null)
+            throw new ArgumentException("Confederation cannot be null.");
         
         Name = name;
         Confederation = confederation;
