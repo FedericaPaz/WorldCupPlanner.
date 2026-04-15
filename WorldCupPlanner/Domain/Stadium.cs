@@ -14,6 +14,10 @@ public class Stadium
         
         if(string.IsNullOrEmpty(city))
             throw new ArgumentException("City cannot be empty.");
+        
+        if(locativeCapacity == 0)
+            throw new ArgumentException("Locative capacity cannot be zero.");
+        
         _name = name;
         _city = city;
         _description = description;
