@@ -32,7 +32,8 @@ public class TeamTests
     [TestMethod]
     public void CreateTeam_WithNameTooLong_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentException>(() => new Team("AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEEEEEEEFFFFFFFFFFG", _defaultConfederation, 301));
+        string nameWith61Characters = new string('A', 61); 
+        Assert.ThrowsException<ArgumentException>(() => new Team(nameWith61Characters, _defaultConfederation, 301));
     }
 
     [TestMethod]
