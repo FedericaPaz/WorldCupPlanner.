@@ -55,5 +55,10 @@ public class StadiumTests
         string description = new string('a', 401);
         Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", description, 40700));
     }
-    
+
+    [TestMethod]
+    public void createStadium_WithCapacityLessThan20000_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 19999));
+    }
 }
