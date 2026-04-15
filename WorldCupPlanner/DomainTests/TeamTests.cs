@@ -5,29 +5,34 @@ namespace DomainTests;
 [TestClass]
 public class TeamTests
 {
+    private Confederation _defaultConfederation;
+
+    [TestInitialize]
+    public void SetUp()
+    {
+        _defaultConfederation = new Confederation("AFC");
+    }
+    
     [TestMethod]
     public void CreateTeam_WithValidData_ShouldSucceed()
     {
-        var confederation = new Confederation("AFC");
-        var team = new Team("Uruguay", confederation, 301);
+        var team = new Team("Uruguay", _defaultConfederation, 301);
         Assert.IsNotNull(team);
         Assert.AreEqual("Uruguay", team.Name);
-        Assert.AreEqual(confederation, team.Confederation);
+        Assert.AreEqual(_defaultConfederation, team.Confederation);
         Assert.AreEqual(301, team.FifaRanking);
     }
     
     [TestMethod]
     public void CreateTeam_WithEmptyName_ShouldThrowException()
     {
-        var confederation = new Confederation("AFC");
-        Assert.ThrowsException<ArgumentException>(() => new Team("", confederation, 301));
+        Assert.ThrowsException<ArgumentException>(() => new Team("", _defaultConfederation, 301));
     }
 
     [TestMethod]
     public void CreateTeam_WithNameTooLong_ShouldThrowException()
     {
-        var confederation = new Confederation("AFC");
-        Assert.ThrowsException<ArgumentException>(() => new Team("AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEEEEEEEFFFFFFFFFFG", confederation, 301));
+        Assert.ThrowsException<ArgumentException>(() => new Team("AAAAAAAAAABBBBBBBBBBCCCCCCCCCCDDDDDDDDDDEEEEEEEEEEFFFFFFFFFFG", _defaultConfederation, 301));
     }
 
     [TestMethod]
@@ -39,37 +44,33 @@ public class TeamTests
     [TestMethod]
     public void CreateTeam_WithRankingBelowMinimum_ShouldThrowException()
     {
-        var confederation = new Confederation("AFC");
-        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", confederation, 299));
+        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", _defaultConfederation, 299));
         
     }
 
     [TestMethod]
     public void CreateTeam_WithRankingAboveMaximum_ShouldThrowException()
     {
-        var confederation = new Confederation("AFC");
-        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", confederation, 2501));
+        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", _defaultConfederation, 2501));
     }
 
     [TestMethod]
     public void CreateTeam_WithRankingAboveMinimum_ShouldSucceed()
     {
-        var confederation = new Confederation("AFC");
-        var team = new Team("Uruguay", confederation, 300);
+        var team = new Team("Uruguay", _defaultConfederation, 300);
         Assert.IsNotNull(team);
         Assert.AreEqual("Uruguay", team.Name);
-        Assert.AreEqual(confederation, team.Confederation);
+        Assert.AreEqual(_defaultConfederation, team.Confederation);
         Assert.AreEqual(300, team.FifaRanking);
     }
 
     [TestMethod]
     public void CreateTeam_WithRankingBelowMaximum_ShouldSucceed()
     {
-        var confederation = new Confederation("AFC");
-        var team = new Team("Uruguay", confederation, 2499);
+        var team = new Team("Uruguay", _defaultConfederation, 2499);
         Assert.IsNotNull(team);
         Assert.AreEqual("Uruguay", team.Name);
-        Assert.AreEqual(confederation, team.Confederation);
+        Assert.AreEqual(_defaultConfederation, team.Confederation);
         Assert.AreEqual(2499, team.FifaRanking);
     }
 }
