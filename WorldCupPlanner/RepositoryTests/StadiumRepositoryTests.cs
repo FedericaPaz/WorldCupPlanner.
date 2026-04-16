@@ -57,7 +57,8 @@ public class StadiumRepositoryTests
     public void GivenNonExistingStadium_DeleteStadium_ShouldThrowException()
     {
         var stadiumRepository = new StadiumRepository();
-        Assert.ThrowsException<InvalidOperationException>(() => stadiumRepository.DeleteStadium("Campeon del Siglo"));
+        var stadium = new Stadium("Campeon del Siglo", "Montevideo", "Desc", 40000);
+        Assert.ThrowsException<InvalidOperationException>(() => stadiumRepository.DeleteStadium(stadium));
     }
 
     [TestMethod]
@@ -67,5 +68,7 @@ public class StadiumRepositoryTests
         var stadium = new Stadium("Campeon del siglo","OtraCiudad", "OtraDesc", 40600);
         Assert.ThrowsException<InvalidOperationException>(() => stadiumRepository.UpdateStadium(stadium));
     }
+
+    
     
 }

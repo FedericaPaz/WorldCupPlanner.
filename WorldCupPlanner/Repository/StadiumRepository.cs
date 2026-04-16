@@ -25,19 +25,29 @@ public class StadiumRepository : IStadiumRepository
 
     public void UpdateStadium(Stadium stadium)
     {
+        if (stadium is null)
+            throw new ArgumentNullException(nameof(stadium));
+
         var existingStadium = _stadiums.FirstOrDefault(s => s._name == stadium._name);
-        if(existingStadium is null)
+
+        if (existingStadium is null)
             throw new InvalidOperationException($"Stadium {stadium._name} not found");
+
         _stadiums.Remove(existingStadium);
         _stadiums.Add(stadium);
     }
 
-    public void DeleteStadium(string name)
+    public void DeleteStadium(Stadium stadium)
     {
-        var stadium = _stadiums.FirstOrDefault(s => s._name == name);
-        if(stadium is null)
-            throw new InvalidOperationException($"Stadium {name} not found");
-        _stadiums.Remove(stadium);
+        if (stadium is null)
+            throw new ArgumentNullException(nameof(stadium));
+
+        var existingStadium = _stadiums.FirstOrDefault(s => s._name == stadium._name);
+
+        if (existingStadium is null)
+            throw new InvalidOperationException($"Stadium {stadium._name} not found");
+
+        _stadiums.Remove(existingStadium);
     }
     
 }
