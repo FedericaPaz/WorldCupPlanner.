@@ -22,17 +22,17 @@ public class TeamTests
     [TestMethod]
     public void CreateTeam_WithValidData_ShouldSucceed()
     {
-        var team = new Team("Uruguay", _defaultConfederation, 301);
+        var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking+1);
         Assert.IsNotNull(team);
         Assert.AreEqual("Uruguay", team.Name);
         Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(301, team.FifaRanking);
+        Assert.AreEqual(MinFifaRanking+1, team.FifaRanking);
     }
     
     [TestMethod]
     public void CreateTeam_WithEmptyName_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentException>(() => new Team("", _defaultConfederation, 301));
+        Assert.ThrowsException<ArgumentException>(() => new Team("", _defaultConfederation, MinFifaRanking+1));
     }
     
     [TestMethod]
@@ -45,46 +45,46 @@ public class TeamTests
     public void CreateTeam_WithNameTooLong_ShouldThrowException()
     {
         string nameWith61Characters = new string('A', MaxNameLength + 1); 
-        Assert.ThrowsException<ArgumentException>(() => new Team(nameWith61Characters, _defaultConfederation, 301));
+        Assert.ThrowsException<ArgumentException>(() => new Team(nameWith61Characters, _defaultConfederation, MinFifaRanking+1));
     }
 
     [TestMethod]
     public void CreateTeam_WithNullConfederation_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", null, 301));
+        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", null, MinFifaRanking+1));
     }
 
     [TestMethod]
     public void CreateTeam_WithRankingBelowMinimum_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", _defaultConfederation, 299));
+        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", _defaultConfederation, MinFifaRanking-1));
         
     }
 
     [TestMethod]
     public void CreateTeam_WithRankingAboveMaximum_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", _defaultConfederation, 2501));
+        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", _defaultConfederation, MaxFifaRanking+1));
     }
 
     [TestMethod]
     public void CreateTeam_WithRankingAboveMinimum_ShouldSucceed()
     {
-        var team = new Team("Uruguay", _defaultConfederation, 301);
+        var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking+1);
         Assert.IsNotNull(team);
         Assert.AreEqual("Uruguay", team.Name);
         Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(301, team.FifaRanking);
+        Assert.AreEqual(MinFifaRanking+1, team.FifaRanking);
     }
 
     [TestMethod]
     public void CreateTeam_WithRankingBelowMaximum_ShouldSucceed()
     {
-        var team = new Team("Uruguay", _defaultConfederation, 2499);
+        var team = new Team("Uruguay", _defaultConfederation, MaxFifaRanking-1);
         Assert.IsNotNull(team);
         Assert.AreEqual("Uruguay", team.Name);
         Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(2499, team.FifaRanking);
+        Assert.AreEqual(MaxFifaRanking-1, team.FifaRanking);
     }
 
     [TestMethod]
