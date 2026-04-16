@@ -6,6 +6,9 @@ namespace DomainTests;
 public class TeamTests
 {
     private Confederation _defaultConfederation;
+    private const int MinFifaRanking = 300;
+    private const int MaxFifaRanking = 2500;
+    private const int MaxNameLength = 60;
 
     [TestInitialize]
     public void SetUp()
@@ -32,7 +35,7 @@ public class TeamTests
     [TestMethod]
     public void CreateTeam_WithNameTooLong_ShouldThrowException()
     {
-        string nameWith61Characters = new string('A', 61); 
+        string nameWith61Characters = new string('A', MaxNameLength + 1); 
         Assert.ThrowsException<ArgumentException>(() => new Team(nameWith61Characters, _defaultConfederation, 301));
     }
 
@@ -78,20 +81,20 @@ public class TeamTests
     [TestMethod]
     public void CreateTeam_WithMaximumRanking_ShouldSucceed()
     {
-        var team = new Team("Uruguay", _defaultConfederation, 2500);
+        var team = new Team("Uruguay", _defaultConfederation, MaxFifaRanking);
         Assert.IsNotNull(team);
         Assert.AreEqual("Uruguay", team.Name);
         Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(2500, team.FifaRanking);
+        Assert.AreEqual(MaxFifaRanking, team.FifaRanking);
     }
     
     [TestMethod]
     public void CreateTeam_WithMinimumRanking_ShouldSucceed()
     {
-        var team = new Team("Uruguay", _defaultConfederation, 300);
+        var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking);
         Assert.IsNotNull(team);
         Assert.AreEqual("Uruguay", team.Name);
         Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(300, team.FifaRanking);
+        Assert.AreEqual(MinFifaRanking, team.FifaRanking);
     }
 }
