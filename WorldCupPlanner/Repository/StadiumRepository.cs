@@ -11,6 +11,10 @@ public class StadiumRepository : IStadiumRepository
     {
         if(stadium is null)
             throw new ArgumentNullException(nameof(stadium));
+        
+        if(_stadiums.Any(s => s._name == stadium._name))
+            throw new ArgumentException($"Stadium {stadium._name} already exists");
+        
         _stadiums.Add(stadium);
     }
 

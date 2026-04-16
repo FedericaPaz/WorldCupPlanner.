@@ -30,6 +30,16 @@ public class StadiumRepositoryTests
         var stadiumRepository = new StadiumRepository();
         Assert.ThrowsException<ArgumentNullException>(() => stadiumRepository.AddStadium(null));
     }
+    
+    [TestMethod]
+    public void GivenExistingStadium_AddDuplicate_ShouldThrowException()
+    {
+        var stadiumRepository = new StadiumRepository();
+        var stadium1 = new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        var stadium2 = new Stadium("Campeon del Siglo", "OtraCiudad", "OtraDesc", 40600);
+        stadiumRepository.AddStadium(stadium1);
+        Assert.ThrowsException<ArgumentException>(() => stadiumRepository.AddStadium(stadium2));
+    }
 
     
 }
