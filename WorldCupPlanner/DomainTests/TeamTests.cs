@@ -1,4 +1,7 @@
-﻿using Domain;
+﻿// TODO: Implementar tests de unicidad de nombre en la capa de Servicio (TeamService).
+// Esta validación requiere acceso al repositorio/colección completa, por lo que corresponde a un Servicio de Dominio y no a la validación intrínseca de la entidad.
+
+using Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DomainTests;
 
