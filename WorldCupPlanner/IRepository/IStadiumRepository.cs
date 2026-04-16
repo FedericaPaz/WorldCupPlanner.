@@ -8,4 +8,5 @@ public interface IStadiumRepository
     Stadium? GetStadium(string name);
     void UpdateStadium(Stadium stadium);
     void DeleteStadium(Stadium stadium);
+    List<Stadium> GetAllStadiums();
 }

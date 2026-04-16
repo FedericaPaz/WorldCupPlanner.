@@ -49,5 +49,10 @@ public class StadiumRepository : IStadiumRepository
 
         _stadiums.Remove(existingStadium);
     }
+
+    public List<Stadium> GetAllStadiums()
+    {
+        return _stadiums;
+    }
     
 }

@@ -80,6 +80,20 @@ public class StadiumRepositoryTests
         Assert.IsNull(result);
     }
 
+    [TestMethod]
+    public void GivenMultipleStadiums_GetAllStadiums_ShouldReturnStadiums()
+    {
+        var stadiumRepository = new StadiumRepository();
+        var stadium1 = new Stadium("Campeon del Siglo", "Montevideo", "Desc", 40600);
+        var stadium2 = new Stadium("Estadio Centenario", "Montevideo", "Desc", 60000);
+        stadiumRepository.AddStadium(stadium1);
+        stadiumRepository.AddStadium(stadium2);
+        var result = stadiumRepository.GetAllStadiums();
+        Assert.AreEqual(2, result.Count);
+    }
+
+    
+
     
     
 }
