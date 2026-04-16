@@ -44,7 +44,14 @@ public class TeamTests
         string nameWith61Characters = new string('A', MaxNameLength + 1); 
         Assert.ThrowsException<ArgumentException>(() => new Team(nameWith61Characters, _defaultConfederation, MinFifaRanking+1));
     }
-
+    
+    [TestMethod]
+    public void CreateTeam_WithMinimumNameLength_ShouldSucceed()
+    {
+        var team = new Team("A", _defaultConfederation, MinFifaRanking);
+        VerifyTeam(team, "A", MinFifaRanking);
+    }
+    
     [TestMethod]
     public void CreateTeam_WithNullConfederation_ShouldThrowException()
     {
