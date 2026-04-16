@@ -53,6 +53,14 @@ public class TeamTests
     }
     
     [TestMethod]
+    public void CreateTeam_WithMaximumNameLength_ShouldSucceed()
+    {
+        string maxName = new string('A', MaxNameLength);
+        var team = new Team(maxName, _defaultConfederation, MinFifaRanking);
+        VerifyTeam(team, maxName, MinFifaRanking);
+    }
+    
+    [TestMethod]
     public void CreateTeam_WithNullConfederation_ShouldThrowException()
     {
         Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", null, MinFifaRanking+1));
