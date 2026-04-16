@@ -7,10 +7,10 @@ public class Stadium
     private const int MaxDescriptionLength = 400;
     private const int MinLocativeCapacity = 20000;
     
-    public string Name {get; private set;} 
-    public string City {get; private set;}
-    public string Description {get; private set;}
-    public int LocativeCapacity {get; private set;}
+    public string _name {get; private set;} 
+    public string _city {get; private set;}
+    public string _description {get; private set;}
+    public int _locativeCapacity {get; private set;}
 
     public Stadium(string name, string city, string description, int locativeCapacity)
     {
@@ -18,10 +18,10 @@ public class Stadium
         ValidateCity(city);
         ValidateLocativeCapacity(locativeCapacity);
         ValidateDescription(description);
-        Name = name;
-        City = city;
-        Description = description;
-        LocativeCapacity = locativeCapacity;
+        _name = name;
+        _city = city;
+        _description = description;
+        _locativeCapacity = locativeCapacity;
     }
     
     private void ValidateName(string name)
