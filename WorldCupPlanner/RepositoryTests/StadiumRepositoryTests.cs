@@ -52,5 +52,12 @@ public class StadiumRepositoryTests
         var result = stadiumRepository.GetStadium("Campeon del Siglo");
         Assert.AreEqual("otraDesc", result?._description);
     }
+
+    [TestMethod]
+    public void GivenNonExistingStadium_DeleteStadium_ShouldThrowException()
+    {
+        var stadiumRepository = new StadiumRepository();
+        Assert.ThrowsException<InvalidOperationException>(() => stadiumRepository.DeleteStadium("Campeon del Siglo"));
+    }
     
 }
