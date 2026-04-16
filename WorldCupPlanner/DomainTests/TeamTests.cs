@@ -23,10 +23,7 @@ public class TeamTests
     public void CreateTeam_WithValidData_ShouldSucceed()
     {
         var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking+1);
-        Assert.IsNotNull(team);
-        Assert.AreEqual("Uruguay", team.Name);
-        Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(MinFifaRanking+1, team.FifaRanking);
+        VerifyTeam(team, "Uruguay", MinFifaRanking+1);
     }
     
     [TestMethod]
@@ -58,7 +55,6 @@ public class TeamTests
     public void CreateTeam_WithRankingBelowMinimum_ShouldThrowException()
     {
         Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", _defaultConfederation, MinFifaRanking-1));
-        
     }
 
     [TestMethod]
@@ -71,39 +67,35 @@ public class TeamTests
     public void CreateTeam_WithRankingAboveMinimum_ShouldSucceed()
     {
         var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking+1);
-        Assert.IsNotNull(team);
-        Assert.AreEqual("Uruguay", team.Name);
-        Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(MinFifaRanking+1, team.FifaRanking);
+        VerifyTeam(team, "Uruguay", MinFifaRanking+1);
     }
 
     [TestMethod]
     public void CreateTeam_WithRankingBelowMaximum_ShouldSucceed()
     {
         var team = new Team("Uruguay", _defaultConfederation, MaxFifaRanking-1);
-        Assert.IsNotNull(team);
-        Assert.AreEqual("Uruguay", team.Name);
-        Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(MaxFifaRanking-1, team.FifaRanking);
+        VerifyTeam(team, "Uruguay", MaxFifaRanking-1);
     }
 
     [TestMethod]
     public void CreateTeam_WithMaximumRanking_ShouldSucceed()
     {
         var team = new Team("Uruguay", _defaultConfederation, MaxFifaRanking);
-        Assert.IsNotNull(team);
-        Assert.AreEqual("Uruguay", team.Name);
-        Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(MaxFifaRanking, team.FifaRanking);
+        VerifyTeam(team, "Uruguay", MaxFifaRanking);
     }
     
     [TestMethod]
     public void CreateTeam_WithMinimumRanking_ShouldSucceed()
     {
         var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking);
+        VerifyTeam(team, "Uruguay", MinFifaRanking);
+    }
+    
+    private void VerifyTeam(Team team, string expectedName, int expectedRanking)
+    {
         Assert.IsNotNull(team);
-        Assert.AreEqual("Uruguay", team.Name);
+        Assert.AreEqual(expectedName, team.Name);
         Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(MinFifaRanking, team.FifaRanking);
+        Assert.AreEqual(expectedRanking, team.FifaRanking);
     }
 }
