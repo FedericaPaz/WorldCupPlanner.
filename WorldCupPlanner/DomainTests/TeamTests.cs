@@ -31,6 +31,12 @@ public class TeamTests
     {
         Assert.ThrowsException<ArgumentException>(() => new Team("", _defaultConfederation, 301));
     }
+    
+    [TestMethod]
+    public void CreateTeam_WithWhiteSpaceName_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Team("   ", _defaultConfederation, MinFifaRanking));
+    }
 
     [TestMethod]
     public void CreateTeam_WithNameTooLong_ShouldThrowException()
