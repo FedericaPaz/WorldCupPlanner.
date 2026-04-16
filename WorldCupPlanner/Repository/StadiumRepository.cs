@@ -26,6 +26,8 @@ public class StadiumRepository : IStadiumRepository
     public void UpdateStadium(Stadium stadium)
     {
         var existingStadium = _stadiums.FirstOrDefault(s => s._name == stadium._name);
+        if(existingStadium is null)
+            throw new InvalidOperationException($"Stadium {stadium._name} not found");
         _stadiums.Remove(existingStadium);
         _stadiums.Add(stadium);
     }
