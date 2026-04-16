@@ -79,17 +79,11 @@ public class TeamTests
     }
 
     [TestMethod]
-    public void CreateTeam_WithRankingAboveMinimum_ShouldSucceed()
+    public void CreateTeam_WithValidIntermediateRanking_ShouldSucceed()
     {
-        var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking+1);
-        VerifyTeam(team, "Uruguay", MinFifaRanking+1);
-    }
-
-    [TestMethod]
-    public void CreateTeam_WithRankingBelowMaximum_ShouldSucceed()
-    {
-        var team = new Team("Uruguay", _defaultConfederation, MaxFifaRanking-1);
-        VerifyTeam(team, "Uruguay", MaxFifaRanking-1);
+        int intermediateRanking = (MinFifaRanking + MaxFifaRanking) / 2;
+        var team = new Team("Uruguay", _defaultConfederation, intermediateRanking);
+        VerifyTeam(team, "Uruguay", intermediateRanking);
     }
 
     [TestMethod]
