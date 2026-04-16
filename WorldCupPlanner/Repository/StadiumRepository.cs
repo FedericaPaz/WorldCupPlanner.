@@ -11,4 +11,9 @@ public class StadiumRepository : IStadiumRepository
     {
         _stadiums.Add(stadium);
     }
+
+    public Stadium? GetStadium(string name)
+    {
+        return _stadiums.FirstOrDefault(stadium => stadium._name == name);
+    }
 }
