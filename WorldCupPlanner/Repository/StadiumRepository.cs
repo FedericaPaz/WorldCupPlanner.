@@ -22,4 +22,11 @@ public class StadiumRepository : IStadiumRepository
     {
         return _stadiums.FirstOrDefault(stadium => stadium._name == name);
     }
+
+    public void UpdateStadium(Stadium stadium)
+    {
+        var existingStadium = _stadiums.FirstOrDefault(s => s._name == stadium._name);
+        _stadiums.Remove(existingStadium);
+        _stadiums.Add(stadium);
+    }
 }

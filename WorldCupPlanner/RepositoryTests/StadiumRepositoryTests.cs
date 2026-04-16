@@ -41,5 +41,16 @@ public class StadiumRepositoryTests
         Assert.ThrowsException<ArgumentException>(() => stadiumRepository.AddStadium(stadium2));
     }
 
+    [TestMethod]
+    public void GivenExistingStadium_UpdateStadium_ShouldUpdateStadium()
+    {
+        var stadiumRepository = new StadiumRepository();
+        var originalStadium = new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        stadiumRepository.AddStadium(originalStadium);
+        var updatedStadium = new Stadium("Campeon del Siglo",  "otraCiudad", "otraDesc", 40600);
+        stadiumRepository.UpdateStadium(updatedStadium);
+        var result = stadiumRepository.GetStadium("Campeon del Siglo");
+        Assert.AreEqual("otraDesc", result?._description);
+    }
     
 }
