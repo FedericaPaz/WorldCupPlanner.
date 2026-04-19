@@ -71,4 +71,21 @@ public class TeamRepositoryTests
         Assert.IsTrue(teams.Contains(team1));
         Assert.IsTrue(teams.Contains(team2));
     }
+    
+    [TestMethod]
+    public void DeleteTeam_WhenExists_ShouldRemoveTeam()
+    {
+        var teamRepository = new TeamRepository();
+        var confederation = new Confederation("AFC");
+        var team = new Team("Uruguay", confederation, 500);
+
+        teamRepository.Add(team);
+        teamRepository.Delete(team);
+
+        var result = teamRepository.GetAll();
+
+        Assert.AreEqual(0, result.Count);
+    }
+    
+    
 }
