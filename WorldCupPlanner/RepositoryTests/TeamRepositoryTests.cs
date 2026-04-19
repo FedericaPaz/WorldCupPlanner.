@@ -11,9 +11,7 @@ public class TeamRepositoryTests
     public void AddTeam_ShouldStoreTeam()
     {
         var repository = new TeamRepository();
-        var conf = new Confederation("AFC");
-        var team = new Team("Uruguay", conf, 500);
-
+        var team = CreateTeam("Uruguay");
         repository.Add(team);
 
         var teams = repository.GetAll();
@@ -26,8 +24,7 @@ public class TeamRepositoryTests
     public void Add_OneTeam_ShouldNotThrowException()
     {
         var teamRepository = new TeamRepository();
-        var confederation = new Confederation("AFC");
-        var team = new Team("Uruguay", confederation, 500);
+        var team = CreateTeam("Uruguay");
         teamRepository.Add(team);
     }
     
@@ -42,8 +39,7 @@ public class TeamRepositoryTests
     public void Get_ExistingTeam_ShouldReturnTeam()
     {
         var teamRepository = new TeamRepository();
-        var confederation = new Confederation("AFC");
-        var team = new Team("Uruguay", confederation, 500);
+        var team = CreateTeam("Uruguay");
         teamRepository.Add(team);
         var result = teamRepository.Get("Uruguay");
         Assert.IsNotNull(result);
@@ -61,9 +57,8 @@ public class TeamRepositoryTests
     public void GivenMultipleTeams_WhenGetAll_ShouldReturnAllTeams()
     {
         var teamRepository = new TeamRepository();
-        var confederation = new Confederation("AFC");
-        var team1 = new Team("Uruguay", confederation, 500);
-        var team2 = new Team("Argentina", confederation, 400);
+        var team1 = CreateTeam("Uruguay");
+        var team2 = CreateTeam("Argentina");
         teamRepository.Add(team1);
         teamRepository.Add(team2);
         var teams = teamRepository.GetAll();
@@ -76,8 +71,7 @@ public class TeamRepositoryTests
     public void DeleteTeam_WhenExists_ShouldRemoveTeam()
     {
         var teamRepository = new TeamRepository();
-        var confederation = new Confederation("AFC");
-        var team = new Team("Uruguay", confederation, 500);
+        var team = CreateTeam("Uruguay");
 
         teamRepository.Add(team);
         teamRepository.Delete(team);
@@ -91,8 +85,7 @@ public class TeamRepositoryTests
     public void DeleteTeam_WhenNonExists_ShouldThrowException()
     {
         var teamRepository = new TeamRepository();
-        var confederation = new Confederation("AFC");
-        var team = new Team("Uruguay", confederation, 500);
+        var team = CreateTeam("Uruguay");
         Assert.ThrowsException<ArgumentException>(() => teamRepository.Delete(team));
     }
     
@@ -100,8 +93,7 @@ public class TeamRepositoryTests
     public void UpdateTeam_WhenExists_ShouldUpdateTeam()
     {
         var teamRepository = new TeamRepository();
-        var  confederation = new Confederation("AFC");
-        var team = new Team("Uruguay", confederation, 500);
+        var team = CreateTeam("Uruguay");
         teamRepository.Add(team);
 
         var updatedTeam = new Team(team.Name, team.Confederation, 1000);
@@ -115,9 +107,12 @@ public class TeamRepositoryTests
     public void UpdateTeam_WhenNonExists_ShouldThrowException()
     {
         var teamRepository = new TeamRepository();
-        var confederation = new Confederation("AFC");
-        var team = new Team("Uruguay", confederation, 500);
+        var team = CreateTeam("Uruguay");
         Assert.ThrowsException<ArgumentException>(() => teamRepository.Update(team));
-    }    
+    }
     
+    private Team CreateTeam(string name)
+    {
+        return new Team(name, new Confederation("AFC"), 500);
+    }
 }
