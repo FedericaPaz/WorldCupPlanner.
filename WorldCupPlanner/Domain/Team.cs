@@ -12,24 +12,33 @@ public class Team
     
     public Team(string name, Confederation confederation, int fifaRanking)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Team name cannot be empty.");
-        
-        if (name.Length > MaxNameLength)
-            throw new ArgumentException("Team name cannot be longer than 60 characters.");
-        
-        if (confederation is null)
-            throw new ArgumentNullException("Confederation cannot be null.");
-        
-        if (fifaRanking < MinRanking)
-            throw new ArgumentException("Fifa ranking cannot be less than 300.");
-        
-        if (fifaRanking > MaxRanking)
-            throw new ArgumentException("Fifa ranking cannot be more than 2500.");
-        
+        ValidateName(name);
+        ValidateConfederation(confederation);
+        ValidateRanking(fifaRanking);
+
         Name = name;
         Confederation = confederation;
         FifaRanking = fifaRanking;
     }
-    
+
+    private void ValidateName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Name cannot be empty");
+
+        if (name.Length > MaxNameLength)
+            throw new ArgumentException($"Name cannot exceed {MaxNameLength} characters");
+    }
+
+    private void ValidateConfederation(Confederation confederation)
+    {
+        if (confederation is null)
+            throw new ArgumentNullException(nameof(confederation));
+    }
+
+    private void ValidateRanking(int ranking)
+    {
+        if (ranking < MinRanking || ranking > MaxRanking)
+            throw new ArgumentException($"Ranking must be between {MinRanking} and {MaxRanking}");
+    }
 }
