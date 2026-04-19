@@ -48,4 +48,12 @@ public class TeamRepositoryTests
         var result = teamRepository.Get("Uruguay");
         Assert.IsNotNull(result);
     }
+    
+    [TestMethod]
+    public void Get_NonExistingTeam_ShouldReturnNull()
+    {
+        var teamRepository = new TeamRepository();
+        var result = teamRepository.Get("Argentina");
+        Assert.IsNull(result);
+    }
 }
