@@ -22,8 +22,15 @@ public class TeamRepository
 
     public void Delete(Team team)
     {
+        if (team is null)
+            throw new ArgumentNullException(nameof(team));
+        
         var existingTeam = _teams.FirstOrDefault(t => t.Name == team.Name);
-        _teams.Remove(team);
+        
+        if (existingTeam is null)
+            throw new ArgumentException($"Team {team.Name} does not exist.");
+            
+        _teams.Remove(existingTeam);
     }
 
     public List<Team> GetAll()

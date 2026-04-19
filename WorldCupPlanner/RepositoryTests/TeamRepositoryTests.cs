@@ -86,6 +86,13 @@ public class TeamRepositoryTests
 
         Assert.AreEqual(0, result.Count);
     }
-    
-    
+
+    [TestMethod]
+    public void DeleteTeam_WhenNonExists_ShouldThrowException()
+    {
+        var teamRepository = new TeamRepository();
+        var confederation = new Confederation("AFC");
+        var team = new Team("Uruguay", confederation, 500);
+        Assert.ThrowsException<ArgumentException>(() => teamRepository.Delete(team));
+    }
 }
