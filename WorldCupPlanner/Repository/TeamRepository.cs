@@ -15,6 +15,11 @@ public class TeamRepository
         _teams.Add(team);
     }
 
+    public Team? Get(string name)
+    {
+        return _teams.FirstOrDefault(t => t.Name == name);
+    }
+
     public List<Team> GetAll()
     {
         return _teams;

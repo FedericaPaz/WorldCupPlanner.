@@ -37,4 +37,15 @@ public class TeamRepositoryTests
         var teamRepository = new TeamRepository();
         Assert.ThrowsException<ArgumentNullException>(() => teamRepository.Add(null));
     }
+    
+    [TestMethod]
+    public void Get_ExistingTeam_ShouldReturnTeam()
+    {
+        var teamRepository = new TeamRepository();
+        var confederation = new Confederation("AFC");
+        var team = new Team("Uruguay", confederation, 500);
+        teamRepository.Add(team);
+        var result = teamRepository.Get("Uruguay");
+        Assert.IsNotNull(result);
+    }
 }
