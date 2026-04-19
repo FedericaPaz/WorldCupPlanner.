@@ -22,7 +22,14 @@ public class TeamRepository
 
     public void Update(Team team)
     {
+        if (team is null)
+            throw new ArgumentNullException(nameof(team));
+        
         var existingTeam = _teams.FirstOrDefault(t => t.Name == team.Name);
+        
+        if (existingTeam is null)
+            throw new ArgumentException($"Team {team.Name} does not exist.");
+        
         _teams.Remove(existingTeam);
         _teams.Add(team);
     }

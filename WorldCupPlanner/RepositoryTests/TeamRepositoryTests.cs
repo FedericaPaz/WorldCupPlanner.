@@ -110,6 +110,14 @@ public class TeamRepositoryTests
         var result = teamRepository.Get(team.Name);
         Assert.AreEqual(1000, result.FifaRanking);
     }
-    
+
+    [TestMethod]
+    public void UpdateTeam_WhenNonExists_ShouldThrowException()
+    {
+        var teamRepository = new TeamRepository();
+        var confederation = new Confederation("AFC");
+        var team = new Team("Uruguay", confederation, 500);
+        Assert.ThrowsException<ArgumentException>(() => teamRepository.Update(team));
+    }    
     
 }
