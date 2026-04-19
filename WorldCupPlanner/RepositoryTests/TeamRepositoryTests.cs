@@ -21,4 +21,13 @@ public class TeamRepositoryTests
         Assert.HasCount(1, teams);
         Assert.AreEqual(team, teams[0]);
     }
+
+    [TestMethod]
+    public void Add_OneTeam_ShouldNotThrowException()
+    {
+        var teamRepository = new TeamRepository();
+        var confederation = new Confederation("AFC");
+        var team = new Team("Uruguay", confederation, 500);
+        teamRepository.Add(team);
+    }
 }
