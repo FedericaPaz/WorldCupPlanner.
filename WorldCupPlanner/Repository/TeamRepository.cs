@@ -9,6 +9,9 @@ public class TeamRepository
 
     public void Add(Team team)
     {
+        if (team == null)
+            throw new ArgumentNullException(nameof(team));
+
         _teams.Add(team);
     }
 

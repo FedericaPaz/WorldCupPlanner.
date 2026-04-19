@@ -18,7 +18,7 @@ public class TeamRepositoryTests
 
         var teams = repository.GetAll();
 
-        Assert.HasCount(1, teams);
+        Assert.AreEqual(1, teams.Count);
         Assert.AreEqual(team, teams[0]);
     }
 
@@ -29,5 +29,12 @@ public class TeamRepositoryTests
         var confederation = new Confederation("AFC");
         var team = new Team("Uruguay", confederation, 500);
         teamRepository.Add(team);
+    }
+    
+    [TestMethod]
+    public void AddTeam_Null_ShouldThrowException()
+    {
+        var teamRepository = new TeamRepository();
+        Assert.ThrowsException<ArgumentNullException>(() => teamRepository.Add(null));
     }
 }
