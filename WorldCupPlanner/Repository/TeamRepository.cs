@@ -28,7 +28,7 @@ public class TeamRepository
         var existingTeam = _teams.FirstOrDefault(t => t.Name == team.Name);
         
         if (existingTeam is null)
-            throw new ArgumentException($"Team {team.Name} does not exist.");
+            throw new InvalidOperationException($"Team {team.Name} does not exist.");
         
         _teams.Remove(existingTeam);
         _teams.Add(team);
@@ -42,13 +42,13 @@ public class TeamRepository
         var existingTeam = _teams.FirstOrDefault(t => t.Name == team.Name);
         
         if (existingTeam is null)
-            throw new ArgumentException($"Team {team.Name} does not exist.");
+            throw new InvalidOperationException($"Team {team.Name} does not exist.");
             
         _teams.Remove(existingTeam);
     }
 
     public List<Team> GetAll()
     {
-        return _teams;
+        return new List<Team>(_teams);
     }
 }

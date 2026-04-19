@@ -78,7 +78,7 @@ public class TeamRepositoryTests
     {
         var teamRepository = new TeamRepository();
         var team = CreateTeam("Uruguay");
-        Assert.ThrowsException<ArgumentException>(() => teamRepository.Delete(team));
+        Assert.ThrowsException<InvalidOperationException>(() => teamRepository.Delete(team));
     }
     
     [TestMethod]
@@ -100,7 +100,21 @@ public class TeamRepositoryTests
     {
         var teamRepository = new TeamRepository();
         var team = CreateTeam("Uruguay");
-        Assert.ThrowsException<ArgumentException>(() => teamRepository.Update(team));
+        Assert.ThrowsException<InvalidOperationException>(() => teamRepository.Update(team));
+    }
+    
+    [TestMethod]
+    public void GetAll_ShouldReturnCopy_NotInternalList()
+    {
+        var teamRepository = new TeamRepository();
+        var team = CreateTeam("Uruguay");
+        teamRepository.Add(team);
+
+        var list = teamRepository.GetAll();
+        list.Clear();
+
+        var result = teamRepository.GetAll();
+        Assert.AreEqual(1, result.Count);
     }
     
     private Team CreateTeam(string name)
