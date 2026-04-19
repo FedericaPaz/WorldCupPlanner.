@@ -34,7 +34,7 @@ public class TeamRepositoryTests
         var team = CreateTeam("Uruguay");
         teamRepository.Add(team);
         var result = teamRepository.Get("Uruguay");
-        Assert.IsNotNull(result);
+        Assert.AreEqual(team, result);
     }
     
     [TestMethod]
