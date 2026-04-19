@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Domain;
 using IRepository;
 
@@ -5,7 +8,7 @@ namespace Repository;
 
 public class StadiumRepository : IStadiumRepository
 {
-    private List<Stadium> _stadiums = new List<Stadium>();
+    private readonly List<Stadium> _stadiums = new List<Stadium>();
 
     public void AddStadium(Stadium stadium)
     {
