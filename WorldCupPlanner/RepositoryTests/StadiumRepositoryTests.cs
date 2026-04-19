@@ -20,7 +20,7 @@ public class StadiumRepositoryTests
         var stadiumRepository = new StadiumRepository();
         var stadium = new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
         stadiumRepository.AddStadium(stadium);
-        var result = stadiumRepository.GetStadium("Campeon del Siglo");
+        var result = stadiumRepository.GetStadium(stadium);
         Assert.IsNotNull(result);
     }
 
@@ -49,7 +49,7 @@ public class StadiumRepositoryTests
         stadiumRepository.AddStadium(originalStadium);
         var updatedStadium = new Stadium("Campeon del Siglo",  "otraCiudad", "otraDesc", 40600);
         stadiumRepository.UpdateStadium(updatedStadium);
-        var result = stadiumRepository.GetStadium("Campeon del Siglo");
+        var result = stadiumRepository.GetStadium(updatedStadium);
         Assert.AreEqual("otraDesc", result?._description);
     }
 
@@ -76,7 +76,7 @@ public class StadiumRepositoryTests
         var stadium = new Stadium("Campeon del Siglo", "Montevideo", "Desc", 40600);
         stadiumRepository.AddStadium(stadium);
         stadiumRepository.DeleteStadium(stadium);
-        var result = stadiumRepository.GetStadium("Campeon del Siglo");
+        var result = stadiumRepository.GetStadium(stadium);
         Assert.IsNull(result);
     }
 

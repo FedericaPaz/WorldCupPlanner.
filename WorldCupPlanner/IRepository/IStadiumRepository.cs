@@ -5,7 +5,7 @@ namespace IRepository;
 public interface IStadiumRepository
 {
     void AddStadium(Stadium stadium);
-    Stadium? GetStadium(string name);
+    Stadium? GetStadium(Stadium stadium);
     void UpdateStadium(Stadium stadium);
     void DeleteStadium(Stadium stadium);
     List<Stadium> GetAllStadiums();
