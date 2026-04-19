@@ -19,14 +19,6 @@ public class TeamRepositoryTests
         Assert.AreEqual(1, teams.Count);
         Assert.AreEqual(team, teams[0]);
     }
-
-    [TestMethod]
-    public void Add_OneTeam_ShouldNotThrowException()
-    {
-        var teamRepository = new TeamRepository();
-        var team = CreateTeam("Uruguay");
-        teamRepository.Add(team);
-    }
     
     [TestMethod]
     public void AddTeam_Null_ShouldThrowException()
