@@ -56,4 +56,19 @@ public class TeamRepositoryTests
         var result = teamRepository.Get("Argentina");
         Assert.IsNull(result);
     }
+    
+    [TestMethod]
+    public void GivenMultipleTeams_WhenGetAll_ShouldReturnAllTeams()
+    {
+        var teamRepository = new TeamRepository();
+        var confederation = new Confederation("AFC");
+        var team1 = new Team("Uruguay", confederation, 500);
+        var team2 = new Team("Argentina", confederation, 400);
+        teamRepository.Add(team1);
+        teamRepository.Add(team2);
+        var teams = teamRepository.GetAll();
+        Assert.AreEqual(2, teams.Count);
+        Assert.IsTrue(teams.Contains(team1));
+        Assert.IsTrue(teams.Contains(team2));
+    }
 }
