@@ -63,7 +63,7 @@ public class TeamTests
     [TestMethod]
     public void CreateTeam_WithNullConfederation_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentException>(() => new Team("Uruguay", null, MinFifaRanking+1));
+        Assert.ThrowsException<ArgumentNullException>(() => new Team("Uruguay", null, MinFifaRanking+1));
     }
 
     [TestMethod]

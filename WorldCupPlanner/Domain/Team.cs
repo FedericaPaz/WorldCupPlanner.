@@ -14,8 +14,8 @@ public class Team
         if (name.Length > 60)
             throw new ArgumentException("Team name cannot be longer than 60 characters.");
         
-        if (confederation == null)
-            throw new ArgumentException("Confederation cannot be null.");
+        if (confederation is null)
+            throw new ArgumentNullException("Confederation cannot be null.");
         
         if (fifaRanking < 300)
             throw new ArgumentException("Fifa ranking cannot be less than 300.");
