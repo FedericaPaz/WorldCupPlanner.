@@ -92,7 +92,7 @@ public class TeamRepositoryTests
         teamRepository.Update(updatedTeam);
 
         var result = teamRepository.Get(team.Name);
-        Assert.AreEqual(1000, result.FifaRanking);
+        Assert.AreEqual(updatedTeam, result);
     }
 
     [TestMethod]
