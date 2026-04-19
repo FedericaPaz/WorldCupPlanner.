@@ -70,7 +70,7 @@ public class TeamRepositoryTests
 
         var result = teamRepository.GetAll();
 
-        Assert.AreEqual(0, result.Count);
+        Assert.IsNull(teamRepository.Get("Uruguay"));
     }
 
     [TestMethod]
