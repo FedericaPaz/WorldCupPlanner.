@@ -92,7 +92,12 @@ public class StadiumRepositoryTests
         Assert.AreEqual(2, result.Count);
     }
 
-    
+    [TestMethod]
+    public void GetNullStadium_NullStadium_ShouldThrowArgumentNullException()
+    {
+        var  stadiumRepository = new StadiumRepository();
+        Assert.ThrowsException<ArgumentNullException>(() => stadiumRepository.GetStadium(null));
+    }
 
     
     

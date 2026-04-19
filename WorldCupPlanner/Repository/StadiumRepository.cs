@@ -21,8 +21,10 @@ public class StadiumRepository : IStadiumRepository
         _stadiums.Add(stadium);
     }
 
-    public Stadium? GetStadium(Stadium stadium)
+    public Stadium? GetStadium(Stadium? stadium)
     {
+        if (stadium is null)
+            throw new ArgumentNullException(nameof(stadium));
         return _stadiums.FirstOrDefault(s => s._name == stadium._name);
     }
 
