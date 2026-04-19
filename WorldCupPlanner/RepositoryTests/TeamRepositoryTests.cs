@@ -6,15 +6,22 @@ namespace RepositoryTests;
 
 [TestClass]
 public class TeamRepositoryTests
-{   
+{
+    private TeamRepository _teamRepository;
+        
+    [TestInitialize]
+    public void setup()
+    {
+        _teamRepository = new TeamRepository();
+    }
+    
     [TestMethod]
     public void AddTeam_ShouldStoreTeam()
     {
-        var repository = new TeamRepository();
         var team = CreateTeam("Uruguay");
-        repository.Add(team);
+        _teamRepository.Add(team);
 
-        var teams = repository.GetAll();
+        var teams = _teamRepository.GetAll();
 
         Assert.AreEqual(1, teams.Count);
         Assert.AreEqual(team, teams[0]);
@@ -23,37 +30,33 @@ public class TeamRepositoryTests
     [TestMethod]
     public void AddTeam_Null_ShouldThrowException()
     {
-        var teamRepository = new TeamRepository();
-        Assert.ThrowsException<ArgumentNullException>(() => teamRepository.Add(null));
+        Assert.ThrowsException<ArgumentNullException>(() => _teamRepository.Add(null));
     }
     
     [TestMethod]
     public void Get_ExistingTeam_ShouldReturnTeam()
     {
-        var teamRepository = new TeamRepository();
         var team = CreateTeam("Uruguay");
-        teamRepository.Add(team);
-        var result = teamRepository.Get("Uruguay");
+        _teamRepository.Add(team);
+        var result = _teamRepository.Get("Uruguay");
         Assert.AreEqual(team, result);
     }
     
     [TestMethod]
     public void Get_NonExistingTeam_ShouldReturnNull()
     {
-        var teamRepository = new TeamRepository();
-        var result = teamRepository.Get("Argentina");
+        var result = _teamRepository.Get("Argentina");
         Assert.IsNull(result);
     }
     
     [TestMethod]
     public void GivenMultipleTeams_WhenGetAll_ShouldReturnAllTeams()
     {
-        var teamRepository = new TeamRepository();
         var team1 = CreateTeam("Uruguay");
         var team2 = CreateTeam("Argentina");
-        teamRepository.Add(team1);
-        teamRepository.Add(team2);
-        var teams = teamRepository.GetAll();
+        _teamRepository.Add(team1);
+        _teamRepository.Add(team2);
+        var teams = _teamRepository.GetAll();
         Assert.AreEqual(2, teams.Count);
         Assert.IsTrue(teams.Contains(team1));
         Assert.IsTrue(teams.Contains(team2));
@@ -62,58 +65,53 @@ public class TeamRepositoryTests
     [TestMethod]
     public void DeleteTeam_WhenExists_ShouldRemoveTeam()
     {
-        var teamRepository = new TeamRepository();
         var team = CreateTeam("Uruguay");
 
-        teamRepository.Add(team);
-        teamRepository.Delete(team);
+        _teamRepository.Add(team);
+        _teamRepository.Delete(team);
 
-        var result = teamRepository.GetAll();
+        var result = _teamRepository.GetAll();
 
-        Assert.IsNull(teamRepository.Get("Uruguay"));
+        Assert.IsNull(_teamRepository.Get("Uruguay"));
     }
 
     [TestMethod]
     public void DeleteTeam_WhenNonExists_ShouldThrowException()
     {
-        var teamRepository = new TeamRepository();
         var team = CreateTeam("Uruguay");
-        Assert.ThrowsException<InvalidOperationException>(() => teamRepository.Delete(team));
+        Assert.ThrowsException<InvalidOperationException>(() => _teamRepository.Delete(team));
     }
     
     [TestMethod]
     public void UpdateTeam_WhenExists_ShouldUpdateTeam()
     {
-        var teamRepository = new TeamRepository();
         var team = CreateTeam("Uruguay");
-        teamRepository.Add(team);
+        _teamRepository.Add(team);
 
         var updatedTeam = new Team(team.Name, team.Confederation, 1000);
-        teamRepository.Update(updatedTeam);
+        _teamRepository.Update(updatedTeam);
 
-        var result = teamRepository.Get(team.Name);
+        var result = _teamRepository.Get(team.Name);
         Assert.AreEqual(updatedTeam, result);
     }
 
     [TestMethod]
     public void UpdateTeam_WhenNonExists_ShouldThrowException()
     {
-        var teamRepository = new TeamRepository();
         var team = CreateTeam("Uruguay");
-        Assert.ThrowsException<InvalidOperationException>(() => teamRepository.Update(team));
+        Assert.ThrowsException<InvalidOperationException>(() => _teamRepository.Update(team));
     }
     
     [TestMethod]
     public void GetAll_ShouldReturnCopy_NotInternalList()
     {
-        var teamRepository = new TeamRepository();
         var team = CreateTeam("Uruguay");
-        teamRepository.Add(team);
+        _teamRepository.Add(team);
 
-        var list = teamRepository.GetAll();
+        var list = _teamRepository.GetAll();
         list.Clear();
 
-        var result = teamRepository.GetAll();
+        var result = _teamRepository.GetAll();
         Assert.AreEqual(1, result.Count);
     }
     
