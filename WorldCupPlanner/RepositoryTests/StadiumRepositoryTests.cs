@@ -57,6 +57,13 @@ public class StadiumRepositoryTests
         Assert.AreEqual(2, result.Count);
     }
     
+    [TestMethod]
+    public void GetAll_EmptyRepository_ShouldReturnEmptyList()
+    {
+        var result = _stadiumRepository.GetAllStadiums();
+        Assert.AreEqual(0, result.Count);
+    }
+    
     // Test UPDATE
     
     [TestMethod]
