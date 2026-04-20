@@ -21,7 +21,7 @@ public class StadiumRepository : IStadiumRepository
         return _stadiums.FirstOrDefault(s => s._name == stadium._name);
     }
 
-    public void UpdateStadium(Stadium stadium)
+    public void UpdateStadium(Stadium? stadium)
     {
         if (stadium is null)
             throw new ArgumentNullException(nameof(stadium));

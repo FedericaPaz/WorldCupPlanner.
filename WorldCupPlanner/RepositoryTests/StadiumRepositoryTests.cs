@@ -82,6 +82,12 @@ public class StadiumRepositoryTests
         var stadium = new Stadium("Campeon del Siglo", "OtraCiudad", "OtraDesc", 40600);
         Assert.ThrowsException<InvalidOperationException>(() => _stadiumRepository.UpdateStadium(stadium));
     }
+
+    [TestMethod]
+    public void GivenNullStadium_UpdateStadium_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => _stadiumRepository.UpdateStadium(null));
+    }
     
     // Tests DELETE 
     
