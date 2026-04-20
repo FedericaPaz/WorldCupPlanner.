@@ -35,7 +35,7 @@ public class StadiumRepository : IStadiumRepository
         _stadiums.Add(stadium);
     }
 
-    public void DeleteStadium(Stadium stadium)
+    public void DeleteStadium(Stadium? stadium)
     {
         if (stadium is null)
             throw new ArgumentNullException(nameof(stadium));
