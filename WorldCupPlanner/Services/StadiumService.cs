@@ -28,7 +28,11 @@ public class StadiumService
     {
         _stadiumRepository.DeleteStadium(stadium);
     }
-    
+
+    public void UpdateStadium(Stadium stadium)
+    {
+        _stadiumRepository.UpdateStadium(stadium);
+    }
     
 
 }

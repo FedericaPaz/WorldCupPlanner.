@@ -40,4 +40,14 @@ public class StadiumServiceTests
         _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
         _service.DeleteStadium(_stadium);
     }
+
+    [TestMethod]
+    public void GivingExistingStadium_UpdateStadium_ShouldUpdateStadium()
+    {
+        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700 );
+        var updatedStadium = new Stadium("Campeon del Siglo","OtraCiudad", "OtraDesc", 40600);
+        _service.UpdateStadium(updatedStadium);
+        var result = _repository.GetStadium(updatedStadium);
+        Assert.AreEqual("OtraCiudad", result?._city);
+    }
 }
