@@ -14,8 +14,16 @@ public class StadiumService
 
     public void AddStadium(string name, string city, string? description, int locativeCapacity)
     {
+        bool nameAlreadyExists = _stadiumRepository
+            .GetAllStadiums()
+            .Any(s => s._name == name);
+        if (nameAlreadyExists)
+            throw new ArgumentException($"Stadium with name {name} already exists");
+        
         var stadium= new Stadium(name, city, description, locativeCapacity);
         _stadiumRepository.AddStadium(stadium);
     }
+    
+    
 
 }
