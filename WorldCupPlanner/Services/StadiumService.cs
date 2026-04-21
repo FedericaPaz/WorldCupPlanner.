@@ -38,6 +38,11 @@ public class StadiumService
             throw new ArgumentException($"Stadium with name {stadium._name} already exists");
         _stadiumRepository.UpdateStadium(stadium);
     }
+
+    public List<Stadium> GetAllStadiums()
+    {
+        return _stadiumRepository.GetAllStadiums();
+    }
     
 
 }

@@ -56,8 +56,7 @@ public class StadiumServiceTests
     {
         var nonExisting = new Stadium("Centenario", "Montevideo", "Desc", 60000);
 
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            _service.UpdateStadium(nonExisting));
+        Assert.ThrowsException<InvalidOperationException>(() => _service.UpdateStadium(nonExisting));
     }
     
     [TestMethod]
@@ -69,5 +68,14 @@ public class StadiumServiceTests
         var updated = new Stadium("Estadio Centenario", "OtraCiudad", "OtraDesc", 40600);
 
         Assert.ThrowsException<ArgumentException>(() => _service.UpdateStadium(updated));
+    }
+
+    [TestMethod]
+    public void GivenMultipleStadiums_GetAllStadiums_ShouldReturnAllStadiums()
+    {
+        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        _service.AddStadium("Estadio Centenario", "Montevideo", "Estadio historico", 60000);
+        var result = _service.GetAllStadiums();
+        Assert.AreEqual(2, result.Count());
     }
 }
