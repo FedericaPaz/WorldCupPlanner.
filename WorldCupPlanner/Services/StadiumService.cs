@@ -43,6 +43,11 @@ public class StadiumService
     {
         return _stadiumRepository.GetAllStadiums();
     }
+
+    public Stadium? GetStadium(Stadium stadium)
+    {
+        return _stadiumRepository.GetStadium(stadium);
+    }
     
 
 }
