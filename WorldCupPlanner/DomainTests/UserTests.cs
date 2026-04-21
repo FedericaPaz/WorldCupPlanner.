@@ -138,4 +138,17 @@ public class UserTests
         Assert.ThrowsException<ArgumentException>(() =>
             new User(firstName, lastName, email, birthDate, password));
     }
+    
+    [TestMethod]
+    public void CreateUser_WithoutNumberPassword_ShouldThrowException()
+    {
+        var firstName = "Juan";
+        var lastName = "Perez";
+        var email = "juan.perez@gmail.com";
+        var birthDate = new DateTime(2000, 1, 1);
+        var password = "Password!";
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            new User(firstName, lastName, email, birthDate, password));
+    }
 }

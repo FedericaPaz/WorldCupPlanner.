@@ -50,6 +50,11 @@ public class User
             throw new ArgumentException("Password must contain at least one lowercase letter.");
         }
         
+        if (!password.Any(char.IsDigit))
+        {
+            throw new ArgumentException("Password must contain at least one number.");
+        }
+        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
