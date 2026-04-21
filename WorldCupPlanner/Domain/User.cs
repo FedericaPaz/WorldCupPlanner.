@@ -40,6 +40,11 @@ public class User
             throw new ArgumentException("Password must be at least 8 characters long.");
         }
         
+        if (!password.Any(char.IsUpper))
+        {
+            throw new ArgumentException("Password must contain at least one uppercase letter.");
+        }
+        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
