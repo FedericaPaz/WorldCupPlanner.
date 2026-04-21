@@ -1,12 +1,16 @@
-﻿namespace Domain;
-using System.Linq;
+﻿using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace Domain;
+
 public class User
 {
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
     public string Email { get; private set; }
     public DateTime BirthDate { get; private set; }
-    public string Password { get; private set; }
+    public string PasswordHash { get; private set; }
 
     public User(string firstName, string lastName, string email, DateTime birthDate, string password)
     {
@@ -65,10 +69,18 @@ public class User
             throw new ArgumentException("Email format is invalid.");
         }
         
+        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         BirthDate = birthDate;
-        Password = password;
+        PasswordHash = HashPassword(password);
+    }
+    private static string HashPassword(string password)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(password);
+        byte[] hash = SHA256.HashData(bytes);
+        return Convert.ToBase64String(hash);
     }
 }
+
