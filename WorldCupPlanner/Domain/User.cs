@@ -14,67 +14,91 @@ public class User
 
     public User(string firstName, string lastName, string email, DateTime birthDate, string password)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-        {
-            throw new ArgumentException("First name cannot be empty.");
-        }
+        ValidateFirstName(firstName);
+        ValidateLastName(lastName);
+        ValidateEmailNotEmpty(email);
+        ValidateBirthDate(birthDate);
+        ValidatePassword(password);
+        ValidateEmailFormat(email);
 
-        if (string.IsNullOrWhiteSpace(lastName))
-        {
-            throw new ArgumentException("Last name cannot be empty.");
-        }
-
-        if (string.IsNullOrWhiteSpace(email))
-        {
-            throw new ArgumentException("Email cannot be empty.");
-        }
-        
-        if (birthDate > DateTime.Today)
-        {
-            throw new ArgumentException("Birth date cannot be in the future.");
-        }
-        
-        if (string.IsNullOrWhiteSpace(password))
-        {
-            throw new ArgumentException("Password cannot be empty.");
-        }
-        
-        if (password.Length < 8)
-        {
-            throw new ArgumentException("Password must be at least 8 characters long.");
-        }
-        
-        if (!password.Any(char.IsUpper))
-        {
-            throw new ArgumentException("Password must contain at least one uppercase letter.");
-        }
-        
-        if (!password.Any(char.IsLower))
-        {
-            throw new ArgumentException("Password must contain at least one lowercase letter.");
-        }
-        
-        if (!password.Any(char.IsDigit))
-        {
-            throw new ArgumentException("Password must contain at least one number.");
-        }
-        
-        if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
-        {
-            throw new ArgumentException("Password must contain at least one special character.");
-        }
-        
-        if (!email.Contains("@"))
-        {
-            throw new ArgumentException("Email format is invalid.");
-        }
-        
-        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         BirthDate = birthDate;
         PasswordHash = HashPassword(password);
+    }
+
+    private static void ValidateFirstName(string firstName)
+    {
+        if (string.IsNullOrWhiteSpace(firstName))
+        {
+            throw new ArgumentException("First name cannot be empty.");
+        }
+    }
+
+    private void ValidateLastName(string lastName)
+    {
+        if (string.IsNullOrWhiteSpace(lastName))
+        {
+            throw new ArgumentException("Last name cannot be empty.");
+        }
+    }
+
+    private void ValidateEmailNotEmpty(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new ArgumentException("Email cannot be empty.");
+        }
+    }
+
+    private void ValidateBirthDate(DateTime birthDate)
+    {
+        if (birthDate > DateTime.Today)
+        {
+            throw new ArgumentException("Birth date cannot be in the future.");
+        }
+    }
+
+    private void ValidatePassword(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            throw new ArgumentException("Password cannot be empty.");
+        }
+
+        if (password.Length < 8)
+        {
+            throw new ArgumentException("Password must be at least 8 characters long.");
+        }
+
+        if (!password.Any(char.IsUpper))
+        {
+            throw new ArgumentException("Password must contain at least one uppercase letter.");
+        }
+
+        if (!password.Any(char.IsLower))
+        {
+            throw new ArgumentException("Password must contain at least one lowercase letter.");
+        }
+
+        if (!password.Any(char.IsDigit))
+        {
+            throw new ArgumentException("Password must contain at least one number.");
+        }
+
+        if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+        {
+            throw new ArgumentException("Password must contain at least one special character.");
+        }
+    }
+
+    private void ValidateEmailFormat(string email)
+    {
+        if (!email.Contains("@"))
+        {
+            throw new ArgumentException("Email format is invalid.");
+        }
     }
     private static string HashPassword(string password)
     {
