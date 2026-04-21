@@ -60,6 +60,11 @@ public class User
             throw new ArgumentException("Password must contain at least one special character.");
         }
         
+        if (!email.Contains("@"))
+        {
+            throw new ArgumentException("Email format is invalid.");
+        }
+        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
