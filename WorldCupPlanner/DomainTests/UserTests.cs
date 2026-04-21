@@ -179,20 +179,6 @@ public class UserTests
     }
     
     [TestMethod]
-    public void CreateUser_ShouldNotStorePlainPassword()
-    {
-        var firstName = "Juan";
-        var lastName = "Perez";
-        var email = "juan.perez@gmail.com";
-        var birthDate = new DateTime(2000, 1, 1);
-        var password = "Password1!";
-
-        User user = new User(firstName, lastName, email, birthDate, password);
-
-        Assert.AreNotEqual(password, user.PasswordHash);
-    }
-    
-    [TestMethod]
     public void CreateUser_ShouldStoreHashedPassword()
     {
         var firstName = "Juan";
