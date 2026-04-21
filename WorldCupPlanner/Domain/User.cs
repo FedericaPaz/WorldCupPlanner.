@@ -1,5 +1,5 @@
 ﻿namespace Domain;
-
+using System.Linq;
 public class User
 {
     public string FirstName { get; private set; }
@@ -43,6 +43,11 @@ public class User
         if (!password.Any(char.IsUpper))
         {
             throw new ArgumentException("Password must contain at least one uppercase letter.");
+        }
+        
+        if (!password.Any(char.IsLower))
+        {
+            throw new ArgumentException("Password must contain at least one lowercase letter.");
         }
         
         FirstName = firstName;
