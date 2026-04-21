@@ -35,6 +35,11 @@ public class User
             throw new ArgumentException("Password cannot be empty.");
         }
         
+        if (password.Length < 8)
+        {
+            throw new ArgumentException("Password must be at least 8 characters long.");
+        }
+        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
