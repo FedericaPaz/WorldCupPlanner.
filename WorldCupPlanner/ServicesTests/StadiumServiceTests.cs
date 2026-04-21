@@ -50,4 +50,13 @@ public class StadiumServiceTests
         var result = _repository.GetStadium(updatedStadium);
         Assert.AreEqual("OtraCiudad", result?._city);
     }
+    
+    [TestMethod]
+    public void GivenNonExistingStadium_UpdateStadium_ShouldThrowException()
+    {
+        var nonExisting = new Stadium("Centenario", "Montevideo", "Desc", 60000);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            _service.UpdateStadium(nonExisting));
+    }
 }
