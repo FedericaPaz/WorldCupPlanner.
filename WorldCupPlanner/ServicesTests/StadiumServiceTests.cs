@@ -59,4 +59,15 @@ public class StadiumServiceTests
         Assert.ThrowsException<InvalidOperationException>(() =>
             _service.UpdateStadium(nonExisting));
     }
+    
+    [TestMethod]
+    public void GivenExistingStadium_UpdateStadium_WithDuplicateName_ShouldThrowException()
+    {
+        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        _service.AddStadium("Estadio Centenario", "Montevideo", "Estadio historico", 60000);
+
+        var updated = new Stadium("Estadio Centenario", "OtraCiudad", "OtraDesc", 40600);
+
+        Assert.ThrowsException<ArgumentException>(() => _service.UpdateStadium(updated));
+    }
 }

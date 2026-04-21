@@ -31,6 +31,11 @@ public class StadiumService
 
     public void UpdateStadium(Stadium stadium)
     {
+        bool stadiumAlreadyExists = _stadiumRepository
+            .GetAllStadiums()
+            .Any(s => s._name == stadium._name);
+        if (stadiumAlreadyExists)
+            throw new ArgumentException($"Stadium with name {stadium._name} already exists");
         _stadiumRepository.UpdateStadium(stadium);
     }
     
