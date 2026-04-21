@@ -55,6 +55,11 @@ public class User
             throw new ArgumentException("Password must contain at least one number.");
         }
         
+        if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+        {
+            throw new ArgumentException("Password must contain at least one special character.");
+        }
+        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
