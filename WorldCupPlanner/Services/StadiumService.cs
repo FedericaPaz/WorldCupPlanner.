@@ -23,6 +23,11 @@ public class StadiumService
         var stadium= new Stadium(name, city, description, locativeCapacity);
         _stadiumRepository.AddStadium(stadium);
     }
+
+    public void DeleteStadium(Stadium stadium)
+    {
+        _stadiumRepository.DeleteStadium(stadium);
+    }
     
     
 

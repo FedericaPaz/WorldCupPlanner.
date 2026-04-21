@@ -33,4 +33,11 @@ public class StadiumServiceTests
         Assert.ThrowsException<ArgumentException>(() =>
             _service.AddStadium("Campeon del Siglo", "OtraCiudad", "OtraDesc", 40600));
     }
+
+    [TestMethod]
+    public void GivenExistingStadium_DeleteStadium_ShouldNotThrowException()
+    {
+        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        _service.DeleteStadium(_stadium);
+    }
 }
