@@ -82,6 +82,13 @@ public class StadiumServiceTests
         Assert.AreEqual(0, result.Count);
     }
     
-    
-    
+    /*
+    [TestMethod]
+    public void GetAllStadiums_WithMultipleStadiums_ShouldReturnAllStadiums()
+    {
+        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        _service.AddStadium("Centenario", "Montevideo", "Estadio historico", 60000);
+        var result = _service.GetAllStadiums();
+        Assert.AreEqual(2, result.Count);
+    }*/
 }
