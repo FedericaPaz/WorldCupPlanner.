@@ -29,4 +29,29 @@ public class TeamServiceTests
         teamService.Create("Uruguay", confedaration, 1000);
         Assert.ThrowsException<ArgumentException>(() => teamService.Create("Uruguay", confedaration, 1000));
     }
+    
+    [TestMethod]
+    public void CreateTeam_WhenUEFALimitExceeded_ShouldThrowException()
+    {
+        var teamRepository = new TeamRepository();
+        var teamService = new TeamService(teamRepository);
+        var confederation = new Confederation("UEFA");
+        
+        for (int i = 0; i < 16; i++)
+        {
+            teamService.Create($"Team{i}", confederation, 1000 + i);
+        }
+        
+        Assert.ThrowsException<Exception>(() => teamService.Create("ExtraTeam", confederation, 2000));
+    }
+    
+    [TestMethod]
+    public void CreateTeam_WhenOFCLimitExceeded_ShouldThrowException()
+    {
+        var teamRepository = new TeamRepository();
+        var teamService = new TeamService(teamRepository);
+        var confederation = new Confederation("OFC");
+        teamService.Create("Team1", confederation, 1000);
+        Assert.ThrowsException<Exception>(() => teamService.Create("ExtraTeam", confederation, 2000));
+    }
 }
