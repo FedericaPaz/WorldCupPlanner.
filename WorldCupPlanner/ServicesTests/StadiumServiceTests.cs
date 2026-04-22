@@ -30,4 +30,10 @@ public class StadiumServiceTests
         Assert.ThrowsException<InvalidOperationException>(() =>
             _service.AddStadium("Campeon del Siglo", "OtraCiudad", "OtraDescripcion", 40600));
     }
+    
+    [TestMethod]
+    public void AddStadium_WithNullStadium_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => _service.AddStadium(null, "Montevideo", "Estadio de Peniarol", 40600));
+    }
 }
