@@ -22,4 +22,12 @@ public class StadiumServiceTests
     {
         _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
     }
+
+    [TestMethod]
+    public void AddStadium_WithDuplicateName_ShouldThrowException()
+    {
+        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            _service.AddStadium("Campeon del Siglo", "OtraCiudad", "OtraDescripcion", 40600));
+    }
 }

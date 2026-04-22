@@ -14,6 +14,10 @@ public class StadiumService
 
     public void AddStadium(string stadiumName, string stadiumCity, string? stadiumDescription, int locativeCapacity)
     {
+        var existingStadium = _stadiumRepository.GetStadium(stadiumName);
+        if (existingStadium != null)
+            throw new InvalidOperationException("Stadium already exists");
+        
         var newStadium = new Stadium(stadiumName, stadiumCity, stadiumDescription, locativeCapacity);
         _stadiumRepository.AddStadium(newStadium);
     }
