@@ -14,7 +14,7 @@ public class StadiumRepository : IStadiumRepository
 
     public Stadium? GetStadium(string nameStadium)
     {
-        return _stadiums.FirstOrDefault(s => s._name == nameStadium);
+        return _stadiums.FirstOrDefault(s => s.StadiumName == nameStadium);
     }
     
     public void DeleteStadium(Stadium? stadium)
