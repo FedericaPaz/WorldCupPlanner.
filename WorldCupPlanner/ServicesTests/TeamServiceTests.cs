@@ -18,4 +18,15 @@ public class TeamServiceTests
         var result = teamRepository.Get("Uruguay");
         Assert.IsNotNull(result);
     }
+    
+    [TestMethod]
+    public void CreateTeam_WithDuplicateName_ShouldThrowException()
+    {
+        var teamRepository = new TeamRepository();
+        var teamService = new TeamService(teamRepository);
+        var confedaration = new Confederation("UEFA");
+        
+        teamService.Create("Uruguay", confedaration, 1000);
+        Assert.ThrowsException<ArgumentException>(() => teamService.Create("Uruguay", confedaration, 1000));
+    }
 }

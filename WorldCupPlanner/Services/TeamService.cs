@@ -15,7 +15,15 @@ public class TeamService : ITeamService
 
     public void Create(string name, Confederation confederation, int fifaRanking)
     {
+        var team1 = _repository.Get(name);
+        if(team1 != null)
+        {
+            throw new ArgumentException($"A team with the name '{name}' already exists.");
+        }
+        
         var team = new Team(name, confederation, fifaRanking);
         _repository.Add(team);
     }
+    
+    
 }
