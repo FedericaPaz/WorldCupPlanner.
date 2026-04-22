@@ -9,43 +9,17 @@ public class StadiumRepository : IStadiumRepository
 
     public void AddStadium(Stadium? stadium)
     {
-        if(stadium is null)
-            throw new ArgumentNullException(nameof(stadium));
         _stadiums.Add(stadium);
     }
 
-    public Stadium? GetStadium(Stadium? stadium)
+    public Stadium? GetStadium(string nameStadium)
     {
-        if (stadium is null)
-            throw new ArgumentNullException(nameof(stadium));
-        return _stadiums.FirstOrDefault(s => s._name == stadium._name);
+        return _stadiums.FirstOrDefault(s => s._name == nameStadium);
     }
-
-    public void UpdateStadium(Stadium? stadium)
-    {
-        if (stadium is null)
-            throw new ArgumentNullException(nameof(stadium));
-
-        var existingStadium = _stadiums.FirstOrDefault(s => s._name == stadium._name);
-
-        if (existingStadium is null)
-            throw new InvalidOperationException($"Stadium {stadium._name} not found");
-
-        _stadiums.Remove(existingStadium);
-        _stadiums.Add(stadium);
-    }
-
+    
     public void DeleteStadium(Stadium? stadium)
     {
-        if (stadium is null)
-            throw new ArgumentNullException(nameof(stadium));
-
-        var existingStadium = _stadiums.FirstOrDefault(s => s._name == stadium._name);
-
-        if (existingStadium is null)
-            throw new InvalidOperationException($"Stadium {stadium._name} not found");
-
-        _stadiums.Remove(existingStadium);
+        _stadiums.Remove(stadium);
     }
 
     public List<Stadium> GetAllStadiums()

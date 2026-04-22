@@ -23,29 +23,29 @@ public class StadiumRepositoryTests
         _stadiumRepository.AddStadium(_stadium);
     }
     
-    [TestMethod]
-    public void GivenNullStadium_AddStadium_ShouldThrowException()
-    {
-        Assert.ThrowsException<ArgumentNullException>(() => _stadiumRepository.AddStadium(null));
-    }
-    
     // Tests para GET
-
     [TestMethod]
     public void Get_ExistingStadium_ShouldReturnStadium()
     {
         _stadiumRepository.AddStadium(_stadium);
-        var result = _stadiumRepository.GetStadium(_stadium);
+        var result = _stadiumRepository.GetStadium("Campeon del Siglo");
         Assert.IsNotNull(result);
     }
     
     [TestMethod]
-    public void GetNullStadium_NullStadium_ShouldThrowArgumentNullException()
+    public void Get_NonExistingStadium_ShouldReturnNull()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => _stadiumRepository.GetStadium(null));
+        var result = _stadiumRepository.GetStadium("Centenario");
+        Assert.IsNull(result);
     }
     
     // Tests GET ALL
+    [TestMethod]
+    public void GetAll_EmptyRepository_ShouldReturnEmptyList()
+    {
+        var result = _stadiumRepository.GetAllStadiums();
+        Assert.AreEqual(0, result.Count);
+    }
     
     [TestMethod]
     public void GivenMultipleStadiums_GetAllStadiums_ShouldReturnStadiums()
@@ -57,59 +57,13 @@ public class StadiumRepositoryTests
         Assert.AreEqual(2, result.Count);
     }
     
-    [TestMethod]
-    public void GetAll_EmptyRepository_ShouldReturnEmptyList()
-    {
-        var result = _stadiumRepository.GetAllStadiums();
-        Assert.AreEqual(0, result.Count);
-    }
-    
-    // Test UPDATE
-    
-    [TestMethod]
-    public void GivenExistingStadium_UpdateStadium_ShouldUpdateStadium()
-    {
-        _stadiumRepository.AddStadium(_stadium);
-        var updatedStadium = new Stadium("Campeon del Siglo", "OtraCiudad", "OtraDesc", 40600);
-        _stadiumRepository.UpdateStadium(updatedStadium);
-        var result = _stadiumRepository.GetStadium(updatedStadium);
-        Assert.AreEqual("OtraDesc", result?._description);
-    }
-    
-    [TestMethod]
-    public void GivenNonExistingStadium_UpdateStadium_ShouldThrowException()
-    {
-        var stadium = new Stadium("Campeon del Siglo", "OtraCiudad", "OtraDesc", 40600);
-        Assert.ThrowsException<InvalidOperationException>(() => _stadiumRepository.UpdateStadium(stadium));
-    }
-
-    [TestMethod]
-    public void GivenNullStadium_UpdateStadium_ShouldThrowException()
-    {
-        Assert.ThrowsException<ArgumentNullException>(() => _stadiumRepository.UpdateStadium(null));
-    }
-    
     // Tests DELETE 
-    
     [TestMethod]
     public void GivenExistingStadium_DeleteStadium_ShouldDeleteStadium()
     {
         _stadiumRepository.AddStadium(_stadium);
         _stadiumRepository.DeleteStadium(_stadium);
-        var result = _stadiumRepository.GetStadium(_stadium);
+        var result = _stadiumRepository.GetStadium("Campeon del Siglo");
         Assert.IsNull(result);
-    }
-    
-    [TestMethod]
-    public void GivenNonExistingStadium_DeleteStadium_ShouldThrowException()
-    {
-        var stadium = new Stadium("Campeon del Siglo", "Montevideo", "Desc", 40000);
-        Assert.ThrowsException<InvalidOperationException>(() => _stadiumRepository.DeleteStadium(stadium));
-    }
-
-    [TestMethod]
-    public void GivenNullStadium_DeleteStadium_ShouldThrowException()
-    {
-        Assert.ThrowsException<ArgumentNullException>(() => _stadiumRepository.DeleteStadium(null));
     }
 }
