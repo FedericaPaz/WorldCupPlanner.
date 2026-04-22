@@ -7,47 +7,16 @@ public class StadiumService
 {
     private readonly IStadiumRepository _stadiumRepository;
 
-    public StadiumService(IStadiumRepository stadiumRepository)
+    public StadiumService(IStadiumRepository repository)
     {
-        _stadiumRepository = stadiumRepository;
+        _stadiumRepository = repository;
     }
 
-    public void AddStadium(string name, string city, string? description, int locativeCapacity)
+    public void CreateStadium(string stadiumName, string stadiumCity, string? stadiumDescription, int locativeCapacity)
     {
-        bool nameAlreadyExists = _stadiumRepository
-            .GetAllStadiums()
-            .Any(s => s._name == name);
-        if (nameAlreadyExists)
-            throw new ArgumentException($"Stadium with name {name} already exists");
-        
-        var stadium= new Stadium(name, city, description, locativeCapacity);
-        _stadiumRepository.AddStadium(stadium);
+        var newStadium = new Stadium(stadiumName, stadiumCity, stadiumDescription, locativeCapacity);
+        _stadiumRepository.AddStadium(newStadium);
     }
 
-    public void DeleteStadium(Stadium stadium)
-    {
-        _stadiumRepository.DeleteStadium(stadium);
-    }
-
-    public void UpdateStadium(Stadium stadium)
-    {
-        bool stadiumAlreadyExists = _stadiumRepository
-            .GetAllStadiums()
-            .Any(s => s._name == stadium._name);
-        if (stadiumAlreadyExists)
-            throw new ArgumentException($"Stadium with name {stadium._name} already exists");
-        _stadiumRepository.UpdateStadium(stadium);
-    }
-
-    public List<Stadium> GetAllStadiums()
-    {
-        return _stadiumRepository.GetAllStadiums();
-    }
-
-    public Stadium? GetStadium(Stadium stadium)
-    {
-        return _stadiumRepository.GetStadium(stadium);
-    }
-    
 
 }

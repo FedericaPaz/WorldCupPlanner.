@@ -11,4 +11,8 @@
       <ProjectReference Include="..\IRepository\IRepository.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+    </ItemGroup>
+
 </Project>
