@@ -27,5 +27,14 @@ public class StadiumService
         _stadiumRepository.AddStadium(newStadium);
     }
 
+    public void DeleteStadium(string name)
+    {
+        var stadium = _stadiumRepository.GetStadium(name);
+        if (stadium == null)
+            throw new InvalidOperationException("Stadium not found");
+
+        _stadiumRepository.DeleteStadium(stadium);
+    }
+
 
 }

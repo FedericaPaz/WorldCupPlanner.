@@ -34,13 +34,28 @@ public class StadiumServiceTests
     [TestMethod]
     public void AddStadium_WithNullStadium_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => _service.AddStadium(null, "Montevideo", "Estadio de Peniarol", 40600));
+        Assert.ThrowsException<ArgumentNullException>(() => _service.AddStadium(null, "Montevideo", "Estadio de Peniarol", 40700));
     }
     
     [TestMethod]
     public void AddStadium_WithNullCity_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => _service.AddStadium("Campeon del Siglo", null, "Estadio de Peniarol", 40600));
+        Assert.ThrowsException<ArgumentNullException>(() => _service.AddStadium("Campeon del Siglo", null, "Estadio de Peniarol", 40700));
+    }
+
+    /*
+    [TestMethod]
+    public void AddStadium_WithCapacityBelowMinimum_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() =>  _service.AddStadium("Campoen del Siglo", "Montevideo", "Estadio de Peniarol", 19999));
+    }
+    */
+
+    [TestMethod]
+    public void DeleteStadium_WithExistingStadium_ShouldNotThrowException()
+    {
+        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        _service.DeleteStadium("Campeon del Siglo");
     }
     
     
