@@ -9,6 +9,18 @@ public class StadiumTests
     {
         var stadium = new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
         Assert.IsNotNull(stadium);
+        Assert.AreEqual("Campeon del Siglo", stadium.StadiumName);
+        Assert.AreEqual("Montevideo", stadium.CityName);
+        Assert.AreEqual("Estadio de Peniarol", stadium.StadiumDescription);
+        Assert.AreEqual(40700, stadium.LocativeCapacity);
+    }
+    
+    [TestMethod]
+    public void createStadium_WithoutDescription_ShouldSucceed()
+    {
+        var stadium = new Stadium("Campeon del Siglo", "Montevideo", "", 40700);
+        Assert.IsNotNull(stadium);
+        Assert.AreEqual("", stadium.StadiumDescription);
     }
 
     [TestMethod]
@@ -34,6 +46,12 @@ public class StadiumTests
     {
         Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", -1));
     }
+    
+    [TestMethod]
+    public void createStadium_WithCapacityLessThan20000_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 19999));
+    }
 
     [TestMethod]
     public void createStadium_WithTooLongName_ShouldThrowException()
@@ -54,11 +72,5 @@ public class StadiumTests
     {
         string description = new string('a', 401);
         Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", description, 40700));
-    }
-
-    [TestMethod]
-    public void createStadium_WithCapacityLessThan20000_ShouldThrowException()
-    {
-        Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 19999));
     }
 }

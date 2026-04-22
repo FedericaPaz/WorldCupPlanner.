@@ -38,7 +38,7 @@ public class Stadium
         set
         {
             EnsureValidDescription(value);
-            _stadiumDescription = value.Trim();
+            _stadiumDescription = value?.Trim();
         }
     }
 
@@ -54,10 +54,10 @@ public class Stadium
 
     public Stadium(string name, string cityName, string stadiumDescription, int locativeCapacity)
     {
-        _stadiumName = name;
-        _cityName = cityName;
-        _stadiumDescription = stadiumDescription;
-        _locativeCapacity = locativeCapacity;
+        StadiumName = name;
+        CityName = cityName;
+        StadiumDescription = stadiumDescription;
+        LocativeCapacity = locativeCapacity;
     }
     
     private void EnsureValidName(string name)
@@ -74,8 +74,8 @@ public class Stadium
 
     private void EnsureValidDescription(string description)
     {
-        if (string.IsNullOrWhiteSpace(description) || description.Length > MaxDescriptionLength)
-            throw new ArgumentException($"Description must be between 1 and {MaxDescriptionLength} characters.");
+        if (description is { Length: > MaxDescriptionLength })
+            throw new ArgumentException($"Description must be at most {MaxDescriptionLength} characters.");
     }
     
     private void EnsureValidCapacity(int capacity)
