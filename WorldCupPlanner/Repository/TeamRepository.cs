@@ -3,7 +3,7 @@ using Domain;
 
 namespace Repository;
 
-public class TeamRepository
+public class TeamRepository :  ITeamRepository
 {
     private readonly List<Team> _teams = new();
 
