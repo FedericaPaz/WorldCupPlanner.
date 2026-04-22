@@ -57,7 +57,30 @@ public class StadiumServiceTests
         _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
         _service.DeleteStadium("Campeon del Siglo");
     }
+
+    /*
+    [TestMethod]
+    public void DeleteStadium_WithNonExistingStadium_ShouldThrowException()
+    {
+        Assert.ThrowsException<InvalidOperationException>(() => _service.DeleteStadium("Campeon del Siglo"));
+    }*/
     
+    /*
+    [TestMethod]
+    public void DeleteStadium_WithExistingStadium_ShouldBeRemovedFromRepository()
+    {
+        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        _service.DeleteStadium("Campeon del Siglo");
+        var result = _repository.GetStadium("Campeon del Siglo");
+        Assert.IsNull(result);
+    }*/
+    
+    [TestMethod]
+    public void GetAllStadiums_WithNoStadiums_ShouldReturnEmptyList()
+    {
+        var result = _service.GetAllStadiums();
+        Assert.AreEqual(0, result.Count);
+    }
     
     
     

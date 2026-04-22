@@ -36,5 +36,8 @@ public class StadiumService
         _stadiumRepository.DeleteStadium(stadium);
     }
 
-
+    public List<Stadium> GetAllStadiums()
+    {
+        return _stadiumRepository.GetAllStadiums();
+    }
 }
