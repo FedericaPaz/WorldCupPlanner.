@@ -5,10 +5,28 @@ public class Team
     private const int MaxNameLength = 60;
     private const int MinRanking = 300;
     private const int MaxRanking = 2500;
+
+    private string _name;
+    private Confederation _confederation;
+    private int _fifaRanking;
     
-    public string Name { get; private set; }
-    public Confederation Confederation { get; private set; }
-    public int FifaRanking { get; private set; }
+    public string Name
+    {
+        get => _name;
+        private set => _name = value;
+    }
+
+    public Confederation Confederation
+    {
+        get => _confederation;
+        private set => _confederation = value;
+    }
+
+    public int FifaRanking
+    {
+        get => _fifaRanking;
+        private set => _fifaRanking = value;
+    }
     
     public Team(string name, Confederation confederation, int fifaRanking)
     {
@@ -16,9 +34,9 @@ public class Team
         ValidateConfederation(confederation);
         ValidateRanking(fifaRanking);
 
-        Name = name;
-        Confederation = confederation;
-        FifaRanking = fifaRanking;
+        _name = name;
+        _confederation = confederation;
+        _fifaRanking = fifaRanking;
     }
 
     private void ValidateName(string name)
