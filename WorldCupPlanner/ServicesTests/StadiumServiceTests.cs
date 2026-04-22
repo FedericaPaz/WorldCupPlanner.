@@ -18,8 +18,8 @@ public class StadiumServiceTests
     }
 
     [TestMethod]
-    public void CreateStadium_WithValidData_ShouldNotThrowException()
+    public void AddStadium_WithValidData_ShouldNotThrowException()
     {
-        _service.CreateStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
     }
 }

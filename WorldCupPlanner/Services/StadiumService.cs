@@ -12,7 +12,7 @@ public class StadiumService
         _stadiumRepository = repository;
     }
 
-    public void CreateStadium(string stadiumName, string stadiumCity, string? stadiumDescription, int locativeCapacity)
+    public void AddStadium(string stadiumName, string stadiumCity, string? stadiumDescription, int locativeCapacity)
     {
         var newStadium = new Stadium(stadiumName, stadiumCity, stadiumDescription, locativeCapacity);
         _stadiumRepository.AddStadium(newStadium);
