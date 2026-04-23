@@ -1,6 +1,6 @@
 namespace DomainTests.Stubs;
 
-public class StubDateMatch
+public class DateTimeMatchStub
 {
     
 }

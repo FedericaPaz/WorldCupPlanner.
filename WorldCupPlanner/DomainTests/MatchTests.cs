@@ -1,3 +1,5 @@
+using DomainTests.Fakes;
+
 namespace DomainTests;
 
 [TestClass]
