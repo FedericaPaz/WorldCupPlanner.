@@ -28,7 +28,9 @@ public class UserRepository : IUserRepository
 
     public void UpdateUser(User user)
     {
-        throw new NotImplementedException();
+        var existingUser = _users.FirstOrDefault(u => u.Email == user.Email);
+        _users.Remove(existingUser);
+        _users.Add(user);
     }
 
     public void DeleteUser(User user)

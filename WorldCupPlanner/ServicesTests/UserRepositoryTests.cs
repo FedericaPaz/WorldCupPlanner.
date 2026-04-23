@@ -97,4 +97,21 @@ public class UserRepositoryTests
 
         Assert.AreEqual(2, result.Count);
     }
+    
+    [TestMethod]
+    public void GivenExistingUser_UpdateUser_ShouldUpdateUser()
+    {
+        var userRepository = new UserRepository();
+        var originalUser = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+        userRepository.AddUser(originalUser);
+
+        var updatedUser = new User("Juan", "Gomez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+
+        userRepository.UpdateUser(updatedUser);
+
+        var result = userRepository.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Gomez", result.LastName);
+    }
 }
