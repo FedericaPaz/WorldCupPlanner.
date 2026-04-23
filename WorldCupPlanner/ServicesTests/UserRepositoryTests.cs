@@ -124,5 +124,11 @@ public class UserRepositoryTests
         Assert.ThrowsException<InvalidOperationException>(() => userRepository.UpdateUser(user));
     }
     
-    
+    [TestMethod]
+    public void GivenNullUser_UpdateUser_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+
+        Assert.ThrowsException<ArgumentNullException>(() => userRepository.UpdateUser(null));
+    }
 }
