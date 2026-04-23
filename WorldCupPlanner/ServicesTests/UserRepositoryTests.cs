@@ -35,4 +35,20 @@ public class UserRepositoryTests
 
         Assert.ThrowsException<ArgumentException>(() => userRepository.AddUser(user2));
     }
+    
+    [TestMethod]
+    public void Get_ExistingUser_ShouldReturnUser()
+    {
+        var userRepository = new UserRepository();
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+
+        userRepository.AddUser(user);
+
+        var result = userRepository.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Juan", result.FirstName);
+        Assert.AreEqual("Perez", result.LastName);
+        Assert.AreEqual("juan.perez@gmail.com", result.Email);
+    }
 }

@@ -23,7 +23,7 @@ public class UserRepository : IUserRepository
 
     public User? GetUser(string email)
     {
-        throw new NotImplementedException();
+        return _users.FirstOrDefault(user => user.Email == email);
     }
 
     public void UpdateUser(User user)
