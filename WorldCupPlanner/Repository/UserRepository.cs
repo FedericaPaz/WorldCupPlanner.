@@ -33,7 +33,7 @@ public class UserRepository : IUserRepository
 
     public void DeleteUser(User user)
     {
-        throw new NotImplementedException();
+        _users.Remove(user);
     }
 
     public List<User> GetAllUsers()

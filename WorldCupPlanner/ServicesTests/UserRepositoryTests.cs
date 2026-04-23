@@ -59,4 +59,18 @@ public class UserRepositoryTests
         var result = userRepository.GetUser("juan.perez@gmail.com");
         Assert.IsNull(result);
     }
+    
+    [TestMethod]
+    public void GivenExistingUser_DeleteUser_ShouldDeleteUser()
+    {
+        var userRepository = new UserRepository();
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+
+        userRepository.AddUser(user);
+        userRepository.DeleteUser(user);
+
+        var result = userRepository.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNull(result);
+    }
 }
