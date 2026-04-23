@@ -82,4 +82,19 @@ public class UserRepositoryTests
 
         Assert.ThrowsException<InvalidOperationException>(() => userRepository.DeleteUser(user));
     }
+    
+    [TestMethod]
+    public void GivenMultipleUsers_GetAllUsers_ShouldReturnUsers()
+    {
+        var userRepository = new UserRepository();
+        var user1 = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+        var user2 = new User("Pedro", "Gomez", "pedro.gomez@gmail.com", new DateTime(1999, 5, 10), "Password1!");
+
+        userRepository.AddUser(user1);
+        userRepository.AddUser(user2);
+
+        var result = userRepository.GetAllUsers();
+
+        Assert.AreEqual(2, result.Count);
+    }
 }
