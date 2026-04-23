@@ -73,4 +73,13 @@ public class UserRepositoryTests
 
         Assert.IsNull(result);
     }
+    
+    [TestMethod]
+    public void GivenNonExistingUser_DeleteUser_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+
+        Assert.ThrowsException<InvalidOperationException>(() => userRepository.DeleteUser(user));
+    }
 }

@@ -33,7 +33,16 @@ public class UserRepository : IUserRepository
 
     public void DeleteUser(User user)
     {
-        _users.Remove(user);
+        if (user is null)
+        {
+            throw new ArgumentNullException(nameof(user));
+        }
+        var existingUser = _users.FirstOrDefault(u => u.Email == user.Email);
+        if (existingUser is null)
+        {
+            throw new InvalidOperationException($"User with email {user.Email} not found");
+        }
+        _users.Remove(existingUser);
     }
 
     public List<User> GetAllUsers()
