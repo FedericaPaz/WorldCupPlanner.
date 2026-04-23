@@ -114,4 +114,15 @@ public class UserRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreEqual("Gomez", result.LastName);
     }
+    
+    [TestMethod]
+    public void GivenNonExistingUser_UpdateUser_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+
+        Assert.ThrowsException<InvalidOperationException>(() => userRepository.UpdateUser(user));
+    }
+    
+    
 }
