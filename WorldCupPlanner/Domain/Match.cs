@@ -42,6 +42,11 @@ public class Match
     public char Group
     {
         get => _group;
+        set
+        {
+            ValidateGroup(value);
+            _group = value;
+        }
     }
 
     public int? HomeGoals
@@ -67,5 +72,12 @@ public class Match
         _homeTeam = homeTeam;
         _awayTeam = awayTeam;
         _group = group;
+        ValidateGroup(group);
+    }
+    
+    private void ValidateGroup(char group)
+    {
+        char groupToUpper = char.ToUpper(group);
+        if (groupToUpper < 'A' || groupToUpper > 'L') throw new ArgumentException($"Group must be a letter between A and L. Value received: '{group}'.");
     }
 }

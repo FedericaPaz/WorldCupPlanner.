@@ -27,4 +27,14 @@ public class MatchTests
       Assert.IsNull(match.AwayGoals);
       Assert.IsNull(match.WinnerMatch);
    }
+
+   [TestMethod]
+   public void CreateMatch_WithInvalidGroup_ShouldThrowArgumentException()
+   {
+      var homeTeam = new TeamStub("Uruguay");
+      var awayTeam = new TeamStub("Argentina");
+      var stadium = new StadiumStub("Estadio Centenario");
+      var dateMatch = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
+      Assert.ThrowsException<ArgumentException>(() => new Match(dateMatch.Now, stadium, homeTeam, awayTeam, 'M'));
+   }
 }
