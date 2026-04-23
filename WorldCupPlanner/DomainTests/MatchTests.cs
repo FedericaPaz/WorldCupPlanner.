@@ -46,4 +46,13 @@ public class MatchTests
       var dateMatch = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
       Assert.ThrowsException<ArgumentException>(() => new Match(dateMatch.Now, stadium, homeTeam, homeTeam, 'A'));
    }
+
+   [TestMethod]
+   public void CreateMatch_WithNullStadium_ShouldThrowArgumentNullException()
+   {
+      var homeTeam = new TeamStub("Uruguay");
+      var awayTeam = new TeamStub("Argentina");
+      var dateMatch = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
+      Assert.ThrowsException<ArgumentNullException>(() => new Match(dateMatch.Now, null, homeTeam, awayTeam, 'A'));
+   }
 }
