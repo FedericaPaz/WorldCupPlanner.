@@ -80,6 +80,7 @@ public class Match
     
     private void ValidateGroup(char group)
     {
+        if (group == '\0')  throw new ArgumentNullException("Group must not be empty.");
         char groupToUpper = char.ToUpper(group);
         if (groupToUpper < 'A' || groupToUpper > 'L') throw new ArgumentException($"Group must be a letter between A and L. Value received: '{group}'.");
     }
