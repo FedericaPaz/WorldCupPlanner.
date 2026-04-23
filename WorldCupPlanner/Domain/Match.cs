@@ -87,6 +87,7 @@ public class Match
     private void ValidateTeams(ITeam homeTeam, ITeam awayTeam)
     {
         if (homeTeam == null) throw new ArgumentNullException(nameof(homeTeam), "Home team must not be null.");
+        if (awayTeam == null) throw new ArgumentNullException(nameof(awayTeam), "Away team must not be null.");
         if (homeTeam._teamName == awayTeam._teamName) throw new ArgumentException("Home team and away team must be different.");
     }
 
