@@ -73,11 +73,17 @@ public class Match
         _awayTeam = awayTeam;
         _group = group;
         ValidateGroup(group);
+        ValidateTeams(homeTeam, awayTeam);
     }
     
     private void ValidateGroup(char group)
     {
         char groupToUpper = char.ToUpper(group);
         if (groupToUpper < 'A' || groupToUpper > 'L') throw new ArgumentException($"Group must be a letter between A and L. Value received: '{group}'.");
+    }
+    
+    private void ValidateTeams(ITeam homeTeam, ITeam awayTeam)
+    {
+        if (homeTeam._teamName == awayTeam._teamName) throw new ArgumentException("Home team and away team must be different.");
     }
 }
