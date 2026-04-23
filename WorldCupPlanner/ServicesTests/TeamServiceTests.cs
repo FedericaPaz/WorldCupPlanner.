@@ -30,28 +30,56 @@ public class TeamServiceTests
         Assert.ThrowsException<ArgumentException>(() => teamService.Create("Uruguay", confedaration, 1000));
     }
     
-    [TestMethod]
-    public void CreateTeam_WhenUEFALimitExceeded_ShouldThrowException()
+    [DataTestMethod]
+    [DataRow("UEFA", 16)]
+    [DataRow("CONMEBOL", 7)]
+    [DataRow("CONCACAF", 7)]
+    [DataRow("CAF", 9)]
+    [DataRow("AFC", 8)]
+    [DataRow("OFC", 1)]
+    public void CreateTeam_WhenConfederationLimitExceeded_ShouldThrowException(
+        string confName, int limit)
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
-        var confederation = new Confederation("UEFA");
+        var confederation = new Confederation(confName);
         
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < limit; i++)
         {
             teamService.Create($"Team{i}", confederation, 1000 + i);
         }
-        
         Assert.ThrowsException<Exception>(() => teamService.Create("ExtraTeam", confederation, 2000));
     }
     
-    [TestMethod]
-    public void CreateTeam_WhenOFCLimitExceeded_ShouldThrowException()
+    [DataTestMethod]
+    [DataRow("UEFA", 16)]
+    [DataRow("CONMEBOL", 7)]
+    [DataRow("CONCACAF", 7)]
+    [DataRow("CAF", 9)]
+    [DataRow("AFC", 8)]
+    [DataRow("OFC", 1)]
+    public void CreateTeam_AtConfederationLimit_ShouldSucceed(
+        string confName, int limit)
+    {
+        var repo = new TeamRepository();
+        var service = new TeamService(repo);
+        var conf = new Confederation(confName);
+
+        for (int i = 0; i < limit; i++)
+        {
+            service.Create($"Team{i}", conf, 1000 + i);
+        }
+
+        var teams = repo.GetAll().Where(t => t.Confederation.Name == confName).Count();
+        Assert.AreEqual(limit, teams);
+    }
+
+    /*[TestMethod]
+    public void AddTeam_WithNullConfederation_ShouldThrowException()
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
-        var confederation = new Confederation("OFC");
-        teamService.Create("Team1", confederation, 1000);
-        Assert.ThrowsException<Exception>(() => teamService.Create("ExtraTeam", confederation, 2000));
-    }
+        var confederation = new Confederation(null);
+        Assert.ThrowsException<ArgumentNullException>(() => teamService.Create("Uruguay", confederation, 1000));
+    }*/
 }

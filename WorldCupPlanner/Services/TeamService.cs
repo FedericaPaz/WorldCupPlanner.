@@ -15,6 +15,9 @@ public class TeamService : ITeamService
 
     public void Create(string name, Confederation confederation, int fifaRanking)
     {
+        if (confederation is null)
+            throw new ArgumentNullException(nameof(confederation));
+            
         var team1 = _repository.Get(name);
         if(team1 != null)
         {
