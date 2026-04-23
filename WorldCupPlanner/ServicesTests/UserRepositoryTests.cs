@@ -15,4 +15,12 @@ public class UserRepositoryTests
 
         userRepository.AddUser(user);
     }
+    
+    [TestMethod]
+    public void GivenNullUser_AddUser_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+
+        Assert.ThrowsException<ArgumentNullException>(() => userRepository.AddUser(null));
+    }
 }

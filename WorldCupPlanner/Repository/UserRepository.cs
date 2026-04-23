@@ -9,6 +9,11 @@ public class UserRepository : IUserRepository
 
     public void AddUser(User user)
     {
+        if (user is null)
+        {
+            throw new ArgumentNullException(nameof(user));
+        }
+
         _users.Add(user);
     }
 
