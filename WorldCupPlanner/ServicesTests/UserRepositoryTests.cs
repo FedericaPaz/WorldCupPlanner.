@@ -23,4 +23,16 @@ public class UserRepositoryTests
 
         Assert.ThrowsException<ArgumentNullException>(() => userRepository.AddUser(null));
     }
+    
+    [TestMethod]
+    public void GivenExistingUser_AddDuplicate_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var user1 = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+        var user2 = new User("Pedro", "Gomez", "juan.perez@gmail.com", new DateTime(1999, 5, 10), "Password1!");
+
+        userRepository.AddUser(user1);
+
+        Assert.ThrowsException<ArgumentException>(() => userRepository.AddUser(user2));
+    }
 }

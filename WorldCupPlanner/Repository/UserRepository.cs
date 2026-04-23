@@ -14,6 +14,10 @@ public class UserRepository : IUserRepository
             throw new ArgumentNullException(nameof(user));
         }
 
+        if (_users.Any(u => u.Email == user.Email))
+        {
+            throw new ArgumentException($"User with email {user.Email} already exists");
+        }
         _users.Add(user);
     }
 
