@@ -51,4 +51,12 @@ public class UserRepositoryTests
         Assert.AreEqual("Perez", result.LastName);
         Assert.AreEqual("juan.perez@gmail.com", result.Email);
     }
+    
+    [TestMethod]
+    public void Get_NonExistingUser_ShouldReturnNull()
+    {
+        var userRepository = new UserRepository();
+        var result = userRepository.GetUser("juan.perez@gmail.com");
+        Assert.IsNull(result);
+    }
 }
