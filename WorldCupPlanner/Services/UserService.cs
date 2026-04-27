@@ -22,4 +22,9 @@ public class UserService
     {
         return _userRepository.GetAllUsers();
     }
+
+    public User? GetUser(string email)
+    {
+        return _userRepository.GetUser(email);
+    }
 }

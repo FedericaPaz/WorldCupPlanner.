@@ -24,6 +24,7 @@ public class UserServiceTests
 
         Assert.AreEqual(1, users.Count);
     }
+
     [TestMethod]
     public void CreateUser_WithExistingEmail_ShouldThrowException()
     {
@@ -45,7 +46,7 @@ public class UserServiceTests
                 new DateTime(1999, 5, 10),
                 "Password1!"));
     }
-    
+
     [TestMethod]
     public void GetAllUsers_ShouldReturnCreatedUsers()
     {
@@ -69,5 +70,16 @@ public class UserServiceTests
         var result = userService.GetAllUsers();
 
         Assert.AreEqual(2, result.Count);
+    }
+    
+    [TestMethod]
+    public void GetUser_WithNonExistingEmail_ShouldReturnNull()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        var result = userService.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNull(result);
     }
 }
