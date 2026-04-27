@@ -25,11 +25,21 @@ public class UserService
 
     public User? GetUser(string email)
     {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new ArgumentException("Email cannot be empty.");
+        }
+
         return _userRepository.GetUser(email);
     }
     
     public void DeleteUser(string email)
     {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new ArgumentException("Email cannot be empty.");
+        }
+
         var user = _userRepository.GetUser(email);
 
         if (user is null)
