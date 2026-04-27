@@ -42,6 +42,13 @@ public class UserService
     
     public void UpdateUser(string firstName, string lastName, string email, DateTime birthDate, string password)
     {
+        var existingUser = _userRepository.GetUser(email);
+
+        if (existingUser is null)
+        {
+            throw new InvalidOperationException($"User with email {email} not found");
+        }
+
         var user = new User(firstName, lastName, email, birthDate, password);
         _userRepository.UpdateUser(user);
     }

@@ -138,4 +138,19 @@ public class UserServiceTests
         Assert.IsNotNull(result);
         Assert.AreEqual("Gomez", result.LastName);
     }
+    
+    [TestMethod]
+    public void UpdateUser_WithNonExistingEmail_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            userService.UpdateUser(
+                "Juan",
+                "Perez",
+                "juan.perez@gmail.com",
+                new DateTime(2000, 1, 1),
+                "Password1!"));
+    }
 }
