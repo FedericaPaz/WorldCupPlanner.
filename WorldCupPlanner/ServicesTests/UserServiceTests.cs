@@ -45,4 +45,29 @@ public class UserServiceTests
                 new DateTime(1999, 5, 10),
                 "Password1!"));
     }
+    
+    [TestMethod]
+    public void GetAllUsers_ShouldReturnCreatedUsers()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        userService.CreateUser(
+            "Juan",
+            "Perez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!");
+
+        userService.CreateUser(
+            "Pedro",
+            "Gomez",
+            "pedro.gomez@gmail.com",
+            new DateTime(1999, 5, 10),
+            "Password1!");
+
+        var result = userService.GetAllUsers();
+
+        Assert.AreEqual(2, result.Count);
+    }
 }
