@@ -102,4 +102,14 @@ public class UserServiceTests
 
         Assert.IsNull(result);
     }
+    
+    [TestMethod]
+    public void DeleteUser_WithNonExistingEmail_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            userService.DeleteUser("juan.perez@gmail.com"));
+    }
 }

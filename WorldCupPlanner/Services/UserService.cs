@@ -31,6 +31,12 @@ public class UserService
     public void DeleteUser(string email)
     {
         var user = _userRepository.GetUser(email);
+
+        if (user is null)
+        {
+            throw new InvalidOperationException($"User with email {email} not found");
+        }
+
         _userRepository.DeleteUser(user);
     }
 }
