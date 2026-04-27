@@ -39,4 +39,10 @@ public class UserService
 
         _userRepository.DeleteUser(user);
     }
+    
+    public void UpdateUser(string firstName, string lastName, string email, DateTime birthDate, string password)
+    {
+        var user = new User(firstName, lastName, email, birthDate, password);
+        _userRepository.UpdateUser(user);
+    }
 }

@@ -112,4 +112,30 @@ public class UserServiceTests
         Assert.ThrowsException<InvalidOperationException>(() =>
             userService.DeleteUser("juan.perez@gmail.com"));
     }
+    
+    [TestMethod]
+    public void UpdateUser_WithExistingEmail_ShouldUpdateUser()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        userService.CreateUser(
+            "Juan",
+            "Perez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!");
+
+        userService.UpdateUser(
+            "Juan",
+            "Gomez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!");
+
+        var result = userService.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Gomez", result.LastName);
+    }
 }
