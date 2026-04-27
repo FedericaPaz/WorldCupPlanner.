@@ -27,4 +27,10 @@ public class UserService
     {
         return _userRepository.GetUser(email);
     }
+    
+    public void DeleteUser(string email)
+    {
+        var user = _userRepository.GetUser(email);
+        _userRepository.DeleteUser(user);
+    }
 }

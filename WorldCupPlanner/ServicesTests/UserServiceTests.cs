@@ -82,4 +82,24 @@ public class UserServiceTests
 
         Assert.IsNull(result);
     }
+    
+    [TestMethod]
+    public void DeleteUser_WithExistingEmail_ShouldDeleteUser()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        userService.CreateUser(
+            "Juan",
+            "Perez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!");
+
+        userService.DeleteUser("juan.perez@gmail.com");
+
+        var result = userService.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNull(result);
+    }
 }
