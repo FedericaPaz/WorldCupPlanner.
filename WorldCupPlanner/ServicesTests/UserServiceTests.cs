@@ -24,4 +24,25 @@ public class UserServiceTests
 
         Assert.AreEqual(1, users.Count);
     }
+    [TestMethod]
+    public void CreateUser_WithExistingEmail_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        userService.CreateUser(
+            "Juan",
+            "Perez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!");
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            userService.CreateUser(
+                "Pedro",
+                "Gomez",
+                "juan.perez@gmail.com",
+                new DateTime(1999, 5, 10),
+                "Password1!"));
+    }
 }
