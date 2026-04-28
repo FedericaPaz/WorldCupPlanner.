@@ -1,8 +1,12 @@
 ﻿using Domain;
+using DTOs;
 
 namespace Services;
 
 public interface ITeamService
 {
-    public void Add(string name, Confederation confederation, int fifaRanking);
+    void Add(TeamDTOs.CreateTeamDTO request);
+    TeamDTOs.TeamResponseDTO? Get(string name);
+    List<TeamDTOs.TeamResponseDTO> GetAll();
+    void Delete(string name);
 }
