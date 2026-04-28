@@ -106,10 +106,10 @@ public class TeamServiceTests
         var request = CreateRequest("Uruguay", "UEFA", 1000);
         teamService.Add(request);
         
-        var result = teamService.Get("Brazil");
+        var result = teamService.Get("Uruguay");
         Assert.IsNotNull(result);
-        Assert.AreEqual("Brazil", result.Name);
-        Assert.AreEqual("UEFA", result.Confederation.Name);
+        Assert.AreEqual("Uruguay", result.Name);
+        Assert.AreEqual("UEFA", result.ConfederationName);
         Assert.AreEqual(1000, result.FifaRanking);
     }
     

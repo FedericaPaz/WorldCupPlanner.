@@ -23,7 +23,7 @@ public class TeamService : ITeamService
         
         var existingTeam = _repository.Get(request.Name);
         if(existingTeam != null)
-            throw new InvalidOperationException($"Team with the name '{request.Name}' already exists.");
+            throw new ArgumentException($"Team with the name '{request.Name}' already exists.");
         
         var confederation = new Confederation(request.ConfederationName);
         
