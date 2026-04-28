@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryTests", "Reposito
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOs", "DTOs\DTOs.csproj", "{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IServices", "IServices\IServices.csproj", "{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -122,6 +124,18 @@ Global
 		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Release|x64.Build.0 = Release|Any CPU
 		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Release|x86.ActiveCfg = Release|Any CPU
 		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Release|x86.Build.0 = Release|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Debug|x64.Build.0 = Debug|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Debug|x86.Build.0 = Debug|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Release|x64.ActiveCfg = Release|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Release|x64.Build.0 = Release|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Release|x86.ActiveCfg = Release|Any CPU
+		{A241BD6F-DB82-451E-B6B0-4D2CEF7FD2A7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,4 @@
-﻿using Domain;
-using DTOs;
+﻿using DTOs;
 using Repository;
 using Services;
 
@@ -78,7 +77,6 @@ public class TeamServiceTests
     {
         var repo = new TeamRepository();
         var service = new TeamService(repo);
-        var conf = new Confederation(confName);
 
         for (int i = 0; i < limit; i++)
         {
