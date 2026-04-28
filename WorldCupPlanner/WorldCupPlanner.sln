@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicesTests", "ServicesTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryTests", "RepositoryTests\RepositoryTests.csproj", "{18311716-650C-460C-8ED6-FB53A4EAEAB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTOs", "DTOs\DTOs.csproj", "{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +110,18 @@ Global
 		{18311716-650C-460C-8ED6-FB53A4EAEAB5}.Release|x64.Build.0 = Release|Any CPU
 		{18311716-650C-460C-8ED6-FB53A4EAEAB5}.Release|x86.ActiveCfg = Release|Any CPU
 		{18311716-650C-460C-8ED6-FB53A4EAEAB5}.Release|x86.Build.0 = Release|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Debug|x64.Build.0 = Debug|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Debug|x86.Build.0 = Debug|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Release|x64.ActiveCfg = Release|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Release|x64.Build.0 = Release|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Release|x86.ActiveCfg = Release|Any CPU
+		{6A36D2E8-50DD-435A-A398-5F8CC8C7500A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
