@@ -12,7 +12,7 @@ public class TeamService : ITeamService
         _repository = repository;
     }
 
-    public void Create(string name, Confederation confederation, int fifaRanking)
+    public void Add(string name, Confederation confederation, int fifaRanking)
     {
         if (confederation is null)
             throw new ArgumentNullException(nameof(confederation));

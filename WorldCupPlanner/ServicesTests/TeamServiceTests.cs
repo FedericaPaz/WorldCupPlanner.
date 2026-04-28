@@ -14,7 +14,7 @@ public class TeamServiceTests
         var teamService = new TeamService(teamRepository);
         var confedaration = new Confederation("UEFA");
         
-        teamService.Create("Uruguay", confedaration, 1000);
+        teamService.Add("Uruguay", confedaration, 1000);
         var result = teamRepository.Get("Uruguay");
         Assert.IsNotNull(result);
     }
@@ -26,8 +26,8 @@ public class TeamServiceTests
         var teamService = new TeamService(teamRepository);
         var confedaration = new Confederation("UEFA");
         
-        teamService.Create("Uruguay", confedaration, 1000);
-        Assert.ThrowsException<ArgumentException>(() => teamService.Create("Uruguay", confedaration, 1000));
+        teamService.Add("Uruguay", confedaration, 1000);
+        Assert.ThrowsException<ArgumentException>(() => teamService.Add("Uruguay", confedaration, 1000));
     }
     
     [DataTestMethod]
@@ -46,9 +46,9 @@ public class TeamServiceTests
         
         for (int i = 0; i < limit; i++)
         {
-            teamService.Create($"Team{i}", confederation, 1000 + i);
+            teamService.Add($"Team{i}", confederation, 1000 + i);
         }
-        Assert.ThrowsException<Exception>(() => teamService.Create("ExtraTeam", confederation, 2000));
+        Assert.ThrowsException<Exception>(() => teamService.Add("ExtraTeam", confederation, 2000));
     }
     
     [DataTestMethod]
@@ -67,7 +67,7 @@ public class TeamServiceTests
 
         for (int i = 0; i < limit; i++)
         {
-            service.Create($"Team{i}", conf, 1000 + i);
+            service.Add($"Team{i}", conf, 1000 + i);
         }
 
         var teams = repo.GetAll().Where(t => t.Confederation.Name == confName).Count();
