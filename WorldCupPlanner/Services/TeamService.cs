@@ -1,4 +1,5 @@
 ﻿using Domain;
+using DTOs;
 using IRepository;
 
 namespace Services;
@@ -12,22 +13,25 @@ public class TeamService : ITeamService
         _repository = repository;
     }
 
-    public void Add(string name, Confederation confederation, int fifaRanking)
+    public void Add(TeamDTOs.CreateTeamDTO request)
     {
-        if (confederation is null)
-            throw new ArgumentNullException(nameof(confederation));
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
             
-        var team1 = _repository.Get(name);
-        if(team1 != null)
-        {
-            throw new ArgumentException($"A team with the name '{name}' already exists.");
-        }
+        if(string.IsNullOrEmpty(request.ConfederationName))
+            throw new ArgumentNullException(nameof(request.ConfederationName));
+        
+        var existingTeam = _repository.Get(request.Name);
+        if(existingTeam != null)
+            throw new InvalidOperationException($"Team with the name '{request.Name}' already exists.");
+        
+        var confederation = new Confederation(request.ConfederationName);
         
         var count = _repository.GetAll().Count(t => t.Confederation.Name == confederation.Name);
         if (count >= GetLimit(confederation.Name))
             throw new Exception($"The confederation '{confederation.Name}' has reached its team limit.");
         
-        var team = new Team(name, confederation, fifaRanking);
+        var team = new Team(request.Name, confederation, request.FifaRanking);
         _repository.Add(team);
     }
 
@@ -45,14 +49,15 @@ public class TeamService : ITeamService
         };
     }
     
-    public Team? Get(string name)
+    public TeamDTOs.TeamResponseDTO? Get(string name)
     {
-        return _repository.Get(name);
+        var team = _repository.Get(name);
+        return team == null ? null : TeamDTOs.TeamResponseDTO.FromEntity(team);
     }
 
-    public List<Team> GetAll()
+    public List<TeamDTOs.TeamResponseDTO> GetAll()
     {
-        return _repository.GetAll();
+        return _repository.GetAll().Select(TeamDTOs.TeamResponseDTO.FromEntity).ToList();
     }
     
     /*public void Update(Team team)
@@ -63,11 +68,9 @@ public class TeamService : ITeamService
     public void Delete(string name)
     {
         var team = _repository.Get(name);
-        if(team is null)
+        if (team is null)
             throw new InvalidOperationException($"Team with the name '{name}' does not exist.");
             
         _repository.Delete(team);
     }
-    
-    
 }
