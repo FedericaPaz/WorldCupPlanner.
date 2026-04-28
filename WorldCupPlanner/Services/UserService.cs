@@ -1,5 +1,6 @@
 ﻿using Domain;
 using IRepository;
+using DTOs.User;
 
 namespace Services;
 
@@ -18,6 +19,17 @@ public class UserService
         _userRepository.AddUser(user);
     }
 
+    public void CreateUser(UserCreateDto userDto)
+    {
+        CreateUser(
+            userDto.FirstName,
+            userDto.LastName,
+            userDto.Email,
+            userDto.BirthDate,
+            userDto.Password
+        );
+    }
+    
     public List<User> GetAllUsers()
     {
         return _userRepository.GetAllUsers();
@@ -62,4 +74,5 @@ public class UserService
         }
         return user;
     }
+    
 }

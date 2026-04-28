@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Repository;
 using Services;
+using DTOs.User;
 
 namespace ServicesTests;
 
@@ -206,5 +207,30 @@ public class UserServiceTests
         Assert.AreEqual("Juan", result.FirstName);
         Assert.AreEqual("Perez", result.LastName);
         Assert.AreEqual("juan.perez@gmail.com", result.Email);
+    }
+    
+    [TestMethod]
+    public void CreateUser_WithValidDto_ShouldCreateUser()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        var userDto = new UserCreateDto
+        {
+            FirstName = "Juan",
+            LastName = "Perez",
+            Email = "juan.perez@gmail.com",
+            BirthDate = new DateTime(2000, 1, 1),
+            Password = "Password1!"
+        };
+
+        userService.CreateUser(userDto);
+
+        var createdUser = userService.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNotNull(createdUser);
+        Assert.AreEqual("Juan", createdUser.FirstName);
+        Assert.AreEqual("Perez", createdUser.LastName);
+        Assert.AreEqual("juan.perez@gmail.com", createdUser.Email);
     }
 }
