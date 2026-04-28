@@ -187,4 +187,24 @@ public class UserServiceTests
         Assert.ThrowsException<ArgumentException>(() => userService.DeleteUser(""));
     }
     
+    [TestMethod]
+    public void GetUser_WithExistingEmail_ShouldReturnUser()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        userService.CreateUser(
+            "Juan",
+            "Perez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!");
+
+        var result = userService.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Juan", result.FirstName);
+        Assert.AreEqual("Perez", result.LastName);
+        Assert.AreEqual("juan.perez@gmail.com", result.Email);
+    }
 }
