@@ -8,7 +8,7 @@ namespace DomainTests;
 [TestClass]
 public class TeamTests
 {
-    private Confederation _defaultConfederation;
+    private Confederation _defaultConfederation = null!;
     private const int MinFifaRanking = 300;
     private const int MaxFifaRanking = 2500;
     private const int MaxNameLength = 60;
@@ -63,7 +63,7 @@ public class TeamTests
     [TestMethod]
     public void CreateTeam_WithNullConfederation_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => new Team("Uruguay", null, MinFifaRanking+1));
+        Assert.ThrowsException<ArgumentNullException>(() => new Team("Uruguay", null!, MinFifaRanking+1));
     }
 
     [TestMethod]
