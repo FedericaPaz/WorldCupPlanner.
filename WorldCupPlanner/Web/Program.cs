@@ -1,10 +1,17 @@
 using Web.Components;
+using IRepository;
+using IServices;
+using Repository;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddSingleton<ITeamRepository, TeamRepository>();
+builder.Services.AddSingleton<ITeamService, TeamService>();
 
 var app = builder.Build();
 
