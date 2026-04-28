@@ -233,4 +233,21 @@ public class UserServiceTests
         Assert.AreEqual("Perez", createdUser.LastName);
         Assert.AreEqual("juan.perez@gmail.com", createdUser.Email);
     }
+    
+    [TestMethod]
+    public void GetUserDto_WithExistingUser_ShouldReturnUserResponseDto()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        userService.CreateUser("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+
+        var result = userService.GetUserDto("juan.perez@gmail.com");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Juan", result.FirstName);
+        Assert.AreEqual("Perez", result.LastName);
+        Assert.AreEqual("juan.perez@gmail.com", result.Email);
+        Assert.AreEqual(new DateTime(2000, 1, 1), result.BirthDate);
+    }
 }

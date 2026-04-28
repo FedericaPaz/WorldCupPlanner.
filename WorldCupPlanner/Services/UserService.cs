@@ -41,6 +41,24 @@ public class UserService
         return _userRepository.GetUser(email);
     }
     
+    public UserResponseDto? GetUserDto(string email)
+    {
+        var user = GetUser(email);
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        return new UserResponseDto
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            BirthDate = user.BirthDate
+        };
+    }
+    
     public void DeleteUser(string email)
     {
         ValidateEmailNotEmpty(email);
