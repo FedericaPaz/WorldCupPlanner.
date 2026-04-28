@@ -25,46 +25,41 @@ public class UserService
 
     public User? GetUser(string email)
     {
-        if (string.IsNullOrWhiteSpace(email))
-        {
-            throw new ArgumentException("Email cannot be empty.");
-        }
-
+        ValidateEmailNotEmpty(email);
         return _userRepository.GetUser(email);
     }
     
     public void DeleteUser(string email)
     {
-        if (string.IsNullOrWhiteSpace(email))
-        {
-            throw new ArgumentException("Email cannot be empty.");
-        }
-
-        var user = _userRepository.GetUser(email);
-
-        if (user is null)
-        {
-            throw new InvalidOperationException($"User with email {email} not found");
-        }
-
+        ValidateEmailNotEmpty(email);
+        var user = GetExistingUserOrThrow(email);
         _userRepository.DeleteUser(user);
     }
     
     public void UpdateUser(string firstName, string lastName, string email, DateTime birthDate, string password)
     {
+        ValidateEmailNotEmpty(email);
+        var existingUser = GetExistingUserOrThrow(email);
+
+        var user = new User(firstName, lastName, email, birthDate, password);
+        _userRepository.UpdateUser(user);
+    }
+
+    private void ValidateEmailNotEmpty(string email)
+    {
         if (string.IsNullOrWhiteSpace(email))
         {
             throw new ArgumentException("Email cannot be empty.");
         }
+    }
 
-        var existingUser = _userRepository.GetUser(email);
-
-        if (existingUser is null)
+    private User GetExistingUserOrThrow(string email)
+    {
+        var user = _userRepository.GetUser(email);
+        if (user is null)
         {
             throw new InvalidOperationException($"User with email {email} not found");
         }
-
-        var user = new User(firstName, lastName, email, birthDate, password);
-        _userRepository.UpdateUser(user);
+        return user;
     }
 }
