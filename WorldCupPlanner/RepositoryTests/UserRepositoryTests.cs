@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Repository;
 
-namespace ServicesTests;
+namespace RepositoryTests;
 
 [TestClass]
 public class UserRepositoryTests
