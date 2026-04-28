@@ -45,6 +45,10 @@ public class TeamService : ITeamService
         };
     }
     
+    public Team? Get(string name)
+    {
+        return _repository.Get(name);
+    }
     
     
     

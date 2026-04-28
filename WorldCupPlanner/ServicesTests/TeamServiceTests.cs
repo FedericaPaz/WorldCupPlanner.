@@ -82,4 +82,18 @@ public class TeamServiceTests
         var confederation = new Confederation(null);
         Assert.ThrowsException<ArgumentNullException>(() => teamService.Create("Uruguay", confederation, 1000));
     }*/
+    
+    [TestMethod]
+    public void Get_WhenTeamExists_ShouldReturnTeam()
+    {
+        var repository = new TeamRepository();
+        var service = new TeamService(repository);
+        var confederation = new Confederation("UEFA");
+        service.Add("Brazil", confederation, 850);
+        
+        var result = service.Get("Brazil");
+        
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Brazil", result.Name);
+    }
 }
