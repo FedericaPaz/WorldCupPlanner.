@@ -155,6 +155,21 @@ public class UserServiceTests
     }
     
     [TestMethod]
+    public void UpdateUser_WithEmptyEmail_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            userService.UpdateUser(
+                "Juan",
+                "Perez",
+                "",
+                new DateTime(2000, 1, 1),
+                "Password1!"));
+    }
+    
+    [TestMethod]
     public void GetUser_WithEmptyEmail_ShouldThrowException()
     {
         var userRepository = new UserRepository();

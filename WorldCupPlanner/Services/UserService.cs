@@ -52,6 +52,11 @@ public class UserService
     
     public void UpdateUser(string firstName, string lastName, string email, DateTime birthDate, string password)
     {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new ArgumentException("Email cannot be empty.");
+        }
+
         var existingUser = _userRepository.GetUser(email);
 
         if (existingUser is null)
