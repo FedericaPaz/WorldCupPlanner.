@@ -49,6 +49,11 @@ public class TeamService : ITeamService
     {
         return _repository.Get(name);
     }
+
+    public List<Team> GetAll()
+    {
+        return _repository.GetAll();
+    }
     
     
     

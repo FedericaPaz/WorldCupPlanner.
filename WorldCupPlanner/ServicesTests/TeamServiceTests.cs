@@ -86,14 +86,36 @@ public class TeamServiceTests
     [TestMethod]
     public void Get_WhenTeamExists_ShouldReturnTeam()
     {
-        var repository = new TeamRepository();
-        var service = new TeamService(repository);
+        var teamRepository = new TeamRepository();
+        var teamService = new TeamService(teamRepository);
         var confederation = new Confederation("UEFA");
-        service.Add("Brazil", confederation, 850);
+        teamService.Add("Brazil", confederation, 1000);
         
-        var result = service.Get("Brazil");
-        
+        var result = teamService.Get("Brazil");
         Assert.IsNotNull(result);
         Assert.AreEqual("Brazil", result.Name);
+    }
+    
+    /*[TestMethod]
+    public void Get_WhenTeamDoesNotExist_ShouldReturnNull()
+    {
+        var teamRepository = new TeamRepository();
+        var teamService = new TeamService(teamRepository);
+
+        var result = teamService.Get("Brazil");
+        Assert.IsNull(result);
+    }*/
+    
+    [TestMethod]
+    public void GetAll_ShouldReturnAllTeams()
+    {
+        var teamRepository = new TeamRepository();
+        var teamService = new TeamService(teamRepository);
+        var confederation = new Confederation("UEFA");
+        teamService.Add("Brazil", confederation, 850);
+        teamService.Add("Argentina", confederation, 750);
+
+        var results = teamService.GetAll();
+        Assert.AreEqual(2, results.Count);
     }
 }
