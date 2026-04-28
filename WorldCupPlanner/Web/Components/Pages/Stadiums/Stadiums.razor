@@ -1,7 +1,11 @@
 @page "/stadiums"
+@rendermode InteractiveServer
+@using System
 @using Domain
 @using Services
 @inject StadiumService Service
+@inject NavigationManager NavigationManager
+@inject Microsoft.JSInterop.IJSRuntime JSRuntime
 
 @if (_stadiums == null)
 {
@@ -9,38 +13,34 @@
 }
 else
 {
-    <div style="padding: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+    <div class="stadiums-container">
+        <div class="stadiums-header">
             <div>
-                <h3 style="margin: 0;">Gestión de Estadios</h3>
-                <p style="color: gray; font-size: 14px; margin: 0;">@_stadiums.Count() estadios registrados</p>
+                <h3 class="title">Gestión de Estadios</h3>
+                <p class="subtitle">@_stadiums.Count() estadios registrados</p>
             </div>
-            <a href="/stadiums/create" style="background: green; color: white; padding: 10px 20px; border-radius: 8px; font-size: 14px; text-decoration: none; display: inline-block;">
-                + Crear estadio
-            </a>
+            <button class="create-btn" @onclick="NavigateToCreate">+ Crear estadio</button>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div class="stadiums-grid">
             @foreach (var stadium in _stadiums)
             {
-                <div style="border: 1px solid #e0e0e0; border-radius: 12px; padding: 1rem; background: white;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div style="background: #e8f5e9; padding: 8px; border-radius: 8px;">📍</div>
-                        <div style="display: flex; gap: 8px;">
-                            <a href="/stadiums/edit/@stadium.StadiumName"
-                               style="background: none; border: none; cursor: pointer; color: gray; text-decoration: none;">✏️</a>
-                            <button @onclick="() => HandleDelete(stadium.StadiumName)" style="background: none; border: none; cursor: pointer; color: red;">🗑️</button>
+                <div class="stadium-card" @key="stadium.StadiumName">
+                    <div class="card-top">
+                        <div class="icon">📍</div>
+                        <div class="card-actions">
+                            <button class="icon-btn edit-btn" @onclick="@(() => NavigateToEdit(stadium.StadiumName))" aria-label="Editar estadio">✏️</button>
+                            <button class="icon-btn delete-btn" @onclick="() => HandleDelete(stadium.StadiumName)" aria-label="Eliminar estadio">🗑️</button>
                         </div>
                     </div>
-                    <h4 style="margin: 0.75rem 0 0.25rem;">@stadium.StadiumName</h4>
-                    <p style="color: gray; font-size: 14px; margin: 0 0 0.5rem;">@stadium.CityName</p>
-                    @if (stadium.StadiumDescription != null)
+
+                    <h4 class="stadium-name">@stadium.StadiumName</h4>
+                    <p class="stadium-city">@stadium.CityName</p>
+                    @if (!string.IsNullOrEmpty(stadium.StadiumDescription))
                     {
-                        <p style="color: gray; font-size: 13px; margin: 0 0 0.5rem;">@stadium.StadiumDescription</p>
+                        <p class="stadium-desc">@stadium.StadiumDescription</p>
                     }
-                    <p style="font-size: 14px; margin: 0;">
-                        Capacidad: <strong>@stadium.LocativeCapacity.ToString("N0") personas</strong>
-                    </p>
+                    <p class="stadium-capacity">Capacidad: <strong>@stadium.LocativeCapacity.ToString("N0") personas</strong></p>
                 </div>
             }
         </div>
@@ -49,12 +49,12 @@ else
 
 @if (!string.IsNullOrEmpty(_errorMessage))
 {
-    <div style="color: red; margin-top: 1rem;">@_errorMessage</div>
+    <div class="message error">@_errorMessage</div>
 }
 
 @if (!string.IsNullOrEmpty(_successMessage))
 {
-    <div style="color: green; margin-top: 1rem;">@_successMessage</div>
+    <div class="message success">@_successMessage</div>
 }
 
 @code
@@ -63,25 +63,38 @@ else
     private string _errorMessage = string.Empty;
     private string _successMessage = string.Empty;
 
-    protected override void OnInitialized()
+    protected override Task OnInitializedAsync()
     {
         _stadiums = Service.GetAllStadiums();
+        return Task.CompletedTask;
     }
 
-    private void HandleDelete(string name)
+    private void NavigateToCreate() => NavigationManager.NavigateTo("/stadiums/create");
+
+    private void NavigateToEdit(string name) => NavigationManager.NavigateTo($"/stadiums/edit/{Uri.EscapeDataString(name)}");
+
+    private async Task HandleDelete(string name)
     {
         _errorMessage = string.Empty;
         try
         {
+            var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"¿Eliminar estadio '{name}'?");
+            if (!confirmed)
+                return;
+
             Service.DeleteStadium(name);
             _stadiums = Service.GetAllStadiums();
             _successMessage = "Estadio eliminado correctamente.";
+            StateHasChanged();
+
+            // auto-hide success message
+            await Task.Delay(3000);
+            _successMessage = string.Empty;
             StateHasChanged();
         }
         catch (InvalidOperationException ex)
         {
             _errorMessage = ex.Message;
         }
-    }  
+    }
 }
-
