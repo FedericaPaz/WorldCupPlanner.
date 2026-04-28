@@ -145,4 +145,12 @@ public class TeamServiceTests
         var result = service.Get("Brazil");
         Assert.IsNull(result);
     }
+    
+    [TestMethod]
+    public void Delete_WhenTeamDoesNotExist_ShouldThrowException()
+    {
+        var repository = new TeamRepository();
+        var service = new TeamService(repository);
+        Assert.ThrowsException<InvalidOperationException>(() => service.Delete("NonExistent"));
+    }
 }

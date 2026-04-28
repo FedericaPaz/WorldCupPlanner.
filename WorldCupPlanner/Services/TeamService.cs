@@ -63,6 +63,9 @@ public class TeamService : ITeamService
     public void Delete(string name)
     {
         var team = _repository.Get(name);
+        if(team is null)
+            throw new InvalidOperationException($"Team with the name '{name}' does not exist.");
+            
         _repository.Delete(team);
     }
     
