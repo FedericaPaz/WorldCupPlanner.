@@ -29,7 +29,7 @@ public class TeamService : ITeamService
         
         var count = _repository.GetAll().Count(t => t.Confederation.Name == confederation.Name);
         if (count >= GetLimit(confederation.Name))
-            throw new Exception($"The confederation '{confederation.Name}' has reached its team limit.");
+            throw new InvalidOperationException($"The confederation '{confederation.Name}' has reached its team limit.");
         
         var team = new Team(request.Name, confederation, request.FifaRanking);
         _repository.Add(team);
@@ -45,7 +45,7 @@ public class TeamService : ITeamService
             "OFC" => 1,
             "CAF" => 9,
             "AFC" => 8,
-            _ => throw new Exception("Invalid confederation name.")
+            _ => throw new InvalidOperationException("Invalid confederation name.")
         };
     }
     

@@ -63,7 +63,7 @@ public class TeamServiceTests
             teamService.Add(request);
         }
         var extraRequest = CreateRequest("ExtraName", confName, 2000);
-        Assert.ThrowsException<Exception>(() => teamService.Add(extraRequest));
+        Assert.ThrowsException<InvalidOperationException>(() => teamService.Add(extraRequest));
     }
     
     [DataTestMethod]
