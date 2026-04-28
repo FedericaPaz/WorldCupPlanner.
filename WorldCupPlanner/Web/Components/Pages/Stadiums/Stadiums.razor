@@ -47,6 +47,41 @@ else
     </div>
 }
 
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div style="color: red; margin-top: 1rem;">@_errorMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(_successMessage))
+{
+    <div style="color: green; margin-top: 1rem;">@_successMessage</div>
+}
+
 @code
-{}
+{
+    private IEnumerable<Stadium>? _stadiums;
+    private string _errorMessage = string.Empty;
+    private string _successMessage = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        _stadiums = Service.GetAllStadiums();
+    }
+
+    private void HandleDelete(string name)
+    {
+        _errorMessage = string.Empty;
+        try
+        {
+            Service.DeleteStadium(name);
+            _stadiums = Service.GetAllStadiums();
+            _successMessage = "Estadio eliminado correctamente.";
+            StateHasChanged();
+        }
+        catch (InvalidOperationException ex)
+        {
+            _errorMessage = ex.Message;
+        }
+    }  
+}
 
