@@ -55,6 +55,16 @@ public class TeamService : ITeamService
         return _repository.GetAll();
     }
     
+    /*public void Update(Team team)
+    {
+        _repository.Update(team);
+    }*/
+
+    public void Delete(string name)
+    {
+        var team = _repository.Get(name);
+        _repository.Delete(team);
+    }
     
     
 }

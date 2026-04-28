@@ -118,4 +118,31 @@ public class TeamServiceTests
         var results = teamService.GetAll();
         Assert.AreEqual(2, results.Count);
     }
+    
+    /*[TestMethod]
+    public void Update_WhenTeamExists_ShouldUpdateTeam()
+    {
+        var teamRepository = new TeamRepository();
+        var teamService = new TeamService(teamRepository);
+        var confederation = new Confederation("UEFA");
+        teamService.Add("Brazil", confederation, 850);
+        var updatedConfederation = new Confederation("CONMEBOL");
+        teamService.Update("Brazil", updatedConfederation, 1000);
+        var result = teamService.Get("Brazil");
+        Assert.IsNotNull(result);
+        Assert.AreEqual("CONMEBOL", result.Confederation.Name);
+        Assert.AreEqual(1000, result.FifaRanking);
+    }*/
+    
+    [TestMethod]
+    public void Delete_WhenTeamExists_ShouldRemoveTeam()
+    {
+        var repository = new TeamRepository();
+        var service = new TeamService(repository);
+        var confederation = new Confederation("UEFA");
+        service.Add("Brazil", confederation, 850);
+        service.Delete("Brazil");
+        var result = service.Get("Brazil");
+        Assert.IsNull(result);
+    }
 }
