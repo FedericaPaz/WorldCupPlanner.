@@ -1,4 +1,5 @@
 ﻿using Domain;
+using DTOs;
 using Repository;
 using Services;
 
@@ -7,16 +8,29 @@ namespace ServicesTests;
 [TestClass]
 public class TeamServiceTests
 {
+    private TeamDTOs.CreateTeamDTO CreateRequest(string name, string confederationName, int fifaRanking)
+    {
+        return new TeamDTOs.CreateTeamDTO
+        {
+            Name = name,
+            ConfederationName = confederationName,
+            FifaRanking = fifaRanking
+        };
+    }
+    
     [TestMethod]
     public void CreateTeam_WithValidData_ShouldAddTeam()
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
-        var confedaration = new Confederation("UEFA");
+        var request = CreateRequest("Uruguay", "UEFA", 1000);
         
-        teamService.Add("Uruguay", confedaration, 1000);
+        teamService.Add(request);
         var result = teamRepository.Get("Uruguay");
         Assert.IsNotNull(result);
+        Assert.AreEqual("Uruguay", result.Name);
+        Assert.AreEqual("UEFA", result.Confederation.Name);
+        Assert.AreEqual(1000, result.FifaRanking);
     }
     
     [TestMethod]
@@ -24,10 +38,10 @@ public class TeamServiceTests
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
-        var confedaration = new Confederation("UEFA");
+        var request = CreateRequest("Uruguay", "UEFA", 1000);
         
-        teamService.Add("Uruguay", confedaration, 1000);
-        Assert.ThrowsException<ArgumentException>(() => teamService.Add("Uruguay", confedaration, 1000));
+        teamService.Add(request);
+        Assert.ThrowsException<ArgumentException>(() => teamService.Add(request));
     }
     
     [DataTestMethod]
@@ -42,13 +56,14 @@ public class TeamServiceTests
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
-        var confederation = new Confederation(confName);
-        
+
         for (int i = 0; i < limit; i++)
         {
-            teamService.Add($"Team{i}", confederation, 1000 + i);
+            var request = CreateRequest($"Team{i}", confName, 1000 + i);
+            teamService.Add(request);
         }
-        Assert.ThrowsException<Exception>(() => teamService.Add("ExtraTeam", confederation, 2000));
+        var extraRequest = CreateRequest("ExtraName", confName, 2000);
+        Assert.ThrowsException<Exception>(() => teamService.Add(extraRequest));
     }
     
     [DataTestMethod]
@@ -67,9 +82,9 @@ public class TeamServiceTests
 
         for (int i = 0; i < limit; i++)
         {
-            service.Add($"Team{i}", conf, 1000 + i);
+            var request = CreateRequest($"Team{i}", confName, 1000 + i);
+            service.Add(request);
         }
-
         var teams = repo.GetAll().Where(t => t.Confederation.Name == confName).Count();
         Assert.AreEqual(limit, teams);
     }
@@ -88,12 +103,14 @@ public class TeamServiceTests
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
-        var confederation = new Confederation("UEFA");
-        teamService.Add("Brazil", confederation, 1000);
+        var request = CreateRequest("Uruguay", "UEFA", 1000);
+        teamService.Add(request);
         
         var result = teamService.Get("Brazil");
         Assert.IsNotNull(result);
         Assert.AreEqual("Brazil", result.Name);
+        Assert.AreEqual("UEFA", result.Confederation.Name);
+        Assert.AreEqual(1000, result.FifaRanking);
     }
     
     /*[TestMethod]
@@ -102,7 +119,7 @@ public class TeamServiceTests
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
 
-        var result = teamService.Get("Brazil");
+        var result = teamService.Get("NonExistent");
         Assert.IsNull(result);
     }*/
     
@@ -111,12 +128,13 @@ public class TeamServiceTests
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
-        var confederation = new Confederation("UEFA");
-        teamService.Add("Brazil", confederation, 850);
-        teamService.Add("Argentina", confederation, 750);
+        teamService.Add(CreateRequest("Brazil", "UEFA", 850));
+        teamService.Add(CreateRequest("Argentina", "UEFA", 750));
 
         var results = teamService.GetAll();
         Assert.AreEqual(2, results.Count);
+        Assert.IsTrue(results.Any(t => t.Name == "Brazil"));
+        Assert.IsTrue(results.Any(t => t.Name == "Argentina"));
     }
     
     /*[TestMethod]
@@ -139,8 +157,7 @@ public class TeamServiceTests
     {
         var repository = new TeamRepository();
         var service = new TeamService(repository);
-        var confederation = new Confederation("UEFA");
-        service.Add("Brazil", confederation, 850);
+        service.Add(CreateRequest("Brazil", "UEFA", 850));
         service.Delete("Brazil");
         var result = service.Get("Brazil");
         Assert.IsNull(result);
