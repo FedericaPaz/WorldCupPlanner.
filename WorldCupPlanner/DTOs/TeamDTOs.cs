@@ -6,8 +6,8 @@ public class TeamDTOs
 {
     public class CreateTeamDTO
     {
-        public string Name { get; set; }
-        public string ConfederationName { get; set; }
+        public string? Name { get; set; }
+        public string? ConfederationName { get; set; }
         public int FifaRanking { get; set; }
         
         public Team ToEntity()
@@ -19,8 +19,8 @@ public class TeamDTOs
 
     public class TeamResponseDTO
     {
-        public string Name { get; set; }
-        public string ConfederationName { get; set; }
+        public string? Name { get; set; }
+        public string? ConfederationName { get; set; }
         public int FifaRanking { get; set; }
         
         public static TeamResponseDTO FromEntity(Team team)
