@@ -19,7 +19,7 @@ public class UserService
         _userRepository.AddUser(user);
     }
 
-    public void CreateUser(UserCreateDto userDto)
+    public void CreateUser(UserDto userDto)
     {
         CreateUser(
             userDto.FirstName,

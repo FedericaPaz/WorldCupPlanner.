@@ -215,7 +215,7 @@ public class UserServiceTests
         var userRepository = new UserRepository();
         var userService = new UserService(userRepository);
 
-        var userDto = new UserCreateDto
+        var userDto = new UserDto
         {
             FirstName = "Juan",
             LastName = "Perez",
