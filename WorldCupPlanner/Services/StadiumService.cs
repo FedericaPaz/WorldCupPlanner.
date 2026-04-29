@@ -47,7 +47,9 @@ public class StadiumService : IStadiumService
 
     public StadiumDTOs.StadiumResponseDTO? GetStadium(string stadiumName)
     {
+        if(string.IsNullOrWhiteSpace(stadiumName))
+            return null;
         var stadium = _stadiumRepository.GetStadium(stadiumName);
-        return StadiumDTOs.StadiumResponseDTO.FromEntity(stadium);
+        return stadium is null ? null : StadiumDTOs.StadiumResponseDTO.FromEntity(stadium);
     }
 }
