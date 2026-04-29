@@ -125,4 +125,23 @@ public class StadiumServiceTests
         var result = _service.GetAllStadiums();
         Assert.AreEqual(2, result.Count);
     }*/
+
+    [TestMethod]
+    public void GetStadium_WithExistingStadium_ShouldReturnStadium()
+    {
+        var dto = new DTOs.StadiumDTOs.CreateStadiumDTO
+        {
+            stadiumName = "Campeon del Siglo",
+            stadiumCity = "Montevideo",
+            stadiumDescription = "Estadio de Peniarol",
+            locativeCapacity = 40700
+        };
+        _service.AddStadium(dto);
+        var result = _service.GetStadium(dto.stadiumName);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(dto.stadiumName, result.stadiumName);
+        Assert.AreEqual(dto.locativeCapacity, result.locativeCapacity);
+        Assert.AreEqual(dto.stadiumCity, result.stadiumCity);
+    }
+    
 }

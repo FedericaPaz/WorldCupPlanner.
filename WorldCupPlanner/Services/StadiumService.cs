@@ -44,4 +44,10 @@ public class StadiumService : IStadiumService
     {
         return _stadiumRepository.GetAllStadiums().Select(StadiumDTOs.StadiumResponseDTO.FromEntity).ToList();
     }
+
+    public StadiumDTOs.StadiumResponseDTO? GetStadium(string stadiumName)
+    {
+        var stadium = _stadiumRepository.GetStadium(stadiumName);
+        return StadiumDTOs.StadiumResponseDTO.FromEntity(stadium);
+    }
 }
