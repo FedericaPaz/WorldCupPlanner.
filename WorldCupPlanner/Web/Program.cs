@@ -3,6 +3,8 @@ using IRepository;
 using IServices;
 using Services;
 using Repository;
+using Blazored.LocalStorage;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddSingleton<IStadiumRepository, StadiumRepository>();
 builder.Services.AddSingleton<IStadiumService, StadiumService>();
+builder.Services.AddBlazoredLocalStorage();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
