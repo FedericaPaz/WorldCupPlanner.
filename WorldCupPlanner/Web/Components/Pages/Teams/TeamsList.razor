@@ -34,18 +34,19 @@ else
     <table class="table table-striped">
         <thead>
         <tr>
+            <th>Ranking FIFA</th>
             <th>Nombre</th>
             <th>Confederación</th>
-            <th>Ranking FIFA</th>
+            <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
         @foreach (var team in _teams.OrderBy(t => t.FifaRanking))
         {
             <tr>
+                <td>@team.FifaRanking</td>
                 <td>@team.Name</td>
                 <td>@team.ConfederationName</td>
-                <td>@team.FifaRanking</td>
                 <td>
                     <button class="btn btn-sm btn-outline-primary me-2" type="button" @onclick="() => GoToEdit(team.Name)">
                         ✏️ Editar
