@@ -16,16 +16,18 @@ public class StadiumService : IStadiumService
 
     public void AddStadium(StadiumDTOs.CreateStadiumDTO request)
     {
-        if(request is null)
-            throw new ArgumentNullException(nameof(request.stadiumName), "Name is required");
-        if(request.stadiumCity is null)
-            throw new ArgumentNullException(nameof(request.stadiumCity), "City is required");
-        
+        if (request is null)
+            throw new ArgumentNullException(nameof(request), "Request is required");
+        if (string.IsNullOrWhiteSpace(request.stadiumName))
+            throw new ArgumentException("Name is required", nameof(request.stadiumName));
+        if (string.IsNullOrWhiteSpace(request.stadiumCity))
+            throw new ArgumentException("City is required", nameof(request.stadiumCity));
+
         var existingStadium = _stadiumRepository.GetStadium(request.stadiumName);
         if (existingStadium != null)
             throw new InvalidOperationException("Stadium already exists");
-        
-        var newStadium = new Stadium(request.stadiumName, request.stadiumCity, request.stadiumDescription, request.);
+
+        var newStadium = request.ToEntity();
         _stadiumRepository.AddStadium(newStadium);
     }
 

@@ -1,10 +1,8 @@
 @page "/stadiums/create"
 @using System.ComponentModel.DataAnnotations
-@using Domain
+@using DTOs
 @using IServices
-@inject IStadiumService
-@using Services
-@inject StadiumService Service
+@inject IStadiumService Service
 @inject NavigationManager Navigation
 
 <div class="stadiums-create">
@@ -75,8 +73,15 @@
         _isSubmitting = true;
         try
         {
-            // UI-side: trim inputs; business rules remain in Service
-            Service.AddStadium(_model.StadiumName?.Trim(), _model.CityName?.Trim(), _model.StadiumDescription?.Trim(), _model.LocativeCapacity);
+            // UI-side: build DTO; business rules remain in Service
+            var dto = new StadiumDTOs.CreateStadiumDTO
+            {
+                stadiumName = _model.StadiumName?.Trim() ?? string.Empty,
+                stadiumCity = _model.CityName?.Trim() ?? string.Empty,
+                stadiumDescription = _model.StadiumDescription?.Trim(),
+                locativeCapacity = _model.LocativeCapacity
+            };
+            Service.AddStadium(dto);
             Navigation.NavigateTo("/stadiums");
         }
         catch (Exception ex)

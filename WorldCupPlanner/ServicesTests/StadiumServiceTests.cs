@@ -20,27 +20,54 @@ public class StadiumServiceTests
     [TestMethod]
     public void AddStadium_WithValidData_ShouldNotThrowException()
     {
-        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        var dto = new DTOs.StadiumDTOs.CreateStadiumDTO
+        {
+            stadiumName = "Campeon del Siglo",
+            stadiumCity = "Montevideo",
+            stadiumDescription = "Estadio de Peniarol",
+            locativeCapacity = 40700
+        };
+        _service.AddStadium(dto);
     }
 
     [TestMethod]
     public void AddStadium_WithDuplicateName_ShouldThrowException()
     {
-        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            _service.AddStadium("Campeon del Siglo", "OtraCiudad", "OtraDescripcion", 40600));
+        var dto1 = new DTOs.StadiumDTOs.CreateStadiumDTO
+        {
+            stadiumName = "Campeon del Siglo",
+            stadiumCity = "Montevideo",
+            stadiumDescription = "Estadio de Peniarol",
+            locativeCapacity = 40700
+        };
+        _service.AddStadium(dto1);
+        var dto2 = new DTOs.StadiumDTOs.CreateStadiumDTO
+        {
+            stadiumName = "Campeon del Siglo",
+            stadiumCity = "OtraCiudad",
+            stadiumDescription = "OtraDescripcion",
+            locativeCapacity = 40600
+        };
+        Assert.ThrowsException<InvalidOperationException>(() => _service.AddStadium(dto2));
     }
     
     [TestMethod]
     public void AddStadium_WithNullStadium_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => _service.AddStadium(null, "Montevideo", "Estadio de Peniarol", 40700));
+        Assert.ThrowsException<ArgumentNullException>(() => _service.AddStadium(null!));
     }
     
     [TestMethod]
     public void AddStadium_WithNullCity_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => _service.AddStadium("Campeon del Siglo", null, "Estadio de Peniarol", 40700));
+        var dto = new DTOs.StadiumDTOs.CreateStadiumDTO
+        {
+            stadiumName = "Campeon del Siglo",
+            stadiumCity = null!,
+            stadiumDescription = "Estadio de Peniarol",
+            locativeCapacity = 40700
+        };
+        Assert.ThrowsException<ArgumentException>(() => _service.AddStadium(dto));
     }
 
     /*
@@ -54,7 +81,14 @@ public class StadiumServiceTests
     [TestMethod]
     public void DeleteStadium_WithExistingStadium_ShouldNotThrowException()
     {
-        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        var dto = new DTOs.StadiumDTOs.CreateStadiumDTO
+        {
+            stadiumName = "Campeon del Siglo",
+            stadiumCity = "Montevideo",
+            stadiumDescription = "Estadio de Peniarol",
+            locativeCapacity = 40700
+        };
+        _service.AddStadium(dto);
         _service.DeleteStadium("Campeon del Siglo");
     }
 

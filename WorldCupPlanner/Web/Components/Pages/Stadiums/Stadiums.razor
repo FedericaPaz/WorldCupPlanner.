@@ -2,12 +2,11 @@
 @rendermode InteractiveServer
 @using System
 @using Domain
-@using Services
-@inject StadiumService Service
+@using DTOs
+@using IServices
+@inject IStadiumService Service
 @inject NavigationManager NavigationManager
 @inject Microsoft.JSInterop.IJSRuntime JSRuntime
-@using IServices
-@inject IStadiumService
 
 @if (_stadiums == null)
 {
@@ -27,22 +26,22 @@ else
         <div class="stadiums-grid">
             @foreach (var stadium in _stadiums)
             {
-                <div class="stadium-card" @key="stadium.StadiumName">
+                <div class="stadium-card" @key="stadium.stadiumName">
                     <div class="card-top">
                         <div class="icon">📍</div>
                         <div class="card-actions">
-                            <button class="icon-btn edit-btn" @onclick="@(() => NavigateToEdit(stadium.StadiumName))" aria-label="Editar estadio">✏️</button>
-                            <button class="icon-btn delete-btn" @onclick="() => HandleDelete(stadium.StadiumName)" aria-label="Eliminar estadio">🗑️</button>
+                            <button class="icon-btn edit-btn" @onclick="@(() => NavigateToEdit(stadium.stadiumName))" aria-label="Editar estadio">✏️</button>
+                            <button class="icon-btn delete-btn" @onclick="() => HandleDelete(stadium.stadiumName)" aria-label="Eliminar estadio">🗑️</button>
                         </div>
                     </div>
 
-                    <h4 class="stadium-name">@stadium.StadiumName</h4>
-                    <p class="stadium-city">@stadium.CityName</p>
-                    @if (!string.IsNullOrEmpty(stadium.StadiumDescription))
+                    <h4 class="stadium-name">@stadium.stadiumName</h4>
+                    <p class="stadium-city">@stadium.stadiumCity</p>
+                    @if (!string.IsNullOrEmpty(stadium.stadiumDescription))
                     {
-                        <p class="stadium-desc">@stadium.StadiumDescription</p>
+                        <p class="stadium-desc">@stadium.stadiumDescription</p>
                     }
-                    <p class="stadium-capacity">Capacidad: <strong>@stadium.LocativeCapacity.ToString("N0") personas</strong></p>
+                    <p class="stadium-capacity">Capacidad: <strong>@stadium.locativeCapacity.ToString("N0") personas</strong></p>
                 </div>
             }
         </div>
@@ -61,7 +60,7 @@ else
 
 @code
 {
-    private IEnumerable<Stadium>? _stadiums;
+    private IEnumerable<StadiumDTOs.StadiumResponseDTO>? _stadiums;
     private string _errorMessage = string.Empty;
     private string _successMessage = string.Empty;
 
