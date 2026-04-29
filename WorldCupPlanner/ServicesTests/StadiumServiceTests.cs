@@ -143,5 +143,12 @@ public class StadiumServiceTests
         Assert.AreEqual(dto.locativeCapacity, result.locativeCapacity);
         Assert.AreEqual(dto.stadiumCity, result.stadiumCity);
     }
+
+    [TestMethod]
+    public void GetStadium_WithNonExistingStadium_ShouldReturnNull()
+    {
+        var result = _service.GetStadium("Campeon del Siglo");
+        Assert.IsNull(result);
+    }
     
 }
