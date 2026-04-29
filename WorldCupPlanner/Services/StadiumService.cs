@@ -1,9 +1,11 @@
 using Domain;
+using DTOs;
 using IRepository;
+using IServices;
 
 namespace Services;
 
-public class StadiumService
+public class StadiumService : IStadiumService
 {
     private readonly IStadiumRepository _stadiumRepository;
 

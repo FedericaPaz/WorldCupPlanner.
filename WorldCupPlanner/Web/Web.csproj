@@ -13,4 +13,9 @@
       <ProjectReference Include="..\Services\Services.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Blazor.LocalStorage" Version="9.0.1" />
+      <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    </ItemGroup>
+
 </Project>
