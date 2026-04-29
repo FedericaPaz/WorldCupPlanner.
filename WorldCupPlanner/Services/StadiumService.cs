@@ -14,7 +14,7 @@ public class StadiumService : IStadiumService
         _stadiumRepository = repository;
     }
 
-    public void AddStadium(string? stadiumName, string? stadiumCity, string? stadiumDescription, int locativeCapacity)
+    public void AddStadium(string stadiumName, string stadiumCity, string? stadiumDescription, int locativeCapacity)
     {
         if(stadiumName is null)
             throw new ArgumentNullException(nameof(stadiumName), "Name is required");
