@@ -1,9 +1,10 @@
 using Domain;
 namespace IServices;
+using DTOs;
 
 public interface IStadiumService
 {
-    void AddStadium(string stadiumName, string stadiumCity, string? stadiumDescription, int locativeCapacity);
+    void AddStadium(StadiumDTOs.CreateStadiumDTO request);
     void DeleteStadium(string stadiumName);
-    List<Stadium> GetAllStadiums();
+    List<StadiumDTOs.StadiumResponseDTO> GetAllStadiums();
 }

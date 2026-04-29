@@ -1,4 +1,5 @@
 using Domain;
+using DTOs;
 using IRepository;
 using IServices;
 
@@ -13,18 +14,18 @@ public class StadiumService : IStadiumService
         _stadiumRepository = repository;
     }
 
-    public void AddStadium(string stadiumName, string stadiumCity, string? stadiumDescription, int locativeCapacity)
+    public void AddStadium(StadiumDTOs.CreateStadiumDTO request)
     {
-        if(stadiumName is null)
-            throw new ArgumentNullException(nameof(stadiumName), "Name is required");
-        if(stadiumCity is null)
-            throw new ArgumentNullException(nameof(stadiumCity), "City is required");
+        if(request is null)
+            throw new ArgumentNullException(nameof(request.stadiumName), "Name is required");
+        if(request.stadiumCity is null)
+            throw new ArgumentNullException(nameof(request.stadiumCity), "City is required");
         
-        var existingStadium = _stadiumRepository.GetStadium(stadiumName);
+        var existingStadium = _stadiumRepository.GetStadium(request.stadiumName);
         if (existingStadium != null)
             throw new InvalidOperationException("Stadium already exists");
         
-        var newStadium = new Stadium(stadiumName, stadiumCity, stadiumDescription, locativeCapacity);
+        var newStadium = new Stadium(request.stadiumName, request.stadiumCity, request.stadiumDescription, request.);
         _stadiumRepository.AddStadium(newStadium);
     }
 
@@ -37,8 +38,8 @@ public class StadiumService : IStadiumService
         _stadiumRepository.DeleteStadium(stadium);
     }
 
-    public List<Stadium> GetAllStadiums()
+    public List<StadiumDTOs.StadiumResponseDTO> GetAllStadiums()
     {
-        return _stadiumRepository.GetAllStadiums();
+        return _stadiumRepository.GetAllStadiums().Select(StadiumDTOs.StadiumResponseDTO.FromEntity).ToList();
     }
 }
