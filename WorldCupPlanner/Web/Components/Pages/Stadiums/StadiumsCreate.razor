@@ -1,8 +1,9 @@
 @page "/stadiums/create"
 @using System.ComponentModel.DataAnnotations
 @using Domain
+@using IServices
+@inject IStadiumService
 @using Services
-@using Microsoft.AspNetCore.Components.Forms
 @inject StadiumService Service
 @inject NavigationManager Navigation
 

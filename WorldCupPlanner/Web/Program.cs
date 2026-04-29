@@ -1,5 +1,6 @@
 using Web.Components;
 using IRepository;
+using IServices;
 using Services;
 using Repository;
 
@@ -10,7 +11,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddSingleton<IStadiumRepository, StadiumRepository>();
-builder.Services.AddSingleton<StadiumService>();
+builder.Services.AddSingleton<IStadiumService, StadiumService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
