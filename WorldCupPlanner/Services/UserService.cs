@@ -19,14 +19,14 @@ public class UserService
         _userRepository.AddUser(user);
     }
 
-    public void CreateUser(UserDto userDto)
+    public void CreateUser(UserRequestDto userRequestDto)
     {
         CreateUser(
-            userDto.FirstName,
-            userDto.LastName,
-            userDto.Email,
-            userDto.BirthDate,
-            userDto.Password
+            userRequestDto.FirstName,
+            userRequestDto.LastName,
+            userRequestDto.Email,
+            userRequestDto.BirthDate,
+            userRequestDto.Password
         );
     }
     
