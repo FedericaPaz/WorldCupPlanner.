@@ -97,4 +97,13 @@ public class MatchTests
      var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
      Assert.ThrowsException<ArgumentException>(() => match.SetMatchResult(-1, 1));
   }
+
+  [TestMethod]
+  public void SetResult_WhenAlreadySet_ShouldThrowArgumentException()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+     match.SetMatchResult(1, 0);
+     Assert.ThrowsException<InvalidOperationException>(() => match.SetMatchResult(2, 0));
+  }
 }
