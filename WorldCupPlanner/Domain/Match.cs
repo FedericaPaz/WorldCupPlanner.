@@ -38,6 +38,7 @@ public class Match
         _awayTeam = awayTeam;
         _group = char.ToUpper(group); 
         _clock = clock;
+        ValidateDate(dateMatch, clock);
     }
     
     private void ValidateGroup(char group)
@@ -73,6 +74,12 @@ public class Match
             _winnerMatch = _awayTeam;
         else
             _winnerMatch = null;
+    }
+
+    private void ValidateDate(DateTime dateMatch, IDateTimeMatch clock)
+    {
+        if (dateMatch < clock.Now)
+            throw new ArgumentException("Match date cannot be in the past.");
     }
 
 
