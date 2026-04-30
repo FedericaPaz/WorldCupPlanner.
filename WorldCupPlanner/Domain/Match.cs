@@ -64,18 +64,17 @@ public class Match
         get => _winnerMatch;
     }
 
-    public Match(DateTime dateMatch, IStadium? stadium, ITeam? homeTeam, ITeam awayTeam, char group)
+    public Match(DateTime dateMatch, IStadium stadium, ITeam homeTeam, ITeam awayTeam, char group, IDateTimeMatch clock)
     {
+        ValidateGroup(group);
+        ValidateTeams(homeTeam, awayTeam);
+        ValidateStadium(stadium);
         _idMatch = ++_idCounter;
         _dateMatch = dateMatch;
         _stadium = stadium;
         _homeTeam = homeTeam;
         _awayTeam = awayTeam;
         _group = group;
-        ValidateGroup(group);
-        ValidateTeams(homeTeam, awayTeam);
-        ValidateStadium(stadium);
-        ValidateTeams(homeTeam, awayTeam);
     }
     
     private void ValidateGroup(char group)
@@ -89,7 +88,7 @@ public class Match
     {
         if (homeTeam == null) throw new ArgumentNullException(nameof(homeTeam), "Home team must not be null.");
         if (awayTeam == null) throw new ArgumentNullException(nameof(awayTeam), "Away team must not be null.");
-        if (homeTeam._teamName == awayTeam._teamName) throw new ArgumentException("Home team and away team must be different.");
+        if (homeTeam._teamName.Equals(awayTeam._teamName)) throw new ArgumentException("Home team and away team must be different.");
     }
 
     private void ValidateStadium(IStadium stadium)
