@@ -54,7 +54,7 @@ public class TeamService : ITeamService
     public TeamDTOs.TeamDTO? Get(string name)
     {
         var team = _repository.Get(name);
-        return team == null ? null : Mappers.TeamXMappers.FromEntity(team);
+        return team?.FromEntity();
     }
 
     public List<TeamDTOs.TeamDTO> GetAll()
