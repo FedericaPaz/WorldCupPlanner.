@@ -59,5 +59,17 @@ public class Match
         if (stadium == null) throw new ArgumentNullException(nameof(stadium), "Stadium must not be null.");
     }
 
-   
+    public void SetMatchResult(int homeGoals, int awayGoals)
+    {
+        _homeGoals = homeGoals;
+        _awayGoals = awayGoals;
+        if (homeGoals > awayGoals)
+            _winnerMatch = _homeTeam;
+        else if (homeGoals < awayGoals)
+            _winnerMatch = _awayTeam;
+        else
+            _winnerMatch = null;
+    }
+
+
 }

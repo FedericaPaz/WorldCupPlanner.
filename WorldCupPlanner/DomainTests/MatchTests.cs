@@ -76,4 +76,17 @@ public class MatchTests
      var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
      Assert.ThrowsException<ArgumentNullException>(() => new Match(clock.Now, stadium, homeTeam, awayTeam, '\0', clock));
   }
+  
+  [TestMethod]
+  public void SetResult_WithValidGoals_ShouldAssignGoalsAndWinner()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var home = new TeamStub("Uruguay");
+     var away = new TeamStub("Argentina");
+     var match = new Match(clock.Now, new StadiumStub("Centenario"), home, away, 'A', clock);
+     match.SetMatchResult(2, 1);
+     Assert.AreEqual(2, match.HomeGoals);
+     Assert.AreEqual(1, match.AwayGoals);
+     Assert.AreEqual(home, match.WinnerMatch);
+  }
 }
