@@ -14,7 +14,7 @@ public class TeamService : ITeamService
         _repository = repository;
     }
 
-    public void Add(TeamDTOs.TeamDTO request)
+    public void Add(TeamDTO request)
     {
         ValidateRequest(request);
         var existingTeam = _repository.Get(request.Name);
@@ -44,15 +44,15 @@ public class TeamService : ITeamService
         };
     }
     
-    public TeamDTOs.TeamDTO? Get(string name)
+    public TeamDTO? Get(string name)
     {
         var team = _repository.Get(name);
         return team?.FromEntity();
     }
 
-    public List<TeamDTOs.TeamDTO> GetAll()
+    public List<TeamDTO> GetAll()
     {
-        return _repository.GetAll().Select(Mappers.TeamXMappers.FromEntity).ToList();
+        return _repository.GetAll().Select(t => t.FromEntity()).ToList();
     }
     
     /*public void Update(Team team)
@@ -69,13 +69,13 @@ public class TeamService : ITeamService
         _repository.Delete(team);
     }
     
-    private static void ValidateRequest(TeamDTOs.TeamDTO request)
+    private static void ValidateRequest(TeamDTO request)
     {
         if (request is null)
             throw new ArgumentNullException(nameof(request));
 
         if (string.IsNullOrWhiteSpace(request.Name))
-            throw new ArgumentException("Name cannot be empty", nameof(request.Name));
+            throw new ArgumentException("Name cannot be empty");
 
         if (string.IsNullOrWhiteSpace(request.ConfederationName))
             throw new ArgumentNullException(nameof(request.ConfederationName));
