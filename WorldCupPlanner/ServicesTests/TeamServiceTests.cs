@@ -7,9 +7,9 @@ namespace ServicesTests;
 [TestClass]
 public class TeamServiceTests
 {
-    private TeamDTOs.TeamDTO CreateRequest(string name, string confederationName, int fifaRanking)
+    private TeamDTO CreateRequest(string name, string confederationName, int fifaRanking)
     {
-        return new TeamDTOs.TeamDTO()
+        return new TeamDTO()
         {
             Name = name,
             ConfederationName = confederationName,
