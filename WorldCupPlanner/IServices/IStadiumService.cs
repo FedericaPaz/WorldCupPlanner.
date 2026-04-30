@@ -4,8 +4,8 @@ using DTOs;
 
 public interface IStadiumService
 {
-    void AddStadium(StadiumDTOs.CreateStadiumDTO request);
+    void AddStadium(StadiumRequest request);
     void DeleteStadium(string stadiumName);
-    List<StadiumDTOs.StadiumResponseDTO> GetAllStadiums();
-    StadiumDTOs.StadiumResponseDTO? GetStadium(string stadiumName);
+    List<StadiumRequest> GetAllStadiums();
+    StadiumRequest? GetStadium(string stadiumName);
 }

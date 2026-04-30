@@ -12,8 +12,8 @@ public class StadiumRequest
     [StringLength(60, MinimumLength = 1, ErrorMessage = "La ciudad debe tener entre 1 y 60 caracteres")]
     public string stadiumCity { get; set; } = string.Empty;
     
-    [StringLength(400, MinimumLength = 1, ErrorMessage = "La descripcion debe tener entre 1 y 400 caracteres")]
-    public string? stadiumDescription { get; set; } = string.Empty;
+    [StringLength(400, ErrorMessage = "La descripcion debe tener como maximo 400 caracteres")]
+    public string? stadiumDescription { get; set; } = null;
     
     [Required(ErrorMessage = "La capacidad locativa es obligatoria")]
     [Range(20000, int.MaxValue, ErrorMessage = "La capacidad locativa debe ser al menos 20000")]

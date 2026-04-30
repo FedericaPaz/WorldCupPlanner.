@@ -74,7 +74,7 @@
         try
         {
             // UI-side: build DTO; business rules remain in Service
-            var dto = new StadiumDTOs.CreateStadiumDTO
+            var dto = new StadiumRequest.CreateStadiumDTO
             {
                 stadiumName = _model.StadiumName?.Trim() ?? string.Empty,
                 stadiumCity = _model.CityName?.Trim() ?? string.Empty,
