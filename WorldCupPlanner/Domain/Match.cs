@@ -13,68 +13,31 @@ public class Match
     private int? _homeGoals;
     private int? _awayGoals;
     private ITeam? _winnerMatch;
+    private IDateTimeMatch _clock;
 
-    public int IdMatch
-    {
-        get => _idMatch;
-    }
-
-    public DateTime DateMatch
-    {
-        get => _dateMatch;
-    }
-
-    public IStadium Stadium
-    {
-        get => _stadium;
-    }
-
-    public ITeam HomeTeam
-    {
-        get => _homeTeam;
-    }
-
-    public ITeam AwayTeam
-    {
-        get => _awayTeam;
-    }
-
-    public char Group
-    {
-        get => _group;
-        set
-        {
-            ValidateGroup(value);
-            _group = value;
-        }
-    }
-
-    public int? HomeGoals
-    {
-        get => _homeGoals;
-    }
-
-    public int? AwayGoals
-    {
-        get => _awayGoals;
-    }
-
-    public ITeam? WinnerMatch
-    {
-        get => _winnerMatch;
-    }
+    public int IdMatch => _idMatch;
+    public DateTime DateMatch => _dateMatch;
+    public IStadium Stadium => _stadium;
+    public ITeam HomeTeam => _homeTeam;
+    public ITeam AwayTeam => _awayTeam;
+    public char Group => _group;
+    public int? HomeGoals => _homeGoals;
+    public int? AwayGoals => _awayGoals;
+    public ITeam? WinnerMatch => _winnerMatch;
 
     public Match(DateTime dateMatch, IStadium stadium, ITeam homeTeam, ITeam awayTeam, char group, IDateTimeMatch clock)
     {
         ValidateGroup(group);
         ValidateTeams(homeTeam, awayTeam);
         ValidateStadium(stadium);
+
         _idMatch = ++_idCounter;
         _dateMatch = dateMatch;
         _stadium = stadium;
         _homeTeam = homeTeam;
         _awayTeam = awayTeam;
-        _group = group;
+        _group = char.ToUpper(group); 
+        _clock = clock;
     }
     
     private void ValidateGroup(char group)
