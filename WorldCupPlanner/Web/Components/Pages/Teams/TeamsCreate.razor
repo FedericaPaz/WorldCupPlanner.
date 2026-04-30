@@ -35,7 +35,14 @@
 </EditForm>
 
 @code {
-    private TeamDTOs.TeamDTO _request = new();
+
+    private TeamDTO _request = new()
+    {
+        Name = "",
+        ConfederationName = "",
+        FifaRanking = 0
+    };
+    
     private string? _errorMessage;
 
     private void HandleSubmit()
