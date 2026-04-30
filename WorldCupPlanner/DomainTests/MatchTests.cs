@@ -38,41 +38,42 @@ public class MatchTests
       Assert.ThrowsException<ArgumentException>(() => new Match(clock.Now, new StadiumStub("Centenario"), team, team, 'A', clock));
    }
 
-   /*
+   
    [TestMethod]
    public void CreateMatch_WithNullStadium_ShouldThrowArgumentNullException()
    {
       var homeTeam = new TeamStub("Uruguay");
       var awayTeam = new TeamStub("Argentina");
-      var dateMatch = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
-      Assert.ThrowsException<ArgumentNullException>(() => new Match(dateMatch.Now, null, homeTeam, awayTeam, 'A'));
+      var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
+      Assert.ThrowsException<ArgumentNullException>(() => new Match(clock.Now, null, homeTeam, awayTeam, 'A', clock));
    }
-
+   
    [TestMethod]
    public void CreateMatch_WithNullHomeTeam_ShouldThrowArgumentNullException()
    {
       var awayTeam = new TeamStub("Argentina");
       var stadium = new StadiumStub("Estadio Centenario");
-      var dateMatch = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
-      Assert.ThrowsException<ArgumentNullException>(() => new Match(dateMatch.Now, stadium, null, awayTeam, 'A'));
+      var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
+      Assert.ThrowsException<ArgumentNullException>(() => new Match(clock.Now, stadium, null, awayTeam, 'A', clock));
    }
-
+   
+  
    [TestMethod]
    public void CreateMatch_WithNullAwayTeam_ShouldThrowArgumentNullException()
    {
       var homeTeam = new TeamStub("Uruguay");
       var stadium = new StadiumStub("Estadio Centenario");
-      var dateMatch = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
-      Assert.ThrowsException<ArgumentNullException>(() => new Match(dateMatch.Now, stadium, homeTeam, null, 'A'));
+      var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
+      Assert.ThrowsException<ArgumentNullException>(() => new Match(clock.Now, stadium, homeTeam, null, 'A', clock));
    }
-
-   [TestMethod]
-   public void CreateMatch_WithNullGroup_ShouldThrowArgumentNullException()
-   {
-      var homeTeam = new TeamStub("Uruguay");
-      var awayTeam = new TeamStub("Argentina");
-      var stadium = new StadiumStub("Estadio Centenario");
-      var dateMatch = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
-      Assert.ThrowsException<ArgumentNullException>(() => new Match(dateMatch.Now, stadium, homeTeam, awayTeam, '\0'));
-   }*/
+   
+  [TestMethod]
+  public void CreateMatch_WithNullGroup_ShouldThrowArgumentNullException()
+  {
+     var homeTeam = new TeamStub("Uruguay");
+     var awayTeam = new TeamStub("Argentina");
+     var stadium = new StadiumStub("Estadio Centenario");
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
+     Assert.ThrowsException<ArgumentNullException>(() => new Match(clock.Now, stadium, homeTeam, awayTeam, '\0', clock));
+  }
 }
