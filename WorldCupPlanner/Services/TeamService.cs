@@ -1,5 +1,4 @@
-﻿using Domain;
-using DTOs;
+﻿using DTOs;
 using IRepository;
 using IServices;
 using Services.Mappers;
@@ -17,23 +16,17 @@ public class TeamService : ITeamService
 
     public void Add(TeamDTOs.TeamDTO request)
     {
-        if (request is null)
-            throw new ArgumentNullException(nameof(request));
-            
-        if(string.IsNullOrEmpty(request.ConfederationName))
-            throw new ArgumentNullException(nameof(request.ConfederationName));
-        
+        ValidateRequest(request);
         var existingTeam = _repository.Get(request.Name);
-        if(existingTeam != null)
+        if (existingTeam != null)
             throw new ArgumentException($"Team with the name '{request.Name}' already exists.");
-        
-        var confederation = new Confederation(request.ConfederationName);
-        
-        var count = _repository.GetAll().Count(t => t.Confederation.Name == confederation.Name);
-        if (count >= GetLimit(confederation.Name))
-            throw new InvalidOperationException($"The confederation '{confederation.Name}' has reached its team limit.");
-        
-        var team = new Team(request.Name, confederation, request.FifaRanking);
+
+        var confederationName = request.ConfederationName!;
+        var count = _repository.GetAll().Count(t => t.Confederation.Name == confederationName);
+        if (count >= GetLimit(confederationName))
+            throw new InvalidOperationException($"The confederation '{confederationName}' has reached its team limit.");
+
+        var team = request.ToEntity();
         _repository.Add(team);
     }
 
@@ -74,5 +67,17 @@ public class TeamService : ITeamService
             throw new InvalidOperationException($"Team with the name '{name}' does not exist.");
             
         _repository.Delete(team);
+    }
+    
+    private static void ValidateRequest(TeamDTOs.TeamDTO request)
+    {
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
+
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ArgumentException("Name cannot be empty", nameof(request.Name));
+
+        if (string.IsNullOrWhiteSpace(request.ConfederationName))
+            throw new ArgumentNullException(nameof(request.ConfederationName));
     }
 }
