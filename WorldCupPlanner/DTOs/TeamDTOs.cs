@@ -1,11 +1,8 @@
 ﻿namespace DTOs;
 
-public class TeamDTOs
+public class TeamDTO
 {
-    public class TeamDTO
-    {
-        public string? Name { get; set; }
-        public string? ConfederationName { get; set; }
-        public int FifaRanking { get; set; }
-    }
+    public string Name { get; set; } = null!;
+    public string ConfederationName { get; set; } = null!;
+    public int FifaRanking { get; set; }
 }
