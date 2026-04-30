@@ -61,6 +61,8 @@ public class Match
 
     public void SetMatchResult(int homeGoals, int awayGoals)
     {
+        if (homeGoals < 0 || awayGoals < 0)
+            throw new ArgumentException("Goals cannot be negative.");
         _homeGoals = homeGoals;
         _awayGoals = awayGoals;
         if (homeGoals > awayGoals)
