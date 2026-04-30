@@ -29,16 +29,16 @@ public class MatchTests
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
       Assert.ThrowsException<ArgumentException>(() => new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'M', clock));
    }
-   /*
+   
    [TestMethod]
    public void CreateMatch_WithSameTeams_ShouldThrowArgumentException()
    {
-      var homeTeam = new TeamStub("Uruguay");
-      var stadium = new StadiumStub("Estadio Centenario");
-      var dateMatch = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
-      Assert.ThrowsException<ArgumentException>(() => new Match(dateMatch.Now, stadium, homeTeam, homeTeam, 'A'));
+      var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+      var team = new TeamStub("Uruguay");
+      Assert.ThrowsException<ArgumentException>(() => new Match(clock.Now, new StadiumStub("Centenario"), team, team, 'A', clock));
    }
 
+   /*
    [TestMethod]
    public void CreateMatch_WithNullStadium_ShouldThrowArgumentNullException()
    {
