@@ -1,12 +1,12 @@
+using Domain;
+
 namespace DomainTests.Stubs;
 
-public class DateTimeMatchStub
+public class DateTimeMatchStub : IDateTimeMatch
 {
-    private readonly DateTime _dateTime;
-    public  DateTimeMatchStub(DateTime dateTime)
+    public DateTime Now { get; set; }
+    public DateTimeMatchStub(DateTime now)
     {
-        _dateTime = dateTime;
+        Now = now;
     }
-    
-    public DateTime Now => _dateTime;
 }
