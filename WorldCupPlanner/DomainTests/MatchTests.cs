@@ -6,6 +6,12 @@ namespace DomainTests;
 [TestClass]
 public class MatchTests
 {
+   [TestInitialize]
+   public void Setup()
+   {
+      Match.ResetIdCounter();
+   }
+   
    [TestMethod]
    public void CreateMatch_WithValidName_ShouldCreateNewMatch()
    {
@@ -122,5 +128,16 @@ public class MatchTests
      var clock = new DateTimeMatchStub(new DateTime(2026, 6, 10));
      var pastDate = new DateTime(2026, 6, 1);
      Assert.ThrowsException<ArgumentException>(() => new Match(pastDate, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock));
+  }
+
+  [TestMethod]
+  public void CreateMatch_AfterResetIdCounter_ShouldStartFromOne()
+  {
+     Match.ResetIdCounter();
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var match1 = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+     var match2 = new Match(clock.Now, new StadiumStub("Maracana"), new TeamStub("Brasil"), new TeamStub("Peru"), 'A', clock);
+     Assert.AreEqual(1, match1.IdMatch);
+     Assert.AreEqual(2, match2.IdMatch);
   }
 }

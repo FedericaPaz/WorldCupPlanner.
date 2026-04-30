@@ -40,6 +40,11 @@ public class Match
         _clock = clock;
         ValidateDate(dateMatch, clock);
     }
+
+    public static void ResetIdCounter()
+    {
+        _idCounter = 0;
+    }
     
     private void ValidateGroup(char group)
     {
