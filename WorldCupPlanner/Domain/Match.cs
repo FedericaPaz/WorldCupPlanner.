@@ -62,6 +62,8 @@ public class Match
 
     public void SetMatchResult(int homeGoals, int awayGoals)
     {
+        if (_clock.Now < _dateMatch)
+            throw new InvalidOperationException("Match has not been played yet.");
         if (_homeGoals != null || _awayGoals != null)
             throw new InvalidOperationException("Result already set.");
         if (homeGoals < 0 || awayGoals < 0)

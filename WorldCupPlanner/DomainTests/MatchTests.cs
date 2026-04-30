@@ -108,6 +108,15 @@ public class MatchTests
   }
 
   [TestMethod]
+  public void SetResult_BeforeMatchDate_ShouldThrowArgumentException()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var matchDate = new DateTime(2026, 6, 10);
+     var match = new Match(matchDate, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+     Assert.ThrowsException<InvalidOperationException>(() => match.SetMatchResult(1, 0));
+  }
+
+  [TestMethod]
   public void CreateMatch_WithPastDate_ShouldThrowArgumentException()
   {
      var clock = new DateTimeMatchStub(new DateTime(2026, 6, 10));
