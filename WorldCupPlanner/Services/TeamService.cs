@@ -15,7 +15,7 @@ public class TeamService : ITeamService
         _repository = repository;
     }
 
-    public void Add(TeamDTOs.CreateTeamDTO request)
+    public void Add(TeamDTOs.TeamDTO request)
     {
         if (request is null)
             throw new ArgumentNullException(nameof(request));
@@ -51,15 +51,15 @@ public class TeamService : ITeamService
         };
     }
     
-    public TeamDTOs.TeamResponseDTO? Get(string name)
+    public TeamDTOs.TeamDTO? Get(string name)
     {
         var team = _repository.Get(name);
-        return team == null ? null : TeamDTOs.TeamResponseDTO.FromEntity(team);
+        return team == null ? null : Mappers.TeamXMappers.FromEntity(team);
     }
 
-    public List<TeamDTOs.TeamResponseDTO> GetAll()
+    public List<TeamDTOs.TeamDTO> GetAll()
     {
-        return _repository.GetAll().Select(TeamDTOs.TeamResponseDTO.FromEntity).ToList();
+        return _repository.GetAll().Select(Mappers.TeamXMappers.FromEntity).ToList();
     }
     
     /*public void Update(Team team)
