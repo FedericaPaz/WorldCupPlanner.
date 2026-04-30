@@ -1,4 +1,6 @@
-﻿using DTOs;
+﻿// TODO: Mover esta logica a la entidad Confederation (getLimit)
+// Ver: Domain/Confederation.cs - agregar método estático GetMaxTeams(string name)
+using DTOs;
 using IRepository;
 using IServices;
 using Services.Mappers;
