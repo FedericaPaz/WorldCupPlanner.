@@ -54,6 +54,9 @@ public class Team
     {
         if (confederation is null)
             throw new ArgumentNullException(nameof(confederation));
+        
+        if (string.IsNullOrWhiteSpace(confederation.Name))
+            throw new ArgumentException("Confederation name cannot be empty");
     }
 
     private void ValidateRanking(int ranking)
