@@ -51,7 +51,7 @@ public class Match
     {
         if (homeTeam == null) throw new ArgumentNullException(nameof(homeTeam), "Home team must not be null.");
         if (awayTeam == null) throw new ArgumentNullException(nameof(awayTeam), "Away team must not be null.");
-        if (homeTeam._teamName.Equals(awayTeam._teamName)) throw new ArgumentException("Home team and away team must be different.");
+        if (homeTeam == awayTeam) throw new ArgumentException("Home team and away team must be different.");
     }
 
     private void ValidateStadium(IStadium stadium)
