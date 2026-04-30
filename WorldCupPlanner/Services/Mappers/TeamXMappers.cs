@@ -5,15 +5,15 @@ namespace Services.Mappers;
 
  public static class TeamXMappers
  {
-     public static Team ToEntity(this TeamDTOs.TeamDTO request)
+     public static Team ToEntity(this TeamDTO request)
      {
          var confederation = new Confederation(request.ConfederationName);
          return new Team(request.Name, confederation, request.FifaRanking);
      }
  
-     public static TeamDTOs.TeamDTO FromEntity(this Team team)
+     public static TeamDTO FromEntity(this Team team)
      {
-         return new TeamDTOs.TeamDTO
+         return new TeamDTO
          {
              Name = team.Name,
              ConfederationName = team.Confederation.Name,
