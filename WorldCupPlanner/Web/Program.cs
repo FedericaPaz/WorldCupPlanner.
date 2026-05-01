@@ -1,10 +1,21 @@
+using Blazored.LocalStorage;
 using Web.Components;
+using IRepository;
+using IServices;
+using Repository;
+using Services;
+using Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<SessionService>();
 
 var app = builder.Build();
 
