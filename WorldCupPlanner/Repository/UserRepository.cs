@@ -7,6 +7,12 @@ public class UserRepository : IUserRepository
 {
     private readonly List<User> _users = new();
 
+    public UserRepository()
+    {
+        var adult1 = new User("Juan", "Perez", "Juan@gmail.com", new DateTime(05 / 05 / 2000), "conTraseñaDeJP!1");
+        _users.Add(adult1);
+    }
+
     public void AddUser(User user)
     {
         if (user is null)
