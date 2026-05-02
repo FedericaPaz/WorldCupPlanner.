@@ -65,6 +65,16 @@ public class StadiumRepositoryTests
         var result = _stadiumRepository.GetAllStadiums();
         Assert.AreEqual(2, result.Count);
     }
+
+    [TestMethod]
+    public void GetAll_ModifyingReturnedList_ShouldNotAffectRepository()
+    {
+        _stadiumRepository.AddStadium(_stadium);
+        var list = _stadiumRepository.GetAllStadiums();
+        list.Clear();
+        var result = _stadiumRepository.GetAllStadiums();
+        Assert.AreEqual(1, result.Count);
+    }
     
     // Tests DELETE 
     [TestMethod]
