@@ -49,3 +49,41 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+/* StadiumsCreate component styles */
+.stadium-back-link {
+    color: gray;
+    text-decoration: none;
+}
+.stadium-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: white;
+    margin-top: 1rem;
+}
+.stadium-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.stadium-icon {
+    background: #e8f5e9;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 24px;
+}
+.stadium-title { margin: 0; }
+.stadium-subtitle { color: gray; font-size: 14px; margin: 0; }
+.stadium-error { color: red; margin-bottom: 1rem; }
+.stadium-form-group { margin-bottom: 1rem; }
+.stadium-form-group--large { margin-bottom: 1.5rem; }
+.stadium-label { font-size: 13px; color: gray; }
+.stadium-required { color: red; }
+.stadium-input { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px; margin-top: 4px; }
+.stadium-textarea { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px; margin-top: 4px; min-height: 80px; }
+.stadium-actions { display: flex; gap: 1rem; }
+.stadium-btn-cancel { flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; background: white; text-align: center; text-decoration: none; color: black; display: inline-block; }
+.stadium-btn-submit { flex: 1; padding: 12px; background: green; color: white; border: none; border-radius: 8px; cursor: pointer; }
+

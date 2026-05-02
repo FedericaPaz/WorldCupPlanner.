@@ -18,4 +18,8 @@
       <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\css\stadiums.css" />
+    </ItemGroup>
+
 </Project>

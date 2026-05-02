@@ -8,7 +8,7 @@ public class StadiumRequest
     [StringLength(80, MinimumLength = 1, ErrorMessage = "El nombre debe tener entre 1 y 80 caracteres")]
     public string stadiumName { get; set; } = string.Empty;   
     
-    [Required(ErrorMessage = "La ciudad es obligatorio")]
+    [Required(ErrorMessage = "La ciudad es obligatoria")]
     [StringLength(60, MinimumLength = 1, ErrorMessage = "La ciudad debe tener entre 1 y 60 caracteres")]
     public string stadiumCity { get; set; } = string.Empty;
     

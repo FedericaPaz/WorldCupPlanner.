@@ -41,14 +41,60 @@ h1:focus {
     padding: 1rem 1rem 1rem 3.7rem;
     color: white;
 }
-
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+/* ─── Stadiums ─────────────────────────────── */
+.stadiums-container { padding: 1.5rem; }
+.stadiums-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.title { margin: 0; }
+.subtitle { color: gray; font-size: 14px; margin: 0; }
+.create-btn { background: green; color: white; padding: 10px 20px; border-radius: 8px; font-size: 14px; border: none; cursor: pointer; }
+.create-btn:focus { outline: 2px solid #00000033; }
+
+.stadiums-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+.stadium-card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 1rem; background: white; }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.icon { background: #e8f5e9; padding: 8px; border-radius: 8px; }
+.card-actions { display: flex; gap: 8px; }
+.icon-btn { background: none !important; border: none !important; cursor: pointer; font-size: 16px; padding: 4px; }
+.edit-btn { color: #555 !important; }
+.delete-btn { color: #c62828 !important; }
+
+.stadium-name { margin: 0.75rem 0 0.25rem; }
+.stadium-city { color: gray; font-size: 14px; margin: 0 0 0.5rem; }
+.stadium-desc { color: gray; font-size: 13px; margin: 0 0 0.5rem; }
+.stadium-capacity { font-size: 14px; margin: 0; }
+
+.message { margin-top: 1rem; padding: 0.5rem 0; }
+.message.error { color: red; }
+.message.success { color: green; }
+
+/* ─── Stadiums create─────────────────────────────── */
+.stadiums-create .card { border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; background: white; margin-top: 1rem; }
+.card-header { display:flex; align-items:center; gap:1rem; margin-bottom:1rem; }
+.card-header .icon { background: #e8f5e9; padding: 10px; border-radius: 8px; font-size: 24px; }
+.card-title { margin:0 }
+.card-sub { color: gray; font-size: 14px; margin:0 }
+
+.form-control { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px; margin-top: 4px; box-sizing: border-box; }
+.form-section { margin-bottom: 1rem; }
+
+.btn-submit { flex: 1; padding: 12px; background: green; color: white; border: none; border-radius: 8px; cursor: pointer; }
+.btn-submit[disabled] { opacity: 0.6; cursor: not-allowed; }
+.btn-cancel { flex: 1; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; background: white; color: black; cursor: pointer; text-align: center; }
+
+.validation-summary { color: #e50000; margin-bottom: 1rem; }
+.validation-message, .validation-message * { color: #e50000; font-size: 13px; margin-top: 4px; display: block; }
+
+.form-actions { display:flex; gap:1rem; margin-top:1rem }
+.back-link { margin-bottom: 0.5rem }
+.btn-cancel { padding: 8px 12px; border: 1px solid #e0e0e0; border-radius: 8px; background: white; color: black; cursor: pointer }
 
 
 

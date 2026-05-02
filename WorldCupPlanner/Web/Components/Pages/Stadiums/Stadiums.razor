@@ -1,12 +1,12 @@
 @page "/stadiums"
 @rendermode InteractiveServer
-@using System
-@using Domain
+
 @using DTOs
 @using IServices
+
 @inject IStadiumService Service
-@inject NavigationManager NavigationManager
-@inject Microsoft.JSInterop.IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+@inject Microsoft.JSInterop.IJSRuntime JS
 
 @if (_stadiums == null)
 {
@@ -15,87 +15,115 @@
 else
 {
     <div class="stadiums-container">
+
         <div class="stadiums-header">
             <div>
                 <h3 class="title">Gestión de Estadios</h3>
-                <p class="subtitle">@_stadiums.Count() estadios registrados</p>
+                <p class="subtitle">@_stadiums.Count estadios registrados</p>
             </div>
-            <button class="create-btn" @onclick="NavigateToCreate">+ Crear estadio</button>
+
+            <button class="create-btn" @onclick="GoToCreate">
+                + Crear estadio
+            </button>
         </div>
 
         <div class="stadiums-grid">
-            @foreach (var stadium in _stadiums)
+            @foreach (var s in _stadiums)
             {
-                <div class="stadium-card" @key="stadium.stadiumName">
+                <div class="stadium-card" @key="s.stadiumName">
+
                     <div class="card-top">
                         <div class="icon">📍</div>
+
                         <div class="card-actions">
-                            <button class="icon-btn edit-btn" @onclick="@(() => NavigateToEdit(stadium.stadiumName))" aria-label="Editar estadio">✏️</button>
-                            <button class="icon-btn delete-btn" @onclick="() => HandleDelete(stadium.stadiumName)" aria-label="Eliminar estadio">🗑️</button>
+                            <button class="icon-btn edit-btn"
+                                    @onclick="() => GoToEdit(s.stadiumName)">
+                                ✏️
+                            </button>
+
+                            <button class="icon-btn delete-btn"
+                                    @onclick="() => Delete(s.stadiumName)">
+                                🗑️
+                            </button>
                         </div>
                     </div>
 
-                    <h4 class="stadium-name">@stadium.stadiumName</h4>
-                    <p class="stadium-city">@stadium.stadiumCity</p>
-                    @if (!string.IsNullOrEmpty(stadium.stadiumDescription))
+                    <h4 class="stadium-name">@s.stadiumName</h4>
+                    <p class="stadium-city">@s.stadiumCity</p>
+
+                    @if (!string.IsNullOrWhiteSpace(s.stadiumDescription))
                     {
-                        <p class="stadium-desc">@stadium.stadiumDescription</p>
+                        <p class="stadium-desc">@s.stadiumDescription</p>
                     }
-                    <p class="stadium-capacity">Capacidad: <strong>@stadium.locativeCapacity.ToString("N0") personas</strong></p>
+
+                    <p class="stadium-capacity">
+                        Capacidad:
+                        <strong>@s.locativeCapacity.ToString("N0")</strong>
+                    </p>
+
                 </div>
             }
         </div>
     </div>
 }
 
-@if (!string.IsNullOrEmpty(_errorMessage))
+@if (!string.IsNullOrEmpty(_error))
 {
-    <div class="message error">@_errorMessage</div>
+    <div class="message error">@_error</div>
 }
 
-@if (!string.IsNullOrEmpty(_successMessage))
+@if (!string.IsNullOrEmpty(_success))
 {
-    <div class="message success">@_successMessage</div>
+    <div class="message success">@_success</div>
 }
 
-@code
-{
-    private IEnumerable<StadiumRequest.StadiumResponseDTO>? _stadiums;
-    private string _errorMessage = string.Empty;
-    private string _successMessage = string.Empty;
+@code {
+    private List<StadiumRequest>? _stadiums;
+    private string _error = string.Empty;
+    private string _success = string.Empty;
 
-    protected override Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        _stadiums = Service.GetAllStadiums();
-        return Task.CompletedTask;
+        LoadData();
     }
 
-    private void NavigateToCreate() => NavigationManager.NavigateTo("/stadiums/create");
-
-    private void NavigateToEdit(string name) => NavigationManager.NavigateTo($"/stadiums/edit/{Uri.EscapeDataString(name)}");
-
-    private async Task HandleDelete(string name)
+    private void LoadData()
     {
-        _errorMessage = string.Empty;
+        _stadiums = Service.GetAllStadiums();
+    }
+
+    private void GoToCreate()
+    {
+        Navigation.NavigateTo("/stadiums/create");
+    }
+
+    private void GoToEdit(string name)
+    {
+        Navigation.NavigateTo($"/stadiums/edit/{Uri.EscapeDataString(name)}");
+    }
+
+    private async Task Delete(string name)
+    {
+        _error = string.Empty;
+        _success = string.Empty;
+
         try
         {
-            var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"¿Eliminar estadio '{name}'?");
-            if (!confirmed)
-                return;
+            var ok = await JS.InvokeAsync<bool>("confirm", $"¿Eliminar '{name}'?");
+            if (!ok) return;
 
             Service.DeleteStadium(name);
-            _stadiums = Service.GetAllStadiums();
-            _successMessage = "Estadio eliminado correctamente.";
-            StateHasChanged();
 
-            // auto-hide success message
-            await Task.Delay(3000);
-            _successMessage = string.Empty;
-            StateHasChanged();
+            LoadData();
+
+            _success = "Estadio eliminado correctamente.";
+
+            await Task.Delay(2000);
+            _success = string.Empty;
         }
         catch (InvalidOperationException ex)
         {
-            _errorMessage = ex.Message;
+            _error = ex.Message;
         }
     }
 }
