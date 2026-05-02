@@ -2,12 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        <AssemblyName>WorldCupPlanner.IServices</AssemblyName>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DTOs\DTOs.csproj" />
+        <ProjectReference Include="..\DTOs\DTOs.csproj" />
     </ItemGroup>
 
 </Project>
