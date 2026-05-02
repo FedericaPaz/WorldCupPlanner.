@@ -24,6 +24,8 @@ public class StadiumRepository : IStadiumRepository
     
     public void DeleteStadium(Stadium stadium)
     {
+        if (stadium == null)
+            throw new ArgumentNullException(nameof(stadium));
         _stadiums.Remove(stadium);
     }
 

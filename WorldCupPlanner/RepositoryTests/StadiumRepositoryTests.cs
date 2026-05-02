@@ -85,4 +85,12 @@ public class StadiumRepositoryTests
         var result = _stadiumRepository.GetStadium("Campeon del Siglo");
         Assert.IsNull(result);
     }
+    
+    [TestMethod]
+    public void Delete_NullStadium_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            _stadiumRepository.DeleteStadium(null!)
+        );
+    }
 }
