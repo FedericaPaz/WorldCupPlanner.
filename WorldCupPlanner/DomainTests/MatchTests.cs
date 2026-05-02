@@ -170,4 +170,14 @@ public class MatchTests
      match.SetMatchResult(0, 2);
      Assert.AreEqual(awayTeam, match.WinnerMatch);
   }
+  
+  [TestMethod]
+  public void SetMatchResult_WithDraw_ShouldLeaveWinnerNull()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+     match.SetMatchResult(1, 1);
+     Assert.IsNull(match.WinnerMatch);
+  }
 }
