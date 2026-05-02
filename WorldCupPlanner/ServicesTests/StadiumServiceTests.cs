@@ -61,13 +61,7 @@ public class StadiumServiceTests
     [TestMethod]
     public void AddStadium_WithNullCity_ShouldThrowException()
     {
-        var dto = new StadiumRequest
-        {
-            stadiumName = "Campeon del Siglo",
-            stadiumCity = null!,
-            stadiumDescription = "Estadio de Peniarol",
-            locativeCapacity = 40700
-        };
+        var dto = CreateRequest("Campeon del Siglo", "", "Estadio de Peniarol", 40700);
         Assert.ThrowsException<ArgumentException>(() => _service.AddStadium(dto));
     }
 
