@@ -38,9 +38,8 @@ public class StadiumService : IStadiumService
         var existingStadium = _stadiumRepository.GetStadium(request.stadiumName);
         if (existingStadium != null)
             throw new InvalidOperationException("El estadio ya existe");
-
-        var newStadium = request.ToEntity();
-        _stadiumRepository.AddStadium(newStadium);
+        
+        _stadiumRepository.AddStadium(request.ToEntity());
     }
 
     public void DeleteStadium(string name)
