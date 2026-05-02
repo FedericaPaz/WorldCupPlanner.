@@ -7,12 +7,6 @@ public class UserRepository : IUserRepository
 {
     private readonly List<User> _users = new();
 
-    public UserRepository()
-    {
-        var adult1 = new User("Juan", "Perez", "Juan@gmail.com", new DateTime(05 / 05 / 2000), "conTraseñaDeJP!1");
-        _users.Add(adult1);
-    }
-
     public void AddUser(User user)
     {
         if (user is null)
@@ -24,6 +18,7 @@ public class UserRepository : IUserRepository
         {
             throw new ArgumentException($"Ya existe un usuario con el email {user.Email}.");
         }
+
         _users.Add(user);
     }
 
@@ -38,11 +33,14 @@ public class UserRepository : IUserRepository
         {
             throw new ArgumentNullException(nameof(user));
         }
+
         var existingUser = _users.FirstOrDefault(u => u.Email == user.Email);
+
         if (existingUser is null)
         {
             throw new InvalidOperationException($"No se encontró un usuario con el email {user.Email}.");
         }
+
         _users.Remove(existingUser);
         _users.Add(user);
     }
@@ -53,11 +51,14 @@ public class UserRepository : IUserRepository
         {
             throw new ArgumentNullException(nameof(user));
         }
+
         var existingUser = _users.FirstOrDefault(u => u.Email == user.Email);
+
         if (existingUser is null)
         {
             throw new InvalidOperationException($"No se encontró un usuario con el email {user.Email}.");
         }
+
         _users.Remove(existingUser);
     }
 
