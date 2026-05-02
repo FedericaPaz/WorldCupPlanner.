@@ -102,5 +102,9 @@ public class Match
             _winnerMatch = null;
     }
 
-
+    public void UpdateDate(DateTime newDate)
+    {
+        ValidateDate(newDate, _clock);
+        _dateMatch = newDate;
+    }
 }

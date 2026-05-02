@@ -180,4 +180,15 @@ public class MatchTests
      match.SetMatchResult(1, 1);
      Assert.IsNull(match.WinnerMatch);
   }
+  
+  [TestMethod]
+  public void UpdateDate_WithValidDate_ShouldUpdateDate()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+     var newDate = new DateTime(2026, 6, 5);
+
+     match.UpdateDate(newDate);
+     Assert.AreEqual(newDate, match.DateMatch);
+  }
 }
