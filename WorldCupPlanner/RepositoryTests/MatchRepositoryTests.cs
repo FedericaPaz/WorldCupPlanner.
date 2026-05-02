@@ -80,4 +80,11 @@ public class MatchRepositoryTests
         Assert.AreEqual(match1, matches[0]);
         Assert.AreEqual(match2, matches[1]);
     }
+    
+    [TestMethod]
+    public void Add_WithNullMatch_ShouldThrowArgumentNullException()
+    {
+        var repository = new MatchRepository();
+        Assert.ThrowsException<ArgumentNullException>(() => repository.AddMatch(null));
+    }
 }

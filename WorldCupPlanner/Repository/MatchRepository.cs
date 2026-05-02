@@ -9,6 +9,8 @@ public class MatchRepository : IMatchRepository
 
     public void AddMatch(Match match)
     {
+        if (match == null)
+            throw new ArgumentNullException(nameof(match));
         _matches.Add(match);
     }
 
