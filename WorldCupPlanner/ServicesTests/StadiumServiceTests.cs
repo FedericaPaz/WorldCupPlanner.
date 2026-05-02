@@ -44,6 +44,12 @@ public class StadiumServiceTests
         _service.AddStadium(dto);
         Assert.ThrowsException<InvalidOperationException>(() => _service.AddStadium(dto));
     }
+
+    [TestMethod]
+    public void AddNullRequest_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => _service.AddStadium(null!));
+    }
     
     [TestMethod]
     public void AddStadium_WithNullStadium_ShouldThrowException()
