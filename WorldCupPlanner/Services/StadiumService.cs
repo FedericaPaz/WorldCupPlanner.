@@ -44,6 +44,9 @@ public class StadiumService : IStadiumService
 
     public void DeleteStadium(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Nombre requerido");
+
         var stadium = _stadiumRepository.GetStadium(name);
         if (stadium == null)
             throw new InvalidOperationException("Estadio no encontrado");

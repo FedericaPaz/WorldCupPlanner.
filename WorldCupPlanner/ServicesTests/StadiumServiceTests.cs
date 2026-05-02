@@ -95,8 +95,18 @@ public class StadiumServiceTests
         var result = _service.GetStadium(dto.stadiumName);
         Assert.IsNull(result);
     }
-
     
+    [TestMethod]
+    public void DeleteStadium_WithNonExistingStadium_ShouldThrowException()
+    {
+        Assert.ThrowsException<InvalidOperationException>(() => _service.DeleteStadium("El estadio no existe"));
+    }
+
+    [TestMethod]
+    public void DeleteStadium_WithEmptyName_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => _service.DeleteStadium(string.Empty));
+    }
     
     [TestMethod]
     public void GetAllStadiums_WithNoStadiums_ShouldReturnEmptyList()
