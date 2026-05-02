@@ -80,6 +80,13 @@ public class StadiumServiceTests
     }
 
     [TestMethod]
+    public void AddStadium_WithCapacityBelowMinimum_ShouldThrowException()
+    {
+        var dto = CreateRequest("Camepon del Siglo", "Montevideo", "Estadio de Peniarol", 10000);
+        Assert.ThrowsException<ArgumentException>(() => _service.AddStadium(dto));
+    }
+
+    [TestMethod]
     public void DeleteStadium_WithExistingStadium_ShouldNotThrowException()
     {
         var dto = new StadiumRequest
