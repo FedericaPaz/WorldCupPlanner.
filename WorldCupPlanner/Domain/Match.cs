@@ -77,12 +77,7 @@ public class Match
             throw new ArgumentException("Los goles no pueden ser negativos.");
         _homeGoals = homeGoals;
         _awayGoals = awayGoals;
-        if (homeGoals > awayGoals)
-            _winnerMatch = _homeTeam;
-        else if (homeGoals < awayGoals)
-            _winnerMatch = _awayTeam;
-        else
-            _winnerMatch = null;
+        AssignWinner(homeGoals, awayGoals);
     }
 
     private void ValidateDate(DateTime dateMatch, IDateTimeMatch clock)
@@ -95,6 +90,16 @@ public class Match
     {
         if (clock == null)
             throw new ArgumentNullException(nameof(clock), "El reloj no puede ser vacío.");
+    }
+    
+    private void AssignWinner(int homeGoals, int awayGoals)
+    {
+        if (homeGoals > awayGoals)
+            _winnerMatch = _homeTeam;
+        else if (homeGoals < awayGoals)
+            _winnerMatch = _awayTeam;
+        else
+            _winnerMatch = null;
     }
 
 

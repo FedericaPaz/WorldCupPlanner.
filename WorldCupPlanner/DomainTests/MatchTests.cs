@@ -159,4 +159,15 @@ public class MatchTests
      var match = new Match( clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'a', clock);
      Assert.AreEqual('A', match.Group);
   }
+  
+  [TestMethod]
+  public void SetMatchResult_WithAwayTeamWinner_ShouldAssignAwayTeamAsWinner()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var awayTeam = new TeamStub("Argentina");
+     var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), awayTeam, 'A', clock);
+
+     match.SetMatchResult(0, 2);
+     Assert.AreEqual(awayTeam, match.WinnerMatch);
+  }
 }
