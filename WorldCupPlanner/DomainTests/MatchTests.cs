@@ -151,4 +151,12 @@ public class MatchTests
      Assert.ThrowsException<ArgumentNullException>(() =>
         new Match( new DateTime(2026, 6, 1), new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', null));
   }
+  
+  [TestMethod]
+  public void CreateMatch_WithLowercaseGroup_ShouldSaveGroupAsUppercase()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var match = new Match( clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'a', clock);
+     Assert.AreEqual('A', match.Group);
+  }
 }
