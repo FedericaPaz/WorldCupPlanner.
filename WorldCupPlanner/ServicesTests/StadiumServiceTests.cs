@@ -71,15 +71,13 @@ public class StadiumServiceTests
         var dto = CreateRequest("Camepon del siglo", new string('a', 61), "Estadio de Peniarol", 40700);
         Assert.ThrowsException<ArgumentException>(() => _service.AddStadium(dto));
     }
-        
 
-    /*
     [TestMethod]
-    public void AddStadium_WithCapacityBelowMinimum_ShouldThrowException()
+    public void AddStadium_WithTooLongDescription_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentException>(() =>  _service.AddStadium("Campoen del Siglo", "Montevideo", "Estadio de Peniarol", 19999));
+        var dto = CreateRequest("Campeon del Siglo", "Montevideo", new string('a', 401), 40700);
+        Assert.ThrowsException<ArgumentException>(() => _service.AddStadium(dto));
     }
-    */
 
     [TestMethod]
     public void DeleteStadium_WithExistingStadium_ShouldNotThrowException()

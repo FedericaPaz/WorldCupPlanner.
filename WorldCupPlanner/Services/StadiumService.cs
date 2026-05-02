@@ -30,8 +30,10 @@ public class StadiumService : IStadiumService
             throw new ArgumentException("La ciudad es requerida", nameof(request.stadiumCity));
         if (request.stadiumCity.Length > MaxCityLength)
             throw new ArgumentException("Ciudad demasiado larga");
+        if(request.stadiumDescription != null && request.stadiumDescription.Length > MaxDescriptionLength)
+            throw new ArgumentException("La descripción es demasiado larga");
         
-
+        
         var existingStadium = _stadiumRepository.GetStadium(request.stadiumName);
         if (existingStadium != null)
             throw new InvalidOperationException("El estadio ya existe");
