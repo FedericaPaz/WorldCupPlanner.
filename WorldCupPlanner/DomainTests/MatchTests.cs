@@ -201,4 +201,15 @@ public class MatchTests
 
      Assert.ThrowsException<ArgumentException>(() => match.UpdateDate(pastDate));
   }
+  
+  [TestMethod]
+  public void UpdateStadium_WithValidStadium_ShouldUpdateStadium()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+     var newStadium = new StadiumStub("Maracana");
+
+     match.UpdateStadium(newStadium);
+     Assert.AreEqual(newStadium, match.Stadium);
+  }
 }

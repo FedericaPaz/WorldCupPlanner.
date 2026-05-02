@@ -107,4 +107,10 @@ public class Match
         ValidateDate(newDate, _clock);
         _dateMatch = newDate;
     }
+    
+    public void UpdateStadium(IStadium newStadium)
+    {
+        ValidateStadium(newStadium);
+        _stadium = newStadium;
+    }
 }
