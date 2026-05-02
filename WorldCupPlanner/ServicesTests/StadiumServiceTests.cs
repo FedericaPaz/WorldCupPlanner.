@@ -40,22 +40,9 @@ public class StadiumServiceTests
     [TestMethod]
     public void AddStadium_WithDuplicateName_ShouldThrowException()
     {
-        var dto1 = new StadiumRequest
-        {
-            stadiumName = "Campeon del Siglo",
-            stadiumCity = "Montevideo",
-            stadiumDescription = "Estadio de Peniarol",
-            locativeCapacity = 40700
-        };
-        _service.AddStadium(dto1);
-        var dto2 = new StadiumRequest
-        {
-            stadiumName = "Campeon del Siglo",
-            stadiumCity = "OtraCiudad",
-            stadiumDescription = "OtraDescripcion",
-            locativeCapacity = 40600
-        };
-        Assert.ThrowsException<InvalidOperationException>(() => _service.AddStadium(dto2));
+        var dto = CreateRequest("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        _service.AddStadium(dto);
+        Assert.ThrowsException<InvalidOperationException>(() => _service.AddStadium(dto));
     }
     
     [TestMethod]
