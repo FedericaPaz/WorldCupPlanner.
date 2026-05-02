@@ -16,7 +16,7 @@ public class UserRepository : IUserRepository
 
         if (_users.Any(u => u.Email == user.Email))
         {
-            throw new ArgumentException($"User with email {user.Email} already exists");
+            throw new ArgumentException($"Ya existe un usuario con el email {user.Email}.");
         }
         _users.Add(user);
     }
@@ -35,7 +35,7 @@ public class UserRepository : IUserRepository
         var existingUser = _users.FirstOrDefault(u => u.Email == user.Email);
         if (existingUser is null)
         {
-            throw new InvalidOperationException($"User with email {user.Email} not found");
+            throw new InvalidOperationException($"No se encontró un usuario con el email {user.Email}.");
         }
         _users.Remove(existingUser);
         _users.Add(user);
@@ -50,7 +50,7 @@ public class UserRepository : IUserRepository
         var existingUser = _users.FirstOrDefault(u => u.Email == user.Email);
         if (existingUser is null)
         {
-            throw new InvalidOperationException($"User with email {user.Email} not found");
+            throw new InvalidOperationException($"No se encontró un usuario con el email {user.Email}.");
         }
         _users.Remove(existingUser);
     }
