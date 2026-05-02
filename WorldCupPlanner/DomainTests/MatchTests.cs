@@ -144,4 +144,11 @@ public class MatchTests
      Assert.AreEqual(1, match1.IdMatch);
      Assert.AreEqual(2, match2.IdMatch);
   }
+  
+  [TestMethod]
+  public void CreateMatch_WithNullClock_ShouldThrowArgumentNullException()
+  {
+     Assert.ThrowsException<ArgumentNullException>(() =>
+        new Match( new DateTime(2026, 6, 1), new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', null));
+  }
 }

@@ -25,20 +25,22 @@ public class Match
     public int? AwayGoals => _awayGoals;
     public ITeam? WinnerMatch => _winnerMatch;
 
+
     public Match(DateTime dateMatch, IStadium stadium, ITeam homeTeam, ITeam awayTeam, char group, IDateTimeMatch clock)
     {
-        ValidateGroup(group);
-        ValidateTeams(homeTeam, awayTeam);
+        ValidateClock(clock);
+        ValidateDate(dateMatch, clock);
         ValidateStadium(stadium);
+        ValidateTeams(homeTeam, awayTeam);
+        ValidateGroup(group);
 
         _idMatch = ++_idCounter;
         _dateMatch = dateMatch;
         _stadium = stadium;
         _homeTeam = homeTeam;
         _awayTeam = awayTeam;
-        _group = char.ToUpper(group); 
+        _group = char.ToUpper(group);
         _clock = clock;
-        ValidateDate(dateMatch, clock);
     }
 
     public static void ResetIdCounter()
@@ -48,31 +50,31 @@ public class Match
     
     private void ValidateGroup(char group)
     {
-        if (group == '\0')  throw new ArgumentNullException("Group must not be empty.");
+        if (group == '\0')  throw new ArgumentNullException("El grupo no puede ser vacio.");
         char groupToUpper = char.ToUpper(group);
-        if (groupToUpper < 'A' || groupToUpper > 'L') throw new ArgumentException($"Group must be a letter between A and L. Value received: '{group}'.");
+        if (groupToUpper < 'A' || groupToUpper > 'L') throw new ArgumentException($"El grupo debe ser una letra entre la A y la L. Valor recibido: '{group}'.");
     }
     
     private void ValidateTeams(ITeam homeTeam, ITeam awayTeam)
     {
-        if (homeTeam == null) throw new ArgumentNullException(nameof(homeTeam), "Home team must not be null.");
-        if (awayTeam == null) throw new ArgumentNullException(nameof(awayTeam), "Away team must not be null.");
-        if (homeTeam == awayTeam) throw new ArgumentException("Home team and away team must be different.");
+        if (homeTeam == null) throw new ArgumentNullException(nameof(homeTeam), "El equipo local no puede ser vacio.");
+        if (awayTeam == null) throw new ArgumentNullException(nameof(awayTeam), "El equipo visitante no puede ser vacio.");
+        if (homeTeam == awayTeam) throw new ArgumentException("El equipo local y el equipo visitante deben ser diferentes.");
     }
 
     private void ValidateStadium(IStadium stadium)
     {
-        if (stadium == null) throw new ArgumentNullException(nameof(stadium), "Stadium must not be null.");
+        if (stadium == null) throw new ArgumentNullException(nameof(stadium), "El estadio no puede ser vacio");
     }
 
     public void SetMatchResult(int homeGoals, int awayGoals)
     {
         if (_clock.Now < _dateMatch)
-            throw new InvalidOperationException("Match has not been played yet.");
+            throw new InvalidOperationException("El partido todavía no se jugó.");
         if (_homeGoals != null || _awayGoals != null)
-            throw new InvalidOperationException("Result already set.");
+            throw new InvalidOperationException("El resultado ya fue seteado.");
         if (homeGoals < 0 || awayGoals < 0)
-            throw new ArgumentException("Goals cannot be negative.");
+            throw new ArgumentException("Los goles no pueden ser negativos.");
         _homeGoals = homeGoals;
         _awayGoals = awayGoals;
         if (homeGoals > awayGoals)
@@ -86,7 +88,13 @@ public class Match
     private void ValidateDate(DateTime dateMatch, IDateTimeMatch clock)
     {
         if (dateMatch < clock.Now)
-            throw new ArgumentException("Match date cannot be in the past.");
+            throw new ArgumentException("La fecha no puede ser pasada.");
+    }
+    
+    private void ValidateClock(IDateTimeMatch clock)
+    {
+        if (clock == null)
+            throw new ArgumentNullException(nameof(clock), "El reloj no puede ser vacío.");
     }
 
 
