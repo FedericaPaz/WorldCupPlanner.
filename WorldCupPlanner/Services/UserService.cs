@@ -79,7 +79,7 @@ public class UserService
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentException("Email cannot be empty.");
+            throw new ArgumentException("El email no puede estar vacío.");
         }
     }
 
@@ -88,7 +88,7 @@ public class UserService
         var user = _userRepository.GetUser(email);
         if (user is null)
         {
-            throw new InvalidOperationException($"User with email {email} not found");
+            throw new InvalidOperationException($"No se encontró un usuario con el email {email}.");
         }
         return user;
     }
