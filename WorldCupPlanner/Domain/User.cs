@@ -1,4 +1,8 @@
-﻿namespace Domain;
+﻿using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace Domain;
 
 public class User
 {
@@ -6,39 +10,101 @@ public class User
     public string LastName { get; private set; }
     public string Email { get; private set; }
     public DateTime BirthDate { get; private set; }
-    public string Password { get; private set; }
+    public string PasswordHash { get; private set; }
 
     public User(string firstName, string lastName, string email, DateTime birthDate, string password)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-        {
-            throw new ArgumentException("First name cannot be empty.");
-        }
+        ValidateFirstName(firstName);
+        ValidateLastName(lastName);
+        ValidateEmailNotEmpty(email);
+        ValidateBirthDate(birthDate);
+        ValidatePassword(password);
+        ValidateEmailFormat(email);
 
-        if (string.IsNullOrWhiteSpace(lastName))
-        {
-            throw new ArgumentException("Last name cannot be empty.");
-        }
-
-        if (string.IsNullOrWhiteSpace(email))
-        {
-            throw new ArgumentException("Email cannot be empty.");
-        }
-        
-        if (birthDate > DateTime.Today)
-        {
-            throw new ArgumentException("Birth date cannot be in the future.");
-        }
-        
-        if (string.IsNullOrWhiteSpace(password))
-        {
-            throw new ArgumentException("Password cannot be empty.");
-        }
-        
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         BirthDate = birthDate;
-        Password = password;
+        PasswordHash = HashPassword(password);
+    }
+
+    private static void ValidateFirstName(string firstName)
+    {
+        if (string.IsNullOrWhiteSpace(firstName))
+        {
+            throw new ArgumentException("El nombre no puede estar vacío.");
+        }
+    }
+
+    private void ValidateLastName(string lastName)
+    {
+        if (string.IsNullOrWhiteSpace(lastName))
+        {
+            throw new ArgumentException("El apellido no puede estar vacío.");
+        }
+    }
+
+    private void ValidateEmailNotEmpty(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new ArgumentException("El email no puede estar vacío.");
+        }
+    }
+
+    private void ValidateBirthDate(DateTime birthDate)
+    {
+        if (birthDate > DateTime.Today)
+        {
+            throw new ArgumentException("La fecha de nacimiento no puede ser futura.");
+        }
+    }
+
+    private void ValidatePassword(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            throw new ArgumentException("La contraseña no puede estar vacía.");
+        }
+
+        if (password.Length < 8)
+        {
+            throw new ArgumentException("La contraseña debe tener al menos 8 caracteres.");
+        }
+
+        if (!password.Any(char.IsUpper))
+        {
+            throw new ArgumentException("La contraseña debe contener al menos una letra mayúscula.");
+        }
+
+        if (!password.Any(char.IsLower))
+        {
+            throw new ArgumentException("La contraseña debe contener al menos una letra minúscula.");
+        }
+
+        if (!password.Any(char.IsDigit))
+        {
+            throw new ArgumentException("La contraseña debe contener al menos un número.");
+        }
+
+        if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+        {
+            throw new ArgumentException("La contraseña debe contener al menos un carácter especial.");
+        }
+    }
+
+    private void ValidateEmailFormat(string email)
+    {
+        if (!email.Contains("@"))
+        {
+            throw new ArgumentException("El formato del email no es válido.");
+        }
+    }
+    private static string HashPassword(string password)
+    {
+        byte[] bytes = Encoding.UTF8.GetBytes(password);
+        byte[] hash = SHA256.HashData(bytes);
+        return Convert.ToBase64String(hash);
     }
 }
+
