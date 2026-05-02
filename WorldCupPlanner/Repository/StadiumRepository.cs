@@ -9,6 +9,9 @@ public class StadiumRepository : IStadiumRepository
 
     public void AddStadium(Stadium stadium)
     {
+        if (stadium == null)
+            throw new ArgumentNullException(nameof(stadium));   
+            
         _stadiums.Add(stadium);
     }
 
