@@ -1,0 +1,46 @@
+﻿@using Web.Services
+@inject SessionService SessionService
+@inject NavigationManager Navigation
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Banking App</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="bankaccounts">
+                <span class="bi bi-bank-nav-menu" aria-hidden="true"></span> Bank Accounts
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="persons">
+                <span class="bi bi-people-fill-nav-menu" aria-hidden="true"></span> Persons
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <button @onclick="HandleLogout"
+                    style="background:none;border:none;padding:0;width:100%;text-align:left;"
+                    class="nav-link">
+                Cerrar sesión (@SessionService.GetCurrentUser()?.Name)
+            </button>
+        </div>
+    </nav>
+</div>
+
+@code {
+    private async Task HandleLogout()
+    {
+        await SessionService.LogOut();
+        Navigation.NavigateTo("/login");
+    }
+}
