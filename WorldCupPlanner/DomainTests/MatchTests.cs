@@ -221,4 +221,15 @@ public class MatchTests
 
      Assert.ThrowsException<ArgumentNullException>(() => match.UpdateStadium(null));
   }
+  
+  [TestMethod]
+  public void CreateMatch_WithDifferentTeamObjectsButSameName_ShouldThrowArgumentException()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var homeTeam = new TeamStub("Uruguay");
+     var awayTeam = new TeamStub("Uruguay");
+
+     Assert.ThrowsException<ArgumentException>(() =>
+        new Match(clock.Now, new StadiumStub("Centenario"), homeTeam, awayTeam, 'A', clock));
+  }
 }

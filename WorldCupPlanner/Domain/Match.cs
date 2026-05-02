@@ -59,7 +59,8 @@ public class Match
     {
         if (homeTeam == null) throw new ArgumentNullException(nameof(homeTeam), "El equipo local no puede ser vacio.");
         if (awayTeam == null) throw new ArgumentNullException(nameof(awayTeam), "El equipo visitante no puede ser vacio.");
-        if (homeTeam == awayTeam) throw new ArgumentException("El equipo local y el equipo visitante deben ser diferentes.");
+        if (homeTeam._teamName == awayTeam._teamName)
+            throw new ArgumentException("El equipo local y el equipo visitante deben ser diferentes.");
     }
 
     private void ValidateStadium(IStadium stadium)
