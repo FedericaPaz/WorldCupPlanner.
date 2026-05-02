@@ -38,6 +38,7 @@ public class StadiumRepositoryTests
         _stadiumRepository.AddStadium(_stadium);
         var result = _stadiumRepository.GetStadium("Campeon del Siglo");
         Assert.IsNotNull(result);
+        Assert.AreEqual("Campeon del Siglo", result.StadiumName);
     }
     
     [TestMethod]
