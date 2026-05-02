@@ -7,23 +7,23 @@ public class StadiumRepository : IStadiumRepository
 {
     private readonly List<Stadium> _stadiums = new List<Stadium>();
 
-    public void AddStadium(Stadium? stadium)
+    public void AddStadium(Stadium stadium)
     {
         _stadiums.Add(stadium);
     }
 
     public Stadium? GetStadium(string nameStadium)
     {
-        return _stadiums.FirstOrDefault(s => s.StadiumName == nameStadium);
+        return _stadiums.FirstOrDefault(s => s.StadiumName.Equals(nameStadium, StringComparison.OrdinalIgnoreCase));
     }
     
-    public void DeleteStadium(Stadium? stadium)
+    public void DeleteStadium(Stadium stadium)
     {
         _stadiums.Remove(stadium);
     }
 
     public List<Stadium> GetAllStadiums()
     {
-        return _stadiums;
+        return _stadiums.ToList();
     }
 }
