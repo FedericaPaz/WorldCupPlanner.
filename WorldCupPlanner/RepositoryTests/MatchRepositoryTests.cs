@@ -57,4 +57,12 @@ public class MatchRepositoryTests
         var repository = new MatchRepository();
         Assert.ThrowsException<ArgumentException>(() => repository.GetMatchById(-1));
     }
+    
+    [TestMethod]
+    public void GetAll_WhenRepositoryIsEmpty_ShouldReturnEmptyList()
+    {
+        var repository = new MatchRepository();
+        var matches = repository.GetAllMatches();
+        Assert.AreEqual(0, matches.Count);
+    }
 }

@@ -14,7 +14,7 @@ public class MatchRepository : IMatchRepository
 
     public List<Match> GetAllMatches()
     {
-        return _matches;
+        return new List<Match>(_matches);
     }
 
     public Match GetMatchById(int matchId)
