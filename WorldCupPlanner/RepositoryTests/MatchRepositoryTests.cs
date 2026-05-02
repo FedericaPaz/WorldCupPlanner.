@@ -24,4 +24,16 @@ public class MatchRepositoryTests
         Assert.AreEqual(1, repository.GetAllMatches().Count);
         Assert.AreEqual(result, repository.GetAllMatches()[0]);
     }
+    
+    [TestMethod]
+    public void GetById_WithExistingMatch_ShouldReturnMatch()
+    {
+        var repository = new MatchRepository();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+        var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+        repository.AddMatch(match);
+        var result = repository.GetMatchById(match.IdMatch);
+        Assert.AreEqual(match, result);
+    }
 }

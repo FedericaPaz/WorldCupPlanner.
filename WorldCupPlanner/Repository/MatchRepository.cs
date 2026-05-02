@@ -16,4 +16,10 @@ public class MatchRepository : IMatchRepository
     {
         return _matches;
     }
+    
+    public Match GetMatchById(int matchId)
+    {
+        return _matches.First(m => m.IdMatch == matchId);
+    }
+    
 }
