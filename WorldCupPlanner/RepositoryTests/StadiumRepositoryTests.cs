@@ -21,6 +21,8 @@ public class StadiumRepositoryTests
     public void Add_OneStadium_ShouldNotThrowException()
     {
         _stadiumRepository.AddStadium(_stadium);
+        var result = _stadiumRepository.GetStadium("Campeon del Siglo");
+        Assert.IsNotNull(result);
     }
     
     // Tests para GET
