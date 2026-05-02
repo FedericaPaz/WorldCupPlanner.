@@ -17,6 +17,8 @@ public class StadiumRepository : IStadiumRepository
 
     public Stadium? GetStadium(string nameStadium)
     {
+        if (string.IsNullOrWhiteSpace(nameStadium))
+            return null;
         return _stadiums.FirstOrDefault(s => s.StadiumName.Equals(nameStadium, StringComparison.OrdinalIgnoreCase));
     }
     
