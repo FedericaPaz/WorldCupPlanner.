@@ -43,4 +43,18 @@ public class MatchRepositoryTests
         var repository = new MatchRepository();
         Assert.ThrowsException<KeyNotFoundException>(() => repository.GetMatchById(99));
     }
+    
+    [TestMethod]
+    public void GetById_WithInvalidId_ShouldThrowArgumentException()
+    {
+        var repository = new MatchRepository();
+        Assert.ThrowsException<ArgumentException>(() => repository.GetMatchById(0));
+    }
+    
+    [TestMethod]
+    public void GetById_WithNegativeId_ShouldThrowArgumentException()
+    {
+        var repository = new MatchRepository();
+        Assert.ThrowsException<ArgumentException>(() => repository.GetMatchById(-1));
+    }
 }

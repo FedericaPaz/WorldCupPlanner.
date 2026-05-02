@@ -19,9 +19,14 @@ public class MatchRepository : IMatchRepository
 
     public Match GetMatchById(int matchId)
     {
+        if (matchId <= 0)
+            throw new ArgumentException("El id debe ser mayor a 0.");
+        
         Match? match = _matches.FirstOrDefault(m => m.IdMatch == matchId);
+
         if (match == null)
             throw new KeyNotFoundException("No existe un partido con ese id.");
+
         return match;
     }
 
