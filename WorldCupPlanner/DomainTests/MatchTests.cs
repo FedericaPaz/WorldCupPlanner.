@@ -212,4 +212,13 @@ public class MatchTests
      match.UpdateStadium(newStadium);
      Assert.AreEqual(newStadium, match.Stadium);
   }
+  
+  [TestMethod]
+  public void UpdateStadium_WithNullStadium_ShouldThrowArgumentNullException()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+     var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+     Assert.ThrowsException<ArgumentNullException>(() => match.UpdateStadium(null));
+  }
 }
