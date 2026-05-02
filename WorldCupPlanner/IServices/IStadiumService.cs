@@ -1,6 +1,6 @@
-using Domain;
-namespace IServices;
 using DTOs;
+
+namespace IServices;
 
 public interface IStadiumService
 {

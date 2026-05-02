@@ -31,14 +31,10 @@ public class StadiumServiceTests
     [TestMethod]
     public void AddStadium_WithValidData_ShouldNotThrowException()
     {
-        var dto = new StadiumRequest
-        {
-            stadiumName = "Campeon del Siglo",
-            stadiumCity = "Montevideo",
-            stadiumDescription = "Estadio de Peniarol",
-            locativeCapacity = 40700
-        };
+        var dto = CreateRequest("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
         _service.AddStadium(dto);
+        var result = _service.GetStadium(dto.stadiumName);
+        Assert.IsNotNull(result);
     }
 
     [TestMethod]
