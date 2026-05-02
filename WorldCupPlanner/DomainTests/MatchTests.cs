@@ -15,18 +15,22 @@ public class MatchTests
    [TestMethod]
    public void CreateMatch_WithValidName_ShouldCreateNewMatch()
    {
+      var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+      var stadium = new StadiumStub("Centenario");
       var homeTeam = new TeamStub("Uruguay");
       var awayTeam = new TeamStub("Argentina");
-      var stadium = new StadiumStub("Estadio Centenario");
-      var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
       var match = new Match(clock.Now, stadium, homeTeam, awayTeam, 'A', clock);
 
       Assert.AreEqual(1, match.IdMatch);
+      Assert.AreEqual(clock.Now, match.DateMatch);
+      Assert.AreEqual(stadium, match.Stadium);
       Assert.AreEqual(homeTeam, match.HomeTeam);
       Assert.AreEqual(awayTeam, match.AwayTeam);
       Assert.AreEqual('A', match.Group);
       Assert.IsNull(match.HomeGoals);
+      Assert.IsNull(match.AwayGoals);
+      Assert.IsNull(match.WinnerMatch);
    }
 
    [TestMethod]
