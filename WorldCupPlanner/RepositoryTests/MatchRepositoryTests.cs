@@ -36,4 +36,11 @@ public class MatchRepositoryTests
         var result = repository.GetMatchById(match.IdMatch);
         Assert.AreEqual(match, result);
     }
+    
+    [TestMethod]
+    public void GetById_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
+    {
+        var repository = new MatchRepository();
+        Assert.ThrowsException<KeyNotFoundException>(() => repository.GetMatchById(99));
+    }
 }

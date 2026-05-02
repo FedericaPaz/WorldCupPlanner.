@@ -16,10 +16,14 @@ public class MatchRepository : IMatchRepository
     {
         return _matches;
     }
-    
+
     public Match GetMatchById(int matchId)
     {
-        return _matches.First(m => m.IdMatch == matchId);
+        Match? match = _matches.FirstOrDefault(m => m.IdMatch == matchId);
+        if (match == null)
+            throw new KeyNotFoundException("No existe un partido con ese id.");
+        return match;
     }
+
     
 }
