@@ -50,7 +50,7 @@ public class Match
     
     private void ValidateGroup(char group)
     {
-        if (group == '\0')  throw new ArgumentNullException("El grupo no puede ser vacio.");
+        if (group == '\0')  throw new ArgumentNullException(nameof(group), "El grupo no puede ser vacio.");
         char groupToUpper = char.ToUpper(group);
         if (groupToUpper < 'A' || groupToUpper > 'L') throw new ArgumentException($"El grupo debe ser una letra entre la A y la L. Valor recibido: '{group}'.");
     }
@@ -72,7 +72,7 @@ public class Match
     {
         if (_clock.Now < _dateMatch)
             throw new InvalidOperationException("El partido todavía no se jugó.");
-        if (_homeGoals != null || _awayGoals != null)
+        if (_homeGoals.HasValue || _awayGoals.HasValue)
             throw new InvalidOperationException("El resultado ya fue seteado.");
         if (homeGoals < 0 || awayGoals < 0)
             throw new ArgumentException("Los goles no pueden ser negativos.");
