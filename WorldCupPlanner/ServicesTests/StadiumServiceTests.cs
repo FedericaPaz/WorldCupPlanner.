@@ -1,4 +1,4 @@
-using Domain;
+using DTOs;
 using Repository;
 using Services;
 
@@ -10,17 +10,28 @@ public class StadiumServiceTests
     private StadiumService _service;
     private StadiumRepository  _repository;
 
+    private StadiumRequest CreateRequest(string stadiumName, string stadiumCity, string? stadiumDescription, int locativeCapacity)
+    {
+        return new StadiumRequest()
+        {
+            stadiumName = stadiumName,
+            stadiumCity = stadiumCity,
+            stadiumDescription = stadiumDescription,
+            locativeCapacity = locativeCapacity
+        };
+    }
+    
     [TestInitialize]
     public void Setup()
     {
         _repository = new StadiumRepository();
         _service = new StadiumService(_repository);
     }
-
+    
     [TestMethod]
     public void AddStadium_WithValidData_ShouldNotThrowException()
     {
-        var dto = new DTOs.StadiumRequest.CreateStadiumDTO
+        var dto = new StadiumRequest
         {
             stadiumName = "Campeon del Siglo",
             stadiumCity = "Montevideo",
@@ -33,7 +44,7 @@ public class StadiumServiceTests
     [TestMethod]
     public void AddStadium_WithDuplicateName_ShouldThrowException()
     {
-        var dto1 = new DTOs.StadiumRequest.CreateStadiumDTO
+        var dto1 = new StadiumRequest
         {
             stadiumName = "Campeon del Siglo",
             stadiumCity = "Montevideo",
@@ -41,7 +52,7 @@ public class StadiumServiceTests
             locativeCapacity = 40700
         };
         _service.AddStadium(dto1);
-        var dto2 = new DTOs.StadiumRequest.CreateStadiumDTO
+        var dto2 = new StadiumRequest
         {
             stadiumName = "Campeon del Siglo",
             stadiumCity = "OtraCiudad",
@@ -60,7 +71,7 @@ public class StadiumServiceTests
     [TestMethod]
     public void AddStadium_WithNullCity_ShouldThrowException()
     {
-        var dto = new DTOs.StadiumRequest.CreateStadiumDTO
+        var dto = new StadiumRequest
         {
             stadiumName = "Campeon del Siglo",
             stadiumCity = null!,
@@ -81,7 +92,7 @@ public class StadiumServiceTests
     [TestMethod]
     public void DeleteStadium_WithExistingStadium_ShouldNotThrowException()
     {
-        var dto = new DTOs.StadiumRequest.CreateStadiumDTO
+        var dto = new StadiumRequest
         {
             stadiumName = "Campeon del Siglo",
             stadiumCity = "Montevideo",
@@ -129,7 +140,7 @@ public class StadiumServiceTests
     [TestMethod]
     public void GetStadium_WithExistingStadium_ShouldReturnStadium()
     {
-        var dto = new DTOs.StadiumRequest.CreateStadiumDTO
+        var dto = new StadiumRequest
         {
             stadiumName = "Campeon del Siglo",
             stadiumCity = "Montevideo",
