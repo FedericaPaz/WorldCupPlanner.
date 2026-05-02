@@ -32,7 +32,7 @@ public class User
     {
         if (string.IsNullOrWhiteSpace(firstName))
         {
-            throw new ArgumentException("First name cannot be empty.");
+            throw new ArgumentException("El nombre no puede estar vacío.");
         }
     }
 
@@ -40,7 +40,7 @@ public class User
     {
         if (string.IsNullOrWhiteSpace(lastName))
         {
-            throw new ArgumentException("Last name cannot be empty.");
+            throw new ArgumentException("El apellido no puede estar vacío.");
         }
     }
 
@@ -48,7 +48,7 @@ public class User
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentException("Email cannot be empty.");
+            throw new ArgumentException("El email no puede estar vacío.");
         }
     }
 
@@ -56,7 +56,7 @@ public class User
     {
         if (birthDate > DateTime.Today)
         {
-            throw new ArgumentException("Birth date cannot be in the future.");
+            throw new ArgumentException("La fecha de nacimiento no puede ser futura.");
         }
     }
 
@@ -64,32 +64,32 @@ public class User
     {
         if (string.IsNullOrWhiteSpace(password))
         {
-            throw new ArgumentException("Password cannot be empty.");
+            throw new ArgumentException("La contraseña no puede estar vacía.");
         }
 
         if (password.Length < 8)
         {
-            throw new ArgumentException("Password must be at least 8 characters long.");
+            throw new ArgumentException("La contraseña debe tener al menos 8 caracteres.");
         }
 
         if (!password.Any(char.IsUpper))
         {
-            throw new ArgumentException("Password must contain at least one uppercase letter.");
+            throw new ArgumentException("La contraseña debe contener al menos una letra mayúscula.");
         }
 
         if (!password.Any(char.IsLower))
         {
-            throw new ArgumentException("Password must contain at least one lowercase letter.");
+            throw new ArgumentException("La contraseña debe contener al menos una letra minúscula.");
         }
 
         if (!password.Any(char.IsDigit))
         {
-            throw new ArgumentException("Password must contain at least one number.");
+            throw new ArgumentException("La contraseña debe contener al menos un número.");
         }
 
         if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
         {
-            throw new ArgumentException("Password must contain at least one special character.");
+            throw new ArgumentException("La contraseña debe contener al menos un carácter especial.");
         }
     }
 
@@ -97,7 +97,7 @@ public class User
     {
         if (!email.Contains("@"))
         {
-            throw new ArgumentException("Email format is invalid.");
+            throw new ArgumentException("El formato del email no es válido.");
         }
     }
     private static string HashPassword(string password)
