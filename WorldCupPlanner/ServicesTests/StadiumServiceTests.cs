@@ -54,7 +54,8 @@ public class StadiumServiceTests
     [TestMethod]
     public void AddStadium_WithNullStadium_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => _service.AddStadium(null!));
+        var dto = CreateRequest("", "Montevideo", "Estadio de Peniarol", 40700);
+        Assert.ThrowsException<ArgumentException>(() => _service.AddStadium(dto));
     }
     
     [TestMethod]
