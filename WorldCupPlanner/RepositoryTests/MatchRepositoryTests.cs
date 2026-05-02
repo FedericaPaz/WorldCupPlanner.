@@ -65,4 +65,19 @@ public class MatchRepositoryTests
         var matches = repository.GetAllMatches();
         Assert.AreEqual(0, matches.Count);
     }
+    
+    [TestMethod]
+    public void GetAll_WithMatches_ShouldReturnAllMatches()
+    {
+        var repository = new MatchRepository();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+        var match1 = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+        var match2 = new Match(clock.Now, new StadiumStub("Maracana"), new TeamStub("Brasil"), new TeamStub("Peru"), 'B', clock);
+        repository.AddMatch(match1);
+        repository.AddMatch(match2);
+        var matches = repository.GetAllMatches();
+        Assert.AreEqual(2, matches.Count);
+        Assert.AreEqual(match1, matches[0]);
+        Assert.AreEqual(match2, matches[1]);
+    }
 }
