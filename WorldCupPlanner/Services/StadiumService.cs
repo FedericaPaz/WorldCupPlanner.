@@ -9,6 +9,11 @@ namespace Services;
 public class StadiumService : IStadiumService
 {
     private readonly IStadiumRepository _stadiumRepository;
+    
+    private const int MinCapacity = 20000;
+    private const int MaxNameLength = 80;
+    private const int MaxCityLength = 60;
+    private const int MaxDescriptionLength = 400;
 
     public StadiumService(IStadiumRepository repository)
     {
@@ -18,11 +23,14 @@ public class StadiumService : IStadiumService
     public void AddStadium(StadiumRequest request)
     {
         if (request is null)
-            throw new ArgumentNullException(nameof(request), "La solicitud es requerida");
+            throw new ArgumentNullException(nameof(request));
         if (string.IsNullOrWhiteSpace(request.stadiumName))
             throw new ArgumentException("El nombre es requerido", nameof(request.stadiumName));
         if (string.IsNullOrWhiteSpace(request.stadiumCity))
             throw new ArgumentException("La ciudad es requerida", nameof(request.stadiumCity));
+        if (request.stadiumCity.Length > MaxCityLength)
+            throw new ArgumentException("Ciudad demasiado larga");
+        
 
         var existingStadium = _stadiumRepository.GetStadium(request.stadiumName);
         if (existingStadium != null)

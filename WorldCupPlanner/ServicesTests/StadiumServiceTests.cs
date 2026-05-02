@@ -65,6 +65,14 @@ public class StadiumServiceTests
         Assert.ThrowsException<ArgumentException>(() => _service.AddStadium(dto));
     }
 
+    [TestMethod]
+    public void AddStadium_WithTooLongCity_ShouldThrowException()
+    {
+        var dto = CreateRequest("Camepon del siglo", new string('a', 61), "Estadio de Peniarol", 40700);
+        Assert.ThrowsException<ArgumentException>(() => _service.AddStadium(dto));
+    }
+        
+
     /*
     [TestMethod]
     public void AddStadium_WithCapacityBelowMinimum_ShouldThrowException()
