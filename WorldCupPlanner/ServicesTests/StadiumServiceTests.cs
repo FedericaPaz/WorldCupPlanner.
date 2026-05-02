@@ -114,16 +114,6 @@ public class StadiumServiceTests
         var result = _service.GetAllStadiums();
         Assert.AreEqual(0, result.Count);
     }
-    
-    /*
-    [TestMethod]
-    public void GetAllStadiums_WithMultipleStadiums_ShouldReturnAllStadiums()
-    {
-        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
-        _service.AddStadium("Centenario", "Montevideo", "Estadio historico", 60000);
-        var result = _service.GetAllStadiums();
-        Assert.AreEqual(2, result.Count);
-    }*/
 
     [TestMethod]
     public void GetStadium_WithExistingStadium_ShouldReturnStadium()
@@ -144,10 +134,25 @@ public class StadiumServiceTests
     }
 
     [TestMethod]
+    public void GetStadium_WithExistingStadium_ShouldNotThrowException()
+    {
+        var dto = CreateRequest("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        _service.AddStadium(dto);
+        var result = _service.GetStadium(dto.stadiumName);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(dto.stadiumCity, result.stadiumCity);
+    }
+   
+    [TestMethod]
     public void GetStadium_WithNonExistingStadium_ShouldReturnNull()
     {
         var result = _service.GetStadium("Campeon del Siglo");
         Assert.IsNull(result);
     }
-    
+
+    [TestMethod]
+    public void GetStadium_WithEmptyName_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => _service.GetStadium(string.Empty));
+    }
 }

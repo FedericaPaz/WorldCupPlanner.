@@ -56,14 +56,18 @@ public class StadiumService : IStadiumService
 
     public List<StadiumRequest> GetAllStadiums()
     {
-        return _stadiumRepository.GetAllStadiums().Select(s => s.ToRequest()).ToList();
+        return _stadiumRepository
+            .GetAllStadiums()
+            .Select(s => s.ToRequest())
+            .ToList();
     }
 
     public StadiumRequest? GetStadium(string stadiumName)
     {
-        if(string.IsNullOrWhiteSpace(stadiumName))
-            return null;
+        if (string.IsNullOrWhiteSpace(stadiumName))
+            throw new ArgumentException("Nombre requerido");
+
         var stadium = _stadiumRepository.GetStadium(stadiumName);
-        return stadium is null ? null : stadium.ToRequest();
+        return stadium?.ToRequest();
     }
 }
