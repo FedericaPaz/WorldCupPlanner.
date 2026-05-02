@@ -191,4 +191,14 @@ public class MatchTests
      match.UpdateDate(newDate);
      Assert.AreEqual(newDate, match.DateMatch);
   }
+  
+  [TestMethod]
+  public void UpdateDate_WithPastDate_ShouldThrowArgumentException()
+  {
+     var clock = new DateTimeMatchStub(new DateTime(2026, 6, 10));
+     var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+     var pastDate = new DateTime(2026, 6, 1);
+
+     Assert.ThrowsException<ArgumentException>(() => match.UpdateDate(pastDate));
+  }
 }
