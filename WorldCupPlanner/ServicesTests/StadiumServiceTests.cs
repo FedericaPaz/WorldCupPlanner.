@@ -89,33 +89,14 @@ public class StadiumServiceTests
     [TestMethod]
     public void DeleteStadium_WithExistingStadium_ShouldNotThrowException()
     {
-        var dto = new StadiumRequest
-        {
-            stadiumName = "Campeon del Siglo",
-            stadiumCity = "Montevideo",
-            stadiumDescription = "Estadio de Peniarol",
-            locativeCapacity = 40700
-        };
+        var dto = CreateRequest("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
         _service.AddStadium(dto);
-        _service.DeleteStadium("Campeon del Siglo");
+        _service.DeleteStadium(dto.stadiumName);
+        var result = _service.GetStadium(dto.stadiumName);
+        Assert.IsNull(result);
     }
 
-    /*
-    [TestMethod]
-    public void DeleteStadium_WithNonExistingStadium_ShouldThrowException()
-    {
-        Assert.ThrowsException<InvalidOperationException>(() => _service.DeleteStadium("Campeon del Siglo"));
-    }*/
     
-    /*
-    [TestMethod]
-    public void DeleteStadium_WithExistingStadium_ShouldBeRemovedFromRepository()
-    {
-        _service.AddStadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
-        _service.DeleteStadium("Campeon del Siglo");
-        var result = _repository.GetStadium("Campeon del Siglo");
-        Assert.IsNull(result);
-    }*/
     
     [TestMethod]
     public void GetAllStadiums_WithNoStadiums_ShouldReturnEmptyList()
