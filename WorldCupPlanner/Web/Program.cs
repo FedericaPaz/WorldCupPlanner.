@@ -1,8 +1,15 @@
 using Web.Components;
 using IRepository;
 using IServices;
+<<<<<<< HEAD
 using Repository;
 using Services;
+=======
+using Services;
+using Repository;
+using Blazored.LocalStorage;
+
+>>>>>>> feature/entidad-estadio
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +17,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+<<<<<<< HEAD
 builder.Services.AddSingleton<ITeamRepository, TeamRepository>();
 builder.Services.AddSingleton<ITeamService, TeamService>();
+=======
+builder.Services.AddSingleton<IStadiumRepository, StadiumRepository>();
+builder.Services.AddSingleton<IStadiumService, StadiumService>();
+builder.Services.AddBlazoredLocalStorage();
+>>>>>>> feature/entidad-estadio
 
 var app = builder.Build();
 

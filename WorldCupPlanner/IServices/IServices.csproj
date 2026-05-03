@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+<<<<<<< HEAD
+=======
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+>>>>>>> feature/entidad-estadio
       <ProjectReference Include="..\DTOs\DTOs.csproj" />
     </ItemGroup>
 

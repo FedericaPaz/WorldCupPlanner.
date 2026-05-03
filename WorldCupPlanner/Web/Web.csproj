@@ -7,9 +7,27 @@
     </PropertyGroup>
 
     <ItemGroup>
+<<<<<<< HEAD
         <ProjectReference Include="..\Services\Services.csproj" />
         <ProjectReference Include="..\Repository\Repository.csproj" />
         <ProjectReference Include="..\IRepository\IRepository.csproj" />
         <ProjectReference Include="..\IServices\IServices.csproj" />
     </ItemGroup>
+=======
+      <ProjectReference Include="..\Domain\Domain.csproj" />
+      <ProjectReference Include="..\IRepository\IRepository.csproj" />
+      <ProjectReference Include="..\Repository\Repository.csproj" />
+      <ProjectReference Include="..\Services\Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Blazor.LocalStorage" Version="9.0.1" />
+      <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\css\stadiums.css" />
+    </ItemGroup>
+
+>>>>>>> feature/entidad-estadio
 </Project>

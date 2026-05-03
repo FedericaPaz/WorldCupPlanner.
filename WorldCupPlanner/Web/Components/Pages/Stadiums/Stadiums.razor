@@ -1,0 +1,129 @@
+@page "/stadiums"
+@rendermode InteractiveServer
+
+@using DTOs
+@using IServices
+
+@inject IStadiumService Service
+@inject NavigationManager Navigation
+@inject Microsoft.JSInterop.IJSRuntime JS
+
+@if (_stadiums == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="stadiums-container">
+
+        <div class="stadiums-header">
+            <div>
+                <h3 class="title">Gestión de Estadios</h3>
+                <p class="subtitle">@_stadiums.Count estadios registrados</p>
+            </div>
+
+            <button class="create-btn" @onclick="GoToCreate">
+                + Crear estadio
+            </button>
+        </div>
+
+        <div class="stadiums-grid">
+            @foreach (var s in _stadiums)
+            {
+                <div class="stadium-card" @key="s.stadiumName">
+
+                    <div class="card-top">
+                        <div class="icon">📍</div>
+
+                        <div class="card-actions">
+                            <button class="icon-btn edit-btn"
+                                    @onclick="() => GoToEdit(s.stadiumName)">
+                                ✏️
+                            </button>
+
+                            <button class="icon-btn delete-btn"
+                                    @onclick="() => Delete(s.stadiumName)">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+
+                    <h4 class="stadium-name">@s.stadiumName</h4>
+                    <p class="stadium-city">@s.stadiumCity</p>
+
+                    @if (!string.IsNullOrWhiteSpace(s.stadiumDescription))
+                    {
+                        <p class="stadium-desc">@s.stadiumDescription</p>
+                    }
+
+                    <p class="stadium-capacity">
+                        Capacidad:
+                        <strong>@s.locativeCapacity.ToString("N0")</strong>
+                    </p>
+
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <div class="message error">@_error</div>
+}
+
+@if (!string.IsNullOrEmpty(_success))
+{
+    <div class="message success">@_success</div>
+}
+
+@code {
+    private List<StadiumRequest>? _stadiums;
+    private string _error = string.Empty;
+    private string _success = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        LoadData();
+    }
+
+    private void LoadData()
+    {
+        _stadiums = Service.GetAllStadiums();
+    }
+
+    private void GoToCreate()
+    {
+        Navigation.NavigateTo("/stadiums/create");
+    }
+
+    private void GoToEdit(string name)
+    {
+        Navigation.NavigateTo($"/stadiums/edit/{Uri.EscapeDataString(name)}");
+    }
+
+    private async Task Delete(string name)
+    {
+        _error = string.Empty;
+        _success = string.Empty;
+
+        try
+        {
+            var ok = await JS.InvokeAsync<bool>("confirm", $"¿Eliminar '{name}'?");
+            if (!ok) return;
+
+            Service.DeleteStadium(name);
+
+            LoadData();
+
+            _success = "Estadio eliminado correctamente.";
+
+            await Task.Delay(2000);
+            _success = string.Empty;
+        }
+        catch (InvalidOperationException ex)
+        {
+            _error = ex.Message;
+        }
+    }
+}
