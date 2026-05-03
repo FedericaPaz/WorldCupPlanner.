@@ -9,7 +9,7 @@ public class Confederation
     public int MaxTeams { get; }
     
     public Confederation(string name)
-    { 
-
+    {
+        Name = name;
     }
 }

@@ -1,6 +1,16 @@
-﻿namespace DomainTests;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Domain;
 
+namespace DomainTests;
+
+
+[TestClass]
 public class ConfederationTests
 {
-    
+    [TestMethod]
+    public void CreateConfederation_WithValidName_ShouldSucceed()
+    {
+        var condeferation = new Confederation("UEFA");
+        Assert.AreEqual("UEFA", condeferation.Name);
+    }
 }
