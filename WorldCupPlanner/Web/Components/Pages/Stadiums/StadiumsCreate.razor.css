@@ -1,0 +1,95 @@
+/* ─── Stadiums create ─────────────────────────────── */
+.stadiums-create .card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: white;
+    margin-top: 1rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.card-header .icon {
+    background: #e8f5e9;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 24px;
+}
+
+.card-title {
+    margin: 0;
+}
+
+.card-sub {
+    color: gray;
+    font-size: 14px;
+    margin: 0;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-top: 4px;
+    box-sizing: border-box;
+}
+
+.form-section {
+    margin-bottom: 1rem;
+}
+
+.btn-submit {
+    flex: 1;
+    padding: 12px;
+    background: green;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-submit[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-cancel {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    color: black;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.validation-summary {
+    color: #e50000;
+    margin-bottom: 1rem;
+}
+
+.validation-message,
+.validation-message * {
+    color: #e50000;
+    font-size: 13px;
+    margin-top: 4px;
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.back-link {
+    margin-bottom: 0.5rem;
+}
