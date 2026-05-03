@@ -47,4 +47,12 @@ public class MatchService : IMatchService
         return match.ToResponse();
         
     }
+    
+    public List<MatchResponse> GetAllMatches()
+    {
+        return _matchRepository
+            .GetAllMatches()
+            .Select(match => match.ToResponse())
+            .ToList();
+    }
 }

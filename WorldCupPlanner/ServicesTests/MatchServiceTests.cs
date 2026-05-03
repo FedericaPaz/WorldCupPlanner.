@@ -344,4 +344,12 @@ public class MatchServiceTests
         var service = new MatchService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
         Assert.ThrowsException<KeyNotFoundException>(() => service.GetMatchById(99));
     }
+    
+    [TestMethod]
+    public void GetAll_WhenThereAreNoMatches_ShouldReturnEmptyList()
+    {
+        var service = new MatchService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+        var result = service.GetAllMatches();
+        Assert.AreEqual(0, result.Count);
+    }
 }
