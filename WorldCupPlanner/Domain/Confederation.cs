@@ -10,7 +10,13 @@ public class Confederation
     
     public Confederation(string name)
     {
-        if(string.Equals(null,name))
+        var validatedName = ValidateName(name);
+        Name = validatedName;
+    }
+    
+    private static string ValidateName(string name)
+    {
+        if (string.Equals(null,name))
             throw new ArgumentNullException(nameof(name), "Confederation name cannot be null.");
             
         if (string.IsNullOrEmpty(name))
@@ -19,8 +25,6 @@ public class Confederation
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Confederation name cannot be empty.");
         
-        Name = name;
+        return name;
     }
-    
-    
 }
