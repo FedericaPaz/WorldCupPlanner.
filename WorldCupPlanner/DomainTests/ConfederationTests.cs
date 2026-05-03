@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Domain;
+﻿using Domain;
 
 namespace DomainTests;
 
@@ -10,8 +9,8 @@ public class ConfederationTests
     [TestMethod]
     public void CreateConfederation_WithValidName_ShouldSucceed()
     {
-        var condeferation = new Confederation("UEFA");
-        Assert.AreEqual("UEFA", condeferation.Name);
+        var confederation = new Confederation("UEFA");
+        Assert.AreEqual("UEFA", confederation.Name);
     }
 
     [TestMethod]
@@ -24,7 +23,6 @@ public class ConfederationTests
     public void CreateConfederation_WithEmptyName_ShouldFail()
     {
         Assert.ThrowsException<ArgumentException>(()=> new  Confederation(""));
-        //Assert.ThrowsException<ArgumentException>(()=> new  Confederation(" "));
     }
 
     [TestMethod]
@@ -65,7 +63,6 @@ public class ConfederationTests
         Assert.IsFalse(Confederation.IsValidName(null!));
         Assert.IsFalse(Confederation.IsValidName("   "));
     }
-
     
     [TestMethod]
     public void MaxTeams_ShouldReturnCorrectValueForEachConfederation()
