@@ -25,6 +25,8 @@ public class MatchService : IMatchService
     {
         if (request == null)
             throw new ArgumentNullException(nameof(request));
+        if (string.IsNullOrWhiteSpace(request.group))
+            throw new ArgumentException("El grupo es obligatorio.");
         var stadium = _stadiumRepository.GetByName(request.stadiumName);
         var homeTeam = _teamRepository.GetByName(request.homeTeamName);
         var awayTeam = _teamRepository.GetByName(request.awayTeamName);

@@ -73,4 +73,21 @@ public class MatchServiceTests
         service.Create(request);
         Assert.AreEqual(1, matchRepository.GetAllMatches().Count);
     }
+    
+    [TestMethod]
+    public void Create_WithEmptyGroup_ShouldThrowArgumentException()
+    {
+        var service = new MatchService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+
+        var request = new MatchRequest
+        {
+            dateMatch = DateTime.Now,
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Argentina",
+            group = "" 
+        };
+
+        Assert.ThrowsException<ArgumentException>(() => service.Create(request));
+    }
 }
