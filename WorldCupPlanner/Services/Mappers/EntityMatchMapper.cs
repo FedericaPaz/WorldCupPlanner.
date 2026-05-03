@@ -18,7 +18,7 @@ public static class EntityMatchMapper
             group = match.Group,
             homeGoals = match.HomeGoals,
             awayGoals = match.AwayGoals,
-            winnerName = match.WinnerMatch._teamName
+            winnerName = match.WinnerMatch?._teamName
         };
     }
 }
