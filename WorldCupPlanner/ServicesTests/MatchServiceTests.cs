@@ -352,4 +352,44 @@ public class MatchServiceTests
         var result = service.GetAllMatches();
         Assert.AreEqual(0, result.Count);
     }
+    
+    [TestMethod]
+    public void GetAll_WithMatches_ShouldReturnAllMatchResponses()
+    {
+        var matchRepository = new MatchRepository();
+        var teamRepository = new TeamRepositoryStub();
+        var stadiumRepository = new StadiumRepositoryStub();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+
+        teamRepository.Add(new TeamStub("Uruguay"));
+        teamRepository.Add(new TeamStub("Argentina"));
+        teamRepository.Add(new TeamStub("Brasil"));
+        teamRepository.Add(new TeamStub("Peru"));
+        stadiumRepository.Add(new StadiumStub("Centenario"));
+
+        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        service.CreateMatch(new MatchRequest
+        {
+            dateMatch = clock.Now,
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Argentina",
+            group = "A"
+        });
+
+        service.CreateMatch(new MatchRequest
+        {
+            dateMatch = clock.Now,
+            stadiumName = "Centenario",
+            homeTeamName = "Brasil",
+            awayTeamName = "Peru",
+            group = "B"
+        });
+
+        var result = service.GetAllMatches();
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual("Uruguay", result[0].homeTeamName);
+        Assert.AreEqual("Brasil", result[1].homeTeamName);
+    }
 }
