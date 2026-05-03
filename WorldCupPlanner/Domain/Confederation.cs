@@ -30,6 +30,6 @@ public class Confederation
     
     private static string NormalizeName(string name)
     {
-        return name.ToUpperInvariant();
+        return name.Trim().ToUpperInvariant();
     }
 }

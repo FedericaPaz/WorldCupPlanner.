@@ -40,5 +40,12 @@ public class ConfederationTests
         Assert.AreEqual("UEFA", confederation.Name);
     }
     
+    [TestMethod]
+    public void CreateConfederation_WithNameWithSpaces_ShouldTrimAndNormalize()
+    {
+        var confederation = new Confederation("  conmebol  ");
+        Assert.AreEqual("CONMEBOL", confederation.Name);
+    }
+    
     
 }
