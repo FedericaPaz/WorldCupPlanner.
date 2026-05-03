@@ -13,8 +13,12 @@ public class ConfederationTests
         var condeferation = new Confederation("UEFA");
         Assert.AreEqual("UEFA", condeferation.Name);
     }
-    
-    
+
+    [TestMethod]
+    public void CreateConfederation_NullName_ShouldFail()
+    {
+        Assert.ThrowsException<ArgumentNullException>(()=> new Confederation(null));
+    }
 
     [TestMethod]
     public void CreateConfederation_WithEmptyName_ShouldFail()

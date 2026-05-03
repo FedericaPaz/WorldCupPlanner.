@@ -10,6 +10,9 @@ public class Confederation
     
     public Confederation(string name)
     {
+        if(string.Equals(null,name))
+            throw new ArgumentNullException(nameof(name), "Confederation name cannot be null.");
+            
         if (string.IsNullOrEmpty(name))
              throw new ArgumentException("Confederation name cannot be empty.");
         
