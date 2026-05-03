@@ -306,4 +306,35 @@ public class MatchServiceTests
         service.SetMatchResult(created.idMatch, 1, 0);
         Assert.ThrowsException<InvalidOperationException>(() => service.SetMatchResult(created.idMatch, 2, 0));
     }
+    
+    [TestMethod]
+    public void GetById_WithExistingMatch_ShouldReturnMatchResponse()
+    {
+        var matchRepository = new MatchRepository();
+        var teamRepository = new TeamRepositoryStub();
+        var stadiumRepository = new StadiumRepositoryStub();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+
+        teamRepository.Add(new TeamStub("Uruguay"));
+        teamRepository.Add(new TeamStub("Argentina"));
+        stadiumRepository.Add(new StadiumStub("Centenario"));
+
+        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        var request = new MatchRequest
+        {
+            dateMatch = clock.Now,
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Argentina",
+            group = "A"
+        };
+
+        var created = service.CreateMatch(request);
+        var result = service.GetMatchById(created.idMatch);
+        Assert.AreEqual(created.idMatch, result.idMatch);
+        Assert.AreEqual("Centenario", result.stadiumName);
+        Assert.AreEqual("Uruguay", result.homeTeamName);
+        Assert.AreEqual("Argentina", result.awayTeamName);
+    }
 }

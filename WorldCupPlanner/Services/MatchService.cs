@@ -40,4 +40,11 @@ public class MatchService : IMatchService
         var match = _matchRepository.GetMatchById(matchId);
         match.SetMatchResult(homeGoals, awayGoals);
     }
+    
+    public MatchResponse GetMatchById(int matchId)
+    {
+        var match = _matchRepository.GetMatchById(matchId);
+        return match.ToResponse();
+        
+    }
 }
