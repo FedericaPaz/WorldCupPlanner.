@@ -11,7 +11,7 @@ public class Confederation
     public Confederation(string name)
     {
         var validatedName = ValidateName(name);
-        Name = validatedName;
+        Name = NormalizeName(validatedName);
     }
     
     private static string ValidateName(string name)
@@ -26,5 +26,10 @@ public class Confederation
             throw new ArgumentException("Confederation name cannot be empty.");
         
         return name;
+    }
+    
+    private static string NormalizeName(string name)
+    {
+        return name.ToUpperInvariant();
     }
 }

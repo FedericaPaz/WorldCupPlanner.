@@ -33,7 +33,12 @@ public class ConfederationTests
         Assert.ThrowsException<ArgumentException>(()=> new  Confederation("  "));
     }
     
-    
+    [TestMethod]
+    public void CreateConfederation_WithLowercaseName_ShouldNormalizeToUppercase()
+    {
+        var confederation = new Confederation("uefa");
+        Assert.AreEqual("UEFA", confederation.Name);
+    }
     
     
 }
