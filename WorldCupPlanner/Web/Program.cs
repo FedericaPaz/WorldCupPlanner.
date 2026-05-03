@@ -35,9 +35,9 @@ using (var scope = app.Services.CreateScope())
     var clock = scope.ServiceProvider.GetRequiredService<IDateTimeMatch>();
 
     // Teams
-    var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1);
-    var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1);
-    var brasil = new Team("Brasil", new Confederation("CONMEBOL"), 1);
+    var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 300);
+    var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 301);
+    var brasil = new Team("Brasil", new Confederation("CONMEBOL"), 400);
 
     teamRepo.Add(uruguay);
     teamRepo.Add(argentina);

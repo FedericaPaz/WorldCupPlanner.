@@ -1,0 +1,141 @@
+.edit-match-page {
+    padding: 1.5rem;
+}
+
+.edit-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: white;
+    margin-top: 1rem;
+    max-width: 900px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.icon {
+    background: #e8f5e9;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 24px;
+}
+
+.card-title {
+    margin: 0;
+}
+
+.card-sub {
+    color: gray;
+    font-size: 14px;
+    margin: 0;
+}
+
+.form-grid,
+.result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-section {
+    margin-bottom: 1rem;
+}
+
+label {
+    font-size: 13px;
+    color: gray;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-top: 4px;
+    box-sizing: border-box;
+}
+
+.disabled {
+    background: #f3f6f4;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 0 1rem;
+}
+
+.result-header h4 {
+    margin: 0;
+}
+
+.simulate-btn {
+    background: #8b5cf6;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.team-result-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1rem;
+    background: #fff;
+}
+
+.goals-input {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-cancel {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    color: black;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-submit {
+    flex: 1;
+    padding: 12px;
+    background: green;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.back-link {
+    margin-bottom: 0.5rem;
+    border: none;
+    background: none;
+    color: gray;
+    cursor: pointer;
+}
+
+.message.error {
+    color: red;
+    margin-top: 1rem;
+}
