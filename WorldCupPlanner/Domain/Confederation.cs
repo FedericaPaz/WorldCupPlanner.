@@ -10,8 +10,11 @@ public class Confederation
     
     public Confederation(string name)
     {
+        if (string.IsNullOrEmpty(name))
+             throw new ArgumentException("Confederation name cannot be empty.");
+        
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Confederation name cannot be empty or whitespace.");
+            throw new ArgumentException("Confederation name cannot be empty.");
         
         Name = name;
     }
