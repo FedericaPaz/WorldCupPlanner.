@@ -21,12 +21,13 @@ public class Confederation
     public Confederation(string name)
     {
         var validatedName = ValidateName(name);
-        if (!_confederationLimits.ContainsKey(validatedName))
+        var normalizedName = NormalizeName(validatedName);
+        
+        if (!_confederationLimits.ContainsKey(normalizedName))
         {
             throw new ArgumentException($"Confederation name '{name}' is invalid.");
         }
         
-        var normalizedName = NormalizeName(name);
         Name = normalizedName;
         MaxTeams = _confederationLimits[normalizedName];
     }
