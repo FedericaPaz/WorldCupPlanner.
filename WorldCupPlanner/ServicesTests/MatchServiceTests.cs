@@ -44,4 +44,11 @@ public class MatchServiceTests
         Assert.AreEqual("Argentina", response.awayTeamName);
         Assert.AreEqual('A', response.group);
     }
+    
+    [TestMethod]
+    public void Create_WithNullRequest_ShouldThrowArgumentNullException()
+    {
+        var service = new MatchService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+        Assert.ThrowsException<ArgumentNullException>(() => service.Create(null));
+    }
 }

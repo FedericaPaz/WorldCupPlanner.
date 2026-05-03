@@ -13,11 +13,7 @@ public class MatchService : IMatchService
     private readonly IStadiumRepository _stadiumRepository;
     private readonly IDateTimeMatch _clock;
 
-    public MatchService(
-        IMatchRepository matchRepository,
-        ITeamRepository teamRepository,
-        IStadiumRepository stadiumRepository,
-        IDateTimeMatch clock)
+    public MatchService(IMatchRepository matchRepository, ITeamRepository teamRepository, IStadiumRepository stadiumRepository, IDateTimeMatch clock)
     {
         _matchRepository = matchRepository;
         _teamRepository = teamRepository;
@@ -27,20 +23,13 @@ public class MatchService : IMatchService
 
     public MatchResponse Create(MatchRequest request)
     {
+        if (request == null)
+            throw new ArgumentNullException(nameof(request));
         var stadium = _stadiumRepository.GetByName(request.stadiumName);
         var homeTeam = _teamRepository.GetByName(request.homeTeamName);
         var awayTeam = _teamRepository.GetByName(request.awayTeamName);
-
-        var match = new Match(
-            request.dateMatch,
-            stadium,
-            homeTeam,
-            awayTeam,
-            request.group[0],
-            _clock);
-
+        var match = new Match(request.dateMatch, stadium, homeTeam, awayTeam, request.group[0], _clock);
         _matchRepository.AddMatch(match);
-
         return match.ToResponse();
     }
 }
