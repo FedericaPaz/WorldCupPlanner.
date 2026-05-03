@@ -65,4 +65,12 @@ public class Confederation
     {
         return Name.GetHashCode(StringComparison.InvariantCulture);
     }
+    
+    public static List<string> GetAllowedNames()
+    {
+        return new List<string> 
+        { 
+            "AFC", "CAF", "CONCACAF", "CONMEBOL", "OFC", "UEFA" 
+        };
+    }
 }

@@ -103,4 +103,29 @@ public class ConfederationTests
         Assert.AreEqual(conf1, conf2);
         Assert.AreNotEqual(conf1, conf3);
     }
+    
+    [TestMethod]
+    public void GetAllowedNames_ShouldReturnAllSixConfederations()
+    {
+        List<string> allowedNames = Confederation.GetAllowedNames();
+        Assert.AreEqual(6, allowedNames.Count);
+        Assert.IsTrue(allowedNames.Contains("UEFA"));
+        Assert.IsTrue(allowedNames.Contains("CONMEBOL"));
+        Assert.IsTrue(allowedNames.Contains("CONCACAF"));
+        Assert.IsTrue(allowedNames.Contains("CAF"));
+        Assert.IsTrue(allowedNames.Contains("AFC"));
+        Assert.IsTrue(allowedNames.Contains("OFC"));
+    }
+    
+    [TestMethod]
+    public void GetAllowedNames_ShouldReturnListWithCorrectOrder()
+    {
+        List<string> allowedNames = Confederation.GetAllowedNames();
+        Assert.AreEqual("AFC", allowedNames[0]);
+        Assert.AreEqual("CAF", allowedNames[1]);
+        Assert.AreEqual("CONCACAF", allowedNames[2]);
+        Assert.AreEqual("CONMEBOL", allowedNames[3]);
+        Assert.AreEqual("OFC", allowedNames[4]);
+        Assert.AreEqual("UEFA", allowedNames[5]);
+    }
 }
