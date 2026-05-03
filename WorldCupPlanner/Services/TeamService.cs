@@ -1,5 +1,4 @@
-﻿// TODO: Mover esta logica a la entidad Confederation (getLimit)
-// Ver: Domain/Confederation.cs - agregar método estático GetMaxTeams(string name)
+﻿using Domain;
 using DTOs;
 using IRepository;
 using IServices;
@@ -24,26 +23,18 @@ public class TeamService : ITeamService
             throw new ArgumentException($"Team with the name '{request.Name}' already exists.");
 
         var confederationName = request.ConfederationName!;
-        var count = _repository.GetAll().Count(t => t.Confederation.Name == confederationName);
-        if (count >= GetLimit(confederationName))
-            throw new InvalidOperationException($"The confederation '{confederationName}' has reached its team limit.");
+        var maxTeams = Confederation.GetMaxTeamsForName(confederationName);
+
+        if (maxTeams == 0)
+            throw new ArgumentException($"Invalid confederation name: {confederationName}");
+
+        var currentCount = _repository.GetAll().Count(t => t.Confederation.Name == confederationName);
+
+        if (currentCount >= maxTeams)
+            throw new InvalidOperationException($"The confederation '{confederationName}' has reached its limit of {maxTeams} teams.");
 
         var team = request.ToEntity();
         _repository.Add(team);
-    }
-
-    private int GetLimit(string confederationName)
-    {
-        return confederationName switch
-        {
-            "UEFA" => 16,
-            "CONMEBOL" => 7,
-            "CONCACAF" => 7,
-            "OFC" => 1,
-            "CAF" => 9,
-            "AFC" => 8,
-            _ => throw new InvalidOperationException("Invalid confederation name.")
-        };
     }
     
     public TeamDTO? Get(string name)
@@ -57,11 +48,6 @@ public class TeamService : ITeamService
         return _repository.GetAll().Select(t => t.FromEntity()).ToList();
     }
     
-    /*public void Update(Team team)
-    {
-        _repository.Update(team);
-    }*/
-
     public void Delete(string name)
     {
         var team = _repository.Get(name);
@@ -81,5 +67,18 @@ public class TeamService : ITeamService
 
         if (string.IsNullOrWhiteSpace(request.ConfederationName))
             throw new ArgumentNullException(nameof(request.ConfederationName));
+    }
+    
+    public List<ConfederationDTO> GetAllConfederations()
+    {
+        List<ConfederationDTO> result = new List<ConfederationDTO>();
+        foreach (string name in Confederation.GetAllowedNames())
+        {
+            result.Add(new ConfederationDTO {
+                Name = name,
+                MaxTeams = Confederation.GetMaxTeamsForName(name)
+            });
+        }
+        return result;
     }
 }
