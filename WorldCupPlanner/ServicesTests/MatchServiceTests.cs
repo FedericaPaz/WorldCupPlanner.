@@ -451,4 +451,33 @@ public class MatchServiceTests
         var pastDate = new DateTime(2026, 6, 1);
         Assert.ThrowsException<ArgumentException>(() => service.UpdateMatchDate(created.idMatch, pastDate));
     }
+    
+    [TestMethod]
+    public void UpdateStadium_WithValidData_ShouldUpdateStadium()
+    {
+        var matchRepository = new MatchRepository();
+        var teamRepository = new TeamRepositoryStub();
+        var stadiumRepository = new StadiumRepositoryStub();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+
+        teamRepository.Add(new TeamStub("Uruguay"));
+        teamRepository.Add(new TeamStub("Argentina"));
+        stadiumRepository.Add(new StadiumStub("Centenario"));
+        stadiumRepository.Add(new StadiumStub("Maracana"));
+
+        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        var created = service.CreateMatch(new MatchRequest
+        {
+            dateMatch = clock.Now,
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Argentina",
+            group = "A"
+        });
+
+        service.UpdateMatchStadium(created.idMatch, "Maracana");
+        var updated = service.GetMatchById(created.idMatch);
+        Assert.AreEqual("Maracana", updated.stadiumName);
+    }
 }

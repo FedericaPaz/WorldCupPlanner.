@@ -61,4 +61,11 @@ public class MatchService : IMatchService
         var match = _matchRepository.GetMatchById(matchId);
         match.UpdateDate(date);
     }
+
+    public void UpdateMatchStadium(int matchId, string stadiumName)
+    {
+        var match = _matchRepository.GetMatchById(matchId);
+        var stadium = _stadiumRepository.GetByName(stadiumName);
+        match.UpdateStadium(stadium);
+    }
 }

@@ -9,4 +9,5 @@ public interface IMatchService
     MatchResponse GetMatchById(int matchId);
     List<MatchResponse> GetAllMatches();
     void UpdateMatchDate(int matchId, DateTime date);
+    void UpdateMatchStadium(int matchId, string stadiumName);
 }
