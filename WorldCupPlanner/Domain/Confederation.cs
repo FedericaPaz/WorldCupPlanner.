@@ -38,6 +38,11 @@ public class Confederation
         return _confederationLimits.GetValueOrDefault(normalized, 0);
     }
     
+    public override bool Equals(object? obj)
+    {
+        return obj is Confederation other && Name == other.Name;
+    }
+    
     private static string ValidateName(string name)
     {
         if (string.Equals(null,name))
@@ -56,4 +61,5 @@ public class Confederation
     {
         return name.Trim().ToUpperInvariant();
     }
+    
 }

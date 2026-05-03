@@ -72,4 +72,14 @@ public class ConfederationTests
         Assert.AreEqual(1, ofc.MaxTeams);
     }
     
+    [TestMethod]
+    public void TwoConfederationsWithSameName_ShouldBeEqual()
+    {
+        var conf1 = new Confederation("UEFA");
+        var conf2 = new Confederation("UEFA");
+        var conf3 = new Confederation("CONMEBOL");
+    
+        Assert.AreEqual(conf1, conf2);
+        Assert.AreNotEqual(conf1, conf3);
+    }
 }
