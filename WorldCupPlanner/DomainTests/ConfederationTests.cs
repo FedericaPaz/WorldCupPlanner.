@@ -55,6 +55,19 @@ public class ConfederationTests
     }
     
     [TestMethod]
+    public void IsValidName_ShouldReturnCorrectResult()
+    {
+        Assert.IsTrue(Confederation.IsValidName("UEFA"));
+        Assert.IsTrue(Confederation.IsValidName("uefa"));    
+        Assert.IsTrue(Confederation.IsValidName("  UEFA  "));  
+        Assert.IsFalse(Confederation.IsValidName("INVALID"));
+        Assert.IsFalse(Confederation.IsValidName(""));
+        Assert.IsFalse(Confederation.IsValidName(null!));
+        Assert.IsFalse(Confederation.IsValidName("   "));
+    }
+
+    
+    [TestMethod]
     public void MaxTeams_ShouldReturnCorrectValueForEachConfederation()
     {
         var uefa = new Confederation("UEFA");
