@@ -46,6 +46,13 @@ public class ConfederationTests
         var confederation = new Confederation("  conmebol  ");
         Assert.AreEqual("CONMEBOL", confederation.Name);
     }
+
+    [TestMethod]
+    public void CreateConfederation_WithInvalidName_ShouldFail()
+    {
+        Assert.ThrowsException<ArgumentException>(()=> new Confederation("UUEEF_FAAA"));
+        Assert.ThrowsException<ArgumentException>(()=> new Confederation("12345"));
+    }
     
     
 }

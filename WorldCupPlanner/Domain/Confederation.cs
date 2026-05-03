@@ -8,9 +8,24 @@ public class Confederation
     public string Name { get; private set; }
     public int MaxTeams { get; }
     
+    private static readonly Dictionary<string, int> _confederationLimits = new()
+    {
+        ["UEFA"] = 16,
+        ["CONMEBOL"] = 7,
+        ["CONCACAF"] = 7,
+        ["CAF"] = 9,
+        ["AFC"] = 8,
+        ["OFC"] = 1
+    };
+    
     public Confederation(string name)
     {
         var validatedName = ValidateName(name);
+        if (!_confederationLimits.ContainsKey(validatedName))
+        {
+            throw new ArgumentException($"Confederation name '{name}' is invalid.");
+        }
+        
         Name = NormalizeName(validatedName);
     }
     
