@@ -424,4 +424,31 @@ public class MatchServiceTests
 
         Assert.AreEqual(newDate, updated.dateMatch);
     }
+    
+    [TestMethod]
+    public void UpdateDate_WithPastDate_ShouldThrowArgumentException()
+    {
+        var matchRepository = new MatchRepository();
+        var teamRepository = new TeamRepositoryStub();
+        var stadiumRepository = new StadiumRepositoryStub();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 10));
+
+        teamRepository.Add(new TeamStub("Uruguay"));
+        teamRepository.Add(new TeamStub("Argentina"));
+        stadiumRepository.Add(new StadiumStub("Centenario"));
+
+        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        var created = service.CreateMatch(new MatchRequest
+        {
+            dateMatch = clock.Now,
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Argentina",
+            group = "A"
+        });
+
+        var pastDate = new DateTime(2026, 6, 1);
+        Assert.ThrowsException<ArgumentException>(() => service.UpdateMatchDate(created.idMatch, pastDate));
+    }
 }
