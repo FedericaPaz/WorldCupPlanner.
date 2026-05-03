@@ -36,7 +36,7 @@ public class MatchServiceTests
             group = "A"
         };
 
-        var response = service.Create(request);
+        var response = service.CreateMatch(request);
 
         Assert.AreEqual(1, response.idMatch);
         Assert.AreEqual("Centenario", response.stadiumName);
@@ -49,7 +49,7 @@ public class MatchServiceTests
     public void Create_WithNullRequest_ShouldThrowArgumentNullException()
     {
         var service = new MatchService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
-        Assert.ThrowsException<ArgumentNullException>(() => service.Create(null));
+        Assert.ThrowsException<ArgumentNullException>(() => service.CreateMatch(null));
     }
     
     [TestMethod]
@@ -70,7 +70,7 @@ public class MatchServiceTests
             group = "A"
         };
 
-        service.Create(request);
+        service.CreateMatch(request);
         Assert.AreEqual(1, matchRepository.GetAllMatches().Count);
     }
     
@@ -88,7 +88,7 @@ public class MatchServiceTests
             group = "" 
         };
 
-        Assert.ThrowsException<ArgumentException>(() => service.Create(request));
+        Assert.ThrowsException<ArgumentException>(() => service.CreateMatch(request));
     }
     
     [TestMethod]
@@ -110,7 +110,7 @@ public class MatchServiceTests
             group = "A"
         };
 
-        Assert.ThrowsException<KeyNotFoundException>(() => service.Create(request));
+        Assert.ThrowsException<KeyNotFoundException>(() => service.CreateMatch(request));
     }
     
     [TestMethod]
@@ -135,7 +135,7 @@ public class MatchServiceTests
             group = "A"
         };
 
-        Assert.ThrowsException<KeyNotFoundException>(() => service.Create(request));
+        Assert.ThrowsException<KeyNotFoundException>(() => service.CreateMatch(request));
     }
     
     [TestMethod]
@@ -160,7 +160,7 @@ public class MatchServiceTests
             group = "A"
         };
 
-        Assert.ThrowsException<ArgumentException>(() => service.Create(request));
+        Assert.ThrowsException<ArgumentException>(() => service.CreateMatch(request));
     }
     
     [TestMethod]
@@ -186,6 +186,39 @@ public class MatchServiceTests
             group = "A"
         };
 
-        Assert.ThrowsException<ArgumentException>(() => service.Create(request));
+        Assert.ThrowsException<ArgumentException>(() => service.CreateMatch(request));
+    }
+    
+    [TestMethod]
+    public void SetResult_WithValidData_ShouldUpdateMatchResult()
+    {
+        var matchRepository = new MatchRepository();
+        var teamRepository = new TeamRepositoryStub();
+        var stadiumRepository = new StadiumRepositoryStub();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+
+        teamRepository.Add(new TeamStub("Uruguay"));
+        teamRepository.Add(new TeamStub("Argentina"));
+        stadiumRepository.Add(new StadiumStub("Centenario"));
+
+        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        
+        var request = new MatchRequest
+        {
+            dateMatch = new DateTime(2026, 6, 1),
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Argentina",
+            group = "A"
+        };
+
+        var created = service.CreateMatch(request);
+        
+        service.SetMatchResult(created.idMatch, 2, 1);
+
+        var match = matchRepository.GetMatchById(created.idMatch);
+
+        Assert.AreEqual(2, match.HomeGoals);
+        Assert.AreEqual(1, match.AwayGoals);
     }
 }

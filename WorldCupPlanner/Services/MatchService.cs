@@ -21,7 +21,7 @@ public class MatchService : IMatchService
         _clock = clock;
     }
 
-    public MatchResponse Create(MatchRequest request)
+    public MatchResponse CreateMatch(MatchRequest request)
     {
         if (request == null)
             throw new ArgumentNullException(nameof(request));
@@ -33,5 +33,11 @@ public class MatchService : IMatchService
         var match = new Match(request.dateMatch, stadium, homeTeam, awayTeam, request.group[0], _clock);
         _matchRepository.AddMatch(match);
         return match.ToResponse();
+    }
+
+    public void SetMatchResult(int matchId, int homeGoals, int awayGoals)
+    {
+        var match = _matchRepository.GetMatchById(matchId);
+        match.SetMatchResult(homeGoals, awayGoals);
     }
 }
