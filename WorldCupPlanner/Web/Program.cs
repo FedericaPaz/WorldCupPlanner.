@@ -27,6 +27,37 @@ builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var teamRepo = scope.ServiceProvider.GetRequiredService<ITeamRepository>();
+    var stadiumRepo = scope.ServiceProvider.GetRequiredService<IStadiumRepository>();
+    var matchRepo = scope.ServiceProvider.GetRequiredService<IMatchRepository>();
+    var clock = scope.ServiceProvider.GetRequiredService<IDateTimeMatch>();
+
+    // Teams
+    var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1);
+    var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1);
+    var brasil = new Team("Brasil", new Confederation("CONMEBOL"), 1);
+
+    teamRepo.Add(uruguay);
+    teamRepo.Add(argentina);
+    teamRepo.Add(brasil);
+
+    // Stadiums
+    var centenario = new Stadium("Centenario", "Montevideo", null, 60000);
+    var maracana = new Stadium("Maracaná", "Rio", null, 70000);
+
+    stadiumRepo.AddStadium(centenario);
+    stadiumRepo.AddStadium(maracana);
+
+    // Matches
+    var match1 = new Match(clock.Now.AddDays(1), centenario, uruguay, argentina, 'A', clock);
+    var match2 = new Match(clock.Now.AddDays(2), maracana, brasil, uruguay, 'B', clock);
+
+    matchRepo.AddMatch(match1);
+    matchRepo.AddMatch(match2);
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
