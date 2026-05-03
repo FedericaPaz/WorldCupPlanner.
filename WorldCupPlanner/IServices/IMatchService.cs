@@ -8,4 +8,5 @@ public interface IMatchService
     void SetMatchResult(int matchId, int homeGoals, int awayGoals);
     MatchResponse GetMatchById(int matchId);
     List<MatchResponse> GetAllMatches();
+    void UpdateMatchDate(int matchId, DateTime date);
 }

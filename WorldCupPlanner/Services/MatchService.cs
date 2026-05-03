@@ -55,4 +55,10 @@ public class MatchService : IMatchService
             .Select(match => match.ToResponse())
             .ToList();
     }
+
+    public void UpdateMatchDate(int matchId, DateTime date)
+    {
+        var match = _matchRepository.GetMatchById(matchId);
+        match.UpdateDate(date);
+    }
 }

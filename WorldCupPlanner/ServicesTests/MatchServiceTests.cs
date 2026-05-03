@@ -392,4 +392,36 @@ public class MatchServiceTests
         Assert.AreEqual("Uruguay", result[0].homeTeamName);
         Assert.AreEqual("Brasil", result[1].homeTeamName);
     }
+    
+    [TestMethod]
+    public void UpdateDate_WithValidDate_ShouldUpdateMatchDate()
+    {
+        var matchRepository = new MatchRepository();
+        var teamRepository = new TeamRepositoryStub();
+        var stadiumRepository = new StadiumRepositoryStub();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+
+        teamRepository.Add(new TeamStub("Uruguay"));
+        teamRepository.Add(new TeamStub("Argentina"));
+        stadiumRepository.Add(new StadiumStub("Centenario"));
+
+        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        var created = service.CreateMatch(new MatchRequest
+        {
+            dateMatch = clock.Now,
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Argentina",
+            group = "A"
+        });
+
+        var newDate = new DateTime(2026, 6, 5);
+
+        service.UpdateMatchDate(created.idMatch, newDate);
+
+        var updated = service.GetMatchById(created.idMatch);
+
+        Assert.AreEqual(newDate, updated.dateMatch);
+    }
 }
