@@ -1,15 +1,9 @@
 using Web.Components;
 using IRepository;
 using IServices;
-<<<<<<< HEAD
-using Repository;
-using Services;
-=======
 using Services;
 using Repository;
 using Blazored.LocalStorage;
-
->>>>>>> feature/entidad-estadio
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,14 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-<<<<<<< HEAD
+// Repositorios y servicios
 builder.Services.AddSingleton<ITeamRepository, TeamRepository>();
 builder.Services.AddSingleton<ITeamService, TeamService>();
-=======
+
 builder.Services.AddSingleton<IStadiumRepository, StadiumRepository>();
 builder.Services.AddSingleton<IStadiumService, StadiumService>();
+
+// Local storage
 builder.Services.AddBlazoredLocalStorage();
->>>>>>> feature/entidad-estadio
 
 var app = builder.Build();
 
@@ -32,7 +27,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
