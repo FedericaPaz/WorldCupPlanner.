@@ -162,4 +162,30 @@ public class MatchServiceTests
 
         Assert.ThrowsException<ArgumentException>(() => service.Create(request));
     }
+    
+    [TestMethod]
+    public void Create_WithPastDate_ShouldThrowArgumentException()
+    {
+        var matchRepository = new MatchRepository();
+        var teamRepository = new TeamRepositoryStub();
+        var stadiumRepository = new StadiumRepositoryStub();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 10));
+
+        teamRepository.Add(new TeamStub("Uruguay"));
+        teamRepository.Add(new TeamStub("Argentina"));
+        stadiumRepository.Add(new StadiumStub("Centenario"));
+
+        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        var request = new MatchRequest
+        {
+            dateMatch = new DateTime(2026, 6, 1), // ← pasada respecto al clock
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Argentina",
+            group = "A"
+        };
+
+        Assert.ThrowsException<ArgumentException>(() => service.Create(request));
+    }
 }
