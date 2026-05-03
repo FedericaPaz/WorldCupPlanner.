@@ -68,9 +68,10 @@ public class Confederation
     
     public static List<string> GetAllowedNames()
     {
-        return new List<string> 
-        { 
-            "AFC", "CAF", "CONCACAF", "CONMEBOL", "OFC", "UEFA" 
-        };
+        List<string> names = new List<string>();
+        foreach (var key in _confederationLimits.Keys)
+            names.Add(key);
+        names.Sort();
+        return names;
     }
 }
