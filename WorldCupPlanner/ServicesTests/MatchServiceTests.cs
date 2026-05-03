@@ -337,4 +337,11 @@ public class MatchServiceTests
         Assert.AreEqual("Uruguay", result.homeTeamName);
         Assert.AreEqual("Argentina", result.awayTeamName);
     }
+    
+    [TestMethod]
+    public void GetById_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
+    {
+        var service = new MatchService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+        Assert.ThrowsException<KeyNotFoundException>(() => service.GetMatchById(99));
+    }
 }
