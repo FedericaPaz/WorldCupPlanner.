@@ -26,7 +26,16 @@ public class Confederation
             throw new ArgumentException($"Confederation name '{name}' is invalid.");
         }
         
-        Name = NormalizeName(validatedName);
+        var normalizedName = NormalizeName(name);
+        Name = normalizedName;
+        MaxTeams = _confederationLimits[normalizedName];
+    }
+    
+    public static int GetMaxTeamsForName(string name)
+    {
+        var validatedName = ValidateName(name);
+        var normalized = NormalizeName(validatedName);
+        return _confederationLimits.GetValueOrDefault(normalized, 0);
     }
     
     private static string ValidateName(string name)

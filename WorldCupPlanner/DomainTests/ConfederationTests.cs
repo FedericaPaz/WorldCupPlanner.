@@ -54,5 +54,22 @@ public class ConfederationTests
         Assert.ThrowsException<ArgumentException>(()=> new Confederation("12345"));
     }
     
+    [TestMethod]
+    public void MaxTeams_ShouldReturnCorrectValueForEachConfederation()
+    {
+        var uefa = new Confederation("UEFA");
+        var conmebol = new Confederation("CONMEBOL");
+        var concacaf = new Confederation("CONCACAF");
+        var caf = new Confederation("CAF");
+        var afc = new Confederation("AFC");
+        var ofc = new Confederation("OFC");
+    
+        Assert.AreEqual(16, uefa.MaxTeams);
+        Assert.AreEqual(7, conmebol.MaxTeams);
+        Assert.AreEqual(7, concacaf.MaxTeams);
+        Assert.AreEqual(9, caf.MaxTeams);
+        Assert.AreEqual(8, afc.MaxTeams);
+        Assert.AreEqual(1, ofc.MaxTeams);
+    }
     
 }
