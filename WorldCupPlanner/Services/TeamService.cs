@@ -22,13 +22,14 @@ public class TeamService : ITeamService
         if (existingTeam != null)
             throw new ArgumentException($"Team with the name '{request.Name}' already exists.");
 
-        var confederationName = request.ConfederationName!;
-        var maxTeams = Confederation.GetMaxTeamsForName(confederationName);
+        var confederationName = request.ConfederationName;
+        var normalizedConf = confederationName.Trim().ToUpperInvariant();
+        var maxTeams = Confederation.GetMaxTeamsForName(normalizedConf);
 
         if (maxTeams == 0)
             throw new ArgumentException($"Invalid confederation name: {confederationName}");
 
-        var currentCount = _repository.GetAll().Count(t => t.Confederation.Name == confederationName);
+        var currentCount = _repository.GetAll().Count(t => t.Confederation.Name == normalizedConf);
 
         if (currentCount >= maxTeams)
             throw new InvalidOperationException($"The confederation '{confederationName}' has reached its limit of {maxTeams} teams.");
