@@ -137,4 +137,29 @@ public class MatchServiceTests
 
         Assert.ThrowsException<KeyNotFoundException>(() => service.Create(request));
     }
+    
+    [TestMethod]
+    public void Create_WithSameHomeAndAwayTeam_ShouldThrowArgumentException()
+    {
+        var matchRepository = new MatchRepository();
+        var teamRepository = new TeamRepositoryStub();
+        var stadiumRepository = new StadiumRepositoryStub();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+
+        teamRepository.Add(new TeamStub("Uruguay"));
+        stadiumRepository.Add(new StadiumStub("Centenario"));
+
+        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        var request = new MatchRequest
+        {
+            dateMatch = clock.Now,
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Uruguay",
+            group = "A"
+        };
+
+        Assert.ThrowsException<ArgumentException>(() => service.Create(request));
+    }
 }
