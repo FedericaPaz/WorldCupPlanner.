@@ -1,25 +1,29 @@
 using Domain;
-using DomainTests.Stubs;
 using IRepository;
 
 namespace ServicesTests.Stubs;
 
 public class TeamRepositoryStub : ITeamRepository
 {
-    private readonly List<ITeam> _teams = new();
+    private readonly List<Team> _teams = new();
 
-    public void Add(ITeam team)
+    public void Add(Team team)
     {
         _teams.Add(team);
     }
 
-    public ITeam GetByName(string name)
+    public Team? Get(string name)
     {
-        var team = _teams.FirstOrDefault(t => t.Name == name);
+        return _teams.FirstOrDefault(t => t.Name == name);
+    }
 
-        if (team == null)
-            throw new KeyNotFoundException("Team not found");
+    public void Delete(Team team)
+    {
+        _teams.Remove(team);
+    }
 
-        return team;
+    public List<Team> GetAll()
+    {
+        return new List<Team>(_teams);
     }
 }

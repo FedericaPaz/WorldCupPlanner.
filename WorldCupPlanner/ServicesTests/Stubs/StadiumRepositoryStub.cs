@@ -1,25 +1,29 @@
 using Domain;
-using DomainTests.Stubs;
 using IRepository;
 
 namespace ServicesTests.Stubs;
 
 public class StadiumRepositoryStub : IStadiumRepository
 {
-    private readonly List<IStadium> _stadiums = new();
+    private readonly List<Stadium> _stadiums = new();
 
-    public void Add(IStadium stadium)
+    public void AddStadium(Stadium stadium)
     {
         _stadiums.Add(stadium);
     }
 
-    public IStadium GetByName(string name)
+    public Stadium? GetStadium(string name)
     {
-        var stadium = _stadiums.FirstOrDefault(s => s.StadiumName == name);
+        return _stadiums.FirstOrDefault(s => s.StadiumName == name);
+    }
 
-        if (stadium == null)
-            throw new KeyNotFoundException("Stadium not found");
+    public void DeleteStadium(Stadium stadium)
+    {
+        _stadiums.Remove(stadium);
+    }
 
-        return stadium;
+    public List<Stadium> GetAllStadiums()
+    {
+        return new List<Stadium>(_stadiums);
     }
 }

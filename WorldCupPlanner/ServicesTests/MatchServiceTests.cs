@@ -16,7 +16,47 @@ public class MatchServiceTests
     {
         Match.ResetIdCounter();
     }
-    
+
+    private static Team CreateTeam(string name)
+    {
+        return new Team(name, new Confederation("CONMEBOL"), 1900);
+    }
+
+    private static Stadium CreateStadium(string name)
+    {
+        return new Stadium(name, "Montevideo", null, 60000);
+    }
+
+    private static MatchRequest CreateValidRequest(DateTime date)
+    {
+        return new MatchRequest
+        {
+            dateMatch = date,
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Argentina",
+            group = "A"
+        };
+    }
+
+    private static MatchService CreateService(
+        MatchRepository matchRepository,
+        TeamRepositoryStub teamRepository,
+        StadiumRepositoryStub stadiumRepository,
+        DateTimeMatchStub clock)
+    {
+        return new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+    }
+
+    private static void AddDefaultTeamsAndStadium(
+        TeamRepositoryStub teamRepository,
+        StadiumRepositoryStub stadiumRepository)
+    {
+        teamRepository.Add(CreateTeam("Uruguay"));
+        teamRepository.Add(CreateTeam("Argentina"));
+        stadiumRepository.AddStadium(CreateStadium("Centenario"));
+    }
+
     [TestMethod]
     public void Create_WithValidRequest_ShouldCreateMatch()
     {
@@ -25,18 +65,11 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var request = new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        };
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var response = service.CreateMatch(request);
+        var response = service.CreateMatch(CreateValidRequest(clock.Now));
 
         Assert.AreEqual(1, response.idMatch);
         Assert.AreEqual("Centenario", response.stadiumName);
@@ -44,14 +77,15 @@ public class MatchServiceTests
         Assert.AreEqual("Argentina", response.awayTeamName);
         Assert.AreEqual('A', response.group);
     }
-    
+
     [TestMethod]
     public void Create_WithNullRequest_ShouldThrowArgumentNullException()
     {
-        var service = new MatchService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+        var service = CreateService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+
         Assert.ThrowsException<ArgumentNullException>(() => service.CreateMatch(null));
     }
-    
+
     [TestMethod]
     public void Create_WithValidRequest_ShouldStoreMatchInRepository()
     {
@@ -59,38 +93,27 @@ public class MatchServiceTests
         var teamRepository = new TeamRepositoryStub();
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var request = new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        };
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        service.CreateMatch(request);
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        service.CreateMatch(CreateValidRequest(clock.Now));
+
         Assert.AreEqual(1, matchRepository.GetAllMatches().Count);
     }
-    
+
     [TestMethod]
     public void Create_WithEmptyGroup_ShouldThrowArgumentException()
     {
-        var service = new MatchService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+        var service = CreateService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
 
-        var request = new MatchRequest
-        {
-            dateMatch = DateTime.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "" 
-        };
+        var request = CreateValidRequest(DateTime.Now);
+        request.group = "";
 
         Assert.ThrowsException<ArgumentException>(() => service.CreateMatch(request));
     }
-    
+
     [TestMethod]
     public void Create_WithNonExistingTeam_ShouldThrowKeyNotFoundException()
     {
@@ -98,21 +121,17 @@ public class MatchServiceTests
         var teamRepository = new TeamRepositoryStub();
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-        teamRepository.Add(new TeamStub("Uruguay"));
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var request = new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina", // ← NO existe
-            group = "A"
-        };
+        teamRepository.Add(CreateTeam("Uruguay"));
+        stadiumRepository.AddStadium(CreateStadium("Centenario"));
+
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        var request = CreateValidRequest(clock.Now);
 
         Assert.ThrowsException<KeyNotFoundException>(() => service.CreateMatch(request));
     }
-    
+
     [TestMethod]
     public void Create_WithNonExistingStadium_ShouldThrowKeyNotFoundException()
     {
@@ -120,24 +139,17 @@ public class MatchServiceTests
         var teamRepository = new TeamRepositoryStub();
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-        
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        teamRepository.Add(CreateTeam("Uruguay"));
+        teamRepository.Add(CreateTeam("Argentina"));
 
-        var request = new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario", // ← NO existe
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        };
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        var request = CreateValidRequest(clock.Now);
 
         Assert.ThrowsException<KeyNotFoundException>(() => service.CreateMatch(request));
     }
-    
+
     [TestMethod]
     public void Create_WithSameHomeAndAwayTeam_ShouldThrowArgumentException()
     {
@@ -146,23 +158,17 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        teamRepository.Add(CreateTeam("Uruguay"));
+        stadiumRepository.AddStadium(CreateStadium("Centenario"));
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var request = new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Uruguay",
-            group = "A"
-        };
+        var request = CreateValidRequest(clock.Now);
+        request.awayTeamName = "Uruguay";
 
         Assert.ThrowsException<ArgumentException>(() => service.CreateMatch(request));
     }
-    
+
     [TestMethod]
     public void Create_WithPastDate_ShouldThrowArgumentException()
     {
@@ -171,24 +177,15 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 10));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var request = new MatchRequest
-        {
-            dateMatch = new DateTime(2026, 6, 1), // ← pasada respecto al clock
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        };
+        var request = CreateValidRequest(new DateTime(2026, 6, 1));
 
         Assert.ThrowsException<ArgumentException>(() => service.CreateMatch(request));
     }
-    
+
     [TestMethod]
     public void SetResult_WithValidData_ShouldUpdateMatchResult()
     {
@@ -197,23 +194,12 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
-        
-        var request = new MatchRequest
-        {
-            dateMatch = new DateTime(2026, 6, 1),
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        };
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var created = service.CreateMatch(request);
-        
+        var created = service.CreateMatch(CreateValidRequest(clock.Now));
+
         service.SetMatchResult(created.idMatch, 2, 1);
 
         var match = matchRepository.GetMatchById(created.idMatch);
@@ -221,7 +207,7 @@ public class MatchServiceTests
         Assert.AreEqual(2, match.HomeGoals);
         Assert.AreEqual(1, match.AwayGoals);
     }
-    
+
     [TestMethod]
     public void SetResult_WithNegativeGoals_ShouldThrowArgumentException()
     {
@@ -230,55 +216,33 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var request = new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        };
-
-        var created = service.CreateMatch(request);
+        var created = service.CreateMatch(CreateValidRequest(clock.Now));
 
         Assert.ThrowsException<ArgumentException>(() => service.SetMatchResult(created.idMatch, -1, 0));
     }
-    
+
     [TestMethod]
     public void SetResult_WhenMatchNotPlayedYet_ShouldThrowInvalidOperationException()
     {
         var matchRepository = new MatchRepository();
         var teamRepository = new TeamRepositoryStub();
         var stadiumRepository = new StadiumRepositoryStub();
-
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
-        
-        var request = new MatchRequest
-        {
-            dateMatch = new DateTime(2026, 6, 10),
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        };
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var created = service.CreateMatch(request);
-        
-        Assert.ThrowsException<InvalidOperationException>(() => service.SetMatchResult(created.idMatch, 2, 1));
+        var created = service.CreateMatch(CreateValidRequest(new DateTime(2026, 6, 10)));
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            service.SetMatchResult(created.idMatch, 2, 1));
     }
-    
+
     [TestMethod]
     public void SetResult_WhenResultAlreadySet_ShouldThrowInvalidOperationException()
     {
@@ -287,26 +251,18 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var request = new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        };
+        var created = service.CreateMatch(CreateValidRequest(clock.Now));
 
-        var created = service.CreateMatch(request);
         service.SetMatchResult(created.idMatch, 1, 0);
-        Assert.ThrowsException<InvalidOperationException>(() => service.SetMatchResult(created.idMatch, 2, 0));
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            service.SetMatchResult(created.idMatch, 2, 0));
     }
-    
+
     [TestMethod]
     public void GetById_WithExistingMatch_ShouldReturnMatchResponse()
     {
@@ -315,44 +271,38 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var request = new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        };
+        var created = service.CreateMatch(CreateValidRequest(clock.Now));
 
-        var created = service.CreateMatch(request);
         var result = service.GetMatchById(created.idMatch);
+
         Assert.AreEqual(created.idMatch, result.idMatch);
         Assert.AreEqual("Centenario", result.stadiumName);
         Assert.AreEqual("Uruguay", result.homeTeamName);
         Assert.AreEqual("Argentina", result.awayTeamName);
     }
-    
+
     [TestMethod]
     public void GetById_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
     {
-        var service = new MatchService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+        var service = CreateService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+
         Assert.ThrowsException<KeyNotFoundException>(() => service.GetMatchById(99));
     }
-    
+
     [TestMethod]
     public void GetAll_WhenThereAreNoMatches_ShouldReturnEmptyList()
     {
-        var service = new MatchService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+        var service = CreateService(new MatchRepository(), new TeamRepositoryStub(), new StadiumRepositoryStub(), new DateTimeMatchStub(new DateTime(2026, 6, 1)));
+
         var result = service.GetAllMatches();
+
         Assert.AreEqual(0, result.Count);
     }
-    
+
     [TestMethod]
     public void GetAll_WithMatches_ShouldReturnAllMatchResponses()
     {
@@ -361,22 +311,14 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        teamRepository.Add(new TeamStub("Brasil"));
-        teamRepository.Add(new TeamStub("Peru"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        teamRepository.Add(CreateTeam("Brasil"));
+        teamRepository.Add(CreateTeam("Peru"));
 
-        service.CreateMatch(new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        });
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        service.CreateMatch(CreateValidRequest(clock.Now));
 
         service.CreateMatch(new MatchRequest
         {
@@ -388,11 +330,12 @@ public class MatchServiceTests
         });
 
         var result = service.GetAllMatches();
+
         Assert.AreEqual(2, result.Count);
         Assert.AreEqual("Uruguay", result[0].homeTeamName);
         Assert.AreEqual("Brasil", result[1].homeTeamName);
     }
-    
+
     [TestMethod]
     public void UpdateDate_WithValidDate_ShouldUpdateMatchDate()
     {
@@ -401,20 +344,11 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var created = service.CreateMatch(new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        });
+        var created = service.CreateMatch(CreateValidRequest(clock.Now));
 
         var newDate = new DateTime(2026, 6, 5);
 
@@ -424,7 +358,7 @@ public class MatchServiceTests
 
         Assert.AreEqual(newDate, updated.dateMatch);
     }
-    
+
     [TestMethod]
     public void UpdateDate_WithPastDate_ShouldThrowArgumentException()
     {
@@ -433,25 +367,18 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 10));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var created = service.CreateMatch(new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        });
+        var created = service.CreateMatch(CreateValidRequest(clock.Now));
 
         var pastDate = new DateTime(2026, 6, 1);
-        Assert.ThrowsException<ArgumentException>(() => service.UpdateMatchDate(created.idMatch, pastDate));
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            service.UpdateMatchDate(created.idMatch, pastDate));
     }
-    
+
     [TestMethod]
     public void UpdateStadium_WithValidData_ShouldUpdateStadium()
     {
@@ -460,27 +387,21 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
-        stadiumRepository.Add(new StadiumStub("Maracana"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        stadiumRepository.AddStadium(CreateStadium("Maracana"));
 
-        var created = service.CreateMatch(new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        });
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        var created = service.CreateMatch(CreateValidRequest(clock.Now));
 
         service.UpdateMatchStadium(created.idMatch, "Maracana");
+
         var updated = service.GetMatchById(created.idMatch);
+
         Assert.AreEqual("Maracana", updated.stadiumName);
     }
-    
+
     [TestMethod]
     public void UpdateStadium_WithNonExistingStadium_ShouldThrowKeyNotFoundException()
     {
@@ -489,21 +410,13 @@ public class MatchServiceTests
         var stadiumRepository = new StadiumRepositoryStub();
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
-        teamRepository.Add(new TeamStub("Uruguay"));
-        teamRepository.Add(new TeamStub("Argentina"));
-        stadiumRepository.Add(new StadiumStub("Centenario"));
+        AddDefaultTeamsAndStadium(teamRepository, stadiumRepository);
 
-        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+        var service = CreateService(matchRepository, teamRepository, stadiumRepository, clock);
 
-        var created = service.CreateMatch(new MatchRequest
-        {
-            dateMatch = clock.Now,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        });
+        var created = service.CreateMatch(CreateValidRequest(clock.Now));
 
-        Assert.ThrowsException<KeyNotFoundException>(() => service.UpdateMatchStadium(created.idMatch, "Maracana"));
+        Assert.ThrowsException<KeyNotFoundException>(() =>
+            service.UpdateMatchStadium(created.idMatch, "Maracana"));
     }
 }
