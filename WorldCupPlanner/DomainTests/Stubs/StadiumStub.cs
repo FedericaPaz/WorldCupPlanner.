@@ -4,10 +4,10 @@ namespace DomainTests.Stubs;
 
 public class StadiumStub : IStadium
 {
-    public string _stadiumName { get; }
+    public string StadiumName { get; }
 
     public StadiumStub(string name)
     {
-        _stadiumName = name;
+        StadiumName = name;
     }
 }

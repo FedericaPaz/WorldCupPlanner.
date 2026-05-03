@@ -15,7 +15,7 @@ public class TeamRepositoryStub : ITeamRepository
 
     public ITeam GetByName(string name)
     {
-        var team = _teams.FirstOrDefault(t => t._teamName == name);
+        var team = _teams.FirstOrDefault(t => t.Name == name);
 
         if (team == null)
             throw new KeyNotFoundException("Team not found");

@@ -12,13 +12,13 @@ public static class EntityMatchMapper
         {
             idMatch = match.IdMatch,
             dateMatch = match.DateMatch,
-            stadiumName = match.Stadium._stadiumName,
-            homeTeamName = match.HomeTeam._teamName,
-            awayTeamName = match.AwayTeam._teamName,
+            stadiumName = match.Stadium.StadiumName,
+            homeTeamName = match.HomeTeam.Name,
+            awayTeamName = match.AwayTeam.Name,
             group = match.Group,
             homeGoals = match.HomeGoals,
             awayGoals = match.AwayGoals,
-            winnerName = match.WinnerMatch?._teamName
+            winnerName = match.WinnerMatch?.Name
         };
     }
 }

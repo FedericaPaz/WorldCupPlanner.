@@ -15,7 +15,7 @@ public class StadiumRepositoryStub : IStadiumRepository
 
     public IStadium GetByName(string name)
     {
-        var stadium = _stadiums.FirstOrDefault(s => s._stadiumName == name);
+        var stadium = _stadiums.FirstOrDefault(s => s.StadiumName == name);
 
         if (stadium == null)
             throw new KeyNotFoundException("Stadium not found");

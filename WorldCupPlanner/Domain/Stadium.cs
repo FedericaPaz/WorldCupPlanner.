@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class Stadium
+public class Stadium : IStadium
 {
     private const int MaxNameLength = 80;
     private const int MaxCityLength = 60;
