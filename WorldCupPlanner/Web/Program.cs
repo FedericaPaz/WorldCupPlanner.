@@ -21,7 +21,7 @@ builder.Services.AddSingleton<IStadiumService, StadiumService>();
 builder.Services.AddSingleton<IMatchRepository, MatchRepository>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 
-builder.Services.AddSingleton<IDateTimeMatch, DateTimeMatchStub>();
+builder.Services.AddSingleton<IDateTimeMatch, SystemDateTimeMatch>();
 
 builder.Services.AddBlazoredLocalStorage();
 
