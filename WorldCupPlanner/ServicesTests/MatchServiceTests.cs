@@ -90,4 +90,26 @@ public class MatchServiceTests
 
         Assert.ThrowsException<ArgumentException>(() => service.Create(request));
     }
+    
+    [TestMethod]
+    public void Create_WithNonExistingTeam_ShouldThrowKeyNotFoundException()
+    {
+        var matchRepository = new MatchRepository();
+        var teamRepository = new TeamRepositoryStub();
+        var stadiumRepository = new StadiumRepositoryStub();
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+        teamRepository.Add(new TeamStub("Uruguay"));
+        var service = new MatchService(matchRepository, teamRepository, stadiumRepository, clock);
+
+        var request = new MatchRequest
+        {
+            dateMatch = clock.Now,
+            stadiumName = "Centenario",
+            homeTeamName = "Uruguay",
+            awayTeamName = "Argentina", // ← NO existe
+            group = "A"
+        };
+
+        Assert.ThrowsException<KeyNotFoundException>(() => service.Create(request));
+    }
 }
