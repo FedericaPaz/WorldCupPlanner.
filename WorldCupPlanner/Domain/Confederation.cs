@@ -33,8 +33,9 @@ public class Confederation
     
     public static int GetMaxTeamsForName(string name)
     {
-        var validatedName = ValidateName(name);
-        var normalized = NormalizeName(validatedName);
+        if (string.IsNullOrWhiteSpace(name))
+            return 0;
+        var normalized = name.Trim().ToUpperInvariant();
         return _confederationLimits.GetValueOrDefault(normalized, 0);
     }
     

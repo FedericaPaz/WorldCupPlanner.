@@ -73,6 +73,17 @@ public class ConfederationTests
     }
     
     [TestMethod]
+    public void GetMaxTeamsForName_ShouldReturnCorrectValue()
+    {
+        Assert.AreEqual(16, Confederation.GetMaxTeamsForName("UEFA"));
+        Assert.AreEqual(16, Confederation.GetMaxTeamsForName("uefa"));     
+        Assert.AreEqual(16, Confederation.GetMaxTeamsForName("  UEFA  ")); 
+        Assert.AreEqual(0, Confederation.GetMaxTeamsForName("INVALID"));
+        Assert.AreEqual(0, Confederation.GetMaxTeamsForName(""));
+        Assert.AreEqual(0, Confederation.GetMaxTeamsForName(null!));
+    }
+    
+    [TestMethod]
     public void TwoConfederationsWithSameName_ShouldBeEqual()
     {
         var conf1 = new Confederation("UEFA");
