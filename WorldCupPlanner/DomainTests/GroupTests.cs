@@ -34,4 +34,15 @@ public class GroupTests
         var group = new Group('A');
         Assert.ThrowsException<ArgumentNullException>(() => group.AddTeamToGroup(null));
     }
+
+    [TestMethod]
+    public void AddTeam_WhenGroupHasFourTeams_ShouldThrowException()
+    {
+        var group = new Group('A');
+        group.AddTeamToGroup(new Team("Team1", new Confederation("UEFA"), 500));
+        group.AddTeamToGroup(new Team("Team2", new Confederation("UEFA"),500));
+        group.AddTeamToGroup(new Team("Team3", new Confederation("UEFA"),500));
+        group.AddTeamToGroup(new Team("Team4", new Confederation("UEFA"), 500));
+        Assert.ThrowsException<InvalidOperationException>(() => group.AddTeamToGroup(new Team("Team5", new Confederation("UEFA"), 500)));
+    }
 }

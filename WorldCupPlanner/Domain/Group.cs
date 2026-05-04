@@ -26,6 +26,8 @@ public class Group
     {
         if (team == null)
             throw new ArgumentNullException(nameof(team));
+        if(_teamsInGroup.Count >= 4)
+            throw new InvalidOperationException("El grupo ya tiene 4 equipos.");
         _teamsInGroup.Add(team);
     }
 }
