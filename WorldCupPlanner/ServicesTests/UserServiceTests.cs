@@ -318,4 +318,36 @@ public class UserServiceTests
         CollectionAssert.Contains(updatedUser.Roles, UserRole.SystemAdministrator);
         CollectionAssert.Contains(updatedUser.Roles, UserRole.Editor);
     }
+    
+    [TestMethod]
+    public void GetUserDto_WithRoles_ShouldReturnRoles()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        var roles = new List<UserRole>
+        {
+            UserRole.SystemAdministrator,
+            UserRole.Editor
+        };
+
+        var userDto = new UserRequestDto
+        {
+            FirstName = "Juan",
+            LastName = "Perez",
+            Email = "juan.perez@gmail.com",
+            BirthDate = new DateTime(2000, 1, 1),
+            Password = "Password1!",
+            Roles = roles
+        };
+
+        userService.CreateUser(userDto);
+
+        var result = userService.GetUserDto("juan.perez@gmail.com");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.Roles.Count);
+        CollectionAssert.Contains(result.Roles, UserRole.SystemAdministrator);
+        CollectionAssert.Contains(result.Roles, UserRole.Editor);
+    }
 }

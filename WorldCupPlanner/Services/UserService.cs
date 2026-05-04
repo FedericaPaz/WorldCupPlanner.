@@ -58,7 +58,8 @@ public class UserService
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
-            BirthDate = user.BirthDate
+            BirthDate = user.BirthDate,
+            Roles = user.Roles
         };
     }
     
