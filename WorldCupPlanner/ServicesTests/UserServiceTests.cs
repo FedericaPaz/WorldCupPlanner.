@@ -1,7 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Domain;
+using DTOs.User;
 using Repository;
 using Services;
-using DTOs.User;
 
 namespace ServicesTests;
 
@@ -249,5 +250,104 @@ public class UserServiceTests
         Assert.AreEqual("Perez", result.LastName);
         Assert.AreEqual("juan.perez@gmail.com", result.Email);
         Assert.AreEqual(new DateTime(2000, 1, 1), result.BirthDate);
+    }
+    
+    [TestMethod]
+    public void CreateUser_WithRolesDto_ShouldCreateUserWithRoles()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        var userDto = new UserRequestDto
+        {
+            FirstName = "Juan",
+            LastName = "Perez",
+            Email = "juan.perez@gmail.com",
+            BirthDate = new DateTime(2000, 1, 1),
+            Password = "Password1!",
+            Roles = new List<UserRole>
+            {
+                UserRole.SystemAdministrator,
+                UserRole.Editor
+            }
+        };
+
+        userService.CreateUser(userDto);
+
+        var createdUser = userService.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNotNull(createdUser);
+        Assert.AreEqual(2, createdUser.Roles.Count);
+        CollectionAssert.Contains(createdUser.Roles, UserRole.SystemAdministrator);
+        CollectionAssert.Contains(createdUser.Roles, UserRole.Editor);
+    }
+    
+    [TestMethod]
+    public void UpdateUser_WithRoles_ShouldUpdateUserRoles()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        userService.CreateUser(
+            "Juan",
+            "Perez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!"
+        );
+
+        var roles = new List<UserRole>
+        {
+            UserRole.SystemAdministrator,
+            UserRole.Editor
+        };
+
+        userService.UpdateUser(
+            "Juan",
+            "Gomez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!",
+            roles
+        );
+
+        var updatedUser = userService.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNotNull(updatedUser);
+        Assert.AreEqual(2, updatedUser.Roles.Count);
+        CollectionAssert.Contains(updatedUser.Roles, UserRole.SystemAdministrator);
+        CollectionAssert.Contains(updatedUser.Roles, UserRole.Editor);
+    }
+    
+    [TestMethod]
+    public void GetUserDto_WithRoles_ShouldReturnRoles()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        var roles = new List<UserRole>
+        {
+            UserRole.SystemAdministrator,
+            UserRole.Editor
+        };
+
+        var userDto = new UserRequestDto
+        {
+            FirstName = "Juan",
+            LastName = "Perez",
+            Email = "juan.perez@gmail.com",
+            BirthDate = new DateTime(2000, 1, 1),
+            Password = "Password1!",
+            Roles = roles
+        };
+
+        userService.CreateUser(userDto);
+
+        var result = userService.GetUserDto("juan.perez@gmail.com");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.Roles.Count);
+        CollectionAssert.Contains(result.Roles, UserRole.SystemAdministrator);
+        CollectionAssert.Contains(result.Roles, UserRole.Editor);
     }
 }

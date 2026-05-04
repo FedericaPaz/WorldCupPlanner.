@@ -191,4 +191,63 @@ public class UserTests
 
         Assert.AreNotEqual(password, user.PasswordHash);
     }
+    
+    [TestMethod]
+    public void CreateUser_WithRoles_ShouldStoreRoles()
+    {
+        var roles = new List<UserRole>
+        {
+            UserRole.SystemAdministrator,
+            UserRole.Editor
+        };
+
+        var user = new User(
+            "Juan",
+            "Perez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!",
+            roles
+        );
+
+        Assert.AreEqual(2, user.Roles.Count);
+        CollectionAssert.Contains(user.Roles, UserRole.SystemAdministrator);
+        CollectionAssert.Contains(user.Roles, UserRole.Editor);
+    }
+    
+    [TestMethod]
+    public void CreateUser_WithoutRoles_ShouldHaveEmptyRolesList()
+    {
+        var user = new User(
+            "Juan",
+            "Perez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!"
+        );
+
+        Assert.IsNotNull(user.Roles);
+        Assert.AreEqual(0, user.Roles.Count);
+    }
+    
+    [TestMethod]
+    public void CreateUser_WithDuplicatedRoles_ShouldThrowException()
+    {
+        var roles = new List<UserRole>
+        {
+            UserRole.Editor,
+            UserRole.Editor
+        };
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            new User(
+                "Juan",
+                "Perez",
+                "juan.perez@gmail.com",
+                new DateTime(2000, 1, 1),
+                "Password1!",
+                roles
+            )
+        );
+    }
 }

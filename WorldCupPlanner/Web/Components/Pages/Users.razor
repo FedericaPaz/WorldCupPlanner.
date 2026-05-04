@@ -2,7 +2,6 @@
 @using Domain
 @using DTOs.User
 @using global::Services
-@using Services
 @inject UserService UserService
 
 <div class="users-shell">
@@ -33,6 +32,7 @@
                     <th>Apellido</th>
                     <th>Email</th>
                     <th>Fecha Nacimiento</th>
+                    <th>Roles</th>
                     <th class="actions-column">Acciones</th>
                 </tr>
             </thead>
@@ -41,7 +41,7 @@
                 @if (_users.Count == 0)
                 {
                     <tr>
-                        <td colspan="5" class="empty-state">
+                        <td colspan="6" class="empty-state">
                             No hay usuarios registrados.
                         </td>
                     </tr>
@@ -55,7 +55,12 @@
                             <td>@user.LastName</td>
                             <td class="muted">@user.Email</td>
                             <td class="muted">@user.BirthDate.ToString("yyyy-MM-dd")</td>
+                            <td class="muted">@FormatRoles(user.Roles)</td>
                             <td class="actions-cell">
+                                <button class="icon-button" @onclick="() => OpenEditModal(user)">
+                                    Editar
+                                </button>
+
                                 <button class="icon-button danger" @onclick="() => DeleteUser(user.Email)">
                                     Eliminar
                                 </button>
@@ -73,7 +78,7 @@
     <div class="modal-backdrop">
         <div class="modal-card">
             <div class="modal-header">
-                <h2>Crear Usuario</h2>
+                <h2>@(_isEditing ? "Editar Usuario" : "Crear Usuario")</h2>
 
                 <button class="close-button" @onclick="CloseCreateModal">
                     ×
@@ -97,7 +102,7 @@
 
                 <div class="form-group">
                     <label>Email</label>
-                    <InputText class="form-control" @bind-Value="_userRequest.Email" />
+                    <InputText class="form-control" @bind-Value="_userRequest.Email" disabled="@_isEditing" />
                     <ValidationMessage For="@(() => _userRequest.Email)" />
                 </div>
 
@@ -113,13 +118,33 @@
                     <ValidationMessage For="@(() => _userRequest.Password)" />
                 </div>
 
+                <div class="form-group">
+                    <label>Roles</label>
+
+                    <div class="roles-options">
+                        <label class="role-option">
+                            <input type="checkbox"
+                                   checked="@_userRequest.Roles.Contains(UserRole.SystemAdministrator)"
+                                   @onchange="ToggleSystemAdministratorRole" />
+                            Administrador
+                        </label>
+
+                        <label class="role-option">
+                            <input type="checkbox"
+                                   checked="@_userRequest.Roles.Contains(UserRole.Editor)"
+                                   @onchange="ToggleEditorRole" />
+                            Editor
+                        </label>
+                    </div>
+                </div>
+
                 <div class="modal-actions">
                     <button type="button" class="secondary-button" @onclick="CloseCreateModal">
                         Cancelar
                     </button>
 
                     <button type="submit" class="primary-button full">
-                        Crear
+                        @(_isEditing ? "Actualizar" : "Crear")
                     </button>
                 </div>
             </EditForm>
@@ -131,6 +156,8 @@
     private List<User> _users = new();
     private UserRequestDto _userRequest = new();
     private bool _showCreateModal;
+    private bool _isEditing;
+    private string _editingEmail = string.Empty;
     private string _errorMessage = string.Empty;
 
     protected override void OnInitialized()
@@ -146,9 +173,32 @@
     private void OpenCreateModal()
     {
         _errorMessage = string.Empty;
+        _isEditing = false;
+        _editingEmail = string.Empty;
+
         _userRequest = new UserRequestDto
         {
-            BirthDate = DateTime.Today
+            BirthDate = DateTime.Today,
+            Roles = new List<UserRole>()
+        };
+
+        _showCreateModal = true;
+    }
+
+    private void OpenEditModal(User user)
+    {
+        _errorMessage = string.Empty;
+        _isEditing = true;
+        _editingEmail = user.Email;
+
+        _userRequest = new UserRequestDto
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email,
+            BirthDate = user.BirthDate,
+            Password = string.Empty,
+            Roles = new List<UserRole>(user.Roles)
         };
 
         _showCreateModal = true;
@@ -157,6 +207,8 @@
     private void CloseCreateModal()
     {
         _showCreateModal = false;
+        _isEditing = false;
+        _editingEmail = string.Empty;
         _errorMessage = string.Empty;
     }
 
@@ -164,7 +216,22 @@
     {
         try
         {
-            UserService.CreateUser(_userRequest);
+            if (_isEditing)
+            {
+                UserService.UpdateUser(
+                    _userRequest.FirstName,
+                    _userRequest.LastName,
+                    _editingEmail,
+                    _userRequest.BirthDate,
+                    _userRequest.Password,
+                    _userRequest.Roles
+                );
+            }
+            else
+            {
+                UserService.CreateUser(_userRequest);
+            }
+
             LoadUsers();
             CloseCreateModal();
         }
@@ -186,232 +253,43 @@
             _errorMessage = exception.Message;
         }
     }
+
+    private void ToggleSystemAdministratorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRole.SystemAdministrator, args);
+    }
+
+    private void ToggleEditorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRole.Editor, args);
+    }
+
+    private void ToggleRole(UserRole role, ChangeEventArgs args)
+    {
+        var isChecked = args.Value is bool value && value;
+
+        if (isChecked && !_userRequest.Roles.Contains(role))
+        {
+            _userRequest.Roles.Add(role);
+        }
+
+        if (!isChecked && _userRequest.Roles.Contains(role))
+        {
+            _userRequest.Roles.Remove(role);
+        }
+    }
+
+    private string FormatRoles(List<UserRole> roles)
+    {
+        if (roles.Count == 0)
+        {
+            return "Sin rol";
+        }
+
+        var roleNames = roles.Select(role =>
+            role == UserRole.SystemAdministrator ? "Administrador" : "Editor"
+        );
+
+        return string.Join(", ", roleNames);
+    }
 }
-
-<style>
-    .users-shell {
-        padding: 32px;
-        background-color: #f9fafb;
-        min-height: 100vh;
-    }
-
-    .users-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
-    }
-
-    .users-header h1 {
-        margin: 0;
-        font-size: 28px;
-        font-weight: 700;
-        color: #111827;
-    }
-
-    .users-header p {
-        margin: 8px 0 0;
-        color: #6b7280;
-        font-size: 16px;
-    }
-
-    .primary-button {
-        background-color: #16a34a;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: 12px 20px;
-        font-weight: 700;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .primary-button:hover {
-        background-color: #15803d;
-    }
-
-    .primary-button.full {
-        flex: 1;
-    }
-
-    .plus-icon {
-        font-size: 24px;
-        line-height: 18px;
-    }
-
-    .users-table-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        overflow: hidden;
-    }
-
-    .users-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .users-table th {
-        background-color: #f3f4f6;
-        color: #111827;
-        text-align: left;
-        padding: 18px 24px;
-        font-weight: 700;
-        font-size: 15px;
-    }
-
-    .users-table td {
-        padding: 18px 24px;
-        border-top: 1px solid #e5e7eb;
-        color: #111827;
-        font-size: 15px;
-    }
-
-    .users-table tr:hover td {
-        background-color: #f9fafb;
-    }
-
-    .muted {
-        color: #6b7280 !important;
-    }
-
-    .actions-column {
-        text-align: right !important;
-    }
-
-    .actions-cell {
-        text-align: right;
-    }
-
-    .icon-button {
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        font-weight: 600;
-        padding: 8px 10px;
-        border-radius: 8px;
-    }
-
-    .icon-button:hover {
-        background-color: #f3f4f6;
-    }
-
-    .icon-button.danger {
-        color: #dc2626;
-    }
-
-    .empty-state {
-        text-align: center;
-        color: #6b7280 !important;
-        padding: 32px !important;
-    }
-
-    .error-message {
-        background: #fee2e2;
-        color: #991b1b;
-        border: 1px solid #fecaca;
-        padding: 12px 16px;
-        border-radius: 10px;
-        margin-bottom: 16px;
-    }
-
-    .modal-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.55);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        padding: 24px;
-    }
-
-    .modal-card {
-        background: white;
-        border-radius: 16px;
-        padding: 24px;
-        width: 100%;
-        max-width: 440px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    }
-
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .modal-header h2 {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 700;
-        color: #111827;
-    }
-
-    .close-button {
-        background: transparent;
-        border: none;
-        font-size: 28px;
-        cursor: pointer;
-        color: #374151;
-        line-height: 1;
-    }
-
-    .form-group {
-        margin-bottom: 16px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #111827;
-        font-size: 14px;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 11px 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        font-size: 15px;
-        box-sizing: border-box;
-    }
-
-    .form-control:focus {
-        outline: none;
-        border-color: #16a34a;
-        box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.15);
-    }
-
-    .validation-message {
-        color: #dc2626;
-        font-size: 13px;
-        margin-top: 6px;
-    }
-
-    .modal-actions {
-        display: flex;
-        gap: 12px;
-        margin-top: 24px;
-    }
-
-    .secondary-button {
-        flex: 1;
-        background: white;
-        color: #374151;
-        border: 1px solid #d1d5db;
-        border-radius: 10px;
-        padding: 12px 20px;
-        font-weight: 700;
-        cursor: pointer;
-    }
-
-    .secondary-button:hover {
-        background: #f3f4f6;
-    }
-</style>

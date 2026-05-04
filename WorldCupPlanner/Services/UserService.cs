@@ -19,15 +19,18 @@ public class UserService
         _userRepository.AddUser(user);
     }
 
-    public void CreateUser(UserRequestDto userRequestDto)
+    public void CreateUser(UserRequestDto userDto)
     {
-        CreateUser(
-            userRequestDto.FirstName,
-            userRequestDto.LastName,
-            userRequestDto.Email,
-            userRequestDto.BirthDate,
-            userRequestDto.Password
+        var user = new User(
+            userDto.FirstName,
+            userDto.LastName,
+            userDto.Email,
+            userDto.BirthDate,
+            userDto.Password,
+            userDto.Roles
         );
+
+        _userRepository.AddUser(user);
     }
     
     public List<User> GetAllUsers()
@@ -55,7 +58,8 @@ public class UserService
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.Email,
-            BirthDate = user.BirthDate
+            BirthDate = user.BirthDate,
+            Roles = user.Roles
         };
     }
     
@@ -66,12 +70,18 @@ public class UserService
         _userRepository.DeleteUser(user);
     }
     
-    public void UpdateUser(string firstName, string lastName, string email, DateTime birthDate, string password)
+    public void UpdateUser(
+        string firstName,
+        string lastName,
+        string email,
+        DateTime birthDate,
+        string password,
+        List<UserRole>? roles = null)
     {
         ValidateEmailNotEmpty(email);
         var existingUser = GetExistingUserOrThrow(email);
 
-        var user = new User(firstName, lastName, email, birthDate, password);
+        var user = new User(firstName, lastName, email, birthDate, password, roles);
         _userRepository.UpdateUser(user);
     }
 
