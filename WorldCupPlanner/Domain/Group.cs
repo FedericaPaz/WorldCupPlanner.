@@ -47,6 +47,8 @@ public class Group
             throw new ArgumentException("El partido no pertenece a este grupo.");
         if (_matchesInGroup.Count >= 6)
             throw new InvalidOperationException("El grupo ya tiene 6 partidos.");
+        if (!_teamsInGroup.Contains(match.HomeTeam))
+            throw new InvalidOperationException("El equipo del partido debe pertenecer al grupo.");
         _matchesInGroup.Add(match);
     }
 }

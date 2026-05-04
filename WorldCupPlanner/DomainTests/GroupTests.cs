@@ -105,4 +105,17 @@ public class GroupTests
         var extraMatch = new Match(clock.Now, stadium, team1, team2, 'A', clock);
         Assert.ThrowsException<InvalidOperationException>(() => group.AddMatchToGroup(extraMatch));
     }
+
+    [TestMethod]
+    public void AddMatch_WhenHomeTeamNotInGroup_ShouldThrowException()
+    {
+        var group = new Group('A');
+        var teamInGroup = new Team("A", new Confederation("UEFA"), 1000);
+        var teamOutsideGroup = new Team("B", new Confederation("UEFA"), 1000);
+        group.AddTeamToGroup(teamInGroup);
+        var stadium = new Stadium("Estadio", "Ciudad", "Descripcion", 30000);
+        var clock = new DateTimeMatchStub(DateTime.Now);
+        var match = new Match(clock.Now, stadium, teamOutsideGroup, teamInGroup, 'A', clock);
+        Assert.ThrowsException<InvalidOperationException>(() => group.AddMatchToGroup(match));
+    }
 }
