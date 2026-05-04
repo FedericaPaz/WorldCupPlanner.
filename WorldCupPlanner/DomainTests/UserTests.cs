@@ -191,4 +191,27 @@ public class UserTests
 
         Assert.AreNotEqual(password, user.PasswordHash);
     }
+    
+    [TestMethod]
+    public void CreateUser_WithRoles_ShouldStoreRoles()
+    {
+        var roles = new List<UserRole>
+        {
+            UserRole.SystemAdministrator,
+            UserRole.Editor
+        };
+
+        var user = new User(
+            "Juan",
+            "Perez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!",
+            roles
+        );
+
+        Assert.AreEqual(2, user.Roles.Count);
+        CollectionAssert.Contains(user.Roles, UserRole.SystemAdministrator);
+        CollectionAssert.Contains(user.Roles, UserRole.Editor);
+    }
 }

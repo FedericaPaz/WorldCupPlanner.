@@ -11,8 +11,9 @@ public class User
     public string Email { get; private set; }
     public DateTime BirthDate { get; private set; }
     public string PasswordHash { get; private set; }
+    public List<UserRole> Roles { get; private set; }
 
-    public User(string firstName, string lastName, string email, DateTime birthDate, string password)
+    public User(string firstName, string lastName, string email, DateTime birthDate, string password, List<UserRole>? roles = null)
     {
         ValidateFirstName(firstName);
         ValidateLastName(lastName);
@@ -26,6 +27,7 @@ public class User
         Email = email;
         BirthDate = birthDate;
         PasswordHash = HashPassword(password);
+        Roles = roles ?? new List<UserRole>();
     }
 
     private static void ValidateFirstName(string firstName)
