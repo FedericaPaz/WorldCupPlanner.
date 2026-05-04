@@ -13,11 +13,7 @@ public class MatchService : IMatchService
     private readonly IStadiumRepository _stadiumRepository;
     private readonly IDateTimeMatch _clock;
 
-    public MatchService(
-        IMatchRepository matchRepository,
-        ITeamRepository teamRepository,
-        IStadiumRepository stadiumRepository,
-        IDateTimeMatch clock)
+    public MatchService(IMatchRepository matchRepository, ITeamRepository teamRepository, IStadiumRepository stadiumRepository, IDateTimeMatch clock)
     {
         _matchRepository = matchRepository;
         _teamRepository = teamRepository;
@@ -27,7 +23,7 @@ public class MatchService : IMatchService
 
     public MatchResponse CreateMatch(MatchRequest request)
     {
-        ValidateRequest(request);
+        EnsureValidRequest(request);
 
         var stadium = GetStadiumOrThrow(request.stadiumName);
         var homeTeam = GetTeamOrThrow(request.homeTeamName, "local");
@@ -38,6 +34,40 @@ public class MatchService : IMatchService
         _matchRepository.AddMatch(match);
 
         return match.ToResponse();
+    }
+
+    private static void EnsureValidRequest(MatchRequest request)
+    {
+        if (request == null)
+            throw new ArgumentNullException(nameof(request));
+
+        if (string.IsNullOrWhiteSpace(request.group))
+            throw new ArgumentException("El grupo es obligatorio.");
+    }
+
+    private IStadium GetStadiumOrThrow(string stadiumName)
+    {
+        var stadium = _stadiumRepository.GetStadium(stadiumName);
+
+        if (stadium == null)
+            throw new KeyNotFoundException("No existe un estadio con ese nombre.");
+
+        return stadium;
+    }
+
+    private ITeam GetTeamOrThrow(string teamName, string teamType)
+    {
+        var team = _teamRepository.Get(teamName);
+
+        if (team == null)
+            throw new KeyNotFoundException($"No existe el equipo {teamType}.");
+
+        return team;
+    }
+
+    private Match CreateMatchEntity(MatchRequest request, IStadium stadium, ITeam homeTeam, ITeam awayTeam)
+    {
+        return new Match(request.dateMatch, stadium, homeTeam, awayTeam, request.group[0], _clock);
     }
 
     public void SetMatchResult(int matchId, int homeGoals, int awayGoals)
@@ -72,49 +102,5 @@ public class MatchService : IMatchService
         var stadium = GetStadiumOrThrow(stadiumName);
 
         match.UpdateStadium(stadium);
-    }
-
-    private static void ValidateRequest(MatchRequest request)
-    {
-        if (request == null)
-            throw new ArgumentNullException(nameof(request));
-
-        if (string.IsNullOrWhiteSpace(request.group))
-            throw new ArgumentException("El grupo es obligatorio.");
-    }
-
-    private IStadium GetStadiumOrThrow(string stadiumName)
-    {
-        var stadium = _stadiumRepository.GetStadium(stadiumName);
-
-        if (stadium == null)
-            throw new KeyNotFoundException("No existe un estadio con ese nombre.");
-
-        return stadium;
-    }
-
-    private ITeam GetTeamOrThrow(string teamName, string teamType)
-    {
-        var team = _teamRepository.Get(teamName);
-
-        if (team == null)
-            throw new KeyNotFoundException($"No existe el equipo {teamType}.");
-
-        return team;
-    }
-
-    private Match CreateMatchEntity(
-        MatchRequest request,
-        IStadium stadium,
-        ITeam homeTeam,
-        ITeam awayTeam)
-    {
-        return new Match(
-            request.dateMatch,
-            stadium,
-            homeTeam,
-            awayTeam,
-            request.group[0],
-            _clock);
     }
 }
