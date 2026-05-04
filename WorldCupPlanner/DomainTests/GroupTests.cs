@@ -88,4 +88,21 @@ public class GroupTests
         var match = new Match(clock.Now, stadium, team1, team2, 'B', clock);
         Assert.ThrowsException<ArgumentException>(() => group.AddMatchToGroup(match));
     }
+
+    [TestMethod]
+    public void AddMatch_WhenGroupHasSixMatches_ShouldThrowException()
+    {
+        var group = new Group('A');
+        var team1 = new Team("A", new Confederation("UEFA"), 1000);
+        var team2 = new Team("B", new Confederation("UEFA"), 1000);
+        var stadium = new Stadium("Estadio", "Ciudad", "Descripcion", 30000);
+        var clock = new DateTimeMatchStub(DateTime.Now);
+        for (int i = 0; i < 6; i++)
+        {
+            var match = new Match(clock.Now, stadium, team1, team2, 'A', clock);
+            group.AddMatchToGroup(match);
+        }
+        var extraMatch = new Match(clock.Now, stadium, team1, team2, 'A', clock);
+        Assert.ThrowsException<InvalidOperationException>(() => group.AddMatchToGroup(extraMatch));
+    }
 }

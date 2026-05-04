@@ -45,6 +45,8 @@ public class Group
             throw new ArgumentNullException(nameof(match));
         if (match.Group != GroupLetter)
             throw new ArgumentException("El partido no pertenece a este grupo.");
+        if (_matchesInGroup.Count >= 6)
+            throw new InvalidOperationException("El grupo ya tiene 6 partidos.");
         _matchesInGroup.Add(match);
     }
 }
