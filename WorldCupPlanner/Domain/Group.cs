@@ -41,6 +41,8 @@ public class Group
     
     public void AddMatchToGroup(Match match)
     {
+        if (match == null)
+            throw new ArgumentNullException(nameof(match));
         _matchesInGroup.Add(match);
     }
 }

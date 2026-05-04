@@ -69,4 +69,11 @@ public class GroupTests
         Assert.AreEqual(1, group.MatchesInGroup.Count);
         Assert.AreEqual(match, group.MatchesInGroup[0]);
     }
+
+    [TestMethod]
+    public void AddMatch_WithNullMatch_ShouldThrowException()
+    {
+        var group = new Group('A');
+        Assert.ThrowsException<ArgumentNullException>(() => group.AddMatchToGroup(null));
+    }
 }
