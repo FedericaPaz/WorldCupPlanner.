@@ -1,4 +1,5 @@
 using Domain;
+using DomainTests.Stubs;
 
 namespace DomainTests;
 
@@ -53,5 +54,19 @@ public class GroupTests
         var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
         group.AddTeamToGroup(team);
         Assert.ThrowsException<InvalidOperationException>(() => group.AddTeamToGroup(team));
+    }
+
+    [TestMethod]
+    public void AddMatch_WithValidMatch_ShouldAddMatch()
+    {
+        var group = new Group('A');
+        var homeTeam = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var awayTeam = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+        var stadium = new Stadium("Estadio Centenario", "Montevideo", "Estadio mundialista", 60000);
+        var match = new Match(clock.Now, stadium, homeTeam, awayTeam, 'A', clock);
+        group.AddMatchToGroup(match);
+        Assert.AreEqual(1, group.MatchesInGroup.Count);
+        Assert.AreEqual(match, group.MatchesInGroup[0]);
     }
 }

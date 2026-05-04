@@ -4,6 +4,7 @@ public class Group
 {
     private char _groupLetter;
     private readonly List<Team> _teamsInGroup = new List<Team>();
+    private readonly List<Match> _matchesInGroup = new List<Match>();
     
     public char GroupLetter
     {
@@ -13,6 +14,11 @@ public class Group
     public IReadOnlyList<Team> TeamsInGroup
     {
         get => _teamsInGroup;
+    }
+
+    public IReadOnlyList<Match> MatchesInGroup
+    {
+        get => _matchesInGroup;
     }
     
     public Group(char groupLetter)
@@ -31,5 +37,10 @@ public class Group
         if (_teamsInGroup.Contains(team))
             throw new InvalidOperationException("El equipo ya está en el grupo.");
         _teamsInGroup.Add(team);
+    }
+    
+    public void AddMatchToGroup(Match match)
+    {
+        _matchesInGroup.Add(match);
     }
 }
