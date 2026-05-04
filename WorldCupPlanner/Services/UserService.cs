@@ -69,12 +69,18 @@ public class UserService
         _userRepository.DeleteUser(user);
     }
     
-    public void UpdateUser(string firstName, string lastName, string email, DateTime birthDate, string password)
+    public void UpdateUser(
+        string firstName,
+        string lastName,
+        string email,
+        DateTime birthDate,
+        string password,
+        List<UserRole>? roles = null)
     {
         ValidateEmailNotEmpty(email);
         var existingUser = GetExistingUserOrThrow(email);
 
-        var user = new User(firstName, lastName, email, birthDate, password);
+        var user = new User(firstName, lastName, email, birthDate, password, roles);
         _userRepository.UpdateUser(user);
     }
 

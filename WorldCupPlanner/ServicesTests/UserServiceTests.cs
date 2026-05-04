@@ -281,4 +281,41 @@ public class UserServiceTests
         CollectionAssert.Contains(createdUser.Roles, UserRole.SystemAdministrator);
         CollectionAssert.Contains(createdUser.Roles, UserRole.Editor);
     }
+    
+    [TestMethod]
+    public void UpdateUser_WithRoles_ShouldUpdateUserRoles()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        userService.CreateUser(
+            "Juan",
+            "Perez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!"
+        );
+
+        var roles = new List<UserRole>
+        {
+            UserRole.SystemAdministrator,
+            UserRole.Editor
+        };
+
+        userService.UpdateUser(
+            "Juan",
+            "Gomez",
+            "juan.perez@gmail.com",
+            new DateTime(2000, 1, 1),
+            "Password1!",
+            roles
+        );
+
+        var updatedUser = userService.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNotNull(updatedUser);
+        Assert.AreEqual(2, updatedUser.Roles.Count);
+        CollectionAssert.Contains(updatedUser.Roles, UserRole.SystemAdministrator);
+        CollectionAssert.Contains(updatedUser.Roles, UserRole.Editor);
+    }
 }
