@@ -8,4 +8,5 @@ public interface ITeamService
     TeamDTO? Get(string name);
     List<TeamDTO> GetAll();
     void Delete(string name);
+    List<ConfederationDTO> GetAllConfederations();
 }

@@ -168,4 +168,33 @@ public class TeamServiceTests
         var service = new TeamService(repository);
         Assert.ThrowsException<InvalidOperationException>(() => service.Delete("NonExistent"));
     }
+    
+    [TestMethod]
+    public void GetAllConfederations_ShouldReturnAllSixConfederations()
+    {
+        var teamRepository = new TeamRepository();
+        var teamService = new TeamService(teamRepository);
+        List<ConfederationDTO> result = teamService.GetAllConfederations();
+        Assert.AreEqual(6, result.Count);
+        Assert.IsTrue(result.Any(c => c.Name == "UEFA"));
+        Assert.IsTrue(result.Any(c => c.Name == "CONMEBOL"));
+        Assert.IsTrue(result.Any(c => c.Name == "CONCACAF"));
+        Assert.IsTrue(result.Any(c => c.Name == "CAF"));
+        Assert.IsTrue(result.Any(c => c.Name == "AFC"));
+        Assert.IsTrue(result.Any(c => c.Name == "OFC"));
+    }
+    
+    [TestMethod]
+    public void GetAllConfederations_ShouldReturnCorrectMaxTeams()
+    {
+        var teamRepository = new TeamRepository();
+        var teamService = new TeamService(teamRepository);
+        List<ConfederationDTO> result = teamService.GetAllConfederations();
+        ConfederationDTO? uefa = result.Find(c => c.Name == "UEFA");
+        Assert.IsNotNull(uefa);
+        Assert.AreEqual(16, uefa.MaxTeams);
+        ConfederationDTO? ofc = result.Find(c => c.Name == "OFC");
+        Assert.IsNotNull(ofc);
+        Assert.AreEqual(1, ofc.MaxTeams);
+    }
 }
