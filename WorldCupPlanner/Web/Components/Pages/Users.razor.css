@@ -230,3 +230,23 @@
 .secondary-button:hover {
     background: #f3f4f6;
 }
+
+.roles-options {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.role-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.role-option input {
+    width: 16px;
+    height: 16px;
+    accent-color: #16a34a;
+}

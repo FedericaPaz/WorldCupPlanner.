@@ -32,6 +32,7 @@
                     <th>Apellido</th>
                     <th>Email</th>
                     <th>Fecha Nacimiento</th>
+                    <th>Roles</th>
                     <th class="actions-column">Acciones</th>
                 </tr>
             </thead>
@@ -40,7 +41,7 @@
                 @if (_users.Count == 0)
                 {
                     <tr>
-                        <td colspan="5" class="empty-state">
+                        <td colspan="6" class="empty-state">
                             No hay usuarios registrados.
                         </td>
                     </tr>
@@ -54,6 +55,7 @@
                             <td>@user.LastName</td>
                             <td class="muted">@user.Email</td>
                             <td class="muted">@user.BirthDate.ToString("yyyy-MM-dd")</td>
+                            <td class="muted">@FormatRoles(user.Roles)</td>
                             <td class="actions-cell">
                                 <button class="icon-button" @onclick="() => OpenEditModal(user)">
                                     Editar
@@ -116,6 +118,26 @@
                     <ValidationMessage For="@(() => _userRequest.Password)" />
                 </div>
 
+                <div class="form-group">
+                    <label>Roles</label>
+
+                    <div class="roles-options">
+                        <label class="role-option">
+                            <input type="checkbox"
+                                   checked="@_userRequest.Roles.Contains(UserRole.SystemAdministrator)"
+                                   @onchange="ToggleSystemAdministratorRole" />
+                            Administrador
+                        </label>
+
+                        <label class="role-option">
+                            <input type="checkbox"
+                                   checked="@_userRequest.Roles.Contains(UserRole.Editor)"
+                                   @onchange="ToggleEditorRole" />
+                            Editor
+                        </label>
+                    </div>
+                </div>
+
                 <div class="modal-actions">
                     <button type="button" class="secondary-button" @onclick="CloseCreateModal">
                         Cancelar
@@ -156,7 +178,8 @@
 
         _userRequest = new UserRequestDto
         {
-            BirthDate = DateTime.Today
+            BirthDate = DateTime.Today,
+            Roles = new List<UserRole>()
         };
 
         _showCreateModal = true;
@@ -174,7 +197,8 @@
             LastName = user.LastName,
             Email = user.Email,
             BirthDate = user.BirthDate,
-            Password = string.Empty
+            Password = string.Empty,
+            Roles = new List<UserRole>(user.Roles)
         };
 
         _showCreateModal = true;
@@ -199,7 +223,8 @@
                     _userRequest.LastName,
                     _editingEmail,
                     _userRequest.BirthDate,
-                    _userRequest.Password
+                    _userRequest.Password,
+                    _userRequest.Roles
                 );
             }
             else
@@ -227,5 +252,44 @@
         {
             _errorMessage = exception.Message;
         }
+    }
+
+    private void ToggleSystemAdministratorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRole.SystemAdministrator, args);
+    }
+
+    private void ToggleEditorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRole.Editor, args);
+    }
+
+    private void ToggleRole(UserRole role, ChangeEventArgs args)
+    {
+        var isChecked = args.Value is bool value && value;
+
+        if (isChecked && !_userRequest.Roles.Contains(role))
+        {
+            _userRequest.Roles.Add(role);
+        }
+
+        if (!isChecked && _userRequest.Roles.Contains(role))
+        {
+            _userRequest.Roles.Remove(role);
+        }
+    }
+
+    private string FormatRoles(List<UserRole> roles)
+    {
+        if (roles.Count == 0)
+        {
+            return "Sin rol";
+        }
+
+        var roleNames = roles.Select(role =>
+            role == UserRole.SystemAdministrator ? "Administrador" : "Editor"
+        );
+
+        return string.Join(", ", roleNames);
     }
 }
