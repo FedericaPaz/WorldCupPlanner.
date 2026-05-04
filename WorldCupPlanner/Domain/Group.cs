@@ -24,6 +24,8 @@ public class Group
     
     public void AddTeamToGroup(Team team)
     {
+        if (team == null)
+            throw new ArgumentNullException(nameof(team));
         _teamsInGroup.Add(team);
     }
 }

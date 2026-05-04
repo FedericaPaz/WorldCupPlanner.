@@ -27,4 +27,11 @@ public class GroupTests
         Assert.AreEqual(1, group.TeamsInGroup.Count);
         Assert.AreEqual(team, group.TeamsInGroup[0]);
     }
+    
+    [TestMethod]
+    public void AddTeam_WithNullTeam_ShouldThrowException()
+    {
+        var group = new Group('A');
+        Assert.ThrowsException<ArgumentNullException>(() => group.AddTeamToGroup(null));
+    }
 }
