@@ -9,21 +9,25 @@ public class MatchRepository : IMatchRepository
 
     public void AddMatch(Match match)
     {
+        EnsureNotNull(match);
+        _matches.Add(match);
+    }
+
+    private void EnsureNotNull(Match match)
+    {
         if (match == null)
             throw new ArgumentNullException(nameof(match));
-        _matches.Add(match);
     }
 
     public List<Match> GetAllMatches()
     {
-        return new List<Match>(_matches);
+        return _matches.ToList();
     }
 
     public Match GetMatchById(int matchId)
     {
-        if (matchId <= 0)
-            throw new ArgumentException("El id debe ser mayor a 0.");
-        
+        EnsureValidId(matchId);
+
         Match? match = _matches.FirstOrDefault(m => m.IdMatch == matchId);
 
         if (match == null)
@@ -32,5 +36,9 @@ public class MatchRepository : IMatchRepository
         return match;
     }
 
-    
+    private void EnsureValidId(int matchId)
+    {
+        if (matchId <= 0)
+            throw new ArgumentException("El id debe ser mayor a 0.");
+    }
 }
