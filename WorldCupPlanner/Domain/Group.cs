@@ -43,6 +43,8 @@ public class Group
     {
         if (match == null)
             throw new ArgumentNullException(nameof(match));
+        if (match.Group != GroupLetter)
+            throw new ArgumentException("El partido no pertenece a este grupo.");
         _matchesInGroup.Add(match);
     }
 }

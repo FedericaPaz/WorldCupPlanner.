@@ -76,4 +76,16 @@ public class GroupTests
         var group = new Group('A');
         Assert.ThrowsException<ArgumentNullException>(() => group.AddMatchToGroup(null));
     }
+
+    [TestMethod]
+    public void AddMatch_WithDifferentGroup_ShouldThrowException()
+    {
+        var group = new Group('A');
+        var team1 = new Team("A", new Confederation("UEFA"), 1000);
+        var team2 = new Team("B", new Confederation("UEFA"), 1000);
+        var stadium = new Stadium("Estadio", "Ciudad", "Descripcion", 30000);
+        var clock = new DateTimeMatchStub(DateTime.Now);
+        var match = new Match(clock.Now, stadium, team1, team2, 'B', clock);
+        Assert.ThrowsException<ArgumentException>(() => group.AddMatchToGroup(match));
+    }
 }
