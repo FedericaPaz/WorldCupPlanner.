@@ -229,4 +229,25 @@ public class UserTests
         Assert.IsNotNull(user.Roles);
         Assert.AreEqual(0, user.Roles.Count);
     }
+    
+    [TestMethod]
+    public void CreateUser_WithDuplicatedRoles_ShouldThrowException()
+    {
+        var roles = new List<UserRole>
+        {
+            UserRole.Editor,
+            UserRole.Editor
+        };
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            new User(
+                "Juan",
+                "Perez",
+                "juan.perez@gmail.com",
+                new DateTime(2000, 1, 1),
+                "Password1!",
+                roles
+            )
+        );
+    }
 }

@@ -21,6 +21,7 @@ public class User
         ValidateBirthDate(birthDate);
         ValidatePassword(password);
         ValidateEmailFormat(email);
+        ValidateRoles(roles);
 
         FirstName = firstName;
         LastName = lastName;
@@ -100,6 +101,14 @@ public class User
         if (!email.Contains("@"))
         {
             throw new ArgumentException("El formato del email no es válido.");
+        }
+    }
+    
+    private void ValidateRoles(List<UserRole>? roles)
+    {
+        if (roles is not null && roles.Count != roles.Distinct().Count())
+        {
+            throw new ArgumentException("El usuario no puede tener roles duplicados.");
         }
     }
     private static string HashPassword(string password)
