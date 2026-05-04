@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Domain;
 
 namespace DTOs.User;
 
@@ -24,4 +25,5 @@ public class UserRequestDto
         ErrorMessage = "La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial."
     )]
     public string Password { get; set; } = string.Empty;
+    public List<UserRole> Roles { get; set; } = new();
 }
