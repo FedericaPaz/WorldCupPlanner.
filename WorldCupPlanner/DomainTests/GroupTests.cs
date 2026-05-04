@@ -45,4 +45,13 @@ public class GroupTests
         group.AddTeamToGroup(new Team("Team4", new Confederation("UEFA"), 500));
         Assert.ThrowsException<InvalidOperationException>(() => group.AddTeamToGroup(new Team("Team5", new Confederation("UEFA"), 500)));
     }
+
+    [TestMethod]
+    public void AddTeam_WithDuplicateTeam_ShouldThrowException()
+    {
+        var group = new Group('A');
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        group.AddTeamToGroup(team);
+        Assert.ThrowsException<InvalidOperationException>(() => group.AddTeamToGroup(team));
+    }
 }
