@@ -49,6 +49,8 @@ public class Group
             throw new InvalidOperationException("El grupo ya tiene 6 partidos.");
         if (!_teamsInGroup.Contains(match.HomeTeam) || !_teamsInGroup.Contains(match.AwayTeam))
             throw new InvalidOperationException("Los equipos del partido deben pertenecer al grupo.");
+        if (_matchesInGroup.Contains(match))
+            throw new InvalidOperationException("El partido ya está registrado en el grupo.");
         _matchesInGroup.Add(match);
     }
 }
