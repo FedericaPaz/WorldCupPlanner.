@@ -12,6 +12,8 @@ public class Group
     
     public Group(char groupLetter)
     {
+        if (groupLetter < 'A' || groupLetter > 'L') 
+            throw new ArgumentException("El grupo debe ser una letra de la A a la L.");
         GroupLetter = groupLetter;
     }
 }

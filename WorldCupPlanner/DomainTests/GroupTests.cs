@@ -11,4 +11,10 @@ public class GroupTests
         var group = new Group('A');
         Assert.AreEqual('A', group.GroupLetter);
     }
+
+    [TestMethod]
+    public void CreateGroup_WithInvalidLetter_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Group('M'));
+    }
 }
