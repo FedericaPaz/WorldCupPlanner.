@@ -22,36 +22,76 @@ public class StadiumService : IStadiumService
 
     public void AddStadium(StadiumRequest request)
     {
-        if (request is null)
-            throw new ArgumentNullException(nameof(request));
-        if (string.IsNullOrWhiteSpace(request.stadiumName))
-            throw new ArgumentException("El nombre es requerido", nameof(request.stadiumName));
-        if (string.IsNullOrWhiteSpace(request.stadiumCity))
-            throw new ArgumentException("La ciudad es requerida", nameof(request.stadiumCity));
-        if (request.stadiumCity.Length > MaxCityLength)
-            throw new ArgumentException("Ciudad demasiado larga");
-        if (request.stadiumDescription != null && request.stadiumDescription.Length > MaxDescriptionLength)
-            throw new ArgumentException("La descripción es demasiado larga");
-        if (request.locativeCapacity < MinCapacity)
-            throw new ArgumentException($"La capacidad locativa debe ser al menos {MinCapacity}");
-        
-        var existingStadium = _stadiumRepository.GetStadium(request.stadiumName);
-        if (existingStadium != null)
-            throw new InvalidOperationException("El estadio ya existe");
-        
+        EnsureValidRequest(request);
+        EnsureStadiumDoesNotExist(request.stadiumName);
         _stadiumRepository.AddStadium(request.ToEntity());
     }
 
-    public void DeleteStadium(string name)
+    private void EnsureValidRequest(StadiumRequest request)
+    {
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
+        EnsureValidName(request.stadiumName);
+        EnsureValidCity(request.stadiumCity);
+        EnsureValidDescription(request.stadiumDescription);
+        EnsureValidCapacity(request.locativeCapacity);
+    }
+
+    private void EnsureValidName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Nombre requerido");
+            throw new ArgumentException("El nombre es requerido");
+
+        if (name.Length > MaxNameLength)
+            throw new ArgumentException("Nombre demasiado largo");
+    }
+
+    private void EnsureValidCity(string city)
+    {
+        if (string.IsNullOrWhiteSpace(city))
+            throw new ArgumentException("La ciudad es requerida");
+
+        if (city.Length > MaxCityLength)
+            throw new ArgumentException("Ciudad demasiado larga");
+    }
+    
+    private void EnsureValidDescription(string description)
+    {
+        if (description != null && description.Length > MaxDescriptionLength)
+            throw new ArgumentException("La descripción es demasiado larga");
+    }
+    
+    private void EnsureValidCapacity(int capacity)
+    {
+        if (capacity < MinCapacity)
+            throw new ArgumentException($"La capacidad locativa debe ser al menos {MinCapacity}");
+    }
+    
+    private void EnsureStadiumDoesNotExist(string stadiumName)
+    {
+        var existingStadium = _stadiumRepository.GetStadium(stadiumName);
+
+        if (existingStadium != null)
+            throw new InvalidOperationException("El estadio ya existe");
+    }
+    
+   
+    public void DeleteStadium(string name)
+    {
+        EnsureValidStadiumName(name);
 
         var stadium = _stadiumRepository.GetStadium(name);
+
         if (stadium == null)
             throw new InvalidOperationException("Estadio no encontrado");
 
         _stadiumRepository.DeleteStadium(stadium);
+    }
+    
+    private void EnsureValidStadiumName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Nombre requerido");
     }
 
     public List<StadiumRequest> GetAllStadiums()

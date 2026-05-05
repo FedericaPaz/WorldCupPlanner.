@@ -1,0 +1,151 @@
+@page "/matches/edit/{Id:int}"
+@rendermode InteractiveServer
+@using DTOs
+@using IServices
+@inject IMatchService MatchService
+@inject IStadiumService StadiumService
+@inject NavigationManager Navigation
+
+<div class="edit-match-page">
+    <button class="back-link" @onclick="GoBack">← Volver a partidos</button>
+
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <div class="message error">@_errorMessage</div>
+    }
+
+    @if (_match is null)
+    {
+        <p>Cargando partido...</p>
+    }
+    else
+    {
+        <div class="edit-card">
+            <div class="card-header">
+                <div class="icon">⚽</div>
+                <div>
+                    <h3 class="card-title">Editar Partido</h3>
+                    <p class="card-sub">@_match.homeTeamName vs @_match.awayTeamName</p>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-section">
+                    <label>Fecha y hora</label>
+                    <input class="form-control" type="datetime-local" @bind="_dateTime" />
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label>Estadio</label>
+                <select class="form-control" @bind="_stadiumName">
+                    @foreach (var stadium in _stadiums)
+                    {
+                        <option value="@stadium.stadiumName">@stadium.stadiumName</option>
+                    }
+                </select>
+            </div>
+
+            <hr />
+
+            <div class="result-header">
+                <h4>Resultado</h4>
+
+                <button class="simulate-btn" type="button" @onclick="SimulateResult">
+                    🎲 Simular resultado
+                </button>
+            </div>
+
+            <div class="result-grid">
+                <div class="team-result-card">
+                    <label>Equipo Local</label>
+                    <input class="form-control disabled" value="@_match.homeTeamName" disabled />
+
+                    <label>Goles</label>
+                    <input class="form-control goals-input" type="number" min="0" @bind="_homeGoals" />
+                </div>
+
+                <div class="team-result-card">
+                    <label>Equipo Visitante</label>
+                    <input class="form-control disabled" value="@_match.awayTeamName" disabled />
+
+                    <label>Goles</label>
+                    <input class="form-control goals-input" type="number" min="0" @bind="_awayGoals" />
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-cancel" type="button" @onclick="GoBack">Cancelar</button>
+                <button class="btn-submit" type="button" @onclick="SaveChanges">Guardar cambios</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private MatchResponse? _match;
+    private List<StadiumRequest> _stadiums = new();
+    private string? _errorMessage;
+
+    private DateTime _dateTime;
+    private string _stadiumName = string.Empty;
+    private int _homeGoals;
+    private int _awayGoals;
+
+    protected override void OnInitialized()
+    {
+        LoadData();
+    }
+
+    private void LoadData()
+    {
+        try
+        {
+            _match = MatchService.GetMatchById(Id);
+            _stadiums = StadiumService.GetAllStadiums();
+
+            _dateTime = _match.dateMatch;
+            _stadiumName = _match.stadiumName;
+            _homeGoals = _match.homeGoals ?? 0;
+            _awayGoals = _match.awayGoals ?? 0;
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+    }
+
+    private void SaveChanges()
+    {
+        try
+        {
+            if (_match is null)
+                return;
+
+            MatchService.UpdateMatchDate(_match.idMatch, _dateTime);
+            MatchService.UpdateMatchStadium(_match.idMatch, _stadiumName);
+            MatchService.SetMatchResult(_match.idMatch, _homeGoals, _awayGoals);
+
+            Navigation.NavigateTo("/matches");
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+    }
+
+    private void SimulateResult()
+    {
+        var random = new Random();
+        _homeGoals = random.Next(0, 6);
+        _awayGoals = random.Next(0, 6);
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/matches");
+    }
+   
+}

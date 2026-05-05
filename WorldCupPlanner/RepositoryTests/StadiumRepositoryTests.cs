@@ -16,7 +16,6 @@ public class StadiumRepositoryTests
         _stadium = new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
     }
     
-    // Tests para ADD
     [TestMethod]
     public void Add_OneStadium_ShouldNotThrowException()
     {
@@ -31,7 +30,6 @@ public class StadiumRepositoryTests
         Assert.ThrowsException<ArgumentNullException>(() => _stadiumRepository.AddStadium(null!));
     }
     
-    // Tests para GET
     [TestMethod]
     public void Get_ExistingStadium_ShouldReturnStadium()
     {
@@ -48,7 +46,6 @@ public class StadiumRepositoryTests
         Assert.IsNull(result);
     }
     
-    // Tests GET ALL
     [TestMethod]
     public void GetAll_EmptyRepository_ShouldReturnEmptyList()
     {
@@ -76,7 +73,6 @@ public class StadiumRepositoryTests
         Assert.AreEqual(1, result.Count);
     }
     
-    // Tests DELETE 
     [TestMethod]
     public void GivenExistingStadium_DeleteStadium_ShouldDeleteStadium()
     {

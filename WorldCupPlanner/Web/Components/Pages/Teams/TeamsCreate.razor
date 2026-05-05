@@ -22,7 +22,13 @@
 
     <div class="mb-3">
         <label class="form-label">Confederación</label>
-        <InputText class="form-control" @bind-Value="_request.ConfederationName" />
+        <InputSelect class="form-control" @bind-Value="_request.ConfederationName">
+            <option value="">Seleccione una confederación...</option>
+            @foreach (var conf in _confederations)
+            {
+                <option value="@conf.Name">@conf.Name (@conf.MaxTeams cupos máximos)</option>
+            }
+        </InputSelect>
     </div>
 
     <div class="mb-3">
@@ -43,8 +49,14 @@
         FifaRanking = 0
     };
     
+    private List<ConfederationDTO> _confederations = new();
     private string? _errorMessage;
 
+    protected override void OnInitialized()
+    {
+        _confederations = TeamService.GetAllConfederations();
+    }
+    
     private void HandleSubmit()
     {
         try

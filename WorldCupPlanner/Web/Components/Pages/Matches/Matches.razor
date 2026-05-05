@@ -1,0 +1,80 @@
+@page "/matches"
+@rendermode InteractiveServer
+@using DTOs
+@using IServices
+@inject IMatchService MatchService
+
+<div class="matches-page">
+    <div class="page-header">
+        <div>
+            <h3>Listado de Partidos</h3>
+            <p>@_matches.Count de @_matches.Count partidos</p>
+        </div>
+    </div>
+
+    <div class="matches-card">
+        <table class="matches-table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Equipos</th>
+                    <th>Resultado</th>
+                    <th>Estadio</th>
+                    <th>Fase</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var match in _matches)
+                {
+                    <tr>
+                        <td class="date-cell">
+                            @match.dateMatch.ToString("dd/MM/yyyy,")
+                            <br />
+                            @match.dateMatch.ToString("HH:mm")
+                        </td>
+
+                        <td class="teams-cell">
+                            @match.homeTeamName vs @match.awayTeamName
+                        </td>
+
+                        <td>
+                            @if (match.homeGoals.HasValue && match.awayGoals.HasValue)
+                            {
+                                <span class="result-pill">
+                                    @match.homeGoals - @match.awayGoals
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="no-result">-</span>
+                            }
+                        </td>
+
+                        <td class="stadium-cell">
+                            @match.stadiumName
+                        </td>
+
+                        <td>
+                            <span class="phase-pill">Grupo @match.group</span>
+                        </td>
+
+                        <td>
+                            <a class="edit-button" href="/matches/edit/@match.idMatch">✎</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<MatchResponse> _matches = new();
+
+    protected override void OnInitialized()
+    {
+        _matches = MatchService.GetAllMatches().ToList();
+    }
+}

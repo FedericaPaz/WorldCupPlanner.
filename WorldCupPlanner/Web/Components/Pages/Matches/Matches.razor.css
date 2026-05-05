@@ -1,0 +1,99 @@
+.matches-page {
+    padding: 1.5rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.page-header h3 {
+    margin: 0;
+}
+
+.page-header p {
+    color: gray;
+    font-size: 14px;
+    margin: 0;
+}
+
+.filter-button {
+    background: #f3f6f4;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.matches-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    margin-top: 1.5rem;
+}
+
+.matches-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.matches-table thead {
+    background: #f3f6f4;
+}
+
+.matches-table th {
+    text-align: left;
+    padding: 1rem;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.matches-table td {
+    padding: 1rem;
+    border-top: 1px solid #e0e0e0;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.date-cell,
+.stadium-cell {
+    color: gray;
+}
+
+.teams-cell {
+    font-weight: 500;
+}
+
+.result-pill {
+    display: inline-block;
+    background: #e8f5e9;
+    color: green;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.no-result {
+    color: gray;
+    font-weight: 600;
+}
+
+.phase-pill {
+    display: inline-block;
+    background: #e8f5e9;
+    color: green;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.edit-button {
+    color: #555;
+    text-decoration: none;
+    font-size: 18px;
+}

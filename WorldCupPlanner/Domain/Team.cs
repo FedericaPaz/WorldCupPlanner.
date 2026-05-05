@@ -2,7 +2,7 @@
 
 namespace Domain;
 
-public class Team
+public class Team : ITeam
 {
     private const int MaxNameLength = 60;
     private const int MinRanking = 300;
@@ -64,4 +64,5 @@ public class Team
         if (ranking < MinRanking || ranking > MaxRanking)
             throw new ArgumentException($"Ranking must be between {MinRanking} and {MaxRanking}");
     }
+    
 }
