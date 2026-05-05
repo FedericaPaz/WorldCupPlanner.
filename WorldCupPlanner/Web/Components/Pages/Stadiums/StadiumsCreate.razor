@@ -1,0 +1,107 @@
+@page "/stadiums/create"
+@rendermode InteractiveServer
+@using DTOs
+@using IServices
+@inject IStadiumService Service
+@inject NavigationManager Navigation
+
+<div class="stadiums-create">
+
+    <div class="back-link">
+        <button class="btn-cancel" @onclick="NavigateBack">
+            ← Volver a estadios
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="icon">🏟️</div>
+            <div>
+                <h3 class="card-title">Crear Nuevo Estadio</h3>
+                <p class="card-sub">Complete la información del estadio</p>
+            </div>
+        </div>
+
+        <EditForm Model="_model" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="message error">@_errorMessage</div>
+            }
+
+            <div class="form-section">
+                <label>Nombre del Estadio <span style="color:red">*</span></label>
+                <InputText class="form-control" @bind-Value="_model.stadiumName" />
+                <ValidationMessage For="@(() => _model.stadiumName)" />
+            </div>
+
+            <div class="form-section">
+                <label>Ciudad <span style="color:red">*</span></label>
+                <InputText class="form-control" @bind-Value="_model.stadiumCity" />
+                <ValidationMessage For="@(() => _model.stadiumCity)" />
+            </div>
+
+            <div class="form-section">
+                <label>Capacidad <span style="color:red">*</span></label>
+                <InputNumber class="form-control" @bind-Value="_model.locativeCapacity" />
+                <ValidationMessage For="@(() => _model.locativeCapacity)" />
+            </div>
+
+            <div class="form-section">
+                <label>Descripción</label>
+                <InputTextArea class="form-control" @bind-Value="_model.stadiumDescription" />
+                <ValidationMessage For="@(() => _model.stadiumDescription)" />
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-cancel" @onclick="NavigateBack">
+                    Cancelar
+                </button>
+
+                <button type="submit" class="btn-submit" disabled="@_isSubmitting">
+                    @(_isSubmitting ? "Creando..." : "Crear estadio")
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private StadiumRequest _model = new();
+    private string _errorMessage = string.Empty;
+    private bool _isSubmitting = false;
+
+    private void NavigateBack()
+    {
+        Navigation.NavigateTo("/stadiums");
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        _errorMessage = string.Empty;
+        _isSubmitting = true;
+
+        try
+        {
+            _model.stadiumName = _model.stadiumName.Trim();
+            _model.stadiumCity = _model.stadiumCity.Trim();
+            _model.stadiumDescription = _model.stadiumDescription?.Trim();
+
+            Service.AddStadium(_model);
+
+            Navigation.NavigateTo("/stadiums");
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
+
+        await Task.CompletedTask;
+    }
+}

@@ -1,0 +1,66 @@
+﻿@page "/teamsCreate"
+@using DTOs
+@using IServices
+@inject ITeamService TeamService
+@inject NavigationManager Navigation
+
+<h3>Crear equipo</h3>
+
+@if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <div class="alert alert-danger">@_errorMessage</div>
+}
+
+<EditForm Model="_request" OnSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <InputText class="form-control" @bind-Value="_request.Name" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Confederación</label>
+        <InputText class="form-control" @bind-Value="_request.ConfederationName" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Ranking FIFA</label>
+        <InputNumber class="form-control" @bind-Value="_request.FifaRanking" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear</button>
+    <button type="button" class="btn btn-secondary ms-2" @onclick="GoBack">Volver</button>
+</EditForm>
+
+@code {
+
+    private TeamDTO _request = new()
+    {
+        Name = "",
+        ConfederationName = "",
+        FifaRanking = 0
+    };
+    
+    private string? _errorMessage;
+
+    private void HandleSubmit()
+    {
+        try
+        {
+            _errorMessage = null;
+            TeamService.Add(_request);
+            Navigation.NavigateTo("/teams");
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/teams");
+    }
+}

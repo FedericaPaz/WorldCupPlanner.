@@ -8,14 +8,19 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DTOs\DTOs.csproj" />
+        <ProjectReference Include="..\Domain\Domain.csproj" />
         <ProjectReference Include="..\IRepository\IRepository.csproj" />
         <ProjectReference Include="..\IServices\IServices.csproj" />
-        <ProjectReference Include="..\Services\Services.csproj" />
         <ProjectReference Include="..\Repository\Repository.csproj" />
+        <ProjectReference Include="..\Services\Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <_ContentIncludedByDefault Remove="wwwroot\css\stadiums.css" />
     </ItemGroup>
 
 </Project>
