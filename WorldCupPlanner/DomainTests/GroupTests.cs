@@ -60,12 +60,19 @@ public class GroupTests
     public void AddMatch_WithValidMatch_ShouldAddMatch()
     {
         var group = new Group('A');
+
         var homeTeam = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
         var awayTeam = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
-        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-        var stadium = new Stadium("Estadio Centenario", "Montevideo", "Estadio mundialista", 60000);
+        var stadium = new Stadium("Estadio Centenario", "Montevideo", "Desc", 60000);
+        var clock = new DateTimeMatchStub(DateTime.Now);
+
+        group.AddTeamToGroup(homeTeam);
+        group.AddTeamToGroup(awayTeam);
+
         var match = new Match(clock.Now, stadium, homeTeam, awayTeam, 'A', clock);
+
         group.AddMatchToGroup(match);
+
         Assert.AreEqual(1, group.MatchesInGroup.Count);
         Assert.AreEqual(match, group.MatchesInGroup[0]);
     }
@@ -93,17 +100,26 @@ public class GroupTests
     public void AddMatch_WhenGroupHasSixMatches_ShouldThrowException()
     {
         var group = new Group('A');
+
         var team1 = new Team("A", new Confederation("UEFA"), 1000);
         var team2 = new Team("B", new Confederation("UEFA"), 1000);
-        var stadium = new Stadium("Estadio", "Ciudad", "Descripcion", 30000);
+
+        group.AddTeamToGroup(team1);
+        group.AddTeamToGroup(team2);
+
+        var stadium = new Stadium("Estadio", "Ciudad", "Des", 30000);
         var clock = new DateTimeMatchStub(DateTime.Now);
+
         for (int i = 0; i < 6; i++)
         {
             var match = new Match(clock.Now, stadium, team1, team2, 'A', clock);
             group.AddMatchToGroup(match);
         }
+
         var extraMatch = new Match(clock.Now, stadium, team1, team2, 'A', clock);
-        Assert.ThrowsException<InvalidOperationException>(() => group.AddMatchToGroup(extraMatch));
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            group.AddMatchToGroup(extraMatch));
     }
 
     [TestMethod]
