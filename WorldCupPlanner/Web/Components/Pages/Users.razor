@@ -17,10 +17,10 @@
         </button>
     </div>
 
-    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    @if (!string.IsNullOrWhiteSpace(_pageErrorMessage))
     {
         <div class="error-message">
-            @_errorMessage
+            @_pageErrorMessage
         </div>
     }
 
@@ -84,6 +84,13 @@
                     ×
                 </button>
             </div>
+
+            @if (!string.IsNullOrWhiteSpace(_modalErrorMessage))
+            {
+                <div class="error-message">
+                    @_modalErrorMessage
+                </div>
+            }
 
             <EditForm Model="_userRequest" OnValidSubmit="SubmitUser">
                 <DataAnnotationsValidator />
@@ -158,7 +165,8 @@
     private bool _showCreateModal;
     private bool _isEditing;
     private string _editingEmail = string.Empty;
-    private string _errorMessage = string.Empty;
+    private string _pageErrorMessage = string.Empty;
+    private string _modalErrorMessage = string.Empty;
 
     protected override void OnInitialized()
     {
@@ -172,7 +180,8 @@
 
     private void OpenCreateModal()
     {
-        _errorMessage = string.Empty;
+        _pageErrorMessage = string.Empty;
+        _modalErrorMessage = string.Empty;
         _isEditing = false;
         _editingEmail = string.Empty;
 
@@ -187,7 +196,8 @@
 
     private void OpenEditModal(User user)
     {
-        _errorMessage = string.Empty;
+        _pageErrorMessage = string.Empty;
+        _modalErrorMessage = string.Empty;
         _isEditing = true;
         _editingEmail = user.Email;
 
@@ -209,13 +219,15 @@
         _showCreateModal = false;
         _isEditing = false;
         _editingEmail = string.Empty;
-        _errorMessage = string.Empty;
+        _modalErrorMessage = string.Empty;
     }
 
     private void SubmitUser()
     {
         try
         {
+            _modalErrorMessage = string.Empty;
+
             if (_isEditing)
             {
                 UserService.UpdateUser(
@@ -237,7 +249,7 @@
         }
         catch (Exception exception)
         {
-            _errorMessage = exception.Message;
+            _modalErrorMessage = exception.Message;
         }
     }
 
@@ -245,12 +257,13 @@
     {
         try
         {
+            _pageErrorMessage = string.Empty;
             UserService.DeleteUser(email);
             LoadUsers();
         }
         catch (Exception exception)
         {
-            _errorMessage = exception.Message;
+            _pageErrorMessage = exception.Message;
         }
     }
 
