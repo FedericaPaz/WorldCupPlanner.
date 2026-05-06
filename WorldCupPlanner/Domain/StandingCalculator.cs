@@ -6,24 +6,58 @@ public class StandingCalculator
     {
         if (group is null)
             throw new ArgumentNullException(nameof(group));
-        
+
+        List<Standing> standings = CreateStandingsForGroup(group);
+
+        ApplyMatchResults(group, standings);
+
+        return OrderStandings(standings);
+    }
+
+    private List<Standing> CreateStandingsForGroup(Group group)
+    {
         List<Standing> standings = new List<Standing>();
 
         foreach (Team team in group.TeamsInGroup)
         {
             standings.Add(new Standing(team));
         }
-        
+
+        return standings;
+    }
+
+    private void ApplyMatchResults(Group group, List<Standing> standings)
+    {
         foreach (Match match in group.MatchesInGroup)
         {
-            if (!match.HomeGoals.HasValue || !match.AwayGoals.HasValue)
+            if (MatchHasNoResult(match))
                 continue;
-            Standing homeStanding = standings.First(s => s.TeamInGroup == match.HomeTeam);
-            Standing awayStanding = standings.First(s => s.TeamInGroup == match.AwayTeam);
-            homeStanding.AddMatchResult(match.HomeGoals.Value, match.AwayGoals.Value);
-            awayStanding.AddMatchResult(match.AwayGoals.Value, match.HomeGoals.Value);
+
+            ApplyMatchResult(match, standings);
         }
-        
+    }
+
+    private bool MatchHasNoResult(Match match)
+    {
+        return !match.HomeGoals.HasValue || !match.AwayGoals.HasValue;
+    }
+
+    private void ApplyMatchResult(Match match, List<Standing> standings)
+    {
+        Standing homeStanding = FindStandingForTeam(standings, match.HomeTeam);
+        Standing awayStanding = FindStandingForTeam(standings, match.AwayTeam);
+
+        homeStanding.AddMatchResult(match.HomeGoals.Value, match.AwayGoals.Value);
+        awayStanding.AddMatchResult(match.AwayGoals.Value, match.HomeGoals.Value);
+    }
+
+    private Standing FindStandingForTeam(List<Standing> standings, ITeam team)
+    {
+        return standings.First(standing => standing.TeamInGroup == team);
+    }
+
+    private List<Standing> OrderStandings(List<Standing> standings)
+    {
         return standings
             .OrderByDescending(standing => standing.PointsInGroup)
             .ThenByDescending(standing => standing.GoalDifference)
