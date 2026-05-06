@@ -6,6 +6,7 @@ public class Standing
     private int _points;
     private int _goalsFor;
     private int _goalsAgainst;
+    private int _goalDifference;
 
     public Team TeamInGroup
     {
@@ -28,6 +29,11 @@ public class Standing
     {
         get { return _goalsAgainst; }
         set { _goalsAgainst = value; }
+    }
+
+    public int GoalDifference
+    {
+        get { return GoalsFor - GoalsAgainst; }
     }
     
     public Standing(Team team)
