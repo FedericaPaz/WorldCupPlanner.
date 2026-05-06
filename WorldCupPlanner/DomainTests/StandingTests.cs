@@ -21,4 +21,13 @@ public class StandingTests
     {
         Assert.ThrowsException<ArgumentNullException>(() => new Standing(null));
     }
+
+    [TestMethod]
+    public void AddMatchResult_WhenTeamWins_ShouldAddThreePoints()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var standing = new Standing(team);
+        standing.AddMatchResult(2, 1);
+        Assert.AreEqual(3, standing.PointsInGroup);
+    }
 }

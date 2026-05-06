@@ -15,6 +15,7 @@ public class Standing
     public int PointsInGroup
     {
         get { return _points; }
+        set { _points = value; }
     }
 
     public int GoalsFor
@@ -32,5 +33,11 @@ public class Standing
         if (team == null)
             throw new ArgumentNullException(nameof(team));
         _team = team;
+    }
+
+    public void AddMatchResult(int goalsFor, int goalsAgainst)
+    {
+        if (goalsFor > goalsAgainst)
+            PointsInGroup += 3;
     }
 }
