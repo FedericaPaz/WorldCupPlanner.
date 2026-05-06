@@ -59,5 +59,7 @@ public class Standing
             PointsInGroup += 3;
         else if (goalsFor ==  goalsAgainst)
             PointsInGroup += 1;
+        if (goalsFor < 0 || goalsAgainst < 0)
+            throw new ArgumentException("Los goles no pueden ser negativos.");
     }
 }
