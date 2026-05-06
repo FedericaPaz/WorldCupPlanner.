@@ -84,4 +84,13 @@ public class StandingTests
         var standing = new Standing(team);
         Assert.ThrowsException<ArgumentException>(() => standing.AddMatchResult(-1, 0));
     }
+
+    [TestMethod]
+    public void AddMatchResult_WhenTeamWins_ShouldIncrementWins()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var standing = new Standing(team);
+        standing.AddMatchResult(2, 1);
+        Assert.AreEqual(1, standing.Wins);
+    }
 }
