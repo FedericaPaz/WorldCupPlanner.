@@ -102,4 +102,13 @@ public class StandingTests
         standing.AddMatchResult(1, 1);
         Assert.AreEqual(1, standing.Draws);
     }
+
+    [TestMethod]
+    public void AddMatchResult_WhenTeamLoses_ShouldIncrementLoses()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var standing = new Standing(team);
+        standing.AddMatchResult(0, 2);
+        Assert.AreEqual(1, standing.Losses);
+    }
 }
