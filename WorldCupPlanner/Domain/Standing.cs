@@ -9,6 +9,7 @@ public class Standing
     private int _goalDifference;
     private int _matchesPlayed;
     private int _wins;
+    private int _draws;
 
     public Team TeamInGroup
     {
@@ -49,6 +50,12 @@ public class Standing
         get { return _wins; }
         set { _wins = value; }
     }
+
+    public int Draws
+    {
+        get { return _draws; }
+        set { _draws = value; }
+    }
     
     public Standing(Team team)
     {
@@ -67,8 +74,11 @@ public class Standing
             PointsInGroup += 3;
             Wins++;
         }
-        else if (goalsFor ==  goalsAgainst)
+        else if (goalsFor == goalsAgainst)
+        {
             PointsInGroup += 1;
+            Draws++;
+        }
         if (goalsFor < 0 || goalsAgainst < 0)
             throw new ArgumentException("Los goles no pueden ser negativos.");
     }
