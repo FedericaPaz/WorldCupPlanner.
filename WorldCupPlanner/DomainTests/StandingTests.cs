@@ -67,4 +67,13 @@ public class StandingTests
         standing.AddMatchResult(4, 1);
         Assert.AreEqual(3, standing.GoalDifference);
     }
+    
+    [TestMethod]
+    public void AddMatchResult_ShouldIncrementMatchesPlayed()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var standing = new Standing(team);
+        standing.AddMatchResult(2, 1);
+        Assert.AreEqual(1, standing.MatchesPlayed);
+    }
 }

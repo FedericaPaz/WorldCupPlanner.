@@ -7,6 +7,7 @@ public class Standing
     private int _goalsFor;
     private int _goalsAgainst;
     private int _goalDifference;
+    private int _matchesPlayed;
 
     public Team TeamInGroup
     {
@@ -35,6 +36,12 @@ public class Standing
     {
         get { return GoalsFor - GoalsAgainst; }
     }
+
+    public int MatchesPlayed
+    {
+        get { return _matchesPlayed; }
+        set { _matchesPlayed = value; }
+    }
     
     public Standing(Team team)
     {
@@ -45,6 +52,7 @@ public class Standing
 
     public void AddMatchResult(int goalsFor, int goalsAgainst)
     {
+        MatchesPlayed++;
         GoalsFor += goalsFor;
         GoalsAgainst += goalsAgainst;
         if (goalsFor > goalsAgainst)
