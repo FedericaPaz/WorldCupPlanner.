@@ -188,4 +188,35 @@ public class StandingCalculatorTests
         Assert.AreEqual(uruguay, standings[0].TeamInGroup);
         Assert.AreEqual(brasil, standings[1].TeamInGroup);
     }
+    
+    [TestMethod]
+    public void CalculateStandings_WithMatchWithoutResult_ShouldNotUpdateStandings()
+    {
+        var group = new Group('A');
+
+        var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
+
+        group.AddTeamToGroup(uruguay);
+        group.AddTeamToGroup(argentina);
+
+        var stadium = new Stadium("Centenario", "Montevideo", "Desc", 60000);
+        var clock = new DateTimeMatchStub(DateTime.Now);
+
+        var match = new Match(clock.Now, stadium, uruguay, argentina, 'A', clock);
+
+        group.AddMatchToGroup(match);
+
+        var calculator = new StandingCalculator();
+
+        var standings = calculator.CalculateStandings(group);
+
+        Standing uruguayStanding = standings.First(s => s.TeamInGroup == uruguay);
+        Standing argentinaStanding = standings.First(s => s.TeamInGroup == argentina);
+
+        Assert.AreEqual(0, uruguayStanding.PointsInGroup);
+        Assert.AreEqual(0, argentinaStanding.PointsInGroup);
+        Assert.AreEqual(0, uruguayStanding.MatchesPlayed);
+        Assert.AreEqual(0, argentinaStanding.MatchesPlayed);
+    }
 }

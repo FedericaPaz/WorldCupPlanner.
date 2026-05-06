@@ -13,6 +13,8 @@ public class StandingCalculator
         
         foreach (Match match in group.MatchesInGroup)
         {
+            if (!match.HomeGoals.HasValue || !match.AwayGoals.HasValue)
+                continue;
             Standing homeStanding = standings.First(s => s.TeamInGroup == match.HomeTeam);
             Standing awayStanding = standings.First(s => s.TeamInGroup == match.AwayTeam);
             homeStanding.AddMatchResult(match.HomeGoals.Value, match.AwayGoals.Value);
