@@ -111,4 +111,22 @@ public class StandingTests
         standing.AddMatchResult(0, 2);
         Assert.AreEqual(1, standing.Losses);
     }
+    
+    [TestMethod]
+    public void AddMatchResult_WithMultipleMatches_ShouldAccumulateStatistics()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var standing = new Standing(team);
+        standing.AddMatchResult(2, 1);
+        standing.AddMatchResult(1, 1);
+        standing.AddMatchResult(0, 3);
+        Assert.AreEqual(4, standing.PointsInGroup);
+        Assert.AreEqual(3, standing.GoalsFor);
+        Assert.AreEqual(5, standing.GoalsAgainst);
+        Assert.AreEqual(-2, standing.GoalDifference);
+        Assert.AreEqual(1, standing.Wins);
+        Assert.AreEqual(1, standing.Draws);
+        Assert.AreEqual(1, standing.Losses);
+        Assert.AreEqual(3, standing.MatchesPlayed);
+    }
 }
