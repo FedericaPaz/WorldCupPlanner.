@@ -29,6 +29,8 @@ public class Standing
     
     public Standing(Team team)
     {
+        if (team == null)
+            throw new ArgumentNullException(nameof(team));
         _team = team;
     }
 }

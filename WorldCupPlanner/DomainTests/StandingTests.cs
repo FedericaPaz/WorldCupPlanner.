@@ -15,4 +15,10 @@ public class StandingTests
         Assert.AreEqual(0, standing.GoalsFor);
         Assert.AreEqual(0, standing.GoalsAgainst);
     }
+
+    [TestMethod]
+    public void CreateStanding_WithNullTeam_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => new Standing(null));
+    }
 }
