@@ -21,11 +21,13 @@ public class Standing
     public int GoalsFor
     {
         get { return _goalsFor; }
+        set { _goalsFor = value; }
     }
 
     public int GoalsAgainst
     {
         get { return _goalsAgainst; }
+        set { _goalsAgainst = value; }
     }
     
     public Standing(Team team)
@@ -37,6 +39,8 @@ public class Standing
 
     public void AddMatchResult(int goalsFor, int goalsAgainst)
     {
+        GoalsFor += goalsFor;
+        GoalsAgainst += goalsAgainst;
         if (goalsFor > goalsAgainst)
             PointsInGroup += 3;
         else if (goalsFor ==  goalsAgainst)
