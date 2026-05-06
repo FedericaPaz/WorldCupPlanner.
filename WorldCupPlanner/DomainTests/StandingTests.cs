@@ -39,4 +39,13 @@ public class StandingTests
         standing.AddMatchResult(1, 1);
         Assert.AreEqual(1, standing.PointsInGroup);
     }
+
+    [TestMethod]
+    public void AddMatchResult_WhenTeamLoses_ShouldNotAddPoints()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var standing = new Standing(team);
+        standing.AddMatchResult(0, 1);
+        Assert.AreEqual(0, standing.PointsInGroup);
+    }
 }
