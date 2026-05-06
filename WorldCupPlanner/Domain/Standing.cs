@@ -2,11 +2,13 @@ namespace Domain;
 
 public class Standing
 {
+    private const int PointsForWin = 3;
+    private const int PointsForDraw = 1;
+
     private Team _team;
     private int _points;
     private int _goalsFor;
     private int _goalsAgainst;
-    private int _goalDifference;
     private int _matchesPlayed;
     private int _wins;
     private int _draws;
@@ -20,19 +22,19 @@ public class Standing
     public int PointsInGroup
     {
         get { return _points; }
-        set { _points = value; }
+        private set { _points = value; }
     }
 
     public int GoalsFor
     {
         get { return _goalsFor; }
-        set { _goalsFor = value; }
+        private set { _goalsFor = value; }
     }
 
     public int GoalsAgainst
     {
         get { return _goalsAgainst; }
-        set { _goalsAgainst = value; }
+        private set { _goalsAgainst = value; }
     }
 
     public int GoalDifference
@@ -43,54 +45,82 @@ public class Standing
     public int MatchesPlayed
     {
         get { return _matchesPlayed; }
-        set { _matchesPlayed = value; }
+        private set { _matchesPlayed = value; }
     }
 
     public int Wins
     {
         get { return _wins; }
-        set { _wins = value; }
+        private set { _wins = value; }
     }
 
     public int Draws
     {
         get { return _draws; }
-        set { _draws = value; }
+        private set { _draws = value; }
     }
 
     public int Losses
     {
         get { return _losses; }
-        set { _losses = value; }
+        private set { _losses = value; }
     }
     
     public Standing(Team team)
     {
         if (team == null)
             throw new ArgumentNullException(nameof(team));
+
         _team = team;
     }
 
     public void AddMatchResult(int goalsFor, int goalsAgainst)
     {
+        EnsureGoalsAreValid(goalsFor, goalsAgainst);
+
+        UpdateGoals(goalsFor, goalsAgainst);
+
         MatchesPlayed++;
-        GoalsFor += goalsFor;
-        GoalsAgainst += goalsAgainst;
-        if (goalsFor > goalsAgainst)
-        {
-            PointsInGroup += 3;
-            Wins++;
-        }
-        else if (goalsFor == goalsAgainst)
-        {
-            PointsInGroup += 1;
-            Draws++;
-        }
-        else
-        {
-            Losses++;
-        }
+
+        UpdateResultStatistics(goalsFor, goalsAgainst);
+    }
+
+    private static void EnsureGoalsAreValid(int goalsFor, int goalsAgainst)
+    {
         if (goalsFor < 0 || goalsAgainst < 0)
             throw new ArgumentException("Los goles no pueden ser negativos.");
+    }
+
+    private void UpdateGoals(int goalsFor, int goalsAgainst)
+    {
+        GoalsFor += goalsFor;
+        GoalsAgainst += goalsAgainst;
+    }
+
+    private void UpdateResultStatistics(int goalsFor, int goalsAgainst)
+    {
+        if (goalsFor > goalsAgainst)
+            RegisterWin();
+        else if (goalsFor == goalsAgainst)
+            RegisterDraw();
+        else
+            RegisterLoss();
+    }
+
+    private void RegisterWin()
+    {
+        PointsInGroup += PointsForWin;
+        Wins++;
+    }
+
+    private void RegisterDraw()
+    {
+        PointsInGroup += PointsForDraw;
+        Draws++;
+    }
+
+    private void RegisterLoss()
+    {
+        Losses++;
     }
 }
