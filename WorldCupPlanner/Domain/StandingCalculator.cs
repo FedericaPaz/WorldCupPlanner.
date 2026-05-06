@@ -18,7 +18,9 @@ public class StandingCalculator
             homeStanding.AddMatchResult(match.HomeGoals.Value, match.AwayGoals.Value);
             awayStanding.AddMatchResult(match.AwayGoals.Value, match.HomeGoals.Value);
         }
-
-        return standings;
+        
+        return standings
+            .OrderByDescending(standing => standing.PointsInGroup)
+            .ToList();
     }
 }
