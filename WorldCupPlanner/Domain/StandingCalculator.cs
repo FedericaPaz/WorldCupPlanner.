@@ -22,6 +22,7 @@ public class StandingCalculator
         return standings
             .OrderByDescending(standing => standing.PointsInGroup)
             .ThenByDescending(standing => standing.GoalDifference)
+            .ThenByDescending(standing => standing.GoalsFor)
             .ToList();
     }
 }

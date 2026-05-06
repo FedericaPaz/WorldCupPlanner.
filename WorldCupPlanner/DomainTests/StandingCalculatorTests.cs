@@ -155,4 +155,37 @@ public class StandingCalculatorTests
         Assert.AreEqual(uruguay, standings[0].TeamInGroup);
         Assert.AreEqual(france, standings[1].TeamInGroup);
     }
+    
+    [TestMethod]
+    public void CalculateStandings_WhenTeamsHaveSamePointsAndGoalDifference_ShouldOrderByGoalsFor()
+    {
+        var group = new Group('A');
+
+        var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
+        var brasil = new Team("France", new Confederation("UEFA"), 1900);
+
+        group.AddTeamToGroup(uruguay);
+        group.AddTeamToGroup(argentina);
+        group.AddTeamToGroup(brasil);
+
+        var stadium = new Stadium("Centenario", "Montevideo", "Desc",60000);
+        var clock = new DateTimeMatchStub(DateTime.Now);
+
+        var match1 = new Match(clock.Now, stadium, uruguay, argentina, 'A', clock);
+        match1.SetMatchResult(4, 2);
+
+        var match2 = new Match(clock.Now, stadium, brasil, argentina, 'A', clock);
+        match2.SetMatchResult(3, 1); // France: 3 pts, DG +2, GF 3
+
+        group.AddMatchToGroup(match1);
+        group.AddMatchToGroup(match2);
+
+        var calculator = new StandingCalculator();
+
+        var standings = calculator.CalculateStandings(group);
+
+        Assert.AreEqual(uruguay, standings[0].TeamInGroup);
+        Assert.AreEqual(brasil, standings[1].TeamInGroup);
+    }
 }
