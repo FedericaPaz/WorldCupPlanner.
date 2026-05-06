@@ -4,6 +4,9 @@ public class StandingCalculator
 {
     public List<Standing> CalculateStandings(Group group)
     {
+        if (group is null)
+            throw new ArgumentNullException(nameof(group));
+        
         List<Standing> standings = new List<Standing>();
 
         foreach (Team team in group.TeamsInGroup)

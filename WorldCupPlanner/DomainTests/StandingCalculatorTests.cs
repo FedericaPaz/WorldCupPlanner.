@@ -219,4 +219,11 @@ public class StandingCalculatorTests
         Assert.AreEqual(0, uruguayStanding.MatchesPlayed);
         Assert.AreEqual(0, argentinaStanding.MatchesPlayed);
     }
+    
+    [TestMethod]
+    public void CalculateStandings_WithNullGroup_ShouldThrowException()
+    {
+        var calculator = new StandingCalculator();
+        Assert.ThrowsException<ArgumentNullException>(() => calculator.CalculateStandings(null));
+    }
 }
