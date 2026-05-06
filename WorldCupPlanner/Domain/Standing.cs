@@ -39,5 +39,7 @@ public class Standing
     {
         if (goalsFor > goalsAgainst)
             PointsInGroup += 3;
+        else if (goalsFor ==  goalsAgainst)
+            PointsInGroup += 1;
     }
 }
