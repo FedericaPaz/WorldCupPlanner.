@@ -10,6 +10,14 @@ public class StandingCalculator
         {
             standings.Add(new Standing(team));
         }
+        
+        foreach (Match match in group.MatchesInGroup)
+        {
+            Standing homeStanding = standings.First(s => s.TeamInGroup == match.HomeTeam);
+            Standing awayStanding = standings.First(s => s.TeamInGroup == match.AwayTeam);
+            homeStanding.AddMatchResult(match.HomeGoals.Value, match.AwayGoals.Value);
+            awayStanding.AddMatchResult(match.AwayGoals.Value, match.HomeGoals.Value);
+        }
 
         return standings;
     }
