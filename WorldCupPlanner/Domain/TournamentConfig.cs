@@ -11,6 +11,8 @@ public class TournamentConfig
     public int MaxPartidosPorDia { get; set; } = 3;
     public int SeparacionEntreFechas { get; set; } = 3;
     
+    
+    
     public TournamentConfig()
     {
         SemillaFixture = 12345;
@@ -45,6 +47,9 @@ public class TournamentConfig
         
         if (maxPartidosPorDia <= 0)
             throw new ArgumentOutOfRangeException(nameof(maxPartidosPorDia));
+        
+        if (separacionEntreFechas < 0)
+            throw new ArgumentOutOfRangeException(nameof(separacionEntreFechas));
         
         SemillaFixture = semillaFixture;
         SemillaCompletar = semillaCompletar;
