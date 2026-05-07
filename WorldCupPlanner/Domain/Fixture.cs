@@ -58,7 +58,15 @@ public class Fixture
     {
         if (_groups.Count != 12)
             return false;
-
+        
+        foreach (var group in _groups)
+        {
+            if (group.TeamsInGroup.Count != 4)
+                return false;
+        
+            if (group.MatchesInGroup.Count != 6)
+                return false;
+        }
         return true;
     } 
 }
