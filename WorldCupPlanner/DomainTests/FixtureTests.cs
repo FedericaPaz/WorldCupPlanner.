@@ -109,6 +109,28 @@ public class FixtureTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void CanAdvanceToPhase_ToRoundOf32_WhenGroupStageComplete_ReturnsTrue()
+    {
+        var fixture = CreateValidFixture();
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+        foreach (var group in fixture.GetGroups)
+        {
+            foreach (var match in group.MatchesInGroup)
+                match.SetMatchResult(1, 0);
+        }
+        var result = fixture.CanAdvanceToPhase(TournamentPhase.RoundOf32);
+        Assert.IsTrue(result);
+    }
+    
+    [TestMethod]
+    public void CanAdvanceToPhase_ToRoundOf32_WhenNotInGroupStage_ReturnsFalse()
+    {
+        var fixture = CreateValidFixture();
+        var result = fixture.CanAdvanceToPhase(TournamentPhase.RoundOf32);
+        Assert.IsFalse(result);
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
