@@ -50,5 +50,12 @@ public class TournamentConfigTests
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => new TournamentConfig(1, 1, -1, 1, fecha, 3, 3));
         Assert.ThrowsException<ArgumentOutOfRangeException>(() => new TournamentConfig(1, 1, 1, -1, fecha, 3, 3));
     }
-
+    
+    [TestMethod]
+    public void Constructor_WithInvalidMaxPartidosPorDia_ThrowsArgumentException()
+    {
+        var  fecha = new DateTime(2026, 6, 1);
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new TournamentConfig(1, 1, 1, 1, fecha, 0, 3));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new TournamentConfig(1, 1, 1, 1, fecha, -3, 3));
+    }
 }
