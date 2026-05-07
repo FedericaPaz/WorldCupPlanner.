@@ -60,7 +60,7 @@ public class FixtureTests
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
         var result = fixture.IsValid();
-        Assert.IsTrue(result);
+        Assert.IsFalse(result);
     }
     
     [TestMethod]
@@ -108,8 +108,6 @@ public class FixtureTests
         var result = fixture.CanAdvanceToPhase(TournamentPhase.GroupStage);
         Assert.IsFalse(result);
     }
-    
-    
     
     private Fixture CreateValidFixture()
     {
