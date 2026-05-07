@@ -68,5 +68,13 @@ public class Fixture
                 return false;
         }
         return true;
-    } 
+    }
+
+    public bool CanAdvanceToPhase(TournamentPhase newPhase)
+    {
+        if (newPhase == TournamentPhase.GroupStage)
+            return _groups.Count > 0;
+    
+        return false;
+    }
 }
