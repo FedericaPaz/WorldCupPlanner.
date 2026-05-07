@@ -52,4 +52,11 @@ public class GroupRepositoryTests
         var repository = new GroupRepository();
         Assert.ThrowsException<KeyNotFoundException>(() => repository.GetGroupByName('A'));
     }
+    
+    [TestMethod]
+    public void GetGroup_WithInvalidGroupLetter_ShouldThrowArgumentException()
+    {
+        var repository = new GroupRepository();
+        Assert.ThrowsException<ArgumentException>(() => repository.GetGroupByName('0'));
+    }
 }

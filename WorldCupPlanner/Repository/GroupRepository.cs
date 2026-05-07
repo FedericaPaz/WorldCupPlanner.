@@ -13,6 +13,7 @@ public class GroupRepository : IGroupRepository
 
     public Group GetGroupByName(char groupName)
     {
+        EnsureValidLetter(groupName);
         Group? group = _group.FirstOrDefault(g => g.GroupLetter == groupName);
         if (group is null)
             throw new KeyNotFoundException();
@@ -23,5 +24,11 @@ public class GroupRepository : IGroupRepository
     public List<Group> GetAllGroups()
     {
         return _group.ToList();
+    }
+
+    private void EnsureValidLetter(char groupLetter)
+    {
+        if (groupLetter < 'A' || groupLetter > 'L')
+            throw new ArgumentException("El grupo debe ser una letra de la A a la L.");
     }
 }
