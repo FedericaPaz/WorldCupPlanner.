@@ -39,4 +39,18 @@ public class FixtureTests
         fixture.AdvanceToPhase(TournamentPhase.GroupStage);
         Assert.AreEqual(TournamentPhase.GroupStage, fixture.CurrentPhase);
     }
+    
+    [TestMethod]
+    public void InitializeGroups_WhenCalledTwice_ShouldResetAndRecreateGroups()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        fixture.InitializeGroups();
+        var firstGroupReference = fixture.GetGroups;
+        fixture.InitializeGroups();
+            
+        Assert.AreEqual(12, fixture.GetGroups.Count);
+        Assert.AreEqual('A', fixture.GetGroups[0].GroupLetter);
+        Assert.AreNotSame(firstGroupReference, fixture.GetGroups);
+    }
 }
