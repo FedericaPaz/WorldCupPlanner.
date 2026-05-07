@@ -11,9 +11,10 @@ public class GroupRepository : IGroupRepository
         _group.Add(group);
     }
 
-    public Group GetGroupByName(string groupName)
+    public Group GetGroupByName(char groupName)
     {
-        throw new NotImplementedException();
+        Group? group = _group.FirstOrDefault(g => g.GroupLetter == groupName);
+        return group;
     }
 
     public List<Group> GetAllGroups()

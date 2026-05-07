@@ -35,4 +35,14 @@ public class GroupRepositoryTests
         Assert.IsTrue(allGroups.Contains(groupB));
         Assert.IsTrue(allGroups.Contains(groupC));
     }
+    
+    [TestMethod]
+    public void GetGroup_WithExistingName_ShouldReturnGroup()
+    {
+        var repository = new GroupRepository();
+        var groupA = new Group('A');
+        repository.AddGroup(groupA);        
+        var result = repository.GetGroupByName('A');
+        Assert.AreEqual(groupA, result);
+    }
 }
