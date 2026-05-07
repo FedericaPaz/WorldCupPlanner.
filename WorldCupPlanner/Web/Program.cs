@@ -14,24 +14,23 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddBlazoredLocalStorage();
 
-// User/auth services
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<SessionService>();
 
-// Team services
 builder.Services.AddSingleton<ITeamRepository, TeamRepository>();
 builder.Services.AddSingleton<ITeamService, TeamService>();
 
-// Stadium services
 builder.Services.AddSingleton<IStadiumRepository, StadiumRepository>();
 builder.Services.AddSingleton<IStadiumService, StadiumService>();
 
-// Match services
 builder.Services.AddSingleton<IMatchRepository, MatchRepository>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddSingleton<IDateTimeMatch, SystemDateTimeMatch>();
+
+builder.Services.AddSingleton<ILogRepository, LogRepository>();
+builder.Services.AddSingleton<ILogService, LogService>();
 
 var app = builder.Build();
 
