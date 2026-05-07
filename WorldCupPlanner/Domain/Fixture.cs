@@ -56,6 +56,9 @@ public class Fixture
     
     public bool IsValid()
     {
-        return false;
+        if (_groups.Count != 12)
+            return false;
+
+        return true;
     } 
 }
