@@ -71,4 +71,14 @@ public class FixtureTests
         var result = fixture.IsValid();
         Assert.IsFalse(result);
     }
+    
+    [TestMethod]
+    public void IsValid_WithGroupMissingTeams_ReturnsFalse()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        fixture.InitializeGroups();
+        var result = fixture.IsValid();
+        Assert.IsFalse(result);
+    }
 }
