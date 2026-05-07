@@ -19,6 +19,11 @@ public class LogEntry
         {
             throw new ArgumentException("La categoría del log es requerida.");
         }
+        
+        if (string.IsNullOrWhiteSpace(action))
+        {
+            throw new ArgumentException("La acción del log es requerida.");
+        }
 
         Timestamp = DateTime.UtcNow;
         UserEmail = userEmail;

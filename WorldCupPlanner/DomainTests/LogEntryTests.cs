@@ -32,4 +32,15 @@ public class LogEntryTests
         Assert.ThrowsException<ArgumentException>(() =>
             new LogEntry(userEmail, string.Empty, action, detail));
     }
+    
+    [TestMethod]
+    public void Constructor_WithEmptyAction_ShouldThrowException()
+    {
+        var userEmail = "admin@test.com";
+        var category = "Usuarios";
+        var detail = "Se creó el usuario usuario@test.com";
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            new LogEntry(userEmail, category, string.Empty, detail));
+    }
 }
