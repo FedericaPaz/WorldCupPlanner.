@@ -23,4 +23,10 @@ public class LogServiceTests
         Assert.AreEqual("Alta", logs[0].Action);
         Assert.AreEqual("Se creó el usuario usuario@test.com", logs[0].Detail);
     }
+    
+    [TestMethod]
+    public void Constructor_WithNullRepository_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => new LogService(null!));
+    }
 }
