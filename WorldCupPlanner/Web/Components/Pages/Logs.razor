@@ -1,0 +1,60 @@
+﻿@page "/logs"
+@using Domain
+@using IServices
+@inject ILogService LogService
+
+<div class="users-shell">
+    <div class="users-header">
+        <div>
+            <h1>Log del sistema</h1>
+            <p>Visualización de acciones auditadas</p>
+        </div>
+    </div>
+
+    <div class="users-table-card">
+        <table class="users-table">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Usuario</th>
+                <th>Categoría</th>
+                <th>Acción</th>
+                <th>Detalle</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @if (_logs.Count == 0)
+            {
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        No hay registros en el log.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var log in _logs)
+                {
+                    <tr>
+                        <td class="muted">@log.Timestamp.ToString("O")</td>
+                        <td>@log.UserEmail</td>
+                        <td>@log.Category</td>
+                        <td>@log.Action</td>
+                        <td class="muted">@log.Detail</td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<LogEntry> _logs = new();
+
+    protected override void OnInitialized()
+    {
+        _logs = LogService.GetAll();
+    }
+}
