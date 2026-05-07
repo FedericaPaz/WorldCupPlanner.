@@ -59,4 +59,12 @@ public class GroupRepositoryTests
         var repository = new GroupRepository();
         Assert.ThrowsException<ArgumentException>(() => repository.GetGroupByName('0'));
     }
+    
+    [TestMethod]
+    public void GetAllGroups_WhenRepositoryIsEmpty_ShouldReturnEmptyList()
+    {
+        var repository = new GroupRepository();
+        var groups = repository.GetAllGroups();
+        Assert.AreEqual(0, groups.Count);
+    }
 }
