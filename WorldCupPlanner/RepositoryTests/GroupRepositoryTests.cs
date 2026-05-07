@@ -18,22 +18,10 @@ public class GroupRepositoryTests
     }
 
     [TestMethod]
-    public void GetAllGroups_WithMultipleGroups_ShouldReturnAllGroups()
+    public void AddGroup_WithNullGroup_ShouldThrowArgumentNullException()
     {
         var repository = new GroupRepository();
-        var groupA = new Group('A');
-        var groupB = new Group('B');
-        var groupC = new Group('C');
-
-        repository.AddGroup(groupA);
-        repository.AddGroup(groupB);
-        repository.AddGroup(groupC);
-
-        var allGroups = repository.GetAllGroups();
-        Assert.AreEqual(3, allGroups.Count);
-        Assert.IsTrue(allGroups.Contains(groupA));
-        Assert.IsTrue(allGroups.Contains(groupB));
-        Assert.IsTrue(allGroups.Contains(groupC));
+        Assert.ThrowsException<ArgumentNullException>(() => repository.AddGroup(null));
     }
     
     [TestMethod]
@@ -66,5 +54,24 @@ public class GroupRepositoryTests
         var repository = new GroupRepository();
         var groups = repository.GetAllGroups();
         Assert.AreEqual(0, groups.Count);
+    }
+    
+    [TestMethod]
+    public void GetAllGroups_WithMultipleGroups_ShouldReturnAllGroups()
+    {
+        var repository = new GroupRepository();
+        var groupA = new Group('A');
+        var groupB = new Group('B');
+        var groupC = new Group('C');
+
+        repository.AddGroup(groupA);
+        repository.AddGroup(groupB);
+        repository.AddGroup(groupC);
+
+        var allGroups = repository.GetAllGroups();
+        Assert.AreEqual(3, allGroups.Count);
+        Assert.IsTrue(allGroups.Contains(groupA));
+        Assert.IsTrue(allGroups.Contains(groupB));
+        Assert.IsTrue(allGroups.Contains(groupC));
     }
 }

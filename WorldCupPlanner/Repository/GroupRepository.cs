@@ -8,6 +8,9 @@ public class GroupRepository : IGroupRepository
     private readonly List<Group> _group = new();
     public void AddGroup(Group group)
     {
+        if(group is null)
+            throw new ArgumentNullException(nameof(group));
+        
         _group.Add(group);
     }
 
