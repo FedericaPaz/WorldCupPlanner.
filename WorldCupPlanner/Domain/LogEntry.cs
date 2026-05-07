@@ -10,6 +10,16 @@ public class LogEntry
 
     public LogEntry(string userEmail, string category, string action, string detail)
     {
+        if (string.IsNullOrWhiteSpace(userEmail))
+        {
+            throw new ArgumentException("El usuario del log es requerido.");
+        }
+
+        if (string.IsNullOrWhiteSpace(category))
+        {
+            throw new ArgumentException("La categoría del log es requerida.");
+        }
+
         Timestamp = DateTime.UtcNow;
         UserEmail = userEmail;
         Category = category;

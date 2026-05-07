@@ -21,4 +21,15 @@ public class LogEntryTests
         Assert.AreEqual(detail, logEntry.Detail);
         Assert.IsTrue(logEntry.Timestamp <= DateTime.UtcNow);
     }
+    
+    [TestMethod]
+    public void Constructor_WithEmptyCategory_ShouldThrowException()
+    {
+        var userEmail = "admin@test.com";
+        var action = "Alta";
+        var detail = "Se creó el usuario usuario@test.com";
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            new LogEntry(userEmail, string.Empty, action, detail));
+    }
 }
