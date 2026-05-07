@@ -46,6 +46,9 @@ public class TournamentConfig
         if (maxPartidosPorDia <= 0)
             throw new ArgumentOutOfRangeException(nameof(maxPartidosPorDia));
         
+        if (separacionEntreFechas < 0)
+            throw new ArgumentOutOfRangeException(nameof(separacionEntreFechas));
+        
         SemillaFixture = semillaFixture;
         SemillaCompletar = semillaCompletar;
         SemillaCrucesFase = semillaCrucesFase;
