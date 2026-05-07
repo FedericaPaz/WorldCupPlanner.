@@ -56,6 +56,6 @@ public class Fixture
     
     public bool IsValid()
     {
-        return CurrentPhase != TournamentPhase.NotStarted;
+        return false;
     } 
 }
