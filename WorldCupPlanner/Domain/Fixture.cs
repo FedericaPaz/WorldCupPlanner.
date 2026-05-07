@@ -49,4 +49,9 @@ public class Fixture
         for (char c = 'A'; c <= 'L'; c++)
             _groups.Add(new Group(c));
     }
+    
+    public void AdvanceToPhase(TournamentPhase newPhase)
+    {
+        CurrentPhase = newPhase;
+    }
 }
