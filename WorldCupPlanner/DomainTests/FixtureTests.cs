@@ -100,6 +100,15 @@ public class FixtureTests
         Assert.IsTrue(result);
     }
     
+    [TestMethod]
+    public void CanAdvanceToPhase_ToGroupStage_WhenNoGroups_ReturnsFalse()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        var result = fixture.CanAdvanceToPhase(TournamentPhase.GroupStage);
+        Assert.IsFalse(result);
+    }
+    
     
     
     private Fixture CreateValidFixture()
