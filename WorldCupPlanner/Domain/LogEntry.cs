@@ -24,6 +24,11 @@ public class LogEntry
         {
             throw new ArgumentException("La acción del log es requerida.");
         }
+        
+        if (string.IsNullOrWhiteSpace(detail))
+        {
+            throw new ArgumentException("El detalle del log es requerido.");
+        }
 
         Timestamp = DateTime.UtcNow;
         UserEmail = userEmail;
