@@ -21,4 +21,22 @@ public class TournamentConfig
         MaxPartidosPorDia = 3;
         SeparacionEntreFechas = 3;
     }
+
+    public TournamentConfig(
+        int semillaFixture, 
+        int semillaCompletar, 
+        int semillaCrucesFase, 
+        int semillaSimulation,
+        DateTime fechaInicioTorneo, 
+        int maxPartidosPorDia, 
+        int separacionEntreFechas)
+    {
+        SemillaFixture = semillaFixture;
+        SemillaCompletar = semillaCompletar;
+        SemillaCrucesFase = semillaCrucesFase;
+        SemillaSimulation = semillaSimulation;
+        FechaInicioTorneo = fechaInicioTorneo;
+        MaxPartidosPorDia = maxPartidosPorDia;
+        SeparacionEntreFechas = separacionEntreFechas;
+    }
 }
