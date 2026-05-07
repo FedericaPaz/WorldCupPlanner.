@@ -8,6 +8,11 @@ public class LogRepository
 
     public void Add(LogEntry logEntry)
     {
+        if (logEntry is null)
+        {
+            throw new ArgumentNullException(nameof(logEntry));
+        }
+
         _logs.Add(logEntry);
     }
 
@@ -15,4 +20,6 @@ public class LogRepository
     {
         return _logs;
     }
+    
+    
 }

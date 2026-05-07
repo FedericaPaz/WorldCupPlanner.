@@ -29,8 +29,7 @@ public class LogEntryTests
         var action = "Alta";
         var detail = "Se creó el usuario usuario@test.com";
 
-        Assert.ThrowsException<ArgumentException>(() =>
-            new LogEntry(userEmail, string.Empty, action, detail));
+        Assert.ThrowsException<ArgumentException>(() => new LogEntry(userEmail, string.Empty, action, detail));
     }
     
     [TestMethod]
@@ -40,8 +39,7 @@ public class LogEntryTests
         var category = "Usuarios";
         var detail = "Se creó el usuario usuario@test.com";
 
-        Assert.ThrowsException<ArgumentException>(() =>
-            new LogEntry(userEmail, category, string.Empty, detail));
+        Assert.ThrowsException<ArgumentException>(() => new LogEntry(userEmail, category, string.Empty, detail));
     }
     
     [TestMethod]
@@ -51,7 +49,6 @@ public class LogEntryTests
         var category = "Usuarios";
         var action = "Alta";
 
-        Assert.ThrowsException<ArgumentException>(() =>
-            new LogEntry(userEmail, category, action, string.Empty));
+        Assert.ThrowsException<ArgumentException>(() => new LogEntry(userEmail, category, action, string.Empty));
     }
 }
