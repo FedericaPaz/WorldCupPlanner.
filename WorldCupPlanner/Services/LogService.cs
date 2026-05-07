@@ -1,14 +1,20 @@
 ﻿using Domain;
 using IRepository;
+using IServices;
 
 namespace Services;
 
-public class LogService
+public class LogService : ILogService
 {
     private readonly ILogRepository _logRepository;
 
     public LogService(ILogRepository logRepository)
     {
+        if (logRepository is null)
+        {
+            throw new ArgumentNullException(nameof(logRepository));
+        }
+
         _logRepository = logRepository;
     }
 
