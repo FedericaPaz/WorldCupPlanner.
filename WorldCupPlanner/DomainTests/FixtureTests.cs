@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Tracing;
-using Domain;
+﻿using Domain;
 
 namespace DomainTests;
 
@@ -52,5 +51,24 @@ public class FixtureTests
         Assert.AreEqual(12, fixture.GetGroups.Count);
         Assert.AreEqual('A', fixture.GetGroups[0].GroupLetter);
         Assert.AreNotSame(firstGroupReference, fixture.GetGroups);
+    }
+    
+    [TestMethod]
+    public void IsValid_WithValidFixture_ReturnsTrue()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        fixture.InitializeGroups();
+        var result = fixture.IsValid();
+        Assert.IsFalse(result);
+    }
+    
+    [TestMethod]
+    public void IsValid_WithWrongNumberOfGroups_ReturnsFalse()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        var result = fixture.IsValid();
+        Assert.IsFalse(result);
     }
 }

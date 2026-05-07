@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-
-namespace Domain;
+﻿namespace Domain;
 
 public class ClockStub : IDateTimeMatch
 {
@@ -55,4 +53,9 @@ public class Fixture
     {
         CurrentPhase = newPhase;
     }
+    
+    public bool IsValid()
+    {
+        return CurrentPhase != TournamentPhase.NotStarted;
+    } 
 }
