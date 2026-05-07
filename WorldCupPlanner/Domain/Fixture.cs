@@ -46,6 +46,7 @@ public class Fixture
 
     public void InitializeGroups()
     {
+        _groups = new List<Group>();
         for (char c = 'A'; c <= 'L'; c++)
             _groups.Add(new Group(c));
     }
