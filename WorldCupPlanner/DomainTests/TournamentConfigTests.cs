@@ -40,4 +40,15 @@ public class TournamentConfigTests
         Assert.AreEqual(4, config.MaxPartidosPorDia);
         Assert.AreEqual(2, config.SeparacionEntreFechas);
     }
+    
+    [TestMethod]
+    public void Constructor_WithNegativeSeed_ThrowsArgumentException()
+    {
+        var fecha = new DateTime(2026, 6, 1);
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new TournamentConfig(-1, 1, 1, 1, fecha, 3, 3));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new TournamentConfig(1, -1, 1, 1, fecha, 3, 3));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new TournamentConfig(1, 1, -1, 1, fecha, 3, 3));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new TournamentConfig(1, 1, 1, -1, fecha, 3, 3));
+    }
+
 }
