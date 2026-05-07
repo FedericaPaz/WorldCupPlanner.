@@ -45,4 +45,11 @@ public class GroupRepositoryTests
         var result = repository.GetGroupByName('A');
         Assert.AreEqual(groupA, result);
     }
+    
+    [TestMethod]
+    public void GetGroup_WithNonExistingGroup_ShouldThrowKeyNotFoundException()
+    {
+        var repository = new GroupRepository();
+        Assert.ThrowsException<KeyNotFoundException>(() => repository.GetGroupByName('A'));
+    }
 }

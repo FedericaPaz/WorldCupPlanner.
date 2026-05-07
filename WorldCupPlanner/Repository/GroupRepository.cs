@@ -14,6 +14,9 @@ public class GroupRepository : IGroupRepository
     public Group GetGroupByName(char groupName)
     {
         Group? group = _group.FirstOrDefault(g => g.GroupLetter == groupName);
+        if (group is null)
+            throw new KeyNotFoundException();
+        
         return group;
     }
 
