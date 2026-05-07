@@ -18,7 +18,9 @@ public class LogRepository
 
     public List<LogEntry> GetAll()
     {
-        return _logs;
+        return _logs
+            .OrderByDescending(log => log.Timestamp)
+            .ToList();
     }
     
     
