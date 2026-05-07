@@ -81,4 +81,39 @@ public class FixtureTests
         var result = fixture.IsValid();
         Assert.IsFalse(result);
     }
+    
+    [TestMethod]
+    public void IsValid_WithCompleteFixture_ReturnsTrue()
+    {
+        var fixture = CreateValidFixture();
+        var result = fixture.IsValid();
+        Assert.IsTrue(result);
+    }
+    
+    private Fixture CreateValidFixture()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        fixture.InitializeGroups();
+    
+        foreach (var group in fixture.GetGroups)
+        {
+            for (int i = 1; i <= 4; i++)
+            {
+                var team = new Team($"Team_{group.GroupLetter}_{i}", new Confederation("UEFA"), 1000);
+                group.AddTeamToGroup(team);
+            }
+        
+            var clock = new ClockStub(DateTime.Now);
+            var stadium = new Stadium("Estadio", "Ciudad", "", 50000);
+            var teams = group.TeamsInGroup.ToList();
+        
+            for (int i = 0; i < 6; i++)
+            {
+                var match = new Match(DateTime.Now, stadium, teams[0], teams[1], group.GroupLetter, clock);
+                group.AddMatchToGroup(match);
+            }
+        }
+        return fixture;
+    }
 }
