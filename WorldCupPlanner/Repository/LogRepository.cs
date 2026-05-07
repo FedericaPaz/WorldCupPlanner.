@@ -1,8 +1,9 @@
 ﻿using Domain;
+using IRepository;
 
 namespace Repository;
 
-public class LogRepository
+public class LogRepository : ILogRepository
 {
     private readonly List<LogEntry> _logs = new();
 
