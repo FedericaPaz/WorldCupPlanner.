@@ -5,7 +5,7 @@ public class Group
     private const int MaxTeams = 4;
     private const int MaxMatches = 6;
     private const char FirstGroupLetter = 'A';
-    private const char LastGroupLetter = 'B';
+    private const char LastGroupLetter = 'L';
     
     private char _groupLetter;
     private readonly List<Team> _teamsInGroup = new List<Team>();
