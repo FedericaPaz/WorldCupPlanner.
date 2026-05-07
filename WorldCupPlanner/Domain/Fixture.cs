@@ -43,4 +43,10 @@ public class Fixture
         _groups = new List<Group>();
         CurrentPhase = TournamentPhase.NotStarted;
     }
+
+    public void InitializeGroups()
+    {
+        for (char c = 'A'; c <= 'L'; c++)
+            _groups.Add(new Group(c));
+    }
 }
