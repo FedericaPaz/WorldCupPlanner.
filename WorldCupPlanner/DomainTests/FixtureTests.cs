@@ -29,4 +29,14 @@ public class FixtureTests
         var actualLetters = fixture.GetGroups.Select(g => g.GroupLetter).ToList();
         CollectionAssert.AreEqual(expectedLetters, actualLetters);
     }
+    
+    [TestMethod]
+    public void AdvanceToPhase_ShouldChangeCurrentPhase()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        fixture.InitializeGroups();
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+        Assert.AreEqual(TournamentPhase.GroupStage, fixture.CurrentPhase);
+    }
 }
