@@ -90,6 +90,18 @@ public class FixtureTests
         Assert.IsTrue(result);
     }
     
+    [TestMethod]
+    public void CanAdvanceToPhase_ToGroupStage_WhenGroupsExist_ReturnsTrue()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        fixture.InitializeGroups();
+        var result = fixture.CanAdvanceToPhase(TournamentPhase.GroupStage);
+        Assert.IsTrue(result);
+    }
+    
+    
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
