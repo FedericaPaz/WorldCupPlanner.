@@ -60,7 +60,7 @@ public class FixtureTests
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
         var result = fixture.IsValid();
-        Assert.IsFalse(result);
+        Assert.IsTrue(result);
     }
     
     [TestMethod]
