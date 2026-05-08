@@ -39,4 +39,10 @@ public class FixtureRepositoryTests
         Assert.IsNotNull(result);
         Assert.AreSame(_fixture, result);
     }
+    
+    [TestMethod]
+    public void GetFixture_WhenNoFixtureSaved_ThrowsInvalidOperationException()
+    {
+        Assert.ThrowsException<InvalidOperationException>(() => _repository.GetFixture());
+    }
 }
