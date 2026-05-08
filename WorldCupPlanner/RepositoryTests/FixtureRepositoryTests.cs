@@ -45,4 +45,12 @@ public class FixtureRepositoryTests
     {
         Assert.ThrowsException<InvalidOperationException>(() => _repository.GetFixture());
     }
+    
+    [TestMethod]
+    public void ContainsFixture_WhenNoFixtureSaved_ReturnsFalse()
+    {
+        var fixture = _fixture;
+        var result = _repository.ContainsFixture(fixture);
+        Assert.IsFalse(result);
+    }
 }
