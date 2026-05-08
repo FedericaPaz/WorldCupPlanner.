@@ -71,4 +71,14 @@ public class FixtureGeneratorTests
             Assert.IsTrue(ex.Message.Contains("4 estadios"));
         }
     }
+    
+    [TestMethod]
+    public void GenerateGroupsStageFixture_WithValidData_ReturnsFixture()
+    {
+        AddTeams(48);
+        AddStadiums(4);
+        var fixture = _generator.GenerateGroupsStageFixture(_config);
+        Assert.IsNotNull(fixture);
+        Assert.AreEqual(TournamentPhase.GroupStage, fixture.CurrentPhase);
+    }
 }
