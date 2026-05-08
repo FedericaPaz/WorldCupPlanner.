@@ -14,12 +14,13 @@ public class FixtureServiceTests
     private FixtureService _service;
     private TournamentConfig _config;
     private Fixture _fixture;
+    private FixtureGenerator _fixtureGenerator;
     
     [TestInitialize]
     public void Setup()
     {
         _fixtureRepository = new FixtureRepository();
-        _service = new FixtureService(_fixtureRepository);
+        _service = new FixtureService(_fixtureRepository, _fixtureGenerator);
         _config = new TournamentConfig();
         _fixture = new Fixture(_config);
         Match.ResetIdCounter();
