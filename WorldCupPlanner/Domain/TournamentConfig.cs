@@ -59,4 +59,16 @@ public class TournamentConfig
         MaxPartidosPorDia = maxPartidosPorDia;
         SeparacionEntreFechas = separacionEntreFechas;
     }
+    
+    public List<T> Shuffle<T>(List<T> list, int seed)
+    {
+        var random = new Random(seed);
+        var result = new List<T>(list);
+        for (int i = result.Count - 1; i > 0; i--)
+        {
+            int j = random.Next(i + 1);
+            (result[i], result[j]) = (result[j], result[i]);
+        }
+        return result;
+    }
 }
