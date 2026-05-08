@@ -22,7 +22,15 @@ public class FixtureService : IFixtureService
     
     public bool HasFixture()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var fixture = _fixtureRepository.GetFixture();
+            return _fixtureRepository.ContainsFixture(fixture);
+        }
+        catch (InvalidOperationException)
+        {
+            return false;
+        }
     }
     
     public List<StandingResponse> GetStandingsForGroup(char groupLetter)
