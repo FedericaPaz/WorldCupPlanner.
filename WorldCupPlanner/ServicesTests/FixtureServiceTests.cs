@@ -124,4 +124,10 @@ public class FixtureServiceTests
         Assert.ThrowsException<ArgumentException>(() => _service.GetStandingsForGroup('Z'));
     }
     
+    [TestMethod]
+    public void GetStandingsForGroup_WhenNoFixture_ThrowsException()
+    {
+        Assert.ThrowsException<InvalidOperationException>(() => _service.GetStandingsForGroup('A'));
+    }
+    
 }
