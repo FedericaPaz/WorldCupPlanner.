@@ -122,4 +122,25 @@ public class FixtureGeneratorTests
         foreach (var group in fixture.GetGroups)
             Assert.AreEqual(6, group.MatchesInGroup.Count);
     }
+    
+    [TestMethod]
+    public void GenerateGroupsStageFixture_MatchesHaveCorrectDates()
+    {
+        var startDate = new DateTime(2026, 6, 1);
+        var config = new TournamentConfig(123,123,123,123,startDate, 3,3);
+        AddTeams(48);
+        AddStadiums(4);
+        var fixture = _generator.GenerateGroupsStageFixture(config);
+        var primerGrupo = fixture.GetGroups[0];
+        var partidos = primerGrupo.MatchesInGroup.ToList();
+        
+        Assert.AreEqual(startDate.Date, partidos[0].DateMatch.Date);
+        Assert.AreEqual(startDate.Date, partidos[1].DateMatch.Date);
+        
+        Assert.AreEqual(startDate.AddDays(3).Date, partidos[2].DateMatch.Date);
+        Assert.AreEqual(startDate.AddDays(3).Date, partidos[3].DateMatch.Date);
+        
+        Assert.AreEqual(startDate.AddDays(6).Date, partidos[4].DateMatch.Date);
+        Assert.AreEqual(startDate.AddDays(6).Date, partidos[5].DateMatch.Date);
+    }
 }
