@@ -144,16 +144,19 @@ else
         finally
         {
             _isGenerating = false;
+            StateHasChanged();
         }
     }
     
     private void SelectGroup(GroupResponse group)
     {
         SelectedGroup = group;
+        StateHasChanged();
     }
-    
+
     private void CloseModal()
     {
         SelectedGroup = null;
+        StateHasChanged();
     }
 }
