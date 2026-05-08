@@ -53,4 +53,13 @@ public class FixtureRepositoryTests
         var result = _repository.ContainsFixture(fixture);
         Assert.IsFalse(result);
     }
+
+    [TestMethod]
+    public void ContainsFixture_WhenFixtureSaved_ReturnsTrue()
+    {
+        var fixture = _fixture;
+        _repository.AddFixture(fixture);
+        var result = _repository.ContainsFixture(fixture);
+        Assert.IsTrue(result);
+    }
 }
