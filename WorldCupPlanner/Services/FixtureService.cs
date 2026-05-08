@@ -49,6 +49,9 @@ public class FixtureService : IFixtureService
     {
         var fixture = _fixtureRepository.GetFixture();
         var group = fixture.GetGroups.FirstOrDefault(g => g.GroupLetter == groupLetter);
+        if (group == null)
+            throw new ArgumentException($"Grupo {groupLetter} no encontrado");
+            
         var calculator = new StandingCalculator();
         var standings = calculator.CalculateStandings(group);
         return standings.Select(s => StandingMapper.ToResponse(s)).ToList();
