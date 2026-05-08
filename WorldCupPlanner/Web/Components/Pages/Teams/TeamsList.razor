@@ -1,7 +1,10 @@
 ﻿@page "/teams"
 @using DTOs
 @using IServices
+@using Web.Services
 @inject ITeamService TeamService
+@inject ILogService LogService
+@inject SessionService SessionService
 @inject NavigationManager Navigation
 
 <div class="row align-items-center mb-3">
@@ -87,28 +90,47 @@ else
     {
         Navigation.NavigateTo("/teamsCreate");
     }
-    
+
     private void GoToGenerate()
     {
         Navigation.NavigateTo("/teamsGenerate");
     }
-    
+
     private void GoToEdit(string name)
     {
         Navigation.NavigateTo($"/teams/edit/{name}");
     }
-    
+
     private void DeleteTeam(string name)
     {
         try
         {
             _errorMessage = null;
+
             TeamService.Delete(name);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Equipos",
+                "Eliminación",
+                $"Se eliminó el equipo {name}"
+            );
+
             LoadTeams();
         }
         catch (Exception ex)
         {
             _errorMessage = ex.Message;
         }
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
     }
 }
