@@ -116,4 +116,12 @@ public class FixtureServiceTests
         }
     }
     
+    [TestMethod]
+    public void GetStandingsForGroup_WithInvalidGroup_ThrowsArgumentException()
+    {
+        var fixture = CreateValidFixture();
+        _fixtureRepository.AddFixture(fixture);
+        Assert.ThrowsException<ArgumentException>(() => _service.GetStandingsForGroup('Z'));
+    }
+    
 }
