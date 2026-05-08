@@ -21,6 +21,9 @@ public class FixtureGenerator
         if (teams.Count != 48)
             throw new Exception("Se necesitan 48 equipos");
         
+        if (stadiums.Count < 4)
+            throw new Exception("Se necesitan 4 estadios");
+        
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
         return fixture;
