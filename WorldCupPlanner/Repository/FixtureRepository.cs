@@ -5,29 +5,35 @@ namespace Repository;
 
 public class FixtureRepository : IFixtureRepository
 {
-    private readonly List<Fixture> _fixture = new();
+    private Fixture? _fixture;
+    
     public void AddFixture(Fixture fixture)
     {
         if (fixture == null)
             throw new ArgumentNullException(nameof(fixture));
-        _fixture.Add(fixture);
+        
+        _fixture = fixture;
     }
 
     public Fixture GetFixture()
     {
-        if (_fixture.Count == 0)
+        if (_fixture == null)
             throw new InvalidOperationException();
         
-        return _fixture[0];
+        return _fixture;
     }
 
     public bool ContainsFixture(Fixture fixture)
     {
-        return _fixture.Contains(fixture);
+        return _fixture ==  fixture;
     }
 
-    public void RemoveFixture(Fixture fixture)
+    public void RemoveFixture(Fixture? fixture)
     {
-        _fixture.Remove(fixture);
+        if (fixture == null)
+            throw new ArgumentNullException(nameof(fixture));
+        
+        if (_fixture == fixture)
+            _fixture = null;
     }
 }
