@@ -18,7 +18,7 @@ public class FixtureRepository : IFixtureRepository
     public Fixture GetFixture()
     {
         if (_fixture == null)
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("No hay fixture generado");
         
         return _fixture;
     }

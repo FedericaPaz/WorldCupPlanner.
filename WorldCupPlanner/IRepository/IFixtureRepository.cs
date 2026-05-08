@@ -7,5 +7,5 @@ public interface IFixtureRepository
     void AddFixture(Fixture fixture);
     Fixture GetFixture();
     bool ContainsFixture(Fixture fixture);
-    void RemoveFixture(Fixture fixture);
+    void RemoveFixture(Fixture? fixture);
 }
