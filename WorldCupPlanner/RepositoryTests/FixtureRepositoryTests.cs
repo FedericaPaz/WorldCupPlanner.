@@ -23,4 +23,11 @@ public class FixtureRepositoryTests
     {
         Assert.ThrowsException<ArgumentNullException>(() => _repository.AddFixture(null));
     }
+
+    [TestMethod]
+    public void AddFixture_WithValidFixture_DoesNotThrowException()
+    {
+        _repository.AddFixture(_fixture);
+        Assert.IsTrue(_repository.ContainsFixture(_fixture));
+    }
 }
