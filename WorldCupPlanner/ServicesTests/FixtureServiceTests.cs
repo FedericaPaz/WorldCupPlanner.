@@ -78,5 +78,13 @@ public class FixtureServiceTests
         Assert.AreEqual("", result.CurrentPhase);
     }
     
+    [TestMethod]
+    public void GetFixture_WhenFixtureExists_ReturnsFixture()
+    {
+        var fixture = CreateValidFixture();
+        _fixtureRepository.AddFixture(fixture);
+        var result = _service.GetFixture();
+        Assert.IsNotNull(result);
+    }
     
 }
