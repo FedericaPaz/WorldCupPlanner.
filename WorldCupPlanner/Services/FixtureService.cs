@@ -17,7 +17,19 @@ public class FixtureService : IFixtureService
     
     public FixtureResponse GetFixture()
     {
-        throw new NotImplementedException();
+        try
+        {
+            var fixture = _fixtureRepository.GetFixture();
+            if (_fixtureRepository.ContainsFixture(fixture))
+            {
+                return fixture.ToEntity();
+            }
+            return new FixtureResponse();
+        }
+        catch (InvalidOperationException)
+        {
+            return new FixtureResponse();
+        }
     }
     
     public bool HasFixture()
