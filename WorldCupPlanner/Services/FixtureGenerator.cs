@@ -26,6 +26,7 @@ public class FixtureGenerator
         
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
         return fixture;
     }
 }
