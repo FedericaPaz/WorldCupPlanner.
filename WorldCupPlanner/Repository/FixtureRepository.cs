@@ -5,10 +5,12 @@ namespace Repository;
 
 public class FixtureRepository : IFixtureRepository
 {
+    private readonly List<Fixture> _fixture = new();
     public void AddFixture(Fixture fixture)
     {
         if (fixture == null)
             throw new ArgumentNullException(nameof(fixture));
+        _fixture.Add(fixture);
     }
 
     public Fixture GetFixture()
@@ -18,7 +20,7 @@ public class FixtureRepository : IFixtureRepository
 
     public bool ContainsFixture(Fixture fixture)
     {
-        throw new NotImplementedException();
+        return _fixture.Contains(fixture);
     }
 
     public void RemoveFixture(Fixture fixture)
