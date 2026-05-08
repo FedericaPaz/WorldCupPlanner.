@@ -112,4 +112,14 @@ public class FixtureGeneratorTests
         foreach (var group in fixture.GetGroups)
             Assert.AreEqual(4, group.TeamsInGroup.Count);
     }
+    
+    [TestMethod]
+    public void GenerateGroupsStageFixture_EachGroupHas6Matches()
+    {
+        AddTeams(48);
+        AddStadiums(4);
+        var fixture = _generator.GenerateGroupsStageFixture(_config);
+        foreach (var group in fixture.GetGroups)
+            Assert.AreEqual(6, group.MatchesInGroup.Count);
+    }
 }
