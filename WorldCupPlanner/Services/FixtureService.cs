@@ -47,6 +47,10 @@ public class FixtureService : IFixtureService
     
     public List<StandingResponse> GetStandingsForGroup(char groupLetter)
     {
-        throw new NotImplementedException();
+        var fixture = _fixtureRepository.GetFixture();
+        var group = fixture.GetGroups.FirstOrDefault(g => g.GroupLetter == groupLetter);
+        var calculator = new StandingCalculator();
+        var standings = calculator.CalculateStandings(group);
+        return standings.Select(s => StandingMapper.ToResponse(s)).ToList();
     }
 }
