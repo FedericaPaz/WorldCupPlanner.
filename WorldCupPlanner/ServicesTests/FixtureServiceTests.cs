@@ -67,4 +67,16 @@ public class FixtureServiceTests
         var result = _service.HasFixture();
         Assert.IsTrue(result);
     }
+    
+    [TestMethod]
+    public void GetFixture_WhenNoFixture_ReturnsEmptyResponse()
+    {
+        var result = _service.GetFixture();
+        Assert.IsNotNull(result);
+        Assert.IsNotNull(result.Groups);
+        Assert.AreEqual(0, result.Groups.Count);
+        Assert.AreEqual("", result.CurrentPhase);
+    }
+    
+    
 }
