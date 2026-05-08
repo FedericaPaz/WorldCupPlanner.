@@ -7,11 +7,13 @@ public class FixtureGenerator
 {
     private readonly ITeamRepository _teamRepository;
     private readonly IStadiumRepository _stadiumRepository;
+    private readonly IFixtureRepository _fixtureRepository;
     
-    public FixtureGenerator(ITeamRepository teamRepository, IStadiumRepository stadiumRepository)
+    public FixtureGenerator(ITeamRepository teamRepository, IStadiumRepository stadiumRepository, IFixtureRepository fixtureRepository)
     {
         _teamRepository = teamRepository;
         _stadiumRepository = stadiumRepository;
+        _fixtureRepository = fixtureRepository;
     }
     
     public Fixture GenerateGroupsStageFixture(TournamentConfig config)
@@ -55,6 +57,7 @@ public class FixtureGenerator
             }
         }
         fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+        _fixtureRepository.AddFixture(fixture);
         return fixture;
     }
 }
