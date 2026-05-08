@@ -87,5 +87,20 @@ public class FixtureServiceTests
         Assert.IsNotNull(result);
     }
     
+    [TestMethod]
+    public void GetFixture_ReturnsCorrectGroupData()
+    {
+        var fixture = CreateValidFixture();
+        _fixtureRepository.AddFixture(fixture);
+        var result = _service.GetFixture();
+        var groupA = result.Groups.First(g => g.GroupLetter == 'A');
+        Assert.IsNotNull(groupA);
+        Assert.AreEqual(4, groupA.Teams.Count);
+        Assert.AreEqual(6, groupA.Matches.Count);
+        var firstTeam = groupA.Teams.First();
+        Assert.IsTrue(firstTeam.Name.StartsWith("Team_A"));
+    }
+
+    
     
 }
