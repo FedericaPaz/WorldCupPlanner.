@@ -26,6 +26,14 @@ public class FixtureGenerator
         
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
+        
+        var orderedTeams = teams.OrderBy(t => t.FifaRanking).ToList();
+        for (int i = 0; i < orderedTeams.Count; i++)
+        {
+            int groupIndex = i % 12;
+            fixture.GetGroups[groupIndex].AddTeamToGroup(orderedTeams[i]);
+        }
+        
         fixture.AdvanceToPhase(TournamentPhase.GroupStage);
         return fixture;
     }
