@@ -106,7 +106,12 @@ public class User
     
     private void ValidateRoles(List<UserRole>? roles)
     {
-        if (roles is not null && roles.Count != roles.Distinct().Count())
+        if (roles is null || roles.Count == 0)
+        {
+            throw new ArgumentException("El usuario debe tener al menos un rol asignado.");
+        }
+
+        if (roles.Count != roles.Distinct().Count())
         {
             throw new ArgumentException("El usuario no puede tener roles duplicados.");
         }

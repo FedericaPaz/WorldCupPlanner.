@@ -250,4 +250,32 @@ public class UserTests
             )
         );
     }
+    
+    [TestMethod]
+    public void Constructor_WithoutRoles_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() =>
+            new User(
+                "Juan",
+                "Pérez",
+                "juan@test.com",
+                new DateTime(2000, 1, 1),
+                "Password1!",
+                new List<UserRole>()
+            ));
+    }
+    
+    [TestMethod]
+    public void Constructor_WithNullRoles_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() =>
+            new User(
+                "Juan",
+                "Pérez", 
+                "juan@test.com",
+                new DateTime(2000, 1, 1),
+                "Password1!",
+                null
+              ));
+    }
 }
