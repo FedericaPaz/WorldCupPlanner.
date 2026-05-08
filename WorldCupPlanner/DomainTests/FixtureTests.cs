@@ -137,6 +137,25 @@ public class FixtureTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void AdvanceToPhase_WhenValid_ChangesPhase()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        fixture.InitializeGroups();
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+        Assert.AreEqual(TournamentPhase.GroupStage, fixture.CurrentPhase);
+    }
+    
+    [TestMethod]
+    public void AdvanceToPhase_WhenInvalid_ThrowsException()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config); 
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            fixture.AdvanceToPhase(TournamentPhase.GroupStage));
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
