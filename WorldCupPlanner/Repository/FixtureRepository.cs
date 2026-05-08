@@ -28,6 +28,6 @@ public class FixtureRepository : IFixtureRepository
 
     public void RemoveFixture(Fixture fixture)
     {
-        throw new NotImplementedException();
+        _fixture.Remove(fixture);
     }
 }
