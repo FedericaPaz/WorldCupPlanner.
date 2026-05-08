@@ -30,4 +30,13 @@ public class FixtureRepositoryTests
         _repository.AddFixture(_fixture);
         Assert.IsTrue(_repository.ContainsFixture(_fixture));
     }
+    
+    [TestMethod]
+    public void GetFixture_AfterAdd_ReturnsSameFixture()
+    {
+        _repository.AddFixture(_fixture);
+        var result = _repository.GetFixture();
+        Assert.IsNotNull(result);
+        Assert.AreSame(_fixture, result);
+    }
 }
