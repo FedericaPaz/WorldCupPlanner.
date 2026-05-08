@@ -72,4 +72,12 @@ public class FixtureRepositoryTests
         var result = _repository.ContainsFixture(fixture);
         Assert.IsFalse(result);
     }
+    
+    [TestMethod]
+    public void RemoveFixture_WhenFixtureNotSaved_DoesNotThrowException()
+    {
+        var fixture = _fixture;
+        _repository.RemoveFixture(fixture);
+        Assert.IsFalse(_repository.ContainsFixture(_fixture));
+    }
 }
