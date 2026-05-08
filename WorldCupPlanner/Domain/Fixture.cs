@@ -30,7 +30,7 @@ public class Fixture
     private List<Match> _eliminatoryMatches; //eliminatoria
     private readonly TournamentConfig _config;
     
-    public IReadOnlyList<Group> GetGroups
+    public List<Group> GetGroups
     {
         get => _groups;
     }
@@ -75,16 +75,17 @@ public class Fixture
 
     public bool CanAdvanceToPhase(TournamentPhase newPhase)
     {
-        if (newPhase == TournamentPhase.GroupStage)
-            return _groups.Count > 0;
-    
-        if (newPhase == TournamentPhase.RoundOf32)
-            return CurrentPhase == TournamentPhase.GroupStage && AllGroupMatchesPlayed();
-    
-        if (newPhase == TournamentPhase.QuarterFinals)
-            return CurrentPhase == TournamentPhase.RoundOf32 && AllKnockoutMatchesPlayed();
-    
-        return false;
+        return newPhase switch
+        {
+            TournamentPhase.GroupStage => _groups.Count > 0,
+            TournamentPhase.RoundOf32 => CurrentPhase == TournamentPhase.GroupStage && AllGroupMatchesPlayed(),
+            TournamentPhase.RoundOf16 => CurrentPhase == TournamentPhase.RoundOf32 && AllKnockoutMatchesPlayed(),
+            TournamentPhase.QuarterFinals => CurrentPhase == TournamentPhase.RoundOf16 && AllKnockoutMatchesPlayed(),
+            TournamentPhase.SemiFinals => CurrentPhase == TournamentPhase.QuarterFinals && AllKnockoutMatchesPlayed(),
+            TournamentPhase.ThirdPlace or TournamentPhase.Final => CurrentPhase == TournamentPhase.SemiFinals && AllKnockoutMatchesPlayed(),
+            TournamentPhase.Finished => CurrentPhase == TournamentPhase.Final && AllKnockoutMatchesPlayed(),
+            _ => false
+        };
     }
 
     private bool AllGroupMatchesPlayed()

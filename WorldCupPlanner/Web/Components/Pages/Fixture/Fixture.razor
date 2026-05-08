@@ -2,47 +2,86 @@
 @using DTOs
 @using IServices
 @inject IFixtureService FixtureService
+@inject ITeamService TeamService
+@inject IStadiumService StadiumService
 @inject NavigationManager Navigation
 
 <h3 class="text-center my-4">Fixture - Fase de Grupos</h3>
 
-@if (_fixture == null)
+@if (_isGenerating)
 {
-    <div class="text-center">
+    <div class="text-center py-5">
         <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Cargando...</span>
+            <span class="visually-hidden">Generando...</span>
         </div>
-        <p>Cargando fixture...</p>
+        <p class="mt-3">Generando fixture...</p>
     </div>
-} 
-else if (!_fixture.Groups.Any())
+}
+else if (!FixtureService.HasFixture())
 {
-    <div class="alert alert-warning text-center">
-        <h4>No hay fixture generado</h4>
-        <p>Generar Fixture con el boton de generar Fixture.</p>
-        <button class="btn btn-primary mt-2" @onclick="NavigateToGenerate">
-            Generar Fixture
-        </button>
+    <div class="container">
+        <div class="text-center py-5">
+            <h4>No hay fixture generado</h4>
+            <p class="text-muted">Se necesitan 48 equipos y al menos 4 estadios para generar el fixture.</p>
+            
+            <div class="d-flex justify-content-center gap-4 my-3">
+                <div>
+                    <span class="@(_teamCount >= 48 ? "text-success" : "text-danger") fw-bold fs-5">
+                        @_teamCount
+                    </span>
+                    <span class="text-muted"> / 48 equipos</span>
+                </div>
+                <div>
+                    <span class="@(_stadiumCount >= 4 ? "text-success" : "text-danger") fw-bold fs-5">
+                        @_stadiumCount
+                    </span>
+                    <span class="text-muted"> / 4 estadios</span>
+                </div>
+            </div>
+            
+            @if (_canGenerate)
+            {
+                <button class="btn btn-success btn-lg mt-3" @onclick="GenerateFixture">
+                    ⚽ Generar Fixture
+                </button>
+            }
+            else
+            {
+                <p class="text-muted mt-3">Completá los requisitos para habilitar la generación.</p>
+            }
+            
+            @if (!string.IsNullOrEmpty(_error))
+            {
+                <div class="alert alert-danger mt-3 mx-auto" style="max-width: 500px;">
+                    @_error
+                </div>
+            }
+        </div>
     </div>
 }
 else
 {
+    var fixture = FixtureService.GetFixture();
+    
     <div class="container">
+        <div class="d-flex justify-content-end mb-3">
+            <span class="badge bg-success fs-6">@fixture.CurrentPhase</span>
+        </div>
+        
         <div class="row g-3">
-            @foreach (var group in _fixture.Groups)
+            @foreach (var group in fixture.Groups)
             {
                 <div class="col-md-3 col-sm-6">
-                    <div class="card group-card h-100 shadow-sm" 
-                         @onclick="() => SelectGroup(group)">
+                    <div class="card group-card h-100 shadow-sm" role="button" @onclick="() => SelectGroup(group)">
                         <div class="card-header text-center bg-dark text-white">
                             <h4 class="mb-0">Grupo @group.GroupLetter</h4>
                         </div>
                         <div class="card-body">
                             @foreach (var team in group.Teams)
                             {
-                                <div class="team-item">
-                                    <span class="team-flag">⚽</span>
-                                    <span class="team-name">@team.Name</span>
+                                <div class="team-item d-flex align-items-center gap-2 py-1">
+                                    <span>⚽</span>
+                                    <span>@team.Name</span>
                                 </div>
                             }
                         </div>
@@ -58,15 +97,14 @@ else
 
 @if (SelectedGroup != null)
 {
-    <div class="modal-overlay" @onclick="CloseModal">
-        <div class="modal-container">
+    <div class="modal-backdrop" @onclick="CloseModal">
+        <div class="modal-card" @onclick:stopPropagation="true">
             <div class="modal-header">
                 <h4>Grupo @SelectedGroup.GroupLetter</h4>
                 <button class="btn-close" @onclick="CloseModal">✖</button>
             </div>
             <div class="modal-body">
-                <GroupDetail Group="SelectedGroup" 
-                             OnStandingsUpdated="RefreshStandings" />
+                <GroupDetail Group="SelectedGroup" />
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" @onclick="CloseModal">Cerrar</button>
@@ -76,18 +114,37 @@ else
 }
 
 @code {
-    private FixtureResponse _fixture;
-    private GroupResponse SelectedGroup { get; set; }
+    private bool _isGenerating;
+    private string? _error;
+    private int _teamCount;
+    private int _stadiumCount;
+    private bool _canGenerate;
+    private GroupResponse? SelectedGroup { get; set; }
 
     protected override void OnInitialized()
     {
-        _fixture = FixtureService.GetFixture();
+        _teamCount = TeamService.GetAll().Count;
+        _stadiumCount = StadiumService.GetAllStadiums().Count;
+        _canGenerate = _teamCount >= 48 && _stadiumCount >= 4;
     }
     
-    private void LoadFixture()
+    private void GenerateFixture()
     {
-        _fixture = FixtureService.GetFixture();
-        StateHasChanged();
+        _isGenerating = true;
+        _error = null;
+        
+        try
+        {
+            FixtureService.GenerateFixture();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _isGenerating = false;
+        }
     }
     
     private void SelectGroup(GroupResponse group)
@@ -98,16 +155,5 @@ else
     private void CloseModal()
     {
         SelectedGroup = null;
-        LoadFixture();
-    }
-    
-    private void RefreshStandings()
-    {
-        LoadFixture();
-    }
-    
-    private void NavigateToGenerate()
-    {
-        Navigation.NavigateTo("/admin/generate-fixture");
     }
 }
