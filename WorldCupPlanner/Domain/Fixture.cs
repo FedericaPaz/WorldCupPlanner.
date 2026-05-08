@@ -51,6 +51,9 @@ public class Fixture
     
     public void AdvanceToPhase(TournamentPhase newPhase)
     {
+        if (!CanAdvanceToPhase(newPhase))
+            throw new InvalidOperationException($"No se puede avanzar a {newPhase}");
+            
         CurrentPhase = newPhase;
     }
     
