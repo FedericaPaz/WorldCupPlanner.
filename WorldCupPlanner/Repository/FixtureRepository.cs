@@ -7,7 +7,8 @@ public class FixtureRepository : IFixtureRepository
 {
     public void AddFixture(Fixture fixture)
     {
-        throw new NotImplementedException();
+        if (fixture == null)
+            throw new ArgumentNullException(nameof(fixture));
     }
 
     public Fixture GetFixture()
