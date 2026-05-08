@@ -11,7 +11,7 @@ public class UserRepositoryTests
     public void Add_OneUser_ShouldNotThrowException()
     {
         var userRepository = new UserRepository();
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+        var user = CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
 
         userRepository.AddUser(user);
     }
@@ -28,8 +28,8 @@ public class UserRepositoryTests
     public void GivenExistingUser_AddDuplicate_ShouldThrowException()
     {
         var userRepository = new UserRepository();
-        var user1 = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
-        var user2 = new User("Pedro", "Gomez", "juan.perez@gmail.com", new DateTime(1999, 5, 10), "Password1!");
+        var user1 = CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
+        var user2 = CreateValidUser("Pedro", "Gomez", "juan.perez@gmail.com", new DateTime(1999, 5, 10));
 
         userRepository.AddUser(user1);
 
@@ -40,7 +40,7 @@ public class UserRepositoryTests
     public void Get_ExistingUser_ShouldReturnUser()
     {
         var userRepository = new UserRepository();
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+        var user = CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
 
         userRepository.AddUser(user);
 
@@ -56,7 +56,9 @@ public class UserRepositoryTests
     public void Get_NonExistingUser_ShouldReturnNull()
     {
         var userRepository = new UserRepository();
+
         var result = userRepository.GetUser("juan.perez@gmail.com");
+
         Assert.IsNull(result);
     }
     
@@ -64,7 +66,7 @@ public class UserRepositoryTests
     public void GivenExistingUser_DeleteUser_ShouldDeleteUser()
     {
         var userRepository = new UserRepository();
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+        var user = CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
 
         userRepository.AddUser(user);
         userRepository.DeleteUser(user);
@@ -78,7 +80,7 @@ public class UserRepositoryTests
     public void GivenNonExistingUser_DeleteUser_ShouldThrowException()
     {
         var userRepository = new UserRepository();
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+        var user = CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
 
         Assert.ThrowsException<InvalidOperationException>(() => userRepository.DeleteUser(user));
     }
@@ -87,8 +89,8 @@ public class UserRepositoryTests
     public void GivenMultipleUsers_GetAllUsers_ShouldReturnUsers()
     {
         var userRepository = new UserRepository();
-        var user1 = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
-        var user2 = new User("Pedro", "Gomez", "pedro.gomez@gmail.com", new DateTime(1999, 5, 10), "Password1!");
+        var user1 = CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
+        var user2 = CreateValidUser("Pedro", "Gomez", "pedro.gomez@gmail.com", new DateTime(1999, 5, 10));
 
         userRepository.AddUser(user1);
         userRepository.AddUser(user2);
@@ -102,10 +104,10 @@ public class UserRepositoryTests
     public void GivenExistingUser_UpdateUser_ShouldUpdateUser()
     {
         var userRepository = new UserRepository();
-        var originalUser = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+        var originalUser = CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
         userRepository.AddUser(originalUser);
 
-        var updatedUser = new User("Juan", "Gomez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+        var updatedUser = CreateValidUser("Juan", "Gomez", "juan.perez@gmail.com");
 
         userRepository.UpdateUser(updatedUser);
 
@@ -119,7 +121,7 @@ public class UserRepositoryTests
     public void GivenNonExistingUser_UpdateUser_ShouldThrowException()
     {
         var userRepository = new UserRepository();
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!");
+        var user = CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
 
         Assert.ThrowsException<InvalidOperationException>(() => userRepository.UpdateUser(user));
     }
@@ -130,5 +132,21 @@ public class UserRepositoryTests
         var userRepository = new UserRepository();
 
         Assert.ThrowsException<ArgumentNullException>(() => userRepository.UpdateUser(null));
+    }
+
+    private static User CreateValidUser(
+        string firstName,
+        string lastName,
+        string email,
+        DateTime? birthDate = null)
+    {
+        return new User(
+            firstName,
+            lastName,
+            email,
+            birthDate ?? new DateTime(2000, 1, 1),
+            "Password1!",
+            new List<UserRole> { UserRole.SystemAdministrator }
+        );
     }
 }

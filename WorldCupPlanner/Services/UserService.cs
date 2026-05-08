@@ -13,9 +13,15 @@ public class UserService
         _userRepository = userRepository;
     }
 
-    public void CreateUser(string firstName, string lastName, string email, DateTime birthDate, string password)
+    public void CreateUser(
+        string firstName,
+        string lastName,
+        string email,
+        DateTime birthDate,
+        string password,
+        List<UserRole> roles)
     {
-        var user = new User(firstName, lastName, email, birthDate, password);
+        var user = new User(firstName, lastName, email, birthDate, password, roles);
         _userRepository.AddUser(user);
     }
 
@@ -76,7 +82,7 @@ public class UserService
         string email,
         DateTime birthDate,
         string password,
-        List<UserRole>? roles = null)
+        List<UserRole> roles)
     {
         ValidateEmailNotEmpty(email);
         var existingUser = GetExistingUserOrThrow(email);
@@ -96,11 +102,12 @@ public class UserService
     private User GetExistingUserOrThrow(string email)
     {
         var user = _userRepository.GetUser(email);
+
         if (user is null)
         {
             throw new InvalidOperationException($"No se encontró un usuario con el email {email}.");
         }
+
         return user;
     }
-    
 }
