@@ -15,6 +15,9 @@ public class FixtureRepository : IFixtureRepository
 
     public Fixture GetFixture()
     {
+        if (_fixture.Count == 0)
+            throw new InvalidOperationException();
+        
         return _fixture[0];
     }
 
