@@ -9,6 +9,7 @@ public class FixtureGeneratorTests
 {
     private TeamRepository _teamRepository;    
     private StadiumRepository _stadiumRepository;
+    private FixtureRepository _fixtureRepository;
     private FixtureGenerator _generator;
     private TournamentConfig _config;
     
@@ -17,7 +18,8 @@ public class FixtureGeneratorTests
     {
         _teamRepository = new TeamRepository();
         _stadiumRepository = new StadiumRepository();
-        _generator = new FixtureGenerator(_teamRepository, _stadiumRepository);
+        _fixtureRepository = new FixtureRepository();
+        _generator = new FixtureGenerator(_teamRepository, _stadiumRepository,_fixtureRepository);
         _config = new TournamentConfig();
         Match.ResetIdCounter();
     }
