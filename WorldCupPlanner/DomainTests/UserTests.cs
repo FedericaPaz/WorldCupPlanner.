@@ -271,11 +271,11 @@ public class UserTests
         Assert.ThrowsException<ArgumentException>(() =>
             new User(
                 "Juan",
-                "Pérez",
+                "Pérez", 
                 "juan@test.com",
                 new DateTime(2000, 1, 1),
                 "Password1!",
                 null
-            ));
+              ));
     }
 }
