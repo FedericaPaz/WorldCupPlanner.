@@ -17,32 +17,15 @@ public class FixtureService : IFixtureService
     
     public FixtureResponse GetFixture()
     {
-        try
-        {
-            var fixture = _fixtureRepository.GetFixture();
-            if (_fixtureRepository.ContainsFixture(fixture))
-            {
-                return fixture.ToEntity();
-            }
+        if (!_fixtureRepository.ContainsFixture())
             return new FixtureResponse();
-        }
-        catch (InvalidOperationException)
-        {
-            return new FixtureResponse();
-        }
+        
+        return _fixtureRepository.GetFixture().ToEntity();
     }
     
     public bool HasFixture()
     {
-        try
-        {
-            var fixture = _fixtureRepository.GetFixture();
-            return _fixtureRepository.ContainsFixture(fixture);
-        }
-        catch (InvalidOperationException)
-        {
-            return false;
-        }
+        return _fixtureRepository.ContainsFixture();
     }
     
     public List<StandingResponse> GetStandingsForGroup(char groupLetter)
