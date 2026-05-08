@@ -143,4 +143,19 @@ public class FixtureGeneratorTests
         Assert.AreEqual(startDate.AddDays(6).Date, partidos[4].DateMatch.Date);
         Assert.AreEqual(startDate.AddDays(6).Date, partidos[5].DateMatch.Date);
     }
+    
+    [TestMethod]
+    public void GenerateGroupsStageFixture_MatchesHaveDifferentTeams()
+    {
+        AddTeams(48);
+        AddStadiums(4);
+        var fixture = _generator.GenerateGroupsStageFixture(_config);
+        foreach (var group in fixture.GetGroups)
+        {
+            foreach (var match in group.MatchesInGroup)
+            {
+                Assert.AreNotEqual(match.HomeTeam.Name, match.AwayTeam.Name, "Local y visitante no pueden ser el mismo equipo");
+            }
+        }
+    }
 }
