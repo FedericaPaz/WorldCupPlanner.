@@ -5,6 +5,12 @@ namespace DomainTests;
 [TestClass]
 public class FixtureTests
 {
+    [TestInitialize]
+    public void Setup()
+    {
+        Match.ResetIdCounter();
+    }
+    
     [TestMethod]
     public void Constructor_SetPhaseToNotSarted()
     {
@@ -151,7 +157,7 @@ public class FixtureTests
         
             for (int i = 0; i < 6; i++)
             {
-                var match = new Match(DateTime.Now, stadium, teams[0], teams[1], group.GroupLetter, clock);
+                var match = new Match(clock.Now, stadium, teams[0], teams[1], group.GroupLetter, clock);
                 group.AddMatchToGroup(match);
             }
         }

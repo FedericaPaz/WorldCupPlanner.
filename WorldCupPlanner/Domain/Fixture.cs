@@ -75,6 +75,22 @@ public class Fixture
         if (newPhase == TournamentPhase.GroupStage)
             return _groups.Count > 0;
     
+        if (newPhase == TournamentPhase.RoundOf32)
+            return CurrentPhase == TournamentPhase.GroupStage && AllGroupMatchesPlayed();
+    
+        if (newPhase == TournamentPhase.QuarterFinals)
+            return CurrentPhase == TournamentPhase.RoundOf32 && AllKnockoutMatchesPlayed();
+    
         return false;
+    }
+
+    private bool AllGroupMatchesPlayed()
+    {
+        return _groups.SelectMany(group => group.MatchesInGroup).All(match => match.HomeGoals.HasValue && match.AwayGoals.HasValue);
+    }
+
+    private bool AllKnockoutMatchesPlayed()
+    {
+        return _eliminatoryMatches.All(match => match.HomeGoals.HasValue && match.AwayGoals.HasValue);
     }
 }
