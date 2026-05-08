@@ -15,7 +15,7 @@ public class FixtureRepository : IFixtureRepository
 
     public Fixture GetFixture()
     {
-        throw new NotImplementedException();
+        return _fixture[0];
     }
 
     public bool ContainsFixture(Fixture fixture)
