@@ -33,6 +33,11 @@ builder.Services.AddSingleton<IMatchRepository, MatchRepository>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddSingleton<IDateTimeMatch, SystemDateTimeMatch>();
 
+// Fixture services
+builder.Services.AddSingleton<IFixtureRepository, FixtureRepository >();
+builder.Services.AddSingleton<IFixtureService, FixtureService>();
+builder.Services.AddSingleton<FixtureGenerator>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
