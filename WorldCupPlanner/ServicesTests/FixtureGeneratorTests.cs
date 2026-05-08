@@ -81,4 +81,13 @@ public class FixtureGeneratorTests
         Assert.IsNotNull(fixture);
         Assert.AreEqual(TournamentPhase.GroupStage, fixture.CurrentPhase);
     }
+    
+    [TestMethod]
+    public void GenerateGroupsStageFixture_Creates12Groups()
+    {
+        AddTeams(48);
+        AddStadiums(4);
+        var fixture = _generator.GenerateGroupsStageFixture(_config);
+        Assert.AreEqual(12, fixture.GetGroups.Count);
+    }
 }
