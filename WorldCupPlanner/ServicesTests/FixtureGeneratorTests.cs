@@ -55,4 +55,20 @@ public class FixtureGeneratorTests
             Assert.IsTrue(ex.Message.Contains("48 equipos"));
         }
     }
+    
+    [TestMethod]
+    public void GenerateGroupsStageFixture_WithLessThan4Stadiums_ThrowsException()
+    {
+        AddTeams(48);     
+        AddStadiums(2);  
+        try
+        {
+            _generator.GenerateGroupsStageFixture(_config);
+            Assert.Fail("Debería lanzar una excepción");
+        }
+        catch (Exception ex)
+        {
+            Assert.IsTrue(ex.Message.Contains("4 estadios"));
+        }
+    }
 }
