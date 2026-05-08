@@ -28,7 +28,7 @@ public class FixtureRepositoryTests
     public void AddFixture_WithValidFixture_DoesNotThrowException()
     {
         _repository.AddFixture(_fixture);
-        Assert.IsTrue(_repository.ContainsFixture(_fixture));
+        Assert.IsTrue(_repository.ContainsFixture());
     }
     
     [TestMethod]
@@ -49,8 +49,7 @@ public class FixtureRepositoryTests
     [TestMethod]
     public void ContainsFixture_WhenNoFixtureSaved_ReturnsFalse()
     {
-        var fixture = _fixture;
-        var result = _repository.ContainsFixture(fixture);
+        var result = _repository.ContainsFixture();
         Assert.IsFalse(result);
     }
 
@@ -59,7 +58,7 @@ public class FixtureRepositoryTests
     {
         var fixture = _fixture;
         _repository.AddFixture(fixture);
-        var result = _repository.ContainsFixture(fixture);
+        var result = _repository.ContainsFixture();
         Assert.IsTrue(result);
     }
 
@@ -69,7 +68,7 @@ public class FixtureRepositoryTests
         var fixture = _fixture;
         _repository.AddFixture(fixture);
         _repository.RemoveFixture(fixture);
-        var result = _repository.ContainsFixture(fixture);
+        var result = _repository.ContainsFixture();
         Assert.IsFalse(result);
     }
     
@@ -78,7 +77,7 @@ public class FixtureRepositoryTests
     {
         var fixture = _fixture;
         _repository.RemoveFixture(fixture);
-        Assert.IsFalse(_repository.ContainsFixture(_fixture));
+        Assert.IsFalse(_repository.ContainsFixture());
     }
     
     [TestMethod]
