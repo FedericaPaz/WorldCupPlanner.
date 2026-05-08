@@ -23,9 +23,9 @@ public class FixtureRepository : IFixtureRepository
         return _fixture;
     }
 
-    public bool ContainsFixture(Fixture fixture)
+    public bool ContainsFixture()
     {
-        return _fixture ==  fixture;
+        return _fixture !=  null;
     }
 
     public void RemoveFixture(Fixture? fixture)
