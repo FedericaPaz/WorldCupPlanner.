@@ -9,10 +9,12 @@ namespace Services;
 public class FixtureService : IFixtureService
 {
     private readonly IFixtureRepository _fixtureRepository;
+    private readonly FixtureGenerator _fixtureGenerator;
     
-    public FixtureService(IFixtureRepository fixtureRepository)
+    public FixtureService(IFixtureRepository fixtureRepository, FixtureGenerator fixtureGenerator)
     {
         _fixtureRepository = fixtureRepository;
+        _fixtureGenerator = fixtureGenerator;
     }
     
     public FixtureResponse GetFixture()
@@ -38,5 +40,11 @@ public class FixtureService : IFixtureService
         var calculator = new StandingCalculator();
         var standings = calculator.CalculateStandings(group);
         return standings.Select(s => StandingMapper.ToResponse(s)).ToList();
+    }
+    
+    public void GenerateFixture()
+    {
+        var config = new TournamentConfig();
+        _fixtureGenerator.GenerateGroupsStageFixture(config);
     }
 }
