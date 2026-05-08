@@ -101,6 +101,19 @@ public class FixtureServiceTests
         Assert.IsTrue(firstTeam.Name.StartsWith("Team_A"));
     }
 
-    
+    [TestMethod]
+    public void GetStandingsForGroup_WithValidGroup_ReturnsStandings()
+    {
+        var fixture = CreateValidFixture();
+        _fixtureRepository.AddFixture(fixture);
+        var standings = _service.GetStandingsForGroup('A');
+        Assert.IsNotNull(standings);
+        Assert.AreEqual(4, standings.Count);
+        foreach (var standing in standings)
+        {
+            Assert.IsNotNull(standing.TeamName);
+            Assert.IsTrue(standing.TeamName.StartsWith("Team_A"));
+        }
+    }
     
 }
