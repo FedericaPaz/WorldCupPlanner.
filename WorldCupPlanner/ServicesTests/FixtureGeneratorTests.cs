@@ -26,10 +26,22 @@ public class FixtureGeneratorTests
     
     private void AddTeams(int count)
     {
-        for (int i = 1; i <= count; i++)
+        var confederations = new List<(string name, int limit)>
         {
-            var team = new Team($"Team_{i}", new Confederation("UEFA"), 500 + i);
-            _teamRepository.Add(team);
+            ("UEFA", 16), ("CONMEBOL", 7), ("CONCACAF", 7), ("CAF", 9), ("AFC", 8), ("OFC", 1)
+        };
+    
+        int teamIndex = 1;
+        int rankingBase = 500;
+        foreach (var (name, limit) in confederations)
+        {
+            int teamsToAdd = Math.Min(limit, count - teamIndex + 1);
+            for (int i = 1; i <= teamsToAdd && teamIndex <= count; i++)
+            {
+                var team = new Team($"Team_{teamIndex}", new Confederation(name), rankingBase + teamIndex);
+                _teamRepository.Add(team);
+                teamIndex++;
+            }
         }
     }
     
