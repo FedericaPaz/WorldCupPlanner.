@@ -19,6 +19,8 @@ public class ParsedCsvRow
     
     public string GetValue(string columnName)
     {
+        if (!_values.ContainsKey(columnName))
+            throw new ArgumentException($"La columna '{columnName}' no existe.");
         return _values[columnName];
     }
 }

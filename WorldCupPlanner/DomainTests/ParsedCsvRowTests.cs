@@ -17,4 +17,15 @@ public class ParsedCsvRowTests
         var row = new ParsedCsvRow(2, values);
         Assert.AreEqual("Uruguay", row.GetValue("Nombre"));
     }
+    
+    [TestMethod]
+    public void GetValue_WithMissingColumn_ShouldThrowException()
+    {
+        var values = new Dictionary<string, string>
+        {
+            ["Nombre"] = "Uruguay"
+        };
+        var row = new ParsedCsvRow(2, values);
+        Assert.ThrowsException<ArgumentException>(() => row.GetValue("RankingFIFA"));
+    }
 }
