@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using System.Runtime.InteropServices.JavaScript;
+using Domain;
 using DTOs;
 using IRepository;
 using IServices;
@@ -86,23 +87,41 @@ public class TeamService : ITeamService
     public void GenerateMissingTeams()
     {
         int missing = 48 - (_repository.GetAll().Count());
+        int uefa = 16 - CountConfederation("UEFA");
+        int concacaf = 7 - CountConfederation("CONCACAF");
+        int conmebol = 7 - CountConfederation("CONMEBOL");
+        int caf = 9 - CountConfederation("CAF");
+        int afc = 8 - CountConfederation("AFC");
+        int ofc = 1 - CountConfederation("OFC");
 
         var confederations = new List<(string name, int limit)>
         {
-            ("UEFA", 16), ("CONMEBOL", 7), ("CONCACAF", 7), ("CAF", 9), ("AFC", 8), ("OFC", 1)
+            ("UEFA", uefa), ("CONMEBOL", conmebol), ("CONCACAF", concacaf), ("CAF", caf), ("AFC", afc), ("OFC", ofc)
         };
     
         int teamIndex = 1;
         int rankingBase = 500;
-        foreach (var (name, limit) in confederations)
+
+        foreach (var conf in confederations)
         {
-            int teamsToAdd = Math.Min(limit, missing - teamIndex + 1);
-            for (int i = 1; i <= teamsToAdd && teamIndex <= missing; i++)
+            string name = conf.name;
+            int limit = conf.limit;
+
+            int added = 0;
+            while (added < limit && teamIndex <= missing)
             {
                 var team = new Team($"Team_{teamIndex}", new Confederation(name), rankingBase + teamIndex);
                 _repository.Add(team);
                 teamIndex++;
+                added++;
             }
         }
     }
+    
+    private int CountConfederation(string confederationName)
+    {
+        return (_repository.GetAll().Where(t => t.Confederation.Name == confederationName).ToList()).Count;
+    }
+
+    
 }
