@@ -18,4 +18,16 @@ public class TeamImportValidatorTests
         List<ImportError> errors = validator.ValidateHeaders(headers);
         Assert.AreEqual(0, errors.Count);
     }
+
+    [TestMethod]
+    public void ValidateHeaders_WithInvalidHeaders_ShouldReturnErrors()
+    {
+        var validator = new TeamImportValidator();
+        var headers = new List<string>
+        { 
+            "Nombre","Confederacion", "RankingFIFA"
+        };
+        List<ImportError> errors = validator.ValidateHeaders(headers);
+        Assert.AreEqual(1, errors.Count);
+    }
 }
