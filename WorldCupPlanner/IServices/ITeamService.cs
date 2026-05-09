@@ -9,4 +9,5 @@ public interface ITeamService
     List<TeamDTO> GetAll();
     void Delete(string name);
     List<ConfederationDTO> GetAllConfederations();
+    void GenerateMissingTeams();
 }
