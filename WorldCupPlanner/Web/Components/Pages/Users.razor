@@ -2,7 +2,12 @@
 @using Domain
 @using DTOs.User
 @using global::Services
+@using IServices
+@using Web.Services
+
 @inject UserService UserService
+@inject ILogService LogService
+@inject SessionService SessionService
 
 <div class="users-shell">
     <div class="users-header">
@@ -227,6 +232,7 @@
         try
         {
             _modalErrorMessage = string.Empty;
+            var currentUserEmail = GetCurrentUserEmail();
 
             if (_isEditing)
             {
@@ -238,10 +244,24 @@
                     _userRequest.Password,
                     _userRequest.Roles
                 );
+
+                LogService.Register(
+                    currentUserEmail,
+                    "Usuarios",
+                    "Edición",
+                    $"Se editó el usuario {_editingEmail}"
+                );
             }
             else
             {
                 UserService.CreateUser(_userRequest);
+
+                LogService.Register(
+                    currentUserEmail,
+                    "Usuarios",
+                    "Alta",
+                    $"Se creó el usuario {_userRequest.Email}"
+                );
             }
 
             LoadUsers();
@@ -259,6 +279,14 @@
         {
             _pageErrorMessage = string.Empty;
             UserService.DeleteUser(email);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Usuarios",
+                "Eliminación",
+                $"Se eliminó el usuario {email}"
+            );
+
             LoadUsers();
         }
         catch (Exception exception)
@@ -290,6 +318,16 @@
         {
             _userRequest.Roles.Remove(role);
         }
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
     }
 
     private string FormatRoles(List<UserRole> roles)

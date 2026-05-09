@@ -1,9 +1,14 @@
 @page "/stadiums/edit/{Name}"
 @rendermode InteractiveServer
+
 @using DTOs
 @using IServices
+@using Web.Services
 @using System
+
 @inject IStadiumService Service
+@inject ILogService LogService
+@inject SessionService SessionService
 @inject NavigationManager Navigation
 
 @if (_request == null)
@@ -96,15 +101,36 @@ else
     private void HandleSubmit()
     {
         _errorMessage = string.Empty;
+
         try
         {
-            Service.DeleteStadium(Uri.UnescapeDataString(Name!));
+            var originalName = Uri.UnescapeDataString(Name!);
+
+            Service.DeleteStadium(originalName);
             Service.AddStadium(_request!);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Estadios",
+                "Edición",
+                $"Se editó el estadio {originalName}"
+            );
+
             Navigation.NavigateTo("/stadiums");
         }
         catch (Exception ex)
         {
             _errorMessage = ex.Message;
         }
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
     }
 }

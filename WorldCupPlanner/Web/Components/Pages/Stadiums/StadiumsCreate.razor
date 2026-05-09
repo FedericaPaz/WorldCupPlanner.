@@ -1,8 +1,13 @@
 @page "/stadiums/create"
 @rendermode InteractiveServer
+
 @using DTOs
 @using IServices
+@using Web.Services
+
 @inject IStadiumService Service
+@inject ILogService LogService
+@inject SessionService SessionService
 @inject NavigationManager Navigation
 
 <div class="stadiums-create">
@@ -71,7 +76,7 @@
 @code {
     private StadiumRequest _model = new();
     private string _errorMessage = string.Empty;
-    private bool _isSubmitting = false;
+    private bool _isSubmitting;
 
     private void NavigateBack()
     {
@@ -91,6 +96,13 @@
 
             Service.AddStadium(_model);
 
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Estadios",
+                "Alta",
+                $"Se creó el estadio {_model.stadiumName}"
+            );
+
             Navigation.NavigateTo("/stadiums");
         }
         catch (Exception ex)
@@ -103,5 +115,15 @@
         }
 
         await Task.CompletedTask;
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
     }
 }

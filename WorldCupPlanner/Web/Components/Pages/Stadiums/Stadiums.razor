@@ -3,8 +3,11 @@
 
 @using DTOs
 @using IServices
+@using Web.Services
 
 @inject IStadiumService Service
+@inject ILogService LogService
+@inject SessionService SessionService
 @inject NavigationManager Navigation
 @inject Microsoft.JSInterop.IJSRuntime JS
 
@@ -110,9 +113,19 @@ else
         try
         {
             var ok = await JS.InvokeAsync<bool>("confirm", $"¿Eliminar '{name}'?");
-            if (!ok) return;
+            if (!ok)
+            {
+                return;
+            }
 
             Service.DeleteStadium(name);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Estadios",
+                "Eliminación",
+                $"Se eliminó el estadio {name}"
+            );
 
             LoadData();
 
@@ -125,5 +138,15 @@ else
         {
             _error = ex.Message;
         }
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
     }
 }
