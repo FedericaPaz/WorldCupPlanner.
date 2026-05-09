@@ -97,4 +97,20 @@ public class Fixture
     {
         return _eliminatoryMatches.All(match => match.HomeGoals.HasValue && match.AwayGoals.HasValue);
     }
+    
+    public bool IsStillValid(List<Team> existingTeams, List<Stadium> existingStadiums)
+    {
+        if (!IsValid()) return false;
+        foreach (var group in _groups)
+        {
+            foreach (var team in group.TeamsInGroup)
+                if (existingTeams.All(t => t.Name != team.Name)) return false;
+        }
+        foreach (var group in _groups)
+        {
+            foreach (var match in group.MatchesInGroup)
+                if (existingStadiums.All(s => s.StadiumName != match.Stadium.StadiumName)) return false;
+        }
+        return true;
+    }
 }
