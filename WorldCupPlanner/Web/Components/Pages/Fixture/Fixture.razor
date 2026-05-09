@@ -41,7 +41,7 @@ else if (!FixtureService.HasFixture())
             
             @if (_canGenerate)
             {
-                <button class="btn btn-success btn-lg mt-3" @onclick="GenerateFixture">
+                <button class="btn btn-success btn-lg mt-3" @onclick="GenerateInitialFixture">
                     ⚽ Generar Fixture
                 </button>
             }
@@ -64,32 +64,56 @@ else
     var fixture = FixtureService.GetFixture();
     
     <div class="container">
-        <div class="d-flex justify-content-end mb-3">
-            <span class="badge bg-success fs-6">@fixture.CurrentPhase</span>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div></div>
+            <button class="btn btn-success btn-md" @onclick="RegenerateFixture" disabled="@isReloading">
+                @if (isReloading)
+                {
+                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                    <span>Regenerando fixture...</span>
+                }
+                else
+                {
+                    <span>⚽ ReGenerar Fixture</span>
+                }
+            </button>
+            <div></div>
         </div>
         
-        <div class="row g-3">
-            @foreach (var group in fixture.Groups)
+        <div class="row g-3 reload-container">
+            @if (isReloading)
             {
-                <div class="col-md-3 col-sm-6">
-                    <div class="card group-card h-100 shadow-sm" role="button" @onclick="() => SelectGroup(group)">
-                        <div class="card-header text-center bg-dark text-white">
-                            <h4 class="mb-0">Grupo @group.GroupLetter</h4>
-                        </div>
-                        <div class="card-body">
-                            @foreach (var team in group.Teams)
-                            {
-                                <div class="team-item d-flex align-items-center gap-2 py-1">
-                                    <span>⚽</span>
-                                    <span>@team.Name</span>
-                                </div>
-                            }
-                        </div>
-                        <div class="card-footer text-center text-muted small">
-                            @group.Matches.Count partidos
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-3">Generando nuevos grupos...</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var group in fixture.Groups)
+                {
+                    <div class="col-md-3 col-sm-6 fade-in">
+                        <div class="card group-card h-100 shadow-sm" role="button" @onclick="() => SelectGroup(group)">
+                            <div class="card-header text-center bg-dark text-white">
+                                <h4 class="mb-0">Grupo @group.GroupLetter</h4>
+                            </div>
+                            <div class="card-body">
+                                @foreach (var team in group.Teams)
+                                {
+                                    <div class="team-item d-flex align-items-center gap-2 py-1">
+                                        <span>⚽</span>
+                                        <span>@team.Name</span>
+                                    </div>
+                                }
+                            </div>
+                            <div class="card-footer text-center text-muted small">
+                                @group.Matches.Count partidos
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
             }
         </div>
     </div>
@@ -120,6 +144,7 @@ else
     private int _stadiumCount;
     private bool _canGenerate;
     private GroupResponse? SelectedGroup { get; set; }
+    private bool isReloading = false;
 
     protected override void OnInitialized()
     {
@@ -128,11 +153,10 @@ else
         _canGenerate = _teamCount >= 48 && _stadiumCount >= 4;
     }
     
-    private void GenerateFixture()
+    private void GenerateInitialFixture()
     {
         _isGenerating = true;
         _error = null;
-        
         try
         {
             FixtureService.GenerateFixture();
@@ -146,6 +170,17 @@ else
             _isGenerating = false;
             StateHasChanged();
         }
+    }
+    
+    private async Task RegenerateFixture()
+    {
+        if (isReloading) return;
+        isReloading = true;
+        StateHasChanged();
+        await Task.Delay(500);
+        FixtureService.GenerateFixture();
+        isReloading = false;
+        StateHasChanged();
     }
     
     private void SelectGroup(GroupResponse group)
