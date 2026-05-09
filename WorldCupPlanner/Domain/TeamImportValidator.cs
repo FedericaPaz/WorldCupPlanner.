@@ -22,12 +22,16 @@ public class TeamImportValidator
 
         string name = row.GetValue(NameHeader);
         string confederationName = row.GetValue(ConfederationHeader);
+        string rankingValue = row.GetValue(RankingHeader);
 
         if (importedNames.Contains(name))
             errors.Add(new ImportError(row.RowNumber, "El nombre del equipo está duplicado."));
 
         if (!Confederation.IsValidName(confederationName))
             errors.Add(new ImportError(row.RowNumber, "La confederación no es válida."));
+
+        if (!int.TryParse(rankingValue, out int ranking) || ranking < 300 || ranking > 2500)
+            errors.Add(new ImportError(row.RowNumber, "El ranking FIFA debe estar entre 300 y 2500."));
 
         return errors;
     }
