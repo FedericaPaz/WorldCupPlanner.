@@ -55,9 +55,13 @@ using (var scope = app.Services.CreateScope())
 
     var centenario = new Stadium("Centenario", "Montevideo", null, 60000);
     var maracana = new Stadium("Maracaná", "Rio", null, 70000);
+    var centenario1 = new Stadium("Centenario", "Montevideo", null, 60000);
+    var maracana1 = new Stadium("Maracaná", "Rio", null, 70000);
 
     stadiumRepo.AddStadium(centenario);
     stadiumRepo.AddStadium(maracana);
+    stadiumRepo.AddStadium(maracana1);
+    stadiumRepo.AddStadium(centenario1);
 
     var match1 = new Match(clock.Now.AddDays(1), centenario, uruguay, argentina, 'A', clock);
     var match2 = new Match(clock.Now.AddDays(2), maracana, brasil, uruguay, 'B', clock);
