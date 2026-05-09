@@ -12,6 +12,8 @@ public class FixtureServiceTests
 {
     private FixtureRepository _fixtureRepository;
     private FixtureService _service;
+    private ITeamRepository _teamRepository;
+    private IStadiumRepository _stadiumRepository;
     private TournamentConfig _config;
     private Fixture _fixture;
     private FixtureGenerator _fixtureGenerator;
@@ -20,7 +22,11 @@ public class FixtureServiceTests
     public void Setup()
     {
         _fixtureRepository = new FixtureRepository();
-        _service = new FixtureService(_fixtureRepository, _fixtureGenerator);
+        _teamRepository = new TeamRepository();
+        _stadiumRepository = new StadiumRepository();
+        _fixtureGenerator = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository);
+        _service = new FixtureService(_fixtureRepository, _fixtureGenerator, _teamRepository, _stadiumRepository);
+        
         _config = new TournamentConfig();
         _fixture = new Fixture(_config);
         Match.ResetIdCounter();
@@ -37,11 +43,13 @@ public class FixtureServiceTests
             for (int i = 1; i <= 4; i++)
             {
                 var team = new Team($"Team_{group.GroupLetter}_{i}", new Confederation("UEFA"), 1000);
+                _teamRepository.Add(team);
                 group.AddTeamToGroup(team);
             }
         
             var clock = new ClockStub(DateTime.Now);
             var stadium = new Stadium("Estadio", "Ciudad", "", 50000);
+            _stadiumRepository.AddStadium(stadium);
             var teams = group.TeamsInGroup.ToList();
         
             for (int i = 0; i < 6; i++)

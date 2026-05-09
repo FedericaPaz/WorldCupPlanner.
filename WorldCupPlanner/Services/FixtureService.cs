@@ -10,11 +10,15 @@ public class FixtureService : IFixtureService
 {
     private readonly IFixtureRepository _fixtureRepository;
     private readonly FixtureGenerator _fixtureGenerator;
+    private readonly ITeamRepository _teamRepository;
+    private readonly IStadiumRepository _stadiumRepository;
     
-    public FixtureService(IFixtureRepository fixtureRepository, FixtureGenerator fixtureGenerator)
+    public FixtureService(IFixtureRepository fixtureRepository, FixtureGenerator fixtureGenerator,  ITeamRepository teamRepository, IStadiumRepository stadiumRepository)
     {
         _fixtureRepository = fixtureRepository;
         _fixtureGenerator = fixtureGenerator;
+        _teamRepository = teamRepository;
+        _stadiumRepository = stadiumRepository;
     }
     
     public FixtureResponse GetFixture()
@@ -27,7 +31,15 @@ public class FixtureService : IFixtureService
     
     public bool HasFixture()
     {
-        return _fixtureRepository.ContainsFixture();
+        try
+        {
+            ValidateExistingFixture();
+            return _fixtureRepository.ContainsFixture();
+        }
+        catch
+        {
+            return false;
+        }
     }
     
     public List<StandingResponse> GetStandingsForGroup(char groupLetter)
@@ -46,5 +58,13 @@ public class FixtureService : IFixtureService
     {
         var config = new TournamentConfig();
         _fixtureGenerator.GenerateGroupsStageFixture(config);
+    }
+    
+    private void ValidateExistingFixture()
+    {
+        if (!_fixtureRepository.ContainsFixture()) return;
+        var fixture = _fixtureRepository.GetFixture();
+        if (!fixture.IsStillValid(_teamRepository.GetAll(), _stadiumRepository.GetAllStadiums()))
+            _fixtureRepository.RemoveFixture(fixture);
     }
 }
