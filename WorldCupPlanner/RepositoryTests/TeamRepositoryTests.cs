@@ -82,7 +82,6 @@ public class TeamRepositoryTests
         Assert.ThrowsException<InvalidOperationException>(() => _teamRepository.Delete(team));
     }
     
-    /*
     [TestMethod]
     public void UpdateTeam_WhenExists_ShouldUpdateTeam()
     {
@@ -101,7 +100,7 @@ public class TeamRepositoryTests
     {
         var team = CreateTeam("Uruguay");
         Assert.ThrowsException<InvalidOperationException>(() => _teamRepository.Update(team));
-    }*/
+    }
     
     [TestMethod]
     public void GetAll_ShouldReturnCopy_NotInternalList()
