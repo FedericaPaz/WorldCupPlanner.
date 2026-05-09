@@ -93,7 +93,8 @@ else
 
     private void GoToGenerate()
     {
-        Navigation.NavigateTo("/teamsGenerate");
+        TeamService.GenerateMissingTeams();
+        LoadTeams();
     }
 
     private void GoToEdit(string name)
