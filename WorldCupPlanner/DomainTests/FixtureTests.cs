@@ -156,6 +156,28 @@ public class FixtureTests
             fixture.AdvanceToPhase(TournamentPhase.GroupStage));
     }
     
+    [TestMethod]
+    public void IsStillValid_WithAllTeamsAndStadiumsExisting_ReturnsTrue()
+    {
+        var fixture = CreateValidFixture();
+        List<Team> teams = new List<Team>();
+        List<Stadium> stadiums = new List<Stadium>();
+    
+        foreach (var group in fixture.GetGroups)
+        {
+            foreach (var team in group.TeamsInGroup)
+                teams.Add((Team)team);
+        
+            foreach (var match in group.MatchesInGroup)
+            {
+                if (!stadiums.Contains((Stadium)match.Stadium))
+                    stadiums.Add((Stadium)match.Stadium);
+            }
+        }
+        bool result = fixture.IsStillValid(teams, stadiums);
+        Assert.IsTrue(result);
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
