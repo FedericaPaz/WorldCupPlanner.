@@ -14,4 +14,11 @@ public class TeamFactoryTests
         Assert.AreEqual("CONMEBOL", team.Confederation.Name);
         Assert.AreEqual(1800, team.FifaRanking);
     }
+
+    [TestMethod]
+    public void CreateTeam_WithNonNumericRanking_ShouldThrowException()
+    {
+        var factory = new TeamFactory();
+        Assert.ThrowsException<ArgumentException>(() => factory.CreateTeam("Uruguay", "CONMEBOL", "A")); 
+    }
 }
