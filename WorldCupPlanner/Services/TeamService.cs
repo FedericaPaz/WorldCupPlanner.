@@ -23,6 +23,12 @@ public class TeamService : ITeamService
         if (existingTeam != null)
             throw new ArgumentException($"Ya existe un equipo con el nombre '{request.Name}'.");
 
+        var existingRanking = _repository.GetAll()
+            .Any(t => t.FifaRanking == request.FifaRanking);
+
+        if (existingRanking)
+            throw new ArgumentException($"Ya existe un equipo con el ranking FIFA {request.FifaRanking}.");
+
         var confederationName = request.ConfederationName;
         var normalizedConf = confederationName.Trim().ToUpperInvariant();
         var maxTeams = Confederation.GetMaxTeamsForName(normalizedConf);

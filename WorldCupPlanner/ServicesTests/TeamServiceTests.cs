@@ -197,4 +197,30 @@ public class TeamServiceTests
         Assert.IsNotNull(ofc);
         Assert.AreEqual(1, ofc.MaxTeams);
     }
+    
+    [TestMethod]
+    public void Add_WithExistingFifaRanking_ShouldThrowException()
+    {
+        var repository = new TeamRepository();
+        var service = new TeamService(repository);
+
+        var firstTeam = new TeamDTO
+        {
+            Name = "Uruguay",
+            ConfederationName = "CONMEBOL",
+            FifaRanking = 1000
+        };
+
+        var secondTeam = new TeamDTO
+        {
+            Name = "Argentina",
+            ConfederationName = "CONMEBOL",
+            FifaRanking = 1000
+        };
+
+        service.Add(firstTeam);
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            service.Add(secondTeam));
+    }
 }
