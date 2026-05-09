@@ -45,4 +45,18 @@ public class TeamImportValidatorTests
         List<ImportError> errors = validator.ValidateRow(row, importedNames);
         Assert.AreEqual(1, errors.Count);
     }
+
+    [TestMethod]
+    public void ValidateRow_WithInvalidConfederation_ShouldReturnError()
+    {
+        var validator = new TeamImportValidator();
+        var row = new ParsedCsvRow(2, new Dictionary<string, string>
+        {
+            ["Nombre"] = "Uruguay",
+            ["Confederación"] = "AUF",
+            ["RankingFIFA"] = "1800"
+        });
+        List<ImportError> errors = validator.ValidateRow(row, new HashSet<string>());
+        Assert.AreEqual(1, errors.Count);
+    }
 }

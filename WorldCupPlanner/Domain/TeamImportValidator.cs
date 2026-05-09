@@ -19,9 +19,16 @@ public class TeamImportValidator
     public List<ImportError> ValidateRow(ParsedCsvRow row, HashSet<string> importedNames)
     {
         List<ImportError> errors = new List<ImportError>();
+
         string name = row.GetValue(NameHeader);
+        string confederationName = row.GetValue(ConfederationHeader);
+
         if (importedNames.Contains(name))
             errors.Add(new ImportError(row.RowNumber, "El nombre del equipo está duplicado."));
+
+        if (!Confederation.IsValidName(confederationName))
+            errors.Add(new ImportError(row.RowNumber, "La confederación no es válida."));
+
         return errors;
     }
 }
