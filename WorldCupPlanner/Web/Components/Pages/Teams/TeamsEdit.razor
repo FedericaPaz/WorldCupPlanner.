@@ -1,0 +1,121 @@
+﻿@page "/teams/edit/{Name}"
+@using DTOs
+@using IServices
+@using Web.Services
+
+@inject ITeamService TeamService
+@inject ILogService LogService
+@inject SessionService SessionService
+@inject NavigationManager Navigation
+
+<h3>Editar equipo</h3>
+
+@if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <div class="alert alert-danger">@_errorMessage</div>
+}
+
+@if (_request is null)
+{
+    <p>Cargando equipo...</p>
+}
+else
+{
+    <EditForm Model="_request" OnSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <InputText class="form-control" @bind-Value="_request.Name" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Confederación</label>
+            <InputSelect class="form-control" @bind-Value="_request.ConfederationName">
+                <option value="">Seleccione una confederación...</option>
+                @foreach (var conf in _confederations)
+                {
+                    <option value="@conf.Name">@conf.Name (@conf.MaxTeams cupos máximos)</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ranking FIFA</label>
+            <InputNumber class="form-control" @bind-Value="_request.FifaRanking" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <button type="button" class="btn btn-secondary ms-2" @onclick="GoBack">Volver</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public string? Name { get; set; }
+
+    private TeamDTO? _request;
+    private List<ConfederationDTO> _confederations = new();
+    private string? _errorMessage;
+
+    protected override void OnInitialized()
+    {
+        _confederations = TeamService.GetAllConfederations();
+
+        var currentName = Uri.UnescapeDataString(Name ?? string.Empty);
+        var team = TeamService.Get(currentName);
+
+        if (team is null)
+        {
+            Navigation.NavigateTo("/teams");
+            return;
+        }
+
+        _request = new TeamDTO
+        {
+            Name = team.Name,
+            ConfederationName = team.ConfederationName,
+            FifaRanking = team.FifaRanking
+        };
+    }
+
+    private void HandleSubmit()
+    {
+        try
+        {
+            _errorMessage = null;
+
+            var currentName = Uri.UnescapeDataString(Name ?? string.Empty);
+
+            TeamService.Update(currentName, _request!);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Equipos",
+                "Edición",
+                $"Se editó el equipo {currentName}"
+            );
+
+            Navigation.NavigateTo("/teams");
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/teams");
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
+    }
+}
