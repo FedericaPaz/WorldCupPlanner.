@@ -15,4 +15,13 @@ public class TeamImportValidator
         }
         return errors;
     }
+    
+    public List<ImportError> ValidateRow(ParsedCsvRow row, HashSet<string> importedNames)
+    {
+        List<ImportError> errors = new List<ImportError>();
+        string name = row.GetValue(NameHeader);
+        if (importedNames.Contains(name))
+            errors.Add(new ImportError(row.RowNumber, "El nombre del equipo está duplicado."));
+        return errors;
+    }
 }

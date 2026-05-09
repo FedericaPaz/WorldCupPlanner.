@@ -30,4 +30,19 @@ public class TeamImportValidatorTests
         List<ImportError> errors = validator.ValidateHeaders(headers);
         Assert.AreEqual(1, errors.Count);
     }
+
+    [TestMethod]
+    public void ValidateRow_WithDuplicatedName_ShouldReturnError()
+    {
+        var validator = new TeamImportValidator();
+        var row = new ParsedCsvRow(3, new Dictionary<string, string>
+        {
+            ["Nombre"] = "Uruguay",
+            ["Confederación"] = "CONMEBOL",
+            ["RankingFIFA"] = "1800"
+        });
+        var importedNames = new HashSet<string> { "Uruguay" };
+        List<ImportError> errors = validator.ValidateRow(row, importedNames);
+        Assert.AreEqual(1, errors.Count);
+    }
 }
