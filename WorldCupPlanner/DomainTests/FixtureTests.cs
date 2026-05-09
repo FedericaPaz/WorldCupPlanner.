@@ -203,6 +203,28 @@ public class FixtureTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void IsStillValid_WhenStadiumIsMissing_ReturnsFalse()
+    {
+        var fixture = CreateValidFixture();
+        List<Team> teams = new List<Team>();
+        List<Stadium> stadiums = new List<Stadium>();
+    
+        foreach (var group in fixture.GetGroups)
+        {
+            foreach (var team in group.TeamsInGroup)
+                teams.Add((Team)team);
+            foreach (var match in group.MatchesInGroup)
+            {
+                if (!stadiums.Contains((Stadium)match.Stadium))
+                    stadiums.Add((Stadium)match.Stadium);
+            }
+        }
+        stadiums.Clear();
+        bool result = fixture.IsStillValid(teams, stadiums);
+        Assert.IsFalse(result);
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
