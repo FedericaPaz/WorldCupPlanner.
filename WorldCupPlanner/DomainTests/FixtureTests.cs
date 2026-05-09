@@ -225,6 +225,18 @@ public class FixtureTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void IsStillValid_WhenFixtureIsEmpty_ReturnsFalse()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        fixture.InitializeGroups();
+        List<Team> teams = new List<Team>();
+        List<Stadium> stadiums = new List<Stadium>();
+        bool result = fixture.IsStillValid(teams, stadiums);
+        Assert.IsFalse(result);
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
