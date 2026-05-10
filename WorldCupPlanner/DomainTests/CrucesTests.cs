@@ -32,4 +32,18 @@ public class CrucesTests
         Assert.AreEqual(partido, cruce.Partido);
         Assert.AreEqual(fase, cruce.Fase);
     }
+
+    [TestMethod]
+    public void Constructor_WithEmptyName_ThrowsException()
+    {
+        var partido = CreateBasicMatch();
+        Assert.ThrowsException<ArgumentException>(() => new Cruce("", partido, TournamentPhase.RoundOf16));
+    }
+    
+    [TestMethod]
+    public void Constructor_WithNullName_ThrowsException()
+    {
+        var partido = CreateBasicMatch();
+        Assert.ThrowsException<ArgumentException>(() => new Cruce(null, partido, TournamentPhase.RoundOf16));
+    }
 }

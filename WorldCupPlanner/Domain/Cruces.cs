@@ -8,6 +8,9 @@ public class Cruce
     
     public Cruce(string nombre, Match partido, TournamentPhase fase)
     {
+        if(string.IsNullOrEmpty(nombre))
+            throw new ArgumentException("El nombre del cruce no puede ser vacío o nulo", "nombre");
+        
         Nombre = nombre;
         Partido = partido;
         Fase = fase;
