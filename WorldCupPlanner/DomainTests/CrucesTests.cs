@@ -135,5 +135,15 @@ public class CrucesTests
         Assert.ThrowsException<InvalidOperationException>(() => cruce1.DecideNextCruce(cruce2));
     }
     
+    [TestMethod]
+    public void DecideNextCruce_WithThirdPlace_ThrowsException()
+    {
+        var partido1 = CreateBasicMatch();
+        var partido2 = CreateBasicMatch();
     
+        var cruce1 = new Cruce("3P", partido1, TournamentPhase.ThirdPlace);
+        var cruce2 = new Cruce("F", partido2, TournamentPhase.Final);
+    
+        Assert.ThrowsException<InvalidOperationException>(() => cruce1.DecideNextCruce(cruce2));
+    }
 }
