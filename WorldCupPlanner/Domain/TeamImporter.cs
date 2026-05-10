@@ -12,6 +12,18 @@ public class TeamImporter
 
         ParsedCsv parsedCsv = _parser.Parse(csvContent);
 
+        List<ImportError> headerErrors = _validator.ValidateHeaders(parsedCsv.Headers);
+
+        foreach (ImportError error in headerErrors)
+        {
+            result.AddError(error);
+        }
+
+        if (headerErrors.Count > 0)
+        {
+            return result;
+        }
+
         foreach (ParsedCsvRow row in parsedCsv.Rows)
         {
             Team team = _factory.CreateTeam(
