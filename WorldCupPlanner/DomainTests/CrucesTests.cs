@@ -55,7 +55,7 @@ public class CrucesTests
     }
 
     [TestMethod]
-    public void DecideNextPhase_WithValidCruce_SetsNextPhase()
+    public void DecideNextCruce_WithValidCruce_SetsNextPhase()
     {
         var partido1 = CreateBasicMatch();
         var partido2 = CreateBasicMatch();
@@ -65,5 +65,13 @@ public class CrucesTests
         
         cruce1.DecideNextCruce(cruce2);
         Assert.AreEqual(cruce2, cruce1.NextCruce);
+    }
+    
+    [TestMethod]
+    public void DecideNextCruce_WithSelfReference_ThrowsException()
+    {
+        var partido = CreateBasicMatch();
+        var cruce = new Cruce("A1", partido, TournamentPhase.RoundOf16);
+        Assert.ThrowsException<InvalidOperationException>(() => cruce.DecideNextCruce(cruce));
     }
 }

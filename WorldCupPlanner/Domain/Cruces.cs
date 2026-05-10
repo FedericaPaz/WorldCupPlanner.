@@ -1,4 +1,6 @@
-﻿namespace Domain;
+﻿using System.ComponentModel;
+
+namespace Domain;
 
 public class Cruce
 {
@@ -22,6 +24,8 @@ public class Cruce
 
     public void DecideNextCruce(Cruce cruce)
     {
+        if(cruce == this)
+            throw new InvalidOperationException("El cruce no puede ser igual a sí mismo");
         NextCruce = cruce;
     }
 }
