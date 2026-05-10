@@ -19,4 +19,9 @@ public class ImportResult
     {
         get { return _errors.Count == 0; }
     }
+
+    public void AddError(ImportError error)
+    {
+        _errors.Add(error);
+    }
 }

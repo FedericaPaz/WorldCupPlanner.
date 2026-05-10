@@ -13,4 +13,15 @@ public class ImportResultTests
         Assert.AreEqual(0, result.Errors.Count);
         Assert.IsTrue(result.Success);
     }
+    
+    [TestMethod]
+    public void AddError_WithValidError_ShouldAddError()
+    {
+        var result = new ImportResult();
+        var error = new ImportError(2, "Error");
+        result.AddError(error);
+        Assert.AreEqual(1, result.Errors.Count);
+        Assert.AreEqual(error, result.Errors[0]);
+        Assert.IsFalse(result.Success);
+    }
 }
