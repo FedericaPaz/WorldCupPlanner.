@@ -15,6 +15,7 @@ public class ImportService : IImportService
     {
         if (teamRepository == null)
             throw new ArgumentNullException(nameof(teamRepository));
+
         _teamRepository = teamRepository;
         _teamImporter = new TeamImporter();
     }
@@ -24,13 +25,16 @@ public class ImportService : IImportService
         ImportResult result = _teamImporter.Import(csvContent);
 
         if (result.Success)
-        {
-            foreach (Team team in result.Teams)
-            {
-                _teamRepository.Add(team);
-            }
-        }
+            SaveImportedTeams(result.Teams);
 
         return ImportMapper.ToResponse(result);
+    }
+
+    private void SaveImportedTeams(IReadOnlyList<Team> teams)
+    {
+        foreach (Team team in teams)
+        {
+            _teamRepository.Add(team);
+        }
     }
 }
