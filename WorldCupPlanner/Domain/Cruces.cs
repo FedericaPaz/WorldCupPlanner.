@@ -28,4 +28,9 @@ public class Cruce
             throw new InvalidOperationException("El cruce no puede ser igual a sí mismo");
         NextCruce = cruce;
     }
+
+    public ITeam? GetWinner()
+    {
+        return Partido.WinnerMatch;
+    }
 }

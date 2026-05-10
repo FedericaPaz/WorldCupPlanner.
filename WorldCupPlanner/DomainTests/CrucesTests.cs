@@ -74,4 +74,17 @@ public class CrucesTests
         var cruce = new Cruce("A1", partido, TournamentPhase.RoundOf16);
         Assert.ThrowsException<InvalidOperationException>(() => cruce.DecideNextCruce(cruce));
     }
+
+    [TestMethod]
+    public void GetWinner_WhenMatchHasResult_ReturnsWinner()
+    {
+        _homeTeam = new Team("Test homeTeam", new Confederation("UEFA"), 301);
+        _awayTeam = new Team("Test awayTeam", new Confederation("UEFA"), 302);
+        _stadium = new Stadium("Test Stadium", "Ciudad","Desc",50000);
+        var match = CreateBasicMatch();
+        match.SetMatchResult(2, 1);
+        var cruce = new Cruce("A1", match, TournamentPhase.RoundOf16);
+        var winner = cruce.GetWinner();
+        Assert.AreEqual(_homeTeam, winner);
+    }
 }
