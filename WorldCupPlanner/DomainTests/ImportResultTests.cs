@@ -24,4 +24,14 @@ public class ImportResultTests
         Assert.AreEqual(error, result.Errors[0]);
         Assert.IsFalse(result.Success);
     }
+    
+    [TestMethod]
+    public void AddTeam_WithValidTeam_ShouldAddTeam()
+    {
+        var result = new ImportResult();
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        result.AddTeam(team);
+        Assert.AreEqual(1, result.Teams.Count);
+        Assert.AreEqual(team, result.Teams[0]);
+    }
 }

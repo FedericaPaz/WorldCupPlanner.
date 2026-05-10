@@ -24,4 +24,9 @@ public class ImportResult
     {
         _errors.Add(error);
     }
+    
+    public void AddTeam(Team team)
+    {
+        _teams.Add(team);
+    }
 }
