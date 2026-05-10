@@ -6,8 +6,12 @@ public class CruceGeneratorService
 {
     public List<Cruce> GenerateCruces(List<Group> grupos, List<Stadium> estadios, int semilla)
     {
+        if(grupos == null)
+            throw new ArgumentNullException(nameof(grupos), "La lista de grupos no puede ser nula.");
+        
         if(grupos.Count != 12)
             throw new Exception("Debe haber exactamente 12 grupos para generar los cruces de octavos de final.");
+        
         
         List<Cruce> cruces = new List<Cruce>();
 

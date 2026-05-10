@@ -51,4 +51,12 @@ public class CruceGeneratorServiceTests
         List<Stadium> estadios = CreateBaicStadiums();
         Assert.ThrowsException<Exception>(() => service.GenerateCruces(grupos, estadios, 123));
     }
+    
+    [TestMethod]
+    public void GenerateCruces_WithNullGroups_ShouldThrowException()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Stadium> estadios = CreateBaicStadiums();
+        Assert.ThrowsException<ArgumentNullException>(() => service.GenerateCruces(null, estadios, 123));
+    }
 }
