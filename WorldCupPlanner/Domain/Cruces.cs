@@ -48,7 +48,10 @@ public class Cruce
             TournamentPhase.QuarterFinals => TournamentPhase.SemiFinals,
             TournamentPhase.SemiFinals => TournamentPhase.ThirdPlace,
             TournamentPhase.ThirdPlace => throw new InvalidOperationException("El partido por el tercer puesto no tiene siguiente fase"),
+            TournamentPhase.Final => throw new InvalidOperationException("La final no tiene siguiente fase"),
             _ => throw new InvalidOperationException($"La fase {Phase} no tiene siguiente definida")
         };
     }
+    
+    
 }
