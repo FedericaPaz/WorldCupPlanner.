@@ -33,7 +33,7 @@ public class CruceGeneratorServiceTests
     }
     
     [TestMethod]
-    public void GenerarCruces_With12Groups_ShouldReturns16Cruces()
+    public void GenerateCruces_With12Groups_ShouldReturns16Cruces()
     {
         var service = new CruceGeneratorService();
         var grupos = Create12GroupsWithTeams();
@@ -41,5 +41,14 @@ public class CruceGeneratorServiceTests
         int semilla = 12345;
         var cruces = service.GenerateCruces(grupos, estadios, semilla);
         Assert.AreEqual(16, cruces.Count);
+    }
+
+    [TestMethod]
+    public void GenerateCruces_WithoutGroups_ShouldThrowException()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Group> grupos = new List<Group>();
+        List<Stadium> estadios = CreateBaicStadiums();
+        Assert.ThrowsException<Exception>(() => service.GenerateCruces(grupos, estadios, 123));
     }
 }
