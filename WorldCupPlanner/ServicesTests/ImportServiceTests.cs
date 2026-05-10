@@ -1,5 +1,6 @@
 using Repository;
 using Services;
+using ServicesTests.TestHelpers;
 
 namespace ServicesTests;
 
@@ -18,5 +19,17 @@ public class ImportServiceTests
         var response = service.ImportTeams(csv);
         Assert.IsFalse(response.Success);
         Assert.AreEqual(0, teamRepository.GetAll().Count);
+    }
+    
+    [TestMethod]
+    public void ImportTeams_WithValidCsv_ShouldSaveTeams()
+    {
+        var teamRepository = new TeamRepository();
+        var service = new ImportService(teamRepository);
+        string csv = ImportCsvBuilder.CreateValidCsvWith48Teams();
+        var response = service.ImportTeams(csv);
+        Assert.IsTrue(response.Success);
+        Assert.AreEqual(48, response.ImportedTeamsCount);
+        Assert.AreEqual(48, teamRepository.GetAll().Count);
     }
 }
