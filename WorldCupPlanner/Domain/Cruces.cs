@@ -24,13 +24,30 @@ public class Cruce
 
     public void DecideNextCruce(Cruce cruce)
     {
-        if(cruce == this)
-            throw new InvalidOperationException("El cruce no puede ser igual a sí mismo");
+        if(cruce == this) throw new InvalidOperationException("El cruce no puede ser igual a sí mismo");
+        if(!IsValidNextPhase(cruce.Phase)) throw new InvalidOperationException($"El cruce {cruce.Nombre} no es válido para la fase {Phase}");
         NextCruce = cruce;
     }
 
     public ITeam? GetWinner()
     {
         return Partido.WinnerMatch;
+    }
+
+    private bool IsValidNextPhase(TournamentPhase nextPhase)
+    {
+        return nextPhase == ObtainNextPhase();
+    }
+
+    private TournamentPhase ObtainNextPhase()
+    {
+        return Phase switch
+        {
+            TournamentPhase.RoundOf32 => TournamentPhase.RoundOf16,
+            TournamentPhase.RoundOf16 => TournamentPhase.QuarterFinals,
+            TournamentPhase.QuarterFinals => TournamentPhase.SemiFinals,
+            TournamentPhase.SemiFinals => TournamentPhase.ThirdPlace,
+            _ => throw new InvalidOperationException($"La fase {Phase} no tiene siguiente definida")
+        };
     }
 }
