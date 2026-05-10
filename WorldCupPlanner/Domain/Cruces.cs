@@ -4,7 +4,8 @@ public class Cruce
 {
     public string Nombre { get; private set; }
     public Match Partido { get; private set; }
-    public TournamentPhase Fase { get; private set; }
+    public TournamentPhase Phase { get; private set; }
+    public Cruce? NextCruce { get; private set; }
     
     public Cruce(string nombre, Match partido, TournamentPhase fase)
     {
@@ -16,6 +17,11 @@ public class Cruce
         
         Nombre = nombre;
         Partido = partido;
-        Fase = fase;
+        Phase = fase;
+    }
+
+    public void DecideNextCruce(Cruce cruce)
+    {
+        NextCruce = cruce;
     }
 }

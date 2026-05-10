@@ -30,7 +30,7 @@ public class CrucesTests
         var cruce = new Cruce(nombre, partido, fase);
         Assert.AreEqual(nombre, cruce.Nombre);
         Assert.AreEqual(partido, cruce.Partido);
-        Assert.AreEqual(fase, cruce.Fase);
+        Assert.AreEqual(fase, cruce.Phase);
     }
 
     [TestMethod]
@@ -52,5 +52,18 @@ public class CrucesTests
     {
         var partido = CreateBasicMatch();
         Assert.ThrowsException<ArgumentNullException>((() => new Cruce("A1", null, TournamentPhase.RoundOf16)));
+    }
+
+    [TestMethod]
+    public void DecideNextPhase_WithValidCruce_SetsNextPhase()
+    {
+        var partido1 = CreateBasicMatch();
+        var partido2 = CreateBasicMatch();
+        
+        var cruce1 = new Cruce("A1", partido1, TournamentPhase.RoundOf16);
+        var cruce2 = new Cruce("A2", partido2, TournamentPhase.QuarterFinals);
+        
+        cruce1.DecideNextCruce(cruce2);
+        Assert.AreEqual(cruce2, cruce1.NextCruce);
     }
 }
