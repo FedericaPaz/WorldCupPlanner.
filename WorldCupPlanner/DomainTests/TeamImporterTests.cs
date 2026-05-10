@@ -32,4 +32,18 @@ public class TeamImporterTests
         Assert.IsFalse(result.Success);
         Assert.AreEqual(1, result.Errors.Count);
     }
+    
+    [TestMethod]
+    public void Import_WithInvalidRow_ShouldReturnErrors()
+    {
+        string csv = """
+                     Nombre,Confederación,RankingFIFA
+                     Uruguay,AUF,1800
+                     """;
+        var importer = new TeamImporter();
+        ImportResult result = importer.Import(csv);
+        Assert.IsFalse(result.Success);
+        Assert.AreEqual(1, result.Errors.Count);
+        Assert.AreEqual(0, result.Teams.Count);
+    }
 }

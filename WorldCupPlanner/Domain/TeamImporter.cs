@@ -24,13 +24,28 @@ public class TeamImporter
             return result;
         }
 
+        HashSet<string> importedNames = new HashSet<string>();
+
         foreach (ParsedCsvRow row in parsedCsv.Rows)
         {
+            List<ImportError> rowErrors = _validator.ValidateRow(row, importedNames);
+
+            foreach (ImportError error in rowErrors)
+            {
+                result.AddError(error);
+            }
+
+            if (rowErrors.Count > 0)
+            {
+                continue;
+            }
+
             Team team = _factory.CreateTeam(
                 row.GetValue("Nombre"),
                 row.GetValue("Confederación"),
                 row.GetValue("RankingFIFA"));
 
+            importedNames.Add(team.Name);
             result.AddTeam(team);
         }
 
