@@ -23,11 +23,7 @@ public class TeamService : ITeamService
         if (existingTeam != null)
             throw new ArgumentException($"Ya existe un equipo con el nombre '{request.Name}'.");
 
-        var existingRanking = _repository.GetAll()
-            .Any(t => t.FifaRanking == request.FifaRanking);
-
-        if (existingRanking)
-            throw new ArgumentException($"Ya existe un equipo con el ranking FIFA {request.FifaRanking}.");
+        ValidateRankingIsNotUsed(request.FifaRanking);
 
         var confederationName = request.ConfederationName;
         var normalizedConf = confederationName.Trim().ToUpperInvariant();
@@ -36,7 +32,8 @@ public class TeamService : ITeamService
         if (maxTeams == 0)
             throw new ArgumentException($"La confederación '{confederationName}' no es válida.");
 
-        var currentCount = _repository.GetAll().Count(t => t.Confederation.Name == normalizedConf);
+        var currentCount = _repository.GetAll()
+            .Count(t => t.Confederation.Name == normalizedConf);
 
         if (currentCount >= maxTeams)
             throw new InvalidOperationException($"La confederación '{confederationName}' alcanzó su límite de {maxTeams} equipos.");
@@ -53,7 +50,9 @@ public class TeamService : ITeamService
 
     public List<TeamDTO> GetAll()
     {
-        return _repository.GetAll().Select(t => t.FromEntity()).ToList();
+        return _repository.GetAll()
+            .Select(t => t.FromEntity())
+            .ToList();
     }
 
     public void Update(string currentName, TeamDTO request)
@@ -67,6 +66,8 @@ public class TeamService : ITeamService
 
         if (existingTeam is null)
             throw new InvalidOperationException($"No existe un equipo con el nombre '{currentName}'.");
+
+        ValidateRankingIsNotUsedByAnotherTeam(request.FifaRanking, currentName);
 
         if (!currentName.Equals(request.Name, StringComparison.OrdinalIgnoreCase))
         {
@@ -86,6 +87,7 @@ public class TeamService : ITeamService
     public void Delete(string name)
     {
         var team = _repository.Get(name);
+
         if (team is null)
             throw new InvalidOperationException($"No existe un equipo con el nombre '{name}'.");
 
@@ -137,7 +139,12 @@ public class TeamService : ITeamService
 
             while (added < conf.limit && teamIndex <= missing)
             {
-                var team = new Team($"Team_{teamIndex}", new Confederation(conf.name), rankingBase + teamIndex);
+                var team = new Team(
+                    $"Team_{teamIndex}",
+                    new Confederation(conf.name),
+                    rankingBase + teamIndex
+                );
+
                 _repository.Add(team);
                 teamIndex++;
                 added++;
@@ -157,8 +164,29 @@ public class TeamService : ITeamService
             throw new ArgumentException("La confederación del equipo no puede estar vacía.");
     }
 
+    private void ValidateRankingIsNotUsed(int fifaRanking)
+    {
+        var rankingAlreadyExists = _repository.GetAll()
+            .Any(t => t.FifaRanking == fifaRanking);
+
+        if (rankingAlreadyExists)
+            throw new ArgumentException($"Ya existe un equipo con el ranking FIFA {fifaRanking}.");
+    }
+
+    private void ValidateRankingIsNotUsedByAnotherTeam(int fifaRanking, string currentName)
+    {
+        var rankingBelongsToAnotherTeam = _repository.GetAll()
+            .Any(t =>
+                t.FifaRanking == fifaRanking &&
+                !t.Name.Equals(currentName, StringComparison.OrdinalIgnoreCase));
+
+        if (rankingBelongsToAnotherTeam)
+            throw new ArgumentException($"Ya existe otro equipo con el ranking FIFA {fifaRanking}.");
+    }
+
     private int CountConfederation(string confederationName)
     {
-        return _repository.GetAll().Count(t => t.Confederation.Name == confederationName);
+        return _repository.GetAll()
+            .Count(t => t.Confederation.Name == confederationName);
     }
 }
