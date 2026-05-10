@@ -46,4 +46,19 @@ public class TeamImporterTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.AreEqual(0, result.Teams.Count);
     }
+    
+    [TestMethod]
+    public void Import_WithDuplicatedTeamName_ShouldReturnErrors()
+    {
+        string csv = """
+                     Nombre,Confederación,RankingFIFA
+                     Uruguay,CONMEBOL,1800
+                     Uruguay,CONMEBOL,1700
+                     """;
+        var importer = new TeamImporter();
+        ImportResult result = importer.Import(csv);
+        Assert.IsFalse(result.Success);
+        Assert.AreEqual(1, result.Errors.Count);
+        Assert.AreEqual(1, result.Teams.Count);
+    }
 }
