@@ -11,6 +11,9 @@ public class Cruce
         if(string.IsNullOrEmpty(nombre))
             throw new ArgumentException("El nombre del cruce no puede ser vacío o nulo", "nombre");
         
+        if( partido == null)
+            throw new ArgumentNullException("partido", "partido");
+        
         Nombre = nombre;
         Partido = partido;
         Fase = fase;

@@ -46,4 +46,11 @@ public class CrucesTests
         var partido = CreateBasicMatch();
         Assert.ThrowsException<ArgumentException>(() => new Cruce(null, partido, TournamentPhase.RoundOf16));
     }
+
+    [TestMethod]
+    public void Constructor_WithNullPartido_ThrowsException()
+    {
+        var partido = CreateBasicMatch();
+        Assert.ThrowsException<ArgumentNullException>((() => new Cruce("A1", null, TournamentPhase.RoundOf16)));
+    }
 }
