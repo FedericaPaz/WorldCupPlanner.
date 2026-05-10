@@ -158,4 +158,48 @@ public class CrucesTests
     
         Assert.ThrowsException<InvalidOperationException>(() => cruce1.DecideNextCruce(cruce2));
     }
+    
+    [TestMethod]
+    public void ObtainNextPhase_WhenPhaseIsRoundof32_ReturnRoundOf16()
+    {
+        var partido = CreateBasicMatch();
+        var cruce = new Cruce("A1", partido, TournamentPhase.RoundOf32);
+        var nextPhase = cruce.ObtainNextPhase();
+        Assert.AreEqual(TournamentPhase.RoundOf16, nextPhase);
+    }
+    
+    [TestMethod]
+    public void ObtainNextPhase_WhenPhaseIsRoundof16_ReturnQuarterFinals()
+    {
+        var partido = CreateBasicMatch();
+        var cruce = new Cruce("A1", partido, TournamentPhase.RoundOf16);
+        var nextPhase = cruce.ObtainNextPhase();
+        Assert.AreEqual(TournamentPhase.QuarterFinals, nextPhase);
+    }
+    
+    [TestMethod]
+    public void ObtainNextPhase_WhenPhaseIsQuarterFinals_ReturnSemiFinals()
+    {
+        var partido = CreateBasicMatch();
+        var cruce = new Cruce("A1", partido, TournamentPhase.QuarterFinals);
+        var nextPhase = cruce.ObtainNextPhase();
+        Assert.AreEqual(TournamentPhase.SemiFinals, nextPhase);
+    }
+    
+    [TestMethod]
+    public void ObtainNextPhase_WhenPhaseIsSemiFinals_ReturnFinal()
+    {
+        var partido = CreateBasicMatch();
+        var cruce = new Cruce("A1", partido, TournamentPhase.SemiFinals);
+        var nextPhase = cruce.ObtainNextPhase();
+        Assert.AreEqual(TournamentPhase.Final, nextPhase);
+    }
+
+    [TestMethod]
+    public void ObtainNextPhase_WhenPhaseUnexpected_ThrowsException()
+    {
+        var partido = CreateBasicMatch();
+        var cruce = new Cruce("A1", partido, TournamentPhase.GroupStage);
+        Assert.ThrowsException<InvalidOperationException>(()=> cruce.ObtainNextPhase());
+    }
 }

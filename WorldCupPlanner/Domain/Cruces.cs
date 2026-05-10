@@ -39,16 +39,16 @@ public class Cruce
         return nextPhase == ObtainNextPhase();
     }
 
-    private TournamentPhase ObtainNextPhase()
+    public TournamentPhase ObtainNextPhase()
     {
         return Phase switch
         {
             TournamentPhase.RoundOf32 => TournamentPhase.RoundOf16,
             TournamentPhase.RoundOf16 => TournamentPhase.QuarterFinals,
             TournamentPhase.QuarterFinals => TournamentPhase.SemiFinals,
-            TournamentPhase.SemiFinals => TournamentPhase.ThirdPlace,
-            TournamentPhase.ThirdPlace => throw new InvalidOperationException("El partido por el tercer puesto no tiene siguiente fase"),
+            TournamentPhase.SemiFinals => TournamentPhase.Final,
             TournamentPhase.Final => throw new InvalidOperationException("La final no tiene siguiente fase"),
+            TournamentPhase.ThirdPlace => throw new InvalidOperationException("El partido por el tercer puesto no tiene siguiente fase"),
             _ => throw new InvalidOperationException($"La fase {Phase} no tiene siguiente definida")
         };
     }
