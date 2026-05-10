@@ -13,6 +13,8 @@ public class ImportService : IImportService
 
     public ImportService(ITeamRepository teamRepository)
     {
+        if (teamRepository == null)
+            throw new ArgumentNullException(nameof(teamRepository));
         _teamRepository = teamRepository;
         _teamImporter = new TeamImporter();
     }

@@ -32,4 +32,10 @@ public class ImportServiceTests
         Assert.AreEqual(48, response.ImportedTeamsCount);
         Assert.AreEqual(48, teamRepository.GetAll().Count);
     }
+    
+    [TestMethod]
+    public void CreateImportService_WithNullRepository_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => new ImportService(null));
+    }
 }
