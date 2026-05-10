@@ -101,4 +101,13 @@ public class CrucesTests
         Assert.IsNull(winner);
     }
     
+    [TestMethod]
+    public void GetWinner_WhenMatchResultNotSet_ReturnsNull()
+    {
+        var match = CreateBasicMatch();
+        var cruce = new Cruce("A1", match, TournamentPhase.RoundOf16);
+        var winner = cruce.GetWinner();
+        Assert.IsNull(winner);
+    }
+    
 }
