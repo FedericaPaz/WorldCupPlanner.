@@ -87,4 +87,18 @@ public class CrucesTests
         var winner = cruce.GetWinner();
         Assert.AreEqual(_homeTeam, winner);
     }
+    
+    [TestMethod]
+    public void GetWinner_WhenMatchResultDraw_ReturnsNull()
+    {
+        _homeTeam = new Team("Test homeTeam", new Confederation("UEFA"), 301);
+        _awayTeam = new Team("Test awayTeam", new Confederation("UEFA"), 302);
+        _stadium = new Stadium("Test Stadium", "Ciudad","Desc",50000);
+        var match = CreateBasicMatch();
+        match.SetMatchResult(1, 1);
+        var cruce = new Cruce("A1", match, TournamentPhase.RoundOf16);
+        var winner = cruce.GetWinner();
+        Assert.IsNull(winner);
+    }
+    
 }
