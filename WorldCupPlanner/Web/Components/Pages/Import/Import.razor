@@ -1,0 +1,121 @@
+@page "/import"
+@using DTOs
+@using IServices
+@using Microsoft.AspNetCore.Components.Forms
+@inject IImportService ImportService
+
+<div class="import-page">
+    <div class="page-header">
+        <h2>Importar equipos</h2>
+        <p>Cargue un archivo CSV con 48 equipos.</p>
+    </div>
+
+    <div class="import-grid">
+        <div class="card upload-card">
+            <h3>Subir archivo</h3>
+
+            <label class="upload-box">
+                <InputFile OnChange="HandleFileSelected" accept=".csv" />
+                <div class="upload-icon">⬆</div>
+                <strong>Haga clic para seleccionar un archivo</strong>
+                <span>Formato soportado: CSV</span>
+
+                @if (!string.IsNullOrEmpty(_fileName))
+                {
+                    <p class="file-name">@_fileName</p>
+                }
+            </label>
+
+            <button class="btn-import"
+                    @onclick="ImportTeams"
+                    disabled="@string.IsNullOrWhiteSpace(_csvContent)">
+                Importar archivo
+            </button>
+        </div>
+
+        <div class="card info-card">
+            <h3>Formato del archivo</h3>
+
+            <div class="format-box">
+                <p><strong>Encabezados requeridos:</strong></p>
+                <code>Nombre,Confederación,RankingFIFA</code>
+
+                <p class="mt">
+                    El archivo debe contener exactamente 48 equipos.
+                </p>
+                
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(_successMessage))
+    {
+        <div class="message success">
+            @_successMessage
+        </div>
+    }
+
+    @if (_errors.Any())
+    {
+        <div class="message error">
+            <strong>Errores de importación</strong>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fila</th>
+                        <th>Error</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var error in _errors)
+                    {
+                        <tr>
+                            <td>@error.RowNumber</td>
+                            <td>@error.Message</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private string _csvContent = string.Empty;
+    private string _fileName = string.Empty;
+    private string _successMessage = string.Empty;
+    private List<ImportErrorResponse> _errors = new();
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        _fileName = file.Name;
+
+        using var stream = file.OpenReadStream();
+        using var reader = new StreamReader(stream);
+
+        _csvContent = await reader.ReadToEndAsync();
+
+        _successMessage = string.Empty;
+        _errors.Clear();
+    }
+
+    private void ImportTeams()
+    {
+        ImportResponse response = ImportService.ImportTeams(_csvContent);
+
+        _successMessage = string.Empty;
+        _errors.Clear();
+
+        if (response.Success)
+        {
+            _successMessage = $"Se importaron {response.ImportedTeamsCount} equipos correctamente.";
+        }
+        else
+        {
+            _errors = response.Errors;
+        }
+    }
+}

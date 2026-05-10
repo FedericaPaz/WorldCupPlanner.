@@ -32,6 +32,8 @@ builder.Services.AddSingleton<IDateTimeMatch, SystemDateTimeMatch>();
 builder.Services.AddSingleton<ILogRepository, LogRepository>();
 builder.Services.AddSingleton<ILogService, LogService>();
 
+builder.Services.AddScoped<IImportService, ImportService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
