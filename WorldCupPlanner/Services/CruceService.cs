@@ -48,6 +48,6 @@ public class CruceService : ICruceService
 
     public List<CruceResponse> GetAllCruces()
     {
-        throw new NotImplementedException();
+        return _repository.GetAllCruces().Select(CruceMapper.ToResponse).ToList();;
     }
 }

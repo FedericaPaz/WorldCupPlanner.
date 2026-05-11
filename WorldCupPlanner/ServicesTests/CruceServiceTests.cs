@@ -186,4 +186,12 @@ public class CruceServiceTests
         Assert.ThrowsException<InvalidOperationException>(() => _service.GenerateNextRound());
     }
     
+    [TestMethod]
+    public void GetAllCruces_WhenCrucesExist_ReturnsMappedResponses()
+    {
+        List<Cruce> cruces = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
+        _stubCrucesRepository.SetCruces(cruces);
+        var result = _service.GetAllCruces();
+        Assert.AreEqual(16, result.Count);
+    }
 }
