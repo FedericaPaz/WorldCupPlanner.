@@ -27,7 +27,7 @@ public class Fixture
 {
     public TournamentPhase CurrentPhase { get; private set; }
     private List<Group> _groups;
-    private List<Match> _eliminatoryMatches; //eliminatoria
+    private List<Match> _eliminatoryMatches = new List<Match>(); //eliminatoria
     private readonly TournamentConfig _config;
     
     public List<Group> GetGroups
