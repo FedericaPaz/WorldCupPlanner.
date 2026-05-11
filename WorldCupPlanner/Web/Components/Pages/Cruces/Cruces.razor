@@ -25,6 +25,13 @@
             <button class="error-cerrar" @onclick="() => _mensajeError = null">✖</button>
         </div>
     }
+    @if (_mensajeExito != null)
+    {
+        <div class="success-mensaje">
+            <span>✅ @_mensajeExito</span>
+            <button class="success-cerrar" @onclick="() => _mensajeExito = null">✖</button>
+        </div>
+    }
 
     @if (!_hayCruces)
     {
@@ -194,6 +201,7 @@
     private List<CruceResponse> _todosLosCruces = new();
     private bool _hayCruces = false;
     private string? _mensajeError = null;
+    private string? _mensajeExito = null;
     
     private List<CruceResponse> _ronda32avos => FiltrarPorFase(1);
     private List<CruceResponse> _octavos => FiltrarPorFase(2);
@@ -227,16 +235,21 @@
         }
     }
     
-    private void Generar32avos()
+    private bool _cargando = false;
+
+    private async Task Generar32avos()
     {
+        _cargando = true;
+        StateHasChanged();
         try
         {
             CruceService.GenerateRoundOf32();
-            CargarCruces();
+            _mensajeExito = "✨ 32avos de final generados correctamente";
         }
-        catch (Exception ex)
+        finally
         {
-            _mensajeError = ex.Message;
+            _cargando = false;
+            StateHasChanged();
         }
     }
     
