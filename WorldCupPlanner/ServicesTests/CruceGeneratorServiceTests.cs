@@ -148,4 +148,17 @@ public class CruceGeneratorServiceTests
         List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         Assert.ThrowsException<InvalidOperationException>(() => service.GenerateNextRound(cruces, CreateStadiums(), 123));
     }
+    
+    [TestMethod]
+    public void GenerateNextRound_FromRoundOf16_ShouldGenerateQuarterFinals()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces32 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        SimulateWinner(cruces32);
+        List<Cruce> cruces16 = service.GenerateNextRound(cruces32, CreateStadiums(), 123);
+        SimulateWinner(cruces16);
+        List<Cruce> cuartos = service.GenerateNextRound(cruces16, CreateStadiums(), 123);
+        Assert.AreEqual(TournamentPhase.QuarterFinals, cuartos[0].Phase);
+        Assert.AreEqual(4, cuartos.Count);
+    }
 }
