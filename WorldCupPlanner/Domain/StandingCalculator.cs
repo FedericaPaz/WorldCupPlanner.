@@ -47,8 +47,11 @@ public class StandingCalculator
         Standing homeStanding = FindStandingForTeam(standings, match.HomeTeam);
         Standing awayStanding = FindStandingForTeam(standings, match.AwayTeam);
 
-        homeStanding.AddMatchResult(match.HomeGoals.Value, match.AwayGoals.Value);
-        awayStanding.AddMatchResult(match.AwayGoals.Value, match.HomeGoals.Value);
+        int homeGoals = match.HomeGoals!.Value;
+        int awayGoals = match.AwayGoals!.Value;
+
+        homeStanding.AddMatchResult(homeGoals, awayGoals);
+        awayStanding.AddMatchResult(awayGoals, homeGoals);
     }
 
     private Standing FindStandingForTeam(List<Standing> standings, ITeam team)
