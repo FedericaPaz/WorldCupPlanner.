@@ -67,7 +67,7 @@
                                         <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
                                     </div>
                                     @if (!partido.HomeGoals.HasValue)
-                                        <div class="match-pending">Pendiente</div>
+                                        <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">...</div>
                                 </div>
                             }
                         </div>
@@ -93,7 +93,7 @@
                                     </div>
                                     @if (!partido.HomeGoals.HasValue)
                                     {
-                                        <div class="match-pending">Pendiente</div>
+                                        <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">...</div>
                                     }
                                 </div>
                             }
@@ -120,7 +120,7 @@
                                     </div>
                                     @if (!partido.HomeGoals.HasValue)
                                     {
-                                        <div class="match-pending">Pendiente</div>
+                                        <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">...</div>
                                     }
                                 </div>
                             }
@@ -147,7 +147,7 @@
                                     </div>
                                     @if (!partido.HomeGoals.HasValue)
                                     {
-                                        <div class="match-pending">Pendiente</div>
+                                        <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">...</div>
                                     }
                                 </div>
                             }
@@ -176,7 +176,7 @@
                                     </div>
                                     @if (!partido.HomeGoals.HasValue)
                                     {
-                                        <div class="match-pending">Pendiente</div>
+                                        <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">...</div>
                                     }
                                 </div>
                             }
