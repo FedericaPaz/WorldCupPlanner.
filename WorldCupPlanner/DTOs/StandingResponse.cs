@@ -2,7 +2,7 @@ namespace DTOs;
 
 public class StandingResponse
 {
-    public string TeamName { get; set; }
+    public string TeamName { get; set; } = string.Empty;
     public int Points { get; set; }
     public int GoalsFor { get; set; }
     public int GoalsAgainst { get; set; }
