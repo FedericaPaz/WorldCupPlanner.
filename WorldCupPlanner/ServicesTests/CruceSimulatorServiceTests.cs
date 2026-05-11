@@ -33,4 +33,17 @@ public class CruceSimulatorServiceTests
         Assert.IsTrue(home >= 0);
         Assert.IsTrue(away >= 0);
     }
+    
+    [TestMethod]
+    public void SimulateMatch_WithSameSeed_ShouldReturnSameResult()
+    {
+        Match.ResetIdCounter();
+        var match1 = BuildMatch("España", 1900, "Peru", 700);
+        Match.ResetIdCounter();
+        var match2 = BuildMatch("España", 1900, "Peru", 700);
+        var result1 = _service.SimulateMatch(match1, Seed);
+        var result2 = _service.SimulateMatch(match2, Seed);
+        Assert.AreEqual(result1.homeGoals, result2.homeGoals);
+        Assert.AreEqual(result1.awayGoals, result2.awayGoals);
+    }
 }
