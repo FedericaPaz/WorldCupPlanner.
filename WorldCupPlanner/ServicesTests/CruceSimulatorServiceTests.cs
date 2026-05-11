@@ -24,6 +24,32 @@ public class CruceSimulatorServiceTests
         return new Match(DateTime.Now, stadium, home, away, group, clock);
     }
     
+    private Group BuildGroupWithMatches()
+    {
+        var teams = new[]
+        {
+            new Team("TeamA", new Confederation("UEFA"),   1800),
+            new Team("TeamB", new Confederation("UEFA"),   1700),
+            new Team("TeamC", new Confederation("CONMEBOL"), 1600),
+            new Team("TeamD", new Confederation("CAF"),    1500),
+        };
+
+        var stadium = new Stadium("Est1", "Ciudad", "", 50000);
+        var clock   = new ClockStub(DateTime.Now.AddHours(2));
+        var group   = new Group('A');
+
+        foreach (var t in teams)
+            group.AddTeamToGroup(t);
+
+        var matchups = new[] { (0,3),(1,2),(0,2),(1,3),(0,1),(2,3) };
+        foreach (var (h, a) in matchups)
+        {
+            var m = new Match(DateTime.Now, stadium, teams[h], teams[a], 'A', clock);
+            group.AddMatchToGroup(m);
+        }
+        return group;
+    }
+    
     [TestMethod]
     public void SimulateMatch_GoalsShouldNotBeNegative()
     {
@@ -71,5 +97,15 @@ public class CruceSimulatorServiceTests
             Assert.IsTrue(home <= 7, $"Goles local {home} superan el máximo");
             Assert.IsTrue(away <= 7, $"Goles visitante {away} superan el máximo");
         }
+    }
+    
+    [TestMethod]
+    public void SimulateGroupStage_ShouldSetResultsForAllMatches()
+    {
+        Match.ResetIdCounter();
+        var group = BuildGroupWithMatches();
+        _service.SimulateGroupStage(new List<Group> { group }, Seed);
+        foreach (var match in group.MatchesInGroup)
+            Assert.IsTrue(match.HomeGoals.HasValue, $"El partido {match.IdMatch} no tiene resultado");
     }
 }
