@@ -31,7 +31,8 @@ public class AuthService : IAuthService
         return new LoginResponse 
         { 
             Name = $"{user.FirstName} {user.LastName}", 
-            Email = user.Email 
+            Email = user.Email,
+            Roles = UserRoleMapper.ToDto(user.Roles)
         };
     }
 
