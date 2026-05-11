@@ -48,8 +48,8 @@ public class CruceGeneratorService
     
     private List<Cruce> CrearCruces(List<Team> equipos, List<Stadium> estadios, int semilla, TournamentPhase fase)
     {
-        Random random = new Random(semilla);
-        equipos = equipos.OrderBy(x => random.Next()).ToList();
+        TournamentConfig config = new TournamentConfig();
+        equipos = config.Shuffle(equipos, semilla);
         List<Cruce> cruces = new List<Cruce>();
         int indiceEstadio = 0;
         for (int i = 0; i < equipos.Count; i += 2)
