@@ -6,7 +6,7 @@ namespace Services;
 public class CruceGeneratorService : ICruceGeneratorService
 {
     private readonly StandingCalculator _calculator;
-
+    private Dictionary<string, char> _equipoAGrupo = new();
     public CruceGeneratorService()
     {
         _calculator = new StandingCalculator();
