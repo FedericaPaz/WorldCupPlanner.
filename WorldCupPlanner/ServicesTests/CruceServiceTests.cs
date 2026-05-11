@@ -131,4 +131,12 @@ public class CruceServiceTests
         Assert.AreEqual(4, _stubCruceGenerator.LastStadiums.Count);
         Assert.AreEqual(123, _stubCruceGenerator.LastSeed);
     }
+    
+    [TestMethod]
+    public void GenerateRoundOf32_WhenNoFixtureExists_ThrowsException()
+    {
+        _stubFixtureRepository.AddFixture(null);
+        Assert.ThrowsException<ArgumentNullException>(() => _service.GenerateRoundOf32());
+    }
+    
 }
