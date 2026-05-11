@@ -59,4 +59,17 @@ public class CruceSimulatorServiceTests
         bool sonDistintos = result1.homeGoals != result2.homeGoals || result1.awayGoals != result2.awayGoals;
         Assert.IsTrue(sonDistintos);
     }
+    
+    [TestMethod]
+    public void SimulateMatch_GoalsShouldNotExceedMaximum()
+    {
+        for (int i = 0; i < 50; i++)
+        {
+            Match.ResetIdCounter();
+            var match = BuildMatch($"Team{i}A", 1000 + i, $"Team{i}B", 1000 + i + 1);
+            var (home, away) = _service.SimulateMatch(match, seed: i);
+            Assert.IsTrue(home <= 7, $"Goles local {home} superan el máximo");
+            Assert.IsTrue(away <= 7, $"Goles visitante {away} superan el máximo");
+        }
+    }
 }
