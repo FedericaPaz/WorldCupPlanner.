@@ -1,6 +1,7 @@
 ﻿using Domain;
 using IRepository;
 using DTOs.User;
+using Services.Mappers;
 
 namespace Services;
 
@@ -27,13 +28,14 @@ public class UserService
 
     public void CreateUser(UserRequestDto userDto)
     {
+        var roles = UserRoleMapper.ToDomain(userDto.Roles);
         var user = new User(
             userDto.FirstName,
             userDto.LastName,
             userDto.Email,
             userDto.BirthDate,
             userDto.Password,
-            userDto.Roles
+            roles
         );
 
         _userRepository.AddUser(user);
@@ -65,7 +67,7 @@ public class UserService
             LastName = user.LastName,
             Email = user.Email,
             BirthDate = user.BirthDate,
-            Roles = user.Roles
+            Roles = UserRoleMapper.ToDto(user.Roles)
         };
     }
     
@@ -85,7 +87,7 @@ public class UserService
         List<UserRole> roles)
     {
         ValidateEmailNotEmpty(email);
-        var existingUser = GetExistingUserOrThrow(email);
+        GetExistingUserOrThrow(email);
 
         var user = new User(firstName, lastName, email, birthDate, password, roles);
         _userRepository.UpdateUser(user);
