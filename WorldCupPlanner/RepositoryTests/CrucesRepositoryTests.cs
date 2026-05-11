@@ -64,4 +64,13 @@ public class CrucesRepositoryTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void HasCruces_WhenRepositoryHasCruces_ReturnsTrue()
+    {
+        List<Cruce> cruces = CreateCruces(2, TournamentPhase.RoundOf32);
+        _crucesRepository.AddCruces(cruces);
+        bool result = _crucesRepository.HasCruces();
+        Assert.IsTrue(result);
+    }
+    
 }
