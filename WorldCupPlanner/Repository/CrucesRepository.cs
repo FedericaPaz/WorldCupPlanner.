@@ -25,6 +25,6 @@ public class CrucesRepository : ICrucesRepository
 
     public void RemoveCruces()
     {
-        throw new NotImplementedException();
+        _cruces.Clear();
     }
 }

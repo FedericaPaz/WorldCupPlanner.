@@ -73,4 +73,14 @@ public class CrucesRepositoryTests
         Assert.IsTrue(result);
     }
     
+    [TestMethod]
+    public void RemoveCruces_WhenRepositoryHasCruces_RemovesAll()
+    {
+        List<Cruce> cruces = CreateCruces(4, TournamentPhase.QuarterFinals);
+        _crucesRepository.AddCruces(cruces);
+        _crucesRepository.RemoveCruces();
+        List<Cruce> result = _crucesRepository.GetAllCruces();
+        Assert.AreEqual(0, result.Count);
+    }
+    
 }
