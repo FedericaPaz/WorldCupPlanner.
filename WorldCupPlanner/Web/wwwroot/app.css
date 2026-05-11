@@ -300,3 +300,21 @@ LOGIN CSS
     margin-bottom: 1rem;
     text-align: left;
 }
+
+.role-options {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.role-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #374151;
+    font-weight: 600;
+}
+
+.role-option input {
+    accent-color: #16a34a;
+}

@@ -1,5 +1,6 @@
 ﻿@page "/register"
 @using DTOs
+@using DTOs.User
 @using IServices
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
@@ -43,6 +44,26 @@
                 <InputDate class="auth-input" @bind-Value="_request.BirthDate" />
             </div>
 
+            <div class="auth-field">
+                <label>Seleccione rol</label>
+
+                <div class="role-options">
+                    <label class="role-option">
+                        <input type="checkbox"
+                               checked="@_request.Roles.Contains(UserRoleDto.SystemAdministrator)"
+                               @onchange="ToggleSystemAdministratorRole" />
+                        Administrador
+                    </label>
+
+                    <label class="role-option">
+                        <input type="checkbox"
+                               checked="@_request.Roles.Contains(UserRoleDto.Editor)"
+                               @onchange="ToggleEditorRole" />
+                        Editor
+                    </label>
+                </div>
+            </div>
+
             <button type="submit" class="auth-button">CREAR CUENTA</button>
 
             <a href="/login" class="auth-link">Ya tengo cuenta</a>
@@ -64,6 +85,31 @@
         catch (Exception ex)
         {
             _errorMessage = ex.Message;
+        }
+    }
+
+    private void ToggleSystemAdministratorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.SystemAdministrator, args);
+    }
+
+    private void ToggleEditorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.Editor, args);
+    }
+
+    private void ToggleRole(UserRoleDto role, ChangeEventArgs args)
+    {
+        var isChecked = args.Value is bool value && value;
+
+        if (isChecked && !_request.Roles.Contains(role))
+        {
+            _request.Roles.Add(role);
+        }
+
+        if (!isChecked && _request.Roles.Contains(role))
+        {
+            _request.Roles.Remove(role);
         }
     }
 }

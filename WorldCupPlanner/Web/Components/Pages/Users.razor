@@ -4,6 +4,7 @@
 @using global::Services
 @using IServices
 @using Web.Services
+@using global::Services.Mappers
 
 @inject UserService UserService
 @inject ILogService LogService
@@ -136,14 +137,14 @@
                     <div class="roles-options">
                         <label class="role-option">
                             <input type="checkbox"
-                                   checked="@_userRequest.Roles.Contains(UserRole.SystemAdministrator)"
+                                   checked="@_userRequest.Roles.Contains(UserRoleDto.SystemAdministrator)"
                                    @onchange="ToggleSystemAdministratorRole" />
                             Administrador
                         </label>
 
                         <label class="role-option">
                             <input type="checkbox"
-                                   checked="@_userRequest.Roles.Contains(UserRole.Editor)"
+                                   checked="@_userRequest.Roles.Contains(UserRoleDto.Editor)"
                                    @onchange="ToggleEditorRole" />
                             Editor
                         </label>
@@ -193,7 +194,7 @@
         _userRequest = new UserRequestDto
         {
             BirthDate = DateTime.Today,
-            Roles = new List<UserRole>()
+            Roles = new List<UserRoleDto>()
         };
 
         _showCreateModal = true;
@@ -213,7 +214,7 @@
             Email = user.Email,
             BirthDate = user.BirthDate,
             Password = string.Empty,
-            Roles = new List<UserRole>(user.Roles)
+            Roles = UserRoleMapper.ToDto(user.Roles)
         };
 
         _showCreateModal = true;
@@ -242,7 +243,7 @@
                     _editingEmail,
                     _userRequest.BirthDate,
                     _userRequest.Password,
-                    _userRequest.Roles
+                    UserRoleMapper.ToDomain(_userRequest.Roles)
                 );
 
                 LogService.Register(
@@ -297,15 +298,15 @@
 
     private void ToggleSystemAdministratorRole(ChangeEventArgs args)
     {
-        ToggleRole(UserRole.SystemAdministrator, args);
+        ToggleRole(UserRoleDto.SystemAdministrator, args);
     }
 
     private void ToggleEditorRole(ChangeEventArgs args)
     {
-        ToggleRole(UserRole.Editor, args);
+        ToggleRole(UserRoleDto.Editor, args);
     }
 
-    private void ToggleRole(UserRole role, ChangeEventArgs args)
+    private void ToggleRole(UserRoleDto role, ChangeEventArgs args)
     {
         var isChecked = args.Value is bool value && value;
 
