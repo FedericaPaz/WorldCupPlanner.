@@ -140,4 +140,12 @@ public class CruceGeneratorServiceTests
         Assert.AreEqual(TournamentPhase.RoundOf16, cruces16[0].Phase);
         Assert.AreEqual(8, cruces16.Count);
     }
+    
+    [TestMethod]
+    public void GenerateNextRound_WithoutWinners_ShouldThrowException()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        Assert.ThrowsException<InvalidOperationException>(() => service.GenerateNextRound(cruces, CreateStadiums(), 123));
+    }
 }
