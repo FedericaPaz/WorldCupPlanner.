@@ -178,4 +178,12 @@ public class CruceServiceTests
         Assert.ThrowsException<ArgumentNullException>(() => _service.GenerateNextRound());
     }
     
+    [TestMethod]
+    public void GenerateNextRound_WhenCurrentPhaseIsFinal_ThrowsException()
+    {
+        List<Cruce> crucesFinal = CrearCrucesDummy(1, TournamentPhase.Final);
+        _stubCrucesRepository.SetCruces(crucesFinal);
+        Assert.ThrowsException<InvalidOperationException>(() => _service.GenerateNextRound());
+    }
+    
 }

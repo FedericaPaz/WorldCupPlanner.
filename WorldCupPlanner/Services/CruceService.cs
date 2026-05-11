@@ -39,6 +39,8 @@ public class CruceService : ICruceService
         if (actuales == null || actuales.Count == 0)
             throw new ArgumentNullException(nameof(actuales));
         TournamentPhase ultimaFase = actuales.Max(x => x.Phase);
+        if(ultimaFase == TournamentPhase.Final)
+            throw new InvalidOperationException("No se pueden generar cruces para la siguiente fase, ya se encuentra en la fase final.");
         List<Cruce> ultimaRonda = actuales.Where(x => x.Phase == ultimaFase).ToList();
         List<Cruce> nuevos = _generator.GenerateNextRound(ultimaRonda, _stadiumRepository.GetAllStadiums(), 123);
         _repository.AddCruces(nuevos);
