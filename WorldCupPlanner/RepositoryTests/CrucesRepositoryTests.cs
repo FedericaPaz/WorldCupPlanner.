@@ -56,4 +56,12 @@ public class CrucesRepositoryTests
         List<Cruce> result = _crucesRepository.GetAllCruces();
         Assert.AreEqual(5, result.Count);
     }
+    
+    [TestMethod]
+    public void HasCruces_WhenRepositoryIsEmpty_ReturnsFalse()
+    {
+        bool result = _crucesRepository.HasCruces();
+        Assert.IsFalse(result);
+    }
+    
 }

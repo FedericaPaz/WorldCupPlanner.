@@ -20,7 +20,7 @@ public class CrucesRepository : ICrucesRepository
 
     public bool HasCruces()
     {
-        throw new NotImplementedException();
+        return _cruces.Count > 0;
     }
 
     public void RemoveCruces()
