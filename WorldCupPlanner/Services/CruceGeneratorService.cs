@@ -89,4 +89,17 @@ public class CruceGeneratorService : ICruceGeneratorService
         }
         return ganadores;
     }
+    private void ValidateInputs(List<Group> grupos, List<Stadium> estadios)
+    {
+        if (grupos == null)
+            throw new ArgumentNullException(nameof(grupos), "La lista de grupos no puede ser nula.");
+        if (estadios == null)
+            throw new ArgumentNullException(nameof(estadios), "La lista de estadios no puede ser nula.");
+        if (grupos.Count == 0)
+            throw new ArgumentException("La lista de grupos no puede estar vacía.");
+        if (estadios.Count == 0)
+            throw new ArgumentException("Se requiere al menos un estadio para generar cruces.");
+        if (grupos.Count != 12)
+            throw new ArgumentException("El torneo requiere exactamente 12 grupos (A-L).");
+    }
 }

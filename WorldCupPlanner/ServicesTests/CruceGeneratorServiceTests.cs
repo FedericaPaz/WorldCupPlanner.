@@ -95,6 +95,14 @@ public class CruceGeneratorServiceTests
     }
     
     [TestMethod]
+    public void GenerateRoundOf32_WithEmptyStadiums_ShouldThrowException()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Group> grupos = Create12GroupsWithTeams();
+        Assert.ThrowsException<ArgumentException>(() => service.GenerateRoundOf32(grupos, new List<Stadium>(), 123));
+    } 
+    
+    [TestMethod]
     public void GenerateRoundOf32_ShouldUseQualifiedTeams()
     {
         CruceGeneratorService service = new CruceGeneratorService();
