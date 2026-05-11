@@ -176,4 +176,21 @@ public class CruceGeneratorServiceTests
         Assert.AreEqual(TournamentPhase.SemiFinals, semis[0].Phase);
         Assert.AreEqual(2, semis.Count);
     }
+    
+    [TestMethod]
+    public void GenerateNextRound_FromSemis_ShouldGenerateFinals()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces32 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        SimulateWinner(cruces32);
+        List<Cruce> cruces16 = service.GenerateNextRound(cruces32, CreateStadiums(), 123);
+        SimulateWinner(cruces16);
+        List<Cruce> cuartos = service.GenerateNextRound(cruces16, CreateStadiums(), 123);
+        SimulateWinner(cuartos);
+        List<Cruce> semis = service.GenerateNextRound(cuartos, CreateStadiums(), 123);
+        SimulateWinner(semis);
+        List<Cruce> finals = service.GenerateNextRound(semis, CreateStadiums(), 123);
+        Assert.AreEqual(TournamentPhase.Final, finals[0].Phase);
+        Assert.AreEqual(1, finals.Count);
+    }
 }
