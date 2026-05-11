@@ -55,7 +55,7 @@ public class StadiumService : IStadiumService
             throw new ArgumentException("Ciudad demasiado larga");
     }
     
-    private void EnsureValidDescription(string description)
+    private void EnsureValidDescription(string? description)
     {
         if (description != null && description.Length > MaxDescriptionLength)
             throw new ArgumentException("La descripción es demasiado larga");
