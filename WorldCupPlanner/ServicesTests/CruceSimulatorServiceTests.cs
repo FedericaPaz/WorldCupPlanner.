@@ -108,4 +108,16 @@ public class CruceSimulatorServiceTests
         foreach (var match in group.MatchesInGroup)
             Assert.IsTrue(match.HomeGoals.HasValue, $"El partido {match.IdMatch} no tiene resultado");
     }
+    
+    [TestMethod]
+    public void SimulateGroupStage_ShouldNotOverwriteResults()
+    {
+        Match.ResetIdCounter();
+        var group = BuildGroupWithMatches();
+        var primerPartido = group.MatchesInGroup[0];
+        primerPartido.SetMatchResult(3, 0);
+        _service.SimulateGroupStage(new List<Group> { group }, Seed);
+        Assert.AreEqual(3, primerPartido.HomeGoals);
+        Assert.AreEqual(0, primerPartido.AwayGoals);
+    }
 }
