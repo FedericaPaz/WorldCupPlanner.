@@ -1,7 +1,7 @@
 using Domain;
 using DTOs.User;
 
-namespace Services.TestHelpers;
+namespace ServicesTests.TestHelpers;
 
 public static class UserTestHelper
 {

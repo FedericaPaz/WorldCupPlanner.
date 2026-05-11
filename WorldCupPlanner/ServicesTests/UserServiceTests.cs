@@ -3,7 +3,7 @@ using Domain;
 using DTOs.User;
 using Repository;
 using Services;
-using Services.TestHelpers;
+using ServicesTests.TestHelpers;
 
 namespace ServicesTests;
 
