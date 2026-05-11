@@ -3,6 +3,7 @@ using Domain;
 using DTOs.User;
 using Repository;
 using Services;
+using Services.TestHelpers;
 
 namespace ServicesTests;
 
@@ -21,7 +22,8 @@ public class UserServiceTests
             "juan.perez@gmail.com",
             new DateTime(2000, 1, 1),
             "Password1!",
-            GetValidRoles());
+            UserTestHelper.GetValidRoles()
+        );
 
         var users = userService.GetAllUsers();
 
@@ -40,7 +42,7 @@ public class UserServiceTests
             "juan.perez@gmail.com",
             new DateTime(2000, 1, 1),
             "Password1!",
-            GetValidRoles());
+            UserTestHelper.GetValidRoles());
 
         Assert.ThrowsException<ArgumentException>(() =>
             userService.CreateUser(
@@ -49,7 +51,7 @@ public class UserServiceTests
                 "juan.perez@gmail.com",
                 new DateTime(1999, 5, 10),
                 "Password1!",
-                GetValidRoles()));
+                UserTestHelper.GetValidRoles()));
     }
 
     [TestMethod]
@@ -64,7 +66,7 @@ public class UserServiceTests
             "juan.perez@gmail.com",
             new DateTime(2000, 1, 1),
             "Password1!",
-            GetValidRoles());
+            UserTestHelper.GetValidRoles());
 
         userService.CreateUser(
             "Pedro",
@@ -72,7 +74,7 @@ public class UserServiceTests
             "pedro.gomez@gmail.com",
             new DateTime(1999, 5, 10),
             "Password1!",
-            GetValidRoles());
+            UserTestHelper.GetValidRoles());
 
         var result = userService.GetAllUsers();
 
@@ -102,7 +104,7 @@ public class UserServiceTests
             "juan.perez@gmail.com",
             new DateTime(2000, 1, 1),
             "Password1!",
-            GetValidRoles());
+            UserTestHelper.GetValidRoles());
 
         userService.DeleteUser("juan.perez@gmail.com");
 
@@ -133,7 +135,7 @@ public class UserServiceTests
             "juan.perez@gmail.com",
             new DateTime(2000, 1, 1),
             "Password1!",
-            GetValidRoles());
+            UserTestHelper.GetValidRoles());
 
         userService.UpdateUser(
             "Juan",
@@ -141,7 +143,7 @@ public class UserServiceTests
             "juan.perez@gmail.com",
             new DateTime(2000, 1, 1),
             "Password1!",
-            GetValidRoles());
+            UserTestHelper.GetValidRoles());
 
         var result = userService.GetUser("juan.perez@gmail.com");
 
@@ -162,7 +164,7 @@ public class UserServiceTests
                 "juan.perez@gmail.com",
                 new DateTime(2000, 1, 1),
                 "Password1!",
-                GetValidRoles()));
+                UserTestHelper.GetValidRoles()));
     }
     
     [TestMethod]
@@ -178,7 +180,7 @@ public class UserServiceTests
                 "",
                 new DateTime(2000, 1, 1),
                 "Password1!",
-                GetValidRoles()));
+                UserTestHelper.GetValidRoles()));
     }
     
     [TestMethod]
@@ -211,7 +213,7 @@ public class UserServiceTests
             "juan.perez@gmail.com",
             new DateTime(2000, 1, 1),
             "Password1!",
-            GetValidRoles());
+            UserTestHelper.GetValidRoles());
 
         var result = userService.GetUser("juan.perez@gmail.com");
 
@@ -234,7 +236,7 @@ public class UserServiceTests
             Email = "juan.perez@gmail.com",
             BirthDate = new DateTime(2000, 1, 1),
             Password = "Password1!",
-            Roles = GetValidRoles()
+            Roles = UserTestHelper.GetValidRolesDto()
         };
 
         userService.CreateUser(userDto);
@@ -259,7 +261,7 @@ public class UserServiceTests
             "juan.perez@gmail.com",
             new DateTime(2000, 1, 1),
             "Password1!",
-            GetValidRoles());
+            UserTestHelper.GetValidRoles());
 
         var result = userService.GetUserDto("juan.perez@gmail.com");
 
@@ -283,10 +285,10 @@ public class UserServiceTests
             Email = "juan.perez@gmail.com",
             BirthDate = new DateTime(2000, 1, 1),
             Password = "Password1!",
-            Roles = new List<UserRole>
+            Roles = new List<UserRoleDto>
             {
-                UserRole.SystemAdministrator,
-                UserRole.Editor
+                UserRoleDto.SystemAdministrator,
+                UserRoleDto.Editor
             }
         };
 
@@ -312,7 +314,7 @@ public class UserServiceTests
             "juan.perez@gmail.com",
             new DateTime(2000, 1, 1),
             "Password1!",
-            GetValidRoles()
+            UserTestHelper.GetValidRoles()
         );
 
         var roles = new List<UserRole>
@@ -344,10 +346,10 @@ public class UserServiceTests
         var userRepository = new UserRepository();
         var userService = new UserService(userRepository);
 
-        var roles = new List<UserRole>
+        var roles = new List<UserRoleDto>
         {
-            UserRole.SystemAdministrator,
-            UserRole.Editor
+            UserRoleDto.SystemAdministrator,
+            UserRoleDto.Editor
         };
 
         var userDto = new UserRequestDto
@@ -366,12 +368,7 @@ public class UserServiceTests
 
         Assert.IsNotNull(result);
         Assert.AreEqual(2, result.Roles.Count);
-        CollectionAssert.Contains(result.Roles, UserRole.SystemAdministrator);
-        CollectionAssert.Contains(result.Roles, UserRole.Editor);
-    }
-
-    private static List<UserRole> GetValidRoles()
-    {
-        return new List<UserRole> { UserRole.SystemAdministrator };
+        CollectionAssert.Contains(result.Roles, UserRoleDto.SystemAdministrator);
+        CollectionAssert.Contains(result.Roles, UserRoleDto.Editor);
     }
 }
