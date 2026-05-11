@@ -54,7 +54,10 @@
 
             <div class="team-form-section">
                 <label>Ranking FIFA</label>
-                <InputNumber class="team-form-control" @bind-Value="_request.FifaRanking" />
+                <InputNumber class="team-form-control"
+                             @bind-Value="_request.FifaRanking"
+                             DisplayName="Ranking FIFA"
+                             ParsingErrorMessage="El campo {0} debe ser un número." />
             </div>
 
             <div class="team-form-actions">
