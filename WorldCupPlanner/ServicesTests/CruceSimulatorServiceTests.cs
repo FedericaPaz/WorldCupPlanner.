@@ -50,6 +50,16 @@ public class CruceSimulatorServiceTests
         return group;
     }
     
+    private Cruce BuildCruce(string nombre)
+    {
+        var home    = new Team("Alemania",  new Confederation("UEFA"),     2000);
+        var away    = new Team("Australia", new Confederation("AFC"),       400);
+        var stadium = new Stadium("Test Stadium2", "Ciudad", "", 50000);
+        var clock   = new ClockStub(DateTime.Now.AddHours(2));
+        var match   = new Match(DateTime.Now, stadium, home, away, 'A', clock);
+        return new Cruce(nombre, match, TournamentPhase.RoundOf32);
+    }
+    
     [TestMethod]
     public void SimulateMatch_GoalsShouldNotBeNegative()
     {
@@ -119,5 +129,14 @@ public class CruceSimulatorServiceTests
         _service.SimulateGroupStage(new List<Group> { group }, Seed);
         Assert.AreEqual(3, primerPartido.HomeGoals);
         Assert.AreEqual(0, primerPartido.AwayGoals);
+    }
+    
+    [TestMethod]
+    public void SimulateCruces_ShouldSetWinnerInCruce()
+    {
+        Match.ResetIdCounter();
+        var cruce = BuildCruce("A1");
+        _service.SimulateCruces(new List<Cruce> { cruce }, Seed);
+        Assert.IsNotNull(cruce.GetWinner());
     }
 }
