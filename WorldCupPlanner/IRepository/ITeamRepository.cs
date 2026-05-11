@@ -1,7 +1,5 @@
 using Domain;
 
-using Domain;
-
 namespace IRepository;
 
 public interface ITeamRepository
