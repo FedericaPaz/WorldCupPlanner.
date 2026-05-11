@@ -93,4 +93,14 @@ public class CrucesRepositoryTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void AddCruces_WhenCalledTwice_AddsAllCruces()
+    {
+        List<Cruce> cruces1 = CreateCruces(2, TournamentPhase.RoundOf32);
+        List<Cruce> cruces2 = CreateCruces(3, TournamentPhase.RoundOf16);
+        _crucesRepository.AddCruces(cruces1);
+        _crucesRepository.AddCruces(cruces2);
+        List<Cruce> result = _crucesRepository.GetAllCruces();
+        Assert.AreEqual(5, result.Count);
+    }
 }
