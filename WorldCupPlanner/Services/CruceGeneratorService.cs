@@ -14,69 +14,181 @@ public class CruceGeneratorService : ICruceGeneratorService
     
     public List<Cruce> GenerateRoundOf32(List<Group> grupos, List<Stadium> estadios, int semilla)
     {
-        if (grupos == null) throw new ArgumentNullException(nameof(grupos));
-        if (grupos.Count == 0)
-            throw new ArgumentException("La lista de grupos no puede estar vacía.");
-            
-        List<Team> clasificados = ObtenerClasificados(grupos);
-        return CrearCruces(clasificados, estadios, semilla, TournamentPhase.RoundOf32);
-    }
-    
-    private List<Team> ObtenerClasificados(List<Group> grupos)
-    {
-        List<Team> clasificados = new List<Team>();
-        List<Standing> terceros = new List<Standing>();
-        foreach (Group grupo in grupos)
+        ValidateInputs(grupos, estadios);
+        _equipoAGrupo.Clear();
+        foreach (var grupo in grupos)
         {
-            List<Standing> standings = _calculator.CalculateStandings(grupo);
-            clasificados.Add(standings[0].TeamInGroup);
-            clasificados.Add(standings[1].TeamInGroup);
-            terceros.Add(standings[2]);
+            foreach (var team in grupo.TeamsInGroup)
+                _equipoAGrupo[team.Name] = grupo.GroupLetter;
         }
-
-        List<Team> mejoresTerceros =
-            terceros
-                .OrderByDescending(x => x.PointsInGroup)
-                .ThenByDescending(x => x.GoalDifference)
-                .ThenByDescending(x => x.GoalsFor)
-                .Take(8)
-                .Select(x => x.TeamInGroup)
-                .ToList();
-
-        clasificados.AddRange(mejoresTerceros);
-        return clasificados;
-    }
-    
-    private List<Cruce> CrearCruces(List<Team> equipos, List<Stadium> estadios, int semilla, TournamentPhase fase)
-    {
-        TournamentConfig config = new TournamentConfig();
-        equipos = config.Shuffle(equipos, semilla);
-        List<Cruce> cruces = new List<Cruce>();
+        
+        var (primeros, segundos, mejoresTerceros) = ObtenerClasificadosPorCategoria(grupos);
+        var cruces = new List<Cruce>();
         int indiceEstadio = 0;
-        for (int i = 0; i < equipos.Count; i += 2)
+        
+        //A1-A8: 8 primeros vs 8 mejores terceros
+        cruces.AddRange(EmparejaryCrearCruces(
+            primeros.Take(8).ToList(),         
+            mejoresTerceros, estadios, semilla, "A", ref indiceEstadio));
+        
+        // B1-B4: 4 primeros restantes vs 4 segundos con menor puntaje
+        cruces.AddRange(EmparejaryCrearCruces(
+            primeros.Skip(8).Take(4).ToList(), 
+            segundos.TakeLast(4).Reverse().ToList(), 
+            estadios, semilla + 1, "B", ref indiceEstadio));
+        
+        // B5-B8: 8 segundos entre sí
+        var segundosRestantes = segundos.Count > 4 ? segundos.Take(segundos.Count - 4).ToList() : new List<Team>();
+        if (segundosRestantes.Count >= 2)
         {
-            Team local = equipos[i];
-            Team visitante = equipos[i + 1];
-            Stadium estadio = estadios[indiceEstadio];
-            DateTime fechaPartido = DateTime.Now.AddHours(-2);
-            DateTime fechaActual  =  DateTime.Now;
-            Match partido = new Match(fechaPartido, estadio, local, visitante, 'A', new ClockStub(fechaActual));
-            Cruce cruce = new Cruce($"C{(i / 2) + 1}", partido, fase);
-            cruces.Add(cruce);
-            indiceEstadio++;
-            if (indiceEstadio >= estadios.Count)
-                indiceEstadio = 0;
+            cruces.AddRange(EmparejaryCrearCruces(
+                segundosRestantes.Take(segundosRestantes.Count / 2).ToList(),
+                segundosRestantes.Skip(segundosRestantes.Count / 2).ToList(),
+                estadios, semilla + 2, "B", ref indiceEstadio, empezarEn: 5
+            ));
         }
         return cruces;
     }
 
+    private (List<Team> primeros, List<Team> segundos, List<Team> mejoresTerceros) ObtenerClasificadosPorCategoria(List<Group> grupos)
+    {
+        var primerosPorGrupo = new List<Standing>();
+        var segundosPorGrupo = new List<Standing>();
+        var tercerosPorGrupo = new List<Standing>();
+        
+        foreach (var grupo in grupos)
+        {
+            var standings = _calculator.CalculateStandings(grupo);
+            if (standings.Count >= 3)
+            {
+                primerosPorGrupo.Add(standings[0]);
+                segundosPorGrupo.Add(standings[1]);
+                tercerosPorGrupo.Add(standings[2]);
+            }
+        }
+        
+        var primeros = primerosPorGrupo
+            .OrderByDescending(s => s.PointsInGroup)
+            .ThenByDescending(s => s.GoalDifference)
+            .ThenByDescending(s => s.GoalsFor)
+            .Select(s => s.TeamInGroup)
+            .ToList();
+        
+        var segundos = segundosPorGrupo
+            .OrderByDescending(s => s.PointsInGroup)
+            .ThenByDescending(s => s.GoalDifference)
+            .ThenByDescending(s => s.GoalsFor)
+            .Select(s => s.TeamInGroup)
+            .ToList();
+        
+        var mejoresTerceros = tercerosPorGrupo
+            .OrderByDescending(s => s.PointsInGroup)
+            .ThenByDescending(s => s.GoalDifference)
+            .ThenByDescending(s => s.GoalsFor)
+            .Take(8)
+            .Select(s => s.TeamInGroup)
+            .ToList();
+        
+        return (primeros, segundos, mejoresTerceros);
+    }
+    
     public List<Cruce> GenerateNextRound(List<Cruce> crucesAnteriores, List<Stadium> estadios, int semilla)
     {
-        List<Team> ganadores = ObtainWinners(crucesAnteriores);
-        TournamentPhase siguienteFase = crucesAnteriores[0].ObtainNextPhase();
-        return CrearCruces(ganadores, estadios, semilla, siguienteFase);
+        if (crucesAnteriores == null || crucesAnteriores.Count == 0)
+            throw new ArgumentException("Se requieren cruces anteriores para generar la siguiente ronda.");
+        var ganadores = ObtainWinners(crucesAnteriores);
+        var siguienteFase = crucesAnteriores[0].ObtainNextPhase();
+        return CrearCrucesProximaFase(ganadores, estadios, semilla, siguienteFase);
     }
-
+    
+    
+    private List<Cruce> EmparejaryCrearCruces(List<Team> lista1, List<Team> lista2,
+        List<Stadium> estadios, int semilla, string prefijoCruce, ref int indiceEstadioActual, int empezarEn = 1)
+    {
+        var config = new TournamentConfig();
+        var lista1Barajada = config.Shuffle(lista1, semilla);
+        var lista2Barajada = config.Shuffle(lista2, semilla ^ 0xFFFF);
+        var disponibles = new List<Team>(lista2Barajada);
+        var cruces = new List<Cruce>();
+        int numeroCruce = empezarEn;
+        foreach (var equipo1 in lista1Barajada)
+        {
+            Team? emparejado = null;
+            int indiceEmparejado = -1;
+            for (int i = 0; i < disponibles.Count; i++)
+            {
+                if (!SonDelMismoGrupo(equipo1, disponibles[i])) 
+                {
+                    emparejado = disponibles[i];
+                    indiceEmparejado = i;
+                    break;
+                }
+            }
+            if (emparejado != null)
+            {
+                var partido = CrearPartido(equipo1, emparejado, estadios[indiceEstadioActual % estadios.Count]);
+                var nombreCruce = $"{prefijoCruce}{numeroCruce}";
+                cruces.Add(new Cruce(nombreCruce, partido, TournamentPhase.RoundOf32));
+                disponibles.RemoveAt(indiceEmparejado);
+                indiceEstadioActual++;
+                numeroCruce++;
+            }
+        }
+        return cruces;
+    }
+    private bool SonDelMismoGrupo(Team equipo1, Team equipo2)
+    {
+        if (!_equipoAGrupo.TryGetValue(equipo1.Name, out var grupo1))
+            return false;
+        if (!_equipoAGrupo.TryGetValue(equipo2.Name, out var grupo2))
+            return false;
+        return grupo1 == grupo2;
+    }
+    private Match CrearPartido(Team local, Team visitante, Stadium estadio)
+    {
+        var fechaPartido = DateTime.Now.AddHours(-2);
+        var fechaActual = DateTime.Now;
+        return new Match(
+            fechaPartido,          
+            estadio,               
+            local,                 
+            visitante,             
+            'A',                
+            new ClockStub(fechaActual) 
+        );
+    }
+    private List<Cruce> CrearCrucesProximaFase(List<Team> ganadores, List<Stadium> estadios, int semilla, TournamentPhase fase)
+    {
+        if (ganadores.Count < 2)
+            throw new ArgumentException("Se requieren al menos 2 ganadores para crear cruces.");
+        var config = new TournamentConfig();
+        var ganadoresBarajados = config.Shuffle(ganadores, semilla);
+        var cruces = new List<Cruce>();
+        int indiceEstadio = 0;
+        int numeroCruce = 1;
+        string prefijo = fase switch
+        {
+            TournamentPhase.RoundOf16 => "C",      
+            TournamentPhase.QuarterFinals => "D",   
+            TournamentPhase.SemiFinals => "S",      
+            TournamentPhase.Final => "F",            
+            TournamentPhase.ThirdPlace => "TP",    
+            _ => "X"
+        };
+        
+        for (int i = 0; i < ganadoresBarajados.Count; i += 2)
+        {
+            if (i + 1 < ganadoresBarajados.Count)
+            {
+                var partido = CrearPartido(ganadoresBarajados[i], ganadoresBarajados[i + 1], estadios[indiceEstadio % estadios.Count]);
+                var nombreCruce = $"{prefijo}{numeroCruce}";
+                cruces.Add(new Cruce(nombreCruce, partido, fase));
+                indiceEstadio++;
+                numeroCruce++;
+            }
+        }
+        return cruces;
+    }
     private List<Team> ObtainWinners(List<Cruce> cruces)
     {
         List<Team> ganadores = new List<Team>();

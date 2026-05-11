@@ -113,6 +113,15 @@ public class CruceGeneratorServiceTests
     }
     
     [TestMethod]
+    public void GenerateRoundOf32_WithLessThan12Groups_ShouldThrowException()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Group> grupos = Create12GroupsWithTeams().Take(6).ToList();
+        List<Stadium> estadios = CreateStadiums();
+        Assert.ThrowsException<ArgumentException>(() => service.GenerateRoundOf32(grupos, estadios, 123));
+    }
+    
+    [TestMethod]
     public void GenerateRoundOf32_ShouldGenerateRoundOf32Phase()
     {
         CruceGeneratorService service = new CruceGeneratorService();
@@ -136,6 +145,25 @@ public class CruceGeneratorServiceTests
         List<Cruce> cruces1 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         List<Cruce> cruces2 =service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         Assert.AreEqual(cruces1[0].Partido.HomeTeam.Name, cruces2[0].Partido.HomeTeam.Name);
+    }
+    
+    [TestMethod]
+    public void GenerateRoundOf32_WithDifferentSeed_ShouldGenerateDifferentOrder()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces1 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        List<Cruce> cruces2 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 456);
+        
+        bool isDifferent = false;
+        for (int i = 0; i < cruces1.Count; i++)
+        {
+            if (cruces1[i].Partido.HomeTeam.Name != cruces2[i].Partido.HomeTeam.Name || cruces1[i].Partido.AwayTeam.Name != cruces2[i].Partido.AwayTeam.Name)
+            {
+                isDifferent = true;
+                break;
+            }
+        }
+        Assert.IsTrue(isDifferent, "Con semillas diferentes debería haber emparejamientos diferentes");
     }
     
     [TestMethod]
@@ -202,5 +230,101 @@ public class CruceGeneratorServiceTests
         Assert.AreEqual(1, finals.Count);
     }
     
+    [TestMethod]
+    public void GenerateRoundOf32_ShouldHaveGroupA_WithNames_A1_to_A8()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        var crucesA = cruces.Where(c => c.Nombre.StartsWith("A")).ToList();
+        Assert.AreEqual(8, crucesA.Count, "Debe haber 8 cruces del grupo A");
+        for (int i = 0; i < 8; i++)
+            Assert.AreEqual($"A{i + 1}", crucesA[i].Nombre);
+    }
+
+    [TestMethod]
+    public void GenerateRoundOf32_ShouldHaveCorrectStructure_A_8_B_4_B_4()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        var crucesA = cruces.Count(c => c.Nombre.StartsWith("A"));
+        var crucesB = cruces.Count(c => c.Nombre.StartsWith("B"));
+        Assert.AreEqual(8, crucesA, "8 cruces tipo A");
+        Assert.AreEqual(8, crucesB, "8 cruces tipo B ");
+    }
+
+    [TestMethod]
+    public void GenerateRoundOf32_NoDuplicateTeams()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        var todosEquipos = new HashSet<string>();
+        foreach (var cruce in cruces)
+        {
+            var home = cruce.Partido.HomeTeam.Name;
+            var away = cruce.Partido.AwayTeam.Name;
+            Assert.IsFalse(todosEquipos.Contains(home), $"Equipo {home} aparece múltiples veces");
+            Assert.IsFalse(todosEquipos.Contains(away), $"Equipo {away} aparece múltiples veces");
+            todosEquipos.Add(home);
+            todosEquipos.Add(away);
+        }
+        Assert.AreEqual(32, todosEquipos.Count, "Deben haber exactamente 32 equipos únicos");
+    }
     
+    [TestMethod]
+    public void GenerateRoundOf32_AllTeamsFromGroups_Simple()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Group> grupos = Create12GroupsWithTeams();
+        List<Stadium> estadios = CreateStadiums();
+        List<Cruce> cruces = service.GenerateRoundOf32(grupos, estadios, 123);
+        if (cruces.Count != 16)
+        {
+            Assert.Fail($"Error: Se generaron {cruces.Count} partidos, pero deberían ser 16");
+        }
+        bool todosLosEquiposValidos = true;
+        string mensajeError = "";
+        foreach (Cruce cruce in cruces)
+        {
+            string local = cruce.Partido.HomeTeam.Name;
+            string visitante = cruce.Partido.AwayTeam.Name;
+            bool localEncontrado = false;
+            bool visitanteEncontrado = false;
+            foreach (Group grupo in grupos)
+            {
+                foreach (Team equipo in grupo.TeamsInGroup)
+                {
+                    if (equipo.Name == local)
+                        localEncontrado = true;
+                    if (equipo.Name == visitante)
+                        visitanteEncontrado = true;
+                }
+            }
+            if (!localEncontrado)
+            {
+                todosLosEquiposValidos = false;
+                mensajeError = mensajeError + $"Equipo '{local}' no está en ningún grupo. ";
+            }
+            if (!visitanteEncontrado)
+            {
+                todosLosEquiposValidos = false;
+                mensajeError = mensajeError + $"Equipo '{visitante}' no está en ningún grupo. ";
+            }
+        }
+        Assert.IsTrue(todosLosEquiposValidos, mensajeError);
+    }
+    
+    [TestMethod]
+    public void GenerateRoundOf32_AllCrucesHaveValidMatch()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        foreach (var cruce in cruces)
+        {
+            Assert.IsNotNull(cruce.Partido, "El partido no puede ser nulo");
+            Assert.IsNotNull(cruce.Partido.HomeTeam, "El equipo local no puede ser nulo");
+            Assert.IsNotNull(cruce.Partido.AwayTeam, "El equipo visitante no puede ser nulo");
+            Assert.IsNotNull(cruce.Partido.Stadium, "El estadio no puede ser nulo");
+            Assert.AreNotEqual(cruce.Partido.HomeTeam.Name, cruce.Partido.AwayTeam.Name, "No pueden jugar contra sí mismos");
+        }
+    }
 }
