@@ -3,11 +3,12 @@ using Domain;
 
 namespace Services.Mappers;
 
-public class UserMapper
+public static class UserMapper
 {
-    public static User ToEntity(RegisterRequest dto)
+    public static User ToEntity(RegisterRequest request)
     {
-        return new User(dto.FirstName, dto.LastName, dto.Email, dto.BirthDate, dto.Password, UserRoleMapper.ToDomain(dto.Roles)
+        var roles = UserRoleMapper.ToDomain(request.Roles);
+        return new User(request.FirstName, request.LastName, request.Email, request.BirthDate, request.Password, roles
         );
     }
 }
