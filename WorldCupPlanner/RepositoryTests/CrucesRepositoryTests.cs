@@ -48,4 +48,12 @@ public class CrucesRepositoryTests
         Assert.AreEqual(0, result.Count);
     }
     
+    [TestMethod]
+    public void GetAllCruces_WhenCrucesExist_ReturnsAllCruces()
+    {
+        List<Cruce> cruces = CreateCruces(5, TournamentPhase.RoundOf16);
+        _crucesRepository.AddCruces(cruces);
+        List<Cruce> result = _crucesRepository.GetAllCruces();
+        Assert.AreEqual(5, result.Count);
+    }
 }
