@@ -97,4 +97,14 @@ public class CruceGeneratorServiceTests
         Assert.IsTrue(grupos.SelectMany(g => g.TeamsInGroup)
             .Any(t => t.Name == cruces[0].Partido.HomeTeam.Name));
     }
+    
+    [TestMethod]
+    public void GenerateRoundOf32_ShouldGenerateRoundOf32Phase()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        Assert.AreEqual(TournamentPhase.RoundOf32, cruces[0].Phase);
+    }
+    
+    
 }
