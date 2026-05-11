@@ -10,14 +10,14 @@ public class Match
 
     private int _idMatch;
     private DateTime _dateMatch;
-    private IStadium _stadium;
-    private ITeam _homeTeam;
-    private ITeam _awayTeam;
+    private IStadium _stadium = null!;
+    private ITeam _homeTeam = null!;
+    private ITeam _awayTeam = null!;
     private char _group;
     private int? _homeGoals;
     private int? _awayGoals;
     private ITeam? _winnerMatch;
-    private IDateTimeMatch _clock;
+    private IDateTimeMatch _clock = null!;
 
     public int IdMatch => _idMatch;
 
