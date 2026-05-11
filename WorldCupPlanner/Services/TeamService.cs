@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using Domain;
+﻿using Domain;
 using DTOs;
 using IRepository;
 using IServices;
@@ -19,26 +18,30 @@ public class TeamService : ITeamService
     public void Add(TeamDTO request)
     {
         ValidateRequest(request);
+
         var existingTeam = _repository.Get(request.Name);
         if (existingTeam != null)
-            throw new ArgumentException($"Team with the name '{request.Name}' already exists.");
+            throw new ArgumentException($"Ya existe un equipo con el nombre '{request.Name}'.");
+
+        ValidateRankingIsNotUsed(request.FifaRanking);
 
         var confederationName = request.ConfederationName;
         var normalizedConf = confederationName.Trim().ToUpperInvariant();
         var maxTeams = Confederation.GetMaxTeamsForName(normalizedConf);
 
         if (maxTeams == 0)
-            throw new ArgumentException($"Invalid confederation name: {confederationName}");
+            throw new ArgumentException($"La confederación '{confederationName}' no es válida.");
 
-        var currentCount = _repository.GetAll().Count(t => t.Confederation.Name == normalizedConf);
+        var currentCount = _repository.GetAll()
+            .Count(t => t.Confederation.Name == normalizedConf);
 
         if (currentCount >= maxTeams)
-            throw new InvalidOperationException($"The confederation '{confederationName}' has reached its limit of {maxTeams} teams.");
+            throw new InvalidOperationException($"La confederación '{confederationName}' alcanzó su límite de {maxTeams} equipos.");
 
         var team = request.ToEntity();
         _repository.Add(team);
     }
-    
+
     public TeamDTO? Get(string name)
     {
         var team = _repository.Get(name);
@@ -47,46 +50,69 @@ public class TeamService : ITeamService
 
     public List<TeamDTO> GetAll()
     {
-        return _repository.GetAll().Select(t => t.FromEntity()).ToList();
+        return _repository.GetAll()
+            .Select(t => t.FromEntity())
+            .ToList();
     }
-    
+
+    public void Update(string currentName, TeamDTO request)
+    {
+        if (string.IsNullOrWhiteSpace(currentName))
+            throw new ArgumentException("El nombre actual del equipo no puede estar vacío.");
+
+        ValidateRequest(request);
+
+        var existingTeam = _repository.Get(currentName);
+
+        if (existingTeam is null)
+            throw new InvalidOperationException($"No existe un equipo con el nombre '{currentName}'.");
+
+        ValidateRankingIsNotUsedByAnotherTeam(request.FifaRanking, currentName);
+
+        if (!currentName.Equals(request.Name, StringComparison.OrdinalIgnoreCase))
+        {
+            var teamWithNewName = _repository.Get(request.Name);
+
+            if (teamWithNewName is not null)
+                throw new ArgumentException($"Ya existe un equipo con el nombre '{request.Name}'.");
+
+            _repository.Delete(existingTeam);
+            _repository.Add(request.ToEntity());
+            return;
+        }
+
+        _repository.Update(request.ToEntity());
+    }
+
     public void Delete(string name)
     {
         var team = _repository.Get(name);
+
         if (team is null)
-            throw new InvalidOperationException($"Team with the name '{name}' does not exist.");
-            
+            throw new InvalidOperationException($"No existe un equipo con el nombre '{name}'.");
+
         _repository.Delete(team);
     }
-    
-    private static void ValidateRequest(TeamDTO request)
-    {
-        if (request is null)
-            throw new ArgumentNullException(nameof(request));
 
-        if (string.IsNullOrWhiteSpace(request.Name))
-            throw new ArgumentException("Name cannot be empty");
-
-        if (string.IsNullOrWhiteSpace(request.ConfederationName))
-            throw new ArgumentNullException(nameof(request.ConfederationName));
-    }
-    
     public List<ConfederationDTO> GetAllConfederations()
     {
-        List<ConfederationDTO> result = new List<ConfederationDTO>();
+        List<ConfederationDTO> result = new();
+
         foreach (string name in Confederation.GetAllowedNames())
         {
-            result.Add(new ConfederationDTO {
+            result.Add(new ConfederationDTO
+            {
                 Name = name,
                 MaxTeams = Confederation.GetMaxTeamsForName(name)
             });
         }
+
         return result;
     }
 
     public void GenerateMissingTeams()
     {
-        int missing = 48 - (_repository.GetAll().Count());
+        int missing = 48 - _repository.GetAll().Count;
         int uefa = 16 - CountConfederation("UEFA");
         int concacaf = 7 - CountConfederation("CONCACAF");
         int conmebol = 7 - CountConfederation("CONMEBOL");
@@ -96,32 +122,71 @@ public class TeamService : ITeamService
 
         var confederations = new List<(string name, int limit)>
         {
-            ("UEFA", uefa), ("CONMEBOL", conmebol), ("CONCACAF", concacaf), ("CAF", caf), ("AFC", afc), ("OFC", ofc)
+            ("UEFA", uefa),
+            ("CONMEBOL", conmebol),
+            ("CONCACAF", concacaf),
+            ("CAF", caf),
+            ("AFC", afc),
+            ("OFC", ofc)
         };
-    
+
         int teamIndex = 1;
         int rankingBase = 500;
 
         foreach (var conf in confederations)
         {
-            string name = conf.name;
-            int limit = conf.limit;
-
             int added = 0;
-            while (added < limit && teamIndex <= missing)
+
+            while (added < conf.limit && teamIndex <= missing)
             {
-                var team = new Team($"Team_{teamIndex}", new Confederation(name), rankingBase + teamIndex);
+                var team = new Team(
+                    $"Team_{teamIndex}",
+                    new Confederation(conf.name),
+                    rankingBase + teamIndex
+                );
+
                 _repository.Add(team);
                 teamIndex++;
                 added++;
             }
         }
     }
-    
-    private int CountConfederation(string confederationName)
+
+    private static void ValidateRequest(TeamDTO request)
     {
-        return (_repository.GetAll().Where(t => t.Confederation.Name == confederationName).ToList()).Count;
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
+
+        if (string.IsNullOrWhiteSpace(request.Name))
+            throw new ArgumentException("El nombre del equipo no puede estar vacío.");
+
+        if (string.IsNullOrWhiteSpace(request.ConfederationName))
+            throw new ArgumentException("La confederación del equipo no puede estar vacía.");
     }
 
-    
+    private void ValidateRankingIsNotUsed(int fifaRanking)
+    {
+        var rankingAlreadyExists = _repository.GetAll()
+            .Any(t => t.FifaRanking == fifaRanking);
+
+        if (rankingAlreadyExists)
+            throw new ArgumentException($"Ya existe un equipo con el ranking FIFA {fifaRanking}.");
+    }
+
+    private void ValidateRankingIsNotUsedByAnotherTeam(int fifaRanking, string currentName)
+    {
+        var rankingBelongsToAnotherTeam = _repository.GetAll()
+            .Any(t =>
+                t.FifaRanking == fifaRanking &&
+                !t.Name.Equals(currentName, StringComparison.OrdinalIgnoreCase));
+
+        if (rankingBelongsToAnotherTeam)
+            throw new ArgumentException($"Ya existe otro equipo con el ranking FIFA {fifaRanking}.");
+    }
+
+    private int CountConfederation(string confederationName)
+    {
+        return _repository.GetAll()
+            .Count(t => t.Confederation.Name == confederationName);
+    }
 }

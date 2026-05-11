@@ -44,25 +44,25 @@ public class Team : ITeam
     private void ValidateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Name cannot be empty");
+            throw new ArgumentException("El nombre del equipo no puede estar vacío.");
 
         if (name.Length > MaxNameLength)
-            throw new ArgumentException($"Name cannot exceed {MaxNameLength} characters");
+            throw new ArgumentException($"El nombre del equipo no puede superar los {MaxNameLength} caracteres.");
     }
 
     private void ValidateConfederation(Confederation confederation)
     {
         if (confederation is null)
-            throw new ArgumentNullException(nameof(confederation));
+            throw new ArgumentNullException(nameof(confederation), "La confederación del equipo no puede estar vacía.");
         
         if (string.IsNullOrWhiteSpace(confederation.Name))
-            throw new ArgumentException("Confederation name cannot be empty");
+            throw new ArgumentException("El nombre de la confederación no puede estar vacío.");
     }
 
     private void ValidateRanking(int ranking)
     {
         if (ranking < MinRanking || ranking > MaxRanking)
-            throw new ArgumentException($"Ranking must be between {MinRanking} and {MaxRanking}");
+            throw new ArgumentException($"El ranking FIFA debe estar entre {MinRanking} y {MaxRanking}.");
     }
     
 }
