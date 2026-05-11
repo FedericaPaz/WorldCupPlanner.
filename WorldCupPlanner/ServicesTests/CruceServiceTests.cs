@@ -171,4 +171,11 @@ public class CruceServiceTests
         Assert.AreEqual(TournamentPhase.RoundOf16, _stubCruceGenerator.LastRound[0].Phase);
     }
     
+    [TestMethod]
+    public void GenerateNextRound_WhenNoCrucesExist_ThrowsException()
+    {
+        _stubCrucesRepository.SetCruces(new List<Cruce>());
+        Assert.ThrowsException<ArgumentNullException>(() => _service.GenerateNextRound());
+    }
+    
 }

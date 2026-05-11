@@ -36,6 +36,8 @@ public class CruceService : ICruceService
     public void GenerateNextRound()
     {
         List<Cruce> actuales = _repository.GetAllCruces();
+        if (actuales == null || actuales.Count == 0)
+            throw new ArgumentNullException(nameof(actuales));
         TournamentPhase ultimaFase = actuales.Max(x => x.Phase);
         List<Cruce> ultimaRonda = actuales.Where(x => x.Phase == ultimaFase).ToList();
         List<Cruce> nuevos = _generator.GenerateNextRound(ultimaRonda, _stadiumRepository.GetAllStadiums(), 123);
