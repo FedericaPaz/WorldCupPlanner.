@@ -46,4 +46,17 @@ public class CruceSimulatorServiceTests
         Assert.AreEqual(result1.homeGoals, result2.homeGoals);
         Assert.AreEqual(result1.awayGoals, result2.awayGoals);
     }
+    
+    [TestMethod]
+    public void SimulateMatch_DifferentSeeds_ShouldReturnDifferentResults()
+    {
+        Match.ResetIdCounter();
+        var match1 = BuildMatch("Francia", 2000, "Ecuador", 600);
+        Match.ResetIdCounter();
+        var match2 = BuildMatch("Francia", 2000, "Ecuador", 600);
+        var result1 = _service.SimulateMatch(match1, seed: 1);
+        var result2 = _service.SimulateMatch(match2, seed: 99999);
+        bool sonDistintos = result1.homeGoals != result2.homeGoals || result1.awayGoals != result2.awayGoals;
+        Assert.IsTrue(sonDistintos);
+    }
 }
