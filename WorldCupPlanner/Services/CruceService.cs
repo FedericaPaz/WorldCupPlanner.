@@ -24,6 +24,8 @@ public class CruceService : ICruceService
     public void GenerateRoundOf32()
     {
         Fixture fixture = _fixtureRepository.GetFixture();
+        if (fixture == null)
+            throw new ArgumentNullException(nameof(fixture));
         List<Group> grupos = fixture.GetGroups.ToList();
         List<Stadium> estadios = _stadiumRepository.GetAllStadiums();
         List<Cruce> cruces = _generator.GenerateRoundOf32(grupos, estadios, 123);
@@ -33,7 +35,11 @@ public class CruceService : ICruceService
 
     public void GenerateNextRound()
     {
-        throw new NotImplementedException();
+        List<Cruce> actuales = _repository.GetAllCruces();
+        TournamentPhase ultimaFase = actuales.Max(x => x.Phase);
+        List<Cruce> ultimaRonda = actuales.Where(x => x.Phase == ultimaFase).ToList();
+        List<Cruce> nuevos = _generator.GenerateNextRound(ultimaRonda, _stadiumRepository.GetAllStadiums(), 123);
+        _repository.AddCruces(nuevos);
     }
 
     public List<CruceResponse> GetAllCruces()

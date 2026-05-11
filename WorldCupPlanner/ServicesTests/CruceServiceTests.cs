@@ -139,4 +139,21 @@ public class CruceServiceTests
         Assert.ThrowsException<ArgumentNullException>(() => _service.GenerateRoundOf32());
     }
     
+    [TestMethod]
+    public void GenerateNextRound_WhenCurrentRoundIsRoundOf32_GeneratesRoundOf16()
+    {
+        List<Cruce> crucesActuales = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
+        List<Stadium> estadios = CreateStadiums();
+        List<Cruce> nuevosCruces = CrearCrucesDummy(8, TournamentPhase.RoundOf16);
+        _stubCrucesRepository.SetCruces(crucesActuales);
+        foreach (var e in estadios)
+            _stubStadiumRepository.AddStadium(e);
+        _stubCruceGenerator.SetGeneratedCruces(nuevosCruces);
+        _service.GenerateNextRound();
+        Assert.AreEqual(16, _stubCruceGenerator.LastRound.Count);
+        Assert.AreEqual(4, _stubCruceGenerator.LastStadiums.Count);
+        Assert.AreEqual(123, _stubCruceGenerator.LastSeed);
+        Assert.AreEqual(nuevosCruces.Count, _stubCrucesRepository.AddedCruces.Count);
+    }
+    
 }
