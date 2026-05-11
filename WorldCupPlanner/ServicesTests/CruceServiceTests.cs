@@ -156,4 +156,19 @@ public class CruceServiceTests
         Assert.AreEqual(nuevosCruces.Count, _stubCrucesRepository.AddedCruces.Count);
     }
     
+    [TestMethod]
+    public void GenerateNextRound_UsesOnlyLatestPhase()
+    {
+        List<Cruce> cruces = new List<Cruce>();
+        List<Stadium> estadios = CreateStadiums();
+        cruces.AddRange(CrearCrucesDummy(16, TournamentPhase.RoundOf32));
+        cruces.AddRange(CrearCrucesDummy(8, TournamentPhase.RoundOf16));
+        _stubCrucesRepository.SetCruces(cruces);
+        foreach (var e in estadios)
+            _stubStadiumRepository.AddStadium(e);
+        _stubCruceGenerator.SetGeneratedCruces(CrearCrucesDummy(4, TournamentPhase.QuarterFinals));
+        _service.GenerateNextRound();
+        Assert.AreEqual(TournamentPhase.RoundOf16, _stubCruceGenerator.LastRound[0].Phase);
+    }
+    
 }
