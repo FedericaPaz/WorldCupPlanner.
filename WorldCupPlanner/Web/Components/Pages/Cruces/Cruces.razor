@@ -1,0 +1,255 @@
+﻿@page "/cruces"
+@using DTOs
+@using IServices
+@inject ICruceService CruceService
+
+<div class="cruces-wrapper">
+    <div class="cruces-header">
+        <div>
+            <h1 class="cruces-title">Cruces - Fase Eliminatoria</h1>
+            <p class="cruces-subtitle">Desde 32avos hasta la final</p>
+        </div>
+        @if (_hayCruces && !_tieneFinal)
+        {
+            <button class="btn-siguiente-ronda" @onclick="GenerarSiguienteRonda">
+                <span class="btn-icon">➕</span>
+                Siguiente ronda
+            </button>
+        }
+    </div>
+
+    @if (_mensajeError != null)
+    {
+        <div class="error-mensaje">
+            <span>⚠️ @_mensajeError</span>
+            <button class="error-cerrar" @onclick="() => _mensajeError = null">✖</button>
+        </div>
+    }
+
+    @if (!_hayCruces)
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🏆</div>
+            <h3>No hay cruces generados</h3>
+            <p>Primero completá la fase de grupos</p>
+            <button class="btn-generar-cruces" @onclick="Generar32avos">
+                <span class="btn-icon">✨</span>
+                Generar cruces
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="bracket-container">
+            <div class="bracket-scroll">
+                <!-- 32avos de Final -->
+                @if (_ronda32avos.Any())
+                {
+                    <div class="bracket-round">
+                        <h3 class="round-title">32avos de Final</h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _ronda32avos)
+                            {
+                                <div class="match-card">
+                                    <div class="match-team">
+                                        <span class="team-name">@partido.HomeTeam</span>
+                                        <span class="team-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                    </div>
+                                    <div class="match-team">
+                                        <span class="team-name">@partido.AwayTeam</span>
+                                        <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                    </div>
+                                    @if (!partido.HomeGoals.HasValue)
+                                    {
+                                        <div class="match-pending">Pendiente</div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Octavos de Final -->
+                @if (_octavos.Any())
+                {
+                    <div class="bracket-round">
+                        <h3 class="round-title">Octavos de Final</h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _octavos)
+                            {
+                                <div class="match-card">
+                                    <div class="match-team">
+                                        <span class="team-name">@partido.HomeTeam</span>
+                                        <span class="team-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                    </div>
+                                    <div class="match-team">
+                                        <span class="team-name">@partido.AwayTeam</span>
+                                        <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                    </div>
+                                    @if (!partido.HomeGoals.HasValue)
+                                    {
+                                        <div class="match-pending">Pendiente</div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Cuartos de Final -->
+                @if (_cuartos.Any())
+                {
+                    <div class="bracket-round">
+                        <h3 class="round-title">Cuartos de Final</h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _cuartos)
+                            {
+                                <div class="match-card">
+                                    <div class="match-team">
+                                        <span class="team-name">@partido.HomeTeam</span>
+                                        <span class="team-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                    </div>
+                                    <div class="match-team">
+                                        <span class="team-name">@partido.AwayTeam</span>
+                                        <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                    </div>
+                                    @if (!partido.HomeGoals.HasValue)
+                                    {
+                                        <div class="match-pending">Pendiente</div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Semifinales -->
+                @if (_semis.Any())
+                {
+                    <div class="bracket-round">
+                        <h3 class="round-title">Semifinales</h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _semis)
+                            {
+                                <div class="match-card">
+                                    <div class="match-team">
+                                        <span class="team-name">@partido.HomeTeam</span>
+                                        <span class="team-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                    </div>
+                                    <div class="match-team">
+                                        <span class="team-name">@partido.AwayTeam</span>
+                                        <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                    </div>
+                                    @if (!partido.HomeGoals.HasValue)
+                                    {
+                                        <div class="match-pending">Pendiente</div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Final -->
+                @if (_final.Any())
+                {
+                    <div class="bracket-round final-round">
+                        <h3 class="round-title final-title">
+                            <span>🏆</span> Final <span>🏆</span>
+                        </h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _final)
+                            {
+                                <div class="match-card match-final">
+                                    <div class="match-team">
+                                        <span class="team-name final-team">@partido.HomeTeam</span>
+                                        <span class="team-score final-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                    </div>
+                                    <div class="match-team">
+                                        <span class="team-name final-team">@partido.AwayTeam</span>
+                                        <span class="team-score final-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                    </div>
+                                    @if (!partido.HomeGoals.HasValue)
+                                    {
+                                        <div class="match-pending">Pendiente</div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="info-footer">
+        <p class="info-text">
+            <strong>Nota:</strong> Los cruces se generan automáticamente una vez finalizada la fase de grupos.
+            Los primeros, segundos y mejores terceros avanzan a 32avos de final.
+        </p>
+    </div>
+</div>
+
+@code {
+    private List<CruceResponse> _todosLosCruces = new();
+    private bool _hayCruces = false;
+    private string? _mensajeError = null;
+    
+    private List<CruceResponse> _ronda32avos => FiltrarPorFase(1);
+    private List<CruceResponse> _octavos => FiltrarPorFase(2);
+    private List<CruceResponse> _cuartos => FiltrarPorFase(3);
+    private List<CruceResponse> _semis => FiltrarPorFase(4);
+    private List<CruceResponse> _final => FiltrarPorFase(5);
+    private bool _tieneFinal => _final.Any();
+    
+    private List<CruceResponse> FiltrarPorFase(int fase)
+    {
+        return _todosLosCruces.Where(x => (int)x.Phase == fase).ToList();
+    }
+    
+    protected override void OnInitialized()
+    {
+        CargarCruces();
+    }
+    
+    private void CargarCruces()
+    {
+        try
+        {
+            _todosLosCruces = CruceService.GetAllCruces();
+            _hayCruces = _todosLosCruces.Any();
+            _mensajeError = null;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = $"Error al cargar cruces: {ex.Message}";
+        }
+    }
+    
+    private void Generar32avos()
+    {
+        try
+        {
+            CruceService.GenerateRoundOf32();
+            CargarCruces();
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = ex.Message;
+        }
+    }
+    
+    private void GenerarSiguienteRonda()
+    {
+        try
+        {
+            CruceService.GenerateNextRound();
+            CargarCruces();
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = ex.Message;
+        }
+    }
+}
