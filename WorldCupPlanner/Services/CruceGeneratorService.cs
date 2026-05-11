@@ -23,29 +23,27 @@ public class CruceGeneratorService
     
     private List<Team> ObtenerClasificados(List<Group> grupos)
     {
+        List<Team> clasificados = new List<Team>();
+        List<Standing> terceros = new List<Standing>();
+        foreach (Group grupo in grupos)
         {
-            List<Team> clasificados = new List<Team>();
-            List<Standing> terceros = new List<Standing>();
-            foreach (Group grupo in grupos)
-            {
-                List<Standing> standings = _calculator.CalculateStandings(grupo);
-                clasificados.Add(standings[0].TeamInGroup);
-                clasificados.Add(standings[1].TeamInGroup);
-                terceros.Add(standings[2]);
-            }
-
-            List<Team> mejoresTerceros =
-                terceros
-                    .OrderByDescending(x => x.PointsInGroup)
-                    .ThenByDescending(x => x.GoalDifference)
-                    .ThenByDescending(x => x.GoalsFor)
-                    .Take(8)
-                    .Select(x => x.TeamInGroup)
-                    .ToList();
-
-            clasificados.AddRange(mejoresTerceros);
-            return clasificados;
+            List<Standing> standings = _calculator.CalculateStandings(grupo);
+            clasificados.Add(standings[0].TeamInGroup);
+            clasificados.Add(standings[1].TeamInGroup);
+            terceros.Add(standings[2]);
         }
+
+        List<Team> mejoresTerceros =
+            terceros
+                .OrderByDescending(x => x.PointsInGroup)
+                .ThenByDescending(x => x.GoalDifference)
+                .ThenByDescending(x => x.GoalsFor)
+                .Take(8)
+                .Select(x => x.TeamInGroup)
+                .ToList();
+
+        clasificados.AddRange(mejoresTerceros);
+        return clasificados;
     }
     
     private List<Cruce> CrearCruces(List<Team> equipos, List<Stadium> estadios, int semilla, TournamentPhase fase)
@@ -59,7 +57,9 @@ public class CruceGeneratorService
             Team local = equipos[i];
             Team visitante = equipos[i + 1];
             Stadium estadio = estadios[indiceEstadio];
-            Match partido = new Match(DateTime.Now.AddDays(i), estadio, local, visitante, 'A', new ClockStub(DateTime.Now));
+            DateTime fechaPartido = DateTime.Now.AddHours(-2);
+            DateTime fechaActual  =  DateTime.Now;
+            Match partido = new Match(fechaPartido, estadio, local, visitante, 'A', new ClockStub(fechaActual));
             Cruce cruce = new Cruce($"C{(i / 2) + 1}", partido, fase);
             cruces.Add(cruce);
             indiceEstadio++;
@@ -67,5 +67,25 @@ public class CruceGeneratorService
                 indiceEstadio = 0;
         }
         return cruces;
+    }
+
+    public List<Cruce> GenerateNextRound(List<Cruce> crucesAnteriores, List<Stadium> estadios, int semilla)
+    {
+        List<Team> ganadores = ObtainWinners(crucesAnteriores);
+        TournamentPhase siguienteFase = crucesAnteriores[0].ObtainNextPhase();
+        return CrearCruces(ganadores, estadios, semilla, siguienteFase);
+    }
+
+    private List<Team> ObtainWinners(List<Cruce> cruces)
+    {
+        List<Team> ganadores = new List<Team>();
+        foreach (Cruce cruce in cruces)
+        {
+            Team? ganador = (Team?)cruce.GetWinner();
+            if (ganador == null)
+                throw new InvalidOperationException($"El cruce {cruce.Nombre} no tiene un ganador definido.");
+            ganadores.Add(ganador);
+        }
+        return ganadores;
     }
 }

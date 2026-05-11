@@ -62,6 +62,12 @@ public class CruceGeneratorServiceTests
         return match;
     }
     
+    private void SimulateWinner(List<Cruce> cruces)
+    {
+        foreach (Cruce cruce in cruces)
+            cruce.Partido.SetMatchResult(2, 0);
+    }
+    
     [TestMethod]
     public void GenerateRoundOf32_ShouldGenerate16Cruces()
     {
@@ -122,5 +128,16 @@ public class CruceGeneratorServiceTests
         List<Cruce> cruces1 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         List<Cruce> cruces2 =service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         Assert.AreEqual(cruces1[0].Partido.HomeTeam.Name, cruces2[0].Partido.HomeTeam.Name);
+    }
+    
+    [TestMethod]
+    public void GenerateNextRound_ShouldGenerateRoundOf16()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces32 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        SimulateWinner(cruces32);
+        List<Cruce> cruces16 = service.GenerateNextRound(cruces32, CreateStadiums(), 123);
+        Assert.AreEqual(TournamentPhase.RoundOf16, cruces16[0].Phase);
+        Assert.AreEqual(8, cruces16.Count);
     }
 }
