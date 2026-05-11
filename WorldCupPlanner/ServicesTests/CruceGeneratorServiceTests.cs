@@ -193,4 +193,6 @@ public class CruceGeneratorServiceTests
         Assert.AreEqual(TournamentPhase.Final, finals[0].Phase);
         Assert.AreEqual(1, finals.Count);
     }
+    
+    
 }

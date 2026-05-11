@@ -1,4 +1,6 @@
-﻿namespace DTOs;
+﻿using Domain;
+
+namespace DTOs;
 
 public class CruceResponse
 {
@@ -7,5 +9,5 @@ public class CruceResponse
     public string AwayTeam { get; set; }
     public int? HomeGoals { get; set; }
     public int? AwayGoals { get; set; }
-    public string Phase { get; set; }
+    public TournamentPhase Phase { get; set; }
 }

@@ -1,8 +1,9 @@
 ﻿using Domain;
+using IServices;
 
 namespace Services;
 
-public class CruceGeneratorService
+public class CruceGeneratorService : ICruceGeneratorService
 {
     private readonly StandingCalculator _calculator;
 

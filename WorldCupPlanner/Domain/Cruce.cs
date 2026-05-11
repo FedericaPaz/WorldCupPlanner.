@@ -52,6 +52,4 @@ public class Cruce
             _ => throw new InvalidOperationException($"La fase {Phase} no tiene siguiente definida")
         };
     }
-    
-    
 }
