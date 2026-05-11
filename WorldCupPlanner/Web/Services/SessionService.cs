@@ -1,5 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using DTOs;
+using Domain;
+using DTOs.User;
 using IServices;
 
 namespace Web.Services;
@@ -46,5 +48,21 @@ public class SessionService
     public LoginResponse GetCurrentUser()
     {
         return _currentUser!;
+    }
+
+    public bool HasRole(UserRole role)
+    {
+        return _currentUser is not null &&
+               _currentUser.Roles.Contains((UserRoleDto)role);
+    }
+
+    public bool IsSystemAdministrator()
+    {
+        return HasRole(UserRole.SystemAdministrator);
+    }
+
+    public bool IsEditor()
+    {
+        return HasRole(UserRole.Editor);
     }
 }
