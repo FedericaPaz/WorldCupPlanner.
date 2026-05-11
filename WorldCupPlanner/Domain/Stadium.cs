@@ -7,9 +7,9 @@ public class Stadium : IStadium
     private const int MaxDescriptionLength = 400;
     private const int MinLocativeCapacity = 20000;
 
-    private string _stadiumName;
-    private string _cityName;
-    private string _stadiumDescription;
+    private string _stadiumName = string.Empty;
+    private string _cityName = string.Empty;
+    private string _stadiumDescription = string.Empty;
     private int _locativeCapacity;
 
     public string StadiumName
@@ -38,7 +38,7 @@ public class Stadium : IStadium
         set
         {
             EnsureValidDescription(value);
-            _stadiumDescription = value?.Trim();
+            _stadiumDescription = value?.Trim() ?? string.Empty;
         }
     }
 
@@ -52,35 +52,39 @@ public class Stadium : IStadium
         }
     }
 
-    public Stadium(string name, string cityName, string stadiumDescription, int locativeCapacity)
+    public Stadium(string name, string cityName, string? stadiumDescription, int locativeCapacity)
     {
         StadiumName = name;
         CityName = cityName;
         StadiumDescription = stadiumDescription;
         LocativeCapacity = locativeCapacity;
     }
-    
+
     private void EnsureValidName(string name)
     {
         if (string.IsNullOrWhiteSpace(name) || name.Length > MaxNameLength)
-            throw new ArgumentException($"Stadium name must be between 1 and {MaxNameLength} characters.");
+            throw new ArgumentException(
+                $"Stadium name must be between 1 and {MaxNameLength} characters.");
     }
 
     private void EnsureValidCity(string city)
     {
         if (string.IsNullOrWhiteSpace(city) || city.Length > MaxCityLength)
-            throw new ArgumentException($"City name must be between 1 and {MaxCityLength} characters.");
+            throw new ArgumentException(
+                $"City name must be between 1 and {MaxCityLength} characters.");
     }
 
-    private void EnsureValidDescription(string description)
+    private void EnsureValidDescription(string? description)
     {
         if (description is { Length: > MaxDescriptionLength })
-            throw new ArgumentException($"Description must be at most {MaxDescriptionLength} characters.");
+            throw new ArgumentException(
+                $"Description must be at most {MaxDescriptionLength} characters.");
     }
-    
+
     private void EnsureValidCapacity(int capacity)
     {
         if (capacity < MinLocativeCapacity)
-            throw new ArgumentException($"Capacity must be at least {MinLocativeCapacity}.");
+            throw new ArgumentException(
+                $"Capacity must be at least {MinLocativeCapacity}.");
     }
 }
