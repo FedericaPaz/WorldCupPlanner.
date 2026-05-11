@@ -106,5 +106,13 @@ public class CruceGeneratorServiceTests
         Assert.AreEqual(TournamentPhase.RoundOf32, cruces[0].Phase);
     }
     
+    [TestMethod]
+    public void GenerateRoundOf32_ShouldRotateStadiums()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        Assert.AreEqual("Estadio 1", cruces[0].Partido.Stadium.StadiumName);
+        Assert.AreEqual("Estadio 2", cruces[1].Partido.Stadium.StadiumName);
+    }
     
 }
