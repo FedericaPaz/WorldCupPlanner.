@@ -139,4 +139,15 @@ public class CruceSimulatorServiceTests
         _service.SimulateCruces(new List<Cruce> { cruce }, Seed);
         Assert.IsNotNull(cruce.GetWinner());
     }
+    
+    [TestMethod]
+    public void SimulateCruces_ShouldNotOverwriteResults()
+    {
+        Match.ResetIdCounter();
+        var cruce = BuildCruce("B1");
+        cruce.Partido.SetMatchResult(2, 1);
+        _service.SimulateCruces(new List<Cruce> { cruce }, Seed);
+        Assert.AreEqual(2, cruce.Partido.HomeGoals);
+        Assert.AreEqual(1, cruce.Partido.AwayGoals);
+    }
 }
