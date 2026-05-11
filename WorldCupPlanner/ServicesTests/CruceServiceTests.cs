@@ -194,4 +194,12 @@ public class CruceServiceTests
         var result = _service.GetAllCruces();
         Assert.AreEqual(16, result.Count);
     }
+    
+    [TestMethod]
+    public void GetAllCruces_WhenNoCruces_ReturnsEmptyList()
+    {
+        _stubCrucesRepository.SetCruces(new List<Cruce>());
+        var result = _service.GetAllCruces();
+        Assert.AreEqual(0, result.Count);
+    }
 }
