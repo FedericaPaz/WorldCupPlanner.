@@ -115,4 +115,12 @@ public class CruceGeneratorServiceTests
         Assert.AreEqual("Estadio 2", cruces[1].Partido.Stadium.StadiumName);
     }
     
+    [TestMethod]
+    public void GenerateRoundOf32_WithSameSeed_ShouldGenerateSameOrder()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Cruce> cruces1 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        List<Cruce> cruces2 =service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
+        Assert.AreEqual(cruces1[0].Partido.HomeTeam.Name, cruces2[0].Partido.HomeTeam.Name);
+    }
 }
