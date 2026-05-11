@@ -53,7 +53,7 @@
                 @if (_ronda32avos.Any())
                 {
                     <div class="bracket-round">
-                        <h3 class="round-title">32avos de Final</h3>
+                        <h3 class="round-title">32avos de Final (@_ronda32avos.Count cruces)</h3>
                         <div class="round-matches">
                             @foreach (var partido in _ronda32avos)
                             {
@@ -67,9 +67,7 @@
                                         <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
                                     </div>
                                     @if (!partido.HomeGoals.HasValue)
-                                    {
                                         <div class="match-pending">Pendiente</div>
-                                    }
                                 </div>
                             }
                         </div>
