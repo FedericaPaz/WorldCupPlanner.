@@ -4,32 +4,67 @@ namespace Services;
 
 public class CruceGeneratorService
 {
-    public List<Cruce> GenerateCruces(List<Group> grupos, List<Stadium> estadios, int semilla)
+    private readonly StandingCalculator _calculator;
+
+    public CruceGeneratorService()
     {
-        if(grupos == null)
-            throw new ArgumentNullException(nameof(grupos), "La lista de grupos no puede ser nula.");
-        
-        if(grupos.Count != 12)
-            throw new Exception("Debe haber exactamente 12 grupos para generar los cruces de octavos de final.");
-        
-        
-        List<Cruce> cruces = new List<Cruce>();
-
-        Team equipo1 = grupos[0].TeamsInGroup[0];
-        Team equipo2 = grupos[0].TeamsInGroup[1];
-
-        for (int i = 1; i <= 16; i++)
+        _calculator = new StandingCalculator();
+    }
+    
+    public List<Cruce> GenerateRoundOf32(List<Group> grupos, List<Stadium> estadios, int semilla)
+    {
+        if (grupos == null) throw new ArgumentNullException(nameof(grupos));
+        if (grupos.Count == 0)
+            throw new ArgumentException("La lista de grupos no puede estar vacía.");
+            
+        List<Team> clasificados = ObtenerClasificados(grupos);
+        return CrearCruces(clasificados, estadios, semilla, TournamentPhase.RoundOf32);
+    }
+    
+    private List<Team> ObtenerClasificados(List<Group> grupos)
+    {
         {
-            Match partido = new Match(
-                DateTime.Now.AddDays(i),
-                estadios[0],
-                equipo1,
-                equipo2,
-                'A',
-                new ClockStub(DateTime.Now));
+            List<Team> clasificados = new List<Team>();
+            List<Standing> terceros = new List<Standing>();
+            foreach (Group grupo in grupos)
+            {
+                List<Standing> standings = _calculator.CalculateStandings(grupo);
+                clasificados.Add(standings[0].TeamInGroup);
+                clasificados.Add(standings[1].TeamInGroup);
+                terceros.Add(standings[2]);
+            }
 
-            Cruce cruce = new Cruce($"A{i}", partido, TournamentPhase.RoundOf16);
+            List<Team> mejoresTerceros =
+                terceros
+                    .OrderByDescending(x => x.PointsInGroup)
+                    .ThenByDescending(x => x.GoalDifference)
+                    .ThenByDescending(x => x.GoalsFor)
+                    .Take(8)
+                    .Select(x => x.TeamInGroup)
+                    .ToList();
+
+            clasificados.AddRange(mejoresTerceros);
+            return clasificados;
+        }
+    }
+    
+    private List<Cruce> CrearCruces(List<Team> equipos, List<Stadium> estadios, int semilla, TournamentPhase fase)
+    {
+        Random random = new Random(semilla);
+        equipos = equipos.OrderBy(x => random.Next()).ToList();
+        List<Cruce> cruces = new List<Cruce>();
+        int indiceEstadio = 0;
+        for (int i = 0; i < equipos.Count; i += 2)
+        {
+            Team local = equipos[i];
+            Team visitante = equipos[i + 1];
+            Stadium estadio = estadios[indiceEstadio];
+            Match partido = new Match(DateTime.Now.AddDays(i), estadio, local, visitante, 'A', new ClockStub(DateTime.Now));
+            Cruce cruce = new Cruce($"C{(i / 2) + 1}", partido, fase);
             cruces.Add(cruce);
+            indiceEstadio++;
+            if (indiceEstadio >= estadios.Count)
+                indiceEstadio = 0;
         }
         return cruces;
     }

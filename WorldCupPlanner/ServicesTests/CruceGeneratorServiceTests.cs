@@ -17,12 +17,13 @@ public class CruceGeneratorServiceTests
                 var equipo = new Team($"Equipo{letra}{i + 1}", new Confederation("UEFA"), 300 + i);
                 grupo.AddTeamToGroup(equipo);
             }
+            CreateResults(grupo);
             grupos.Add(grupo);
         }
         return grupos;
     }
 
-    private List<Stadium> CreateBaicStadiums()
+    private List<Stadium> CreateStadiums()
     {
         var stadiums = new List<Stadium>();
         stadiums.Add(new Stadium("Estadio 1", "Ciudad 1", "Descripción 1", 50000));
@@ -32,31 +33,68 @@ public class CruceGeneratorServiceTests
         return stadiums;
     }
     
-    [TestMethod]
-    public void GenerateCruces_With12Groups_ShouldReturns16Cruces()
+    private void CreateResults(Group grupo)
     {
-        var service = new CruceGeneratorService();
-        var grupos = Create12GroupsWithTeams();
-        var estadios = CreateBaicStadiums();
-        int semilla = 12345;
-        var cruces = service.GenerateCruces(grupos, estadios, semilla);
+        List<Team> teams = grupo.TeamsInGroup.ToList();
+        Match m1 = CreateMatch(teams[0], teams[1], 2, 0, grupo.GroupLetter);
+        Match m2 = CreateMatch(teams[0], teams[2], 2, 0, grupo.GroupLetter);
+        Match m3 = CreateMatch(teams[0], teams[3], 2, 0, grupo.GroupLetter);
+        Match m4 = CreateMatch(teams[1], teams[2], 1, 0, grupo.GroupLetter);
+        Match m5 = CreateMatch(teams[1], teams[3], 1, 0, grupo.GroupLetter);
+        Match m6 = CreateMatch(teams[2], teams[3], 1, 0, grupo.GroupLetter);
+        grupo.AddMatchToGroup(m1);
+        grupo.AddMatchToGroup(m2);
+        grupo.AddMatchToGroup(m3);
+        grupo.AddMatchToGroup(m4);
+        grupo.AddMatchToGroup(m5);
+        grupo.AddMatchToGroup(m6);
+    }
+
+    private Match CreateMatch(Team homeTeam, Team awayTeam, int homeGoals, int awayGoals, char groupLetter)
+    {
+        DateTime fechaPartido = DateTime.Now.AddHours(-2);
+        DateTime fechaActual  =  DateTime.Now;
+        Match match = new Match(fechaPartido,
+            new Stadium("Centenario", "Montevideo", "Desc", 50000),
+            homeTeam, awayTeam, groupLetter, new ClockStub(fechaActual));
+
+        match.SetMatchResult(homeGoals, awayGoals);
+        return match;
+    }
+    
+    [TestMethod]
+    public void GenerateRoundOf32_ShouldGenerate16Cruces()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Group> grupos = Create12GroupsWithTeams();
+        List<Stadium> estadios = CreateStadiums();
+        List<Cruce> cruces = service.GenerateRoundOf32(grupos, estadios, 123);
         Assert.AreEqual(16, cruces.Count);
     }
 
     [TestMethod]
-    public void GenerateCruces_WithoutGroups_ShouldThrowException()
+    public void GenerateRoundOf32_WithEmptyGroups_ShouldThrowException()
     {
         CruceGeneratorService service = new CruceGeneratorService();
-        List<Group> grupos = new List<Group>();
-        List<Stadium> estadios = CreateBaicStadiums();
-        Assert.ThrowsException<Exception>(() => service.GenerateCruces(grupos, estadios, 123));
+        List<Stadium> estadios = CreateStadiums();
+        Assert.ThrowsException<ArgumentException>(() => service.GenerateRoundOf32(new List<Group>(), estadios, 123));
     }
     
     [TestMethod]
-    public void GenerateCruces_WithNullGroups_ShouldThrowException()
+    public void GenerateRoundOf32_WithNullGroups_ShouldThrowException()
     {
         CruceGeneratorService service = new CruceGeneratorService();
-        List<Stadium> estadios = CreateBaicStadiums();
-        Assert.ThrowsException<ArgumentNullException>(() => service.GenerateCruces(null, estadios, 123));
+        List<Stadium> estadios = CreateStadiums();
+        Assert.ThrowsException<ArgumentNullException>(() => service.GenerateRoundOf32(null, estadios, 123));
+    }
+    
+    [TestMethod]
+    public void GenerateRoundOf32_ShouldUseQualifiedTeams()
+    {
+        CruceGeneratorService service = new CruceGeneratorService();
+        List<Group> grupos = Create12GroupsWithTeams();
+        List<Cruce> cruces = service.GenerateRoundOf32(grupos, CreateStadiums(), 123);
+        Assert.IsTrue(grupos.SelectMany(g => g.TeamsInGroup)
+            .Any(t => t.Name == cruces[0].Partido.HomeTeam.Name));
     }
 }
