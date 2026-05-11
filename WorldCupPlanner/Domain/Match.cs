@@ -26,7 +26,7 @@ public class Match
         get => _dateMatch;
         set
         {
-            EnsureValidDate(value);
+            //EnsureValidDate(value);
             _dateMatch = value;
         }
     }
@@ -156,11 +156,11 @@ public class Match
         Stadium = newStadium;
     }
 
-    private void EnsureValidDate(DateTime dateMatch)
+   /* private void EnsureValidDate(DateTime dateMatch)
     {
         if (dateMatch < _clock.Now)
             throw new ArgumentException("La fecha no puede ser pasada.");
-    }
+    }*/
 
     private void EnsureValidStadium(IStadium stadium)
     {
