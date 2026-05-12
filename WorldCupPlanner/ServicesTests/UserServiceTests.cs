@@ -383,4 +383,17 @@ public class UserServiceTests
         Assert.IsNotNull(user);
         Assert.IsTrue(user.HasPassword("NewPassword1!"));
     }
+    
+    [TestMethod]
+    public void ChangeOwnPassword_WithExistingUser_ShouldUpdatePassword()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+        userService.CreateUser("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
+        userService.ChangeOwnPassword("juan.perez@gmail.com", "NewPassword1!");
+        var user = userService.GetUser("juan.perez@gmail.com");
+        Assert.IsNotNull(user);
+        Assert.IsTrue(user.HasPassword("NewPassword1!"));
+        
+    }
 }

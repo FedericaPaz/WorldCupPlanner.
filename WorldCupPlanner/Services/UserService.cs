@@ -120,4 +120,12 @@ public class UserService
         user.ChangePassword(defaultPassword);
         _userRepository.UpdateUser(user);
     }
+    
+    public void ChangeOwnPassword(string email, string newPassword)
+    {
+        ValidateEmailNotEmpty(email);
+        var user = GetExistingUserOrThrow(email);
+        user.ChangePassword(newPassword);
+        _userRepository.UpdateUser(user);
+    }
 }
