@@ -9,10 +9,20 @@ namespace Services;
 public class TeamService : ITeamService
 {
     private readonly ITeamRepository _repository;
+    private readonly IFixtureRepository _fixtureRepository;
+    private readonly IMatchRepository _matchRepository;
+    private readonly ICrucesRepository _crucesRepository;
 
-    public TeamService(ITeamRepository repository)
+    public TeamService(
+        ITeamRepository repository,
+        IFixtureRepository fixtureRepository,
+        IMatchRepository matchRepository,
+        ICrucesRepository crucesRepository)
     {
         _repository = repository;
+        _fixtureRepository = fixtureRepository;
+        _matchRepository = matchRepository;
+        _crucesRepository = crucesRepository;
     }
 
     public void Add(TeamDTO request)
@@ -90,7 +100,13 @@ public class TeamService : ITeamService
 
         if (team is null)
             throw new InvalidOperationException($"No existe un equipo con el nombre '{name}'.");
-
+        if (_fixtureRepository.ContainsFixture())
+        {
+            _fixtureRepository.RemoveFixture(_fixtureRepository.GetFixture());
+            _matchRepository.ClearMatches();
+            _crucesRepository.RemoveCruces();
+        }
+        
         _repository.Delete(team);
     }
 
