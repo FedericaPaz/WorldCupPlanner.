@@ -13,12 +13,12 @@ public class User
     public string PasswordHash { get; private set; }
     public List<UserRole> Roles { get; private set; }
 
-    public User(string firstName, string lastName, string email, DateTime birthDate, string password, List<UserRole>? roles = null)
+    public User(string firstName, string lastName, string email, DateTime birthDate, string password, List<UserRole>? roles = null, IDateTimeMatch? clock = null)
     {
         ValidateFirstName(firstName);
         ValidateLastName(lastName);
         ValidateEmailNotEmpty(email);
-        ValidateBirthDate(birthDate);
+        ValidateBirthDate(birthDate, clock);
         ValidatePassword(password);
         ValidateEmailFormat(email);
         ValidateRoles(roles);
@@ -55,9 +55,10 @@ public class User
         }
     }
 
-    private void ValidateBirthDate(DateTime birthDate)
+    private void ValidateBirthDate(DateTime birthDate, IDateTimeMatch? clock)
     {
-        if (birthDate > DateTime.Today)
+        var today = clock?.Now.Date ?? DateTime.Today;
+        if (birthDate > today)
         {
             throw new ArgumentException("La fecha de nacimiento no puede ser futura.");
         }
