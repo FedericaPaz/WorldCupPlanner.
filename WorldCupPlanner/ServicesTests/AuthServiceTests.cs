@@ -9,20 +9,23 @@ namespace ServicesTests;
 [TestClass]
 public class AuthServiceTests
 {
+    private static (UserRepository Repo, AuthService Service, User User) Setup(string firstName = "Juan", string lastName = "Perez", string email = "juan.perez@gmail.com", string password = "Password1!")
+    {
+        var repo = new UserRepository();
+        var service = new AuthService(repo);
+        var user = new User(firstName, lastName, email, new DateTime(2000, 1, 1), password, new List<UserRole> { UserRole.SystemAdministrator });
+        repo.AddUser(user);
+        return (repo, service, user);
+    }
+
     [TestMethod]
     public void Login_WithValidCredentials_ShouldReturnLoginResponse()
     {
-        var userRepository = new UserRepository();
-        var authService = new AuthService(userRepository);
-
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole> { UserRole.SystemAdministrator }
-        );
-
-        userRepository.AddUser(user);
+        var (_, authService, user) = Setup();
 
         var request = new LoginRequest
         {
-            Email = "juan.perez@gmail.com",
+            Email = user.Email,
             Password = "Password1!"
         };
 
@@ -32,38 +35,25 @@ public class AuthServiceTests
         Assert.AreEqual("Juan Perez", response.Name);
         Assert.AreEqual("juan.perez@gmail.com", response.Email);
     }
-    
+
     [TestMethod]
     public void Login_WithInvalidPassword_ShouldThrowException()
     {
-        var userRepository = new UserRepository();
-        var authService = new AuthService(userRepository);
-
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole> { UserRole.SystemAdministrator }
-        );
-
-        userRepository.AddUser(user);
+        var (_, authService, user) = Setup();
 
         var request = new LoginRequest
         {
-            Email = "juan.perez@gmail.com",
+            Email = user.Email,
             Password = "WrongPassword1!"
         };
 
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            authService.Login(request));
+        Assert.ThrowsException<InvalidOperationException>(() => authService.Login(request));
     }
-    
+
     [TestMethod]
     public void Login_WithNonExistingEmail_ShouldThrowException()
     {
-        var userRepository = new UserRepository();
-        var authService = new AuthService(userRepository);
-
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole> { UserRole.SystemAdministrator }
-        );
-
-        userRepository.AddUser(user);
+        var (_, authService, _) = Setup();
 
         var request = new LoginRequest
         {
@@ -71,20 +61,13 @@ public class AuthServiceTests
             Password = "Password1!"
         };
 
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            authService.Login(request));
+        Assert.ThrowsException<InvalidOperationException>(() => authService.Login(request));
     }
-    
+
     [TestMethod]
     public void Login_WithValidCredentials_ShouldReturnFullName()
     {
-        var userRepository = new UserRepository();
-        var authService = new AuthService(userRepository);
-
-        var user = new User("Pedro", "Gomez", "pedro.gomez@gmail.com", new DateTime(1999, 5, 10), "Password1!", new List<UserRole> { UserRole.SystemAdministrator }
-        );
-
-        userRepository.AddUser(user);
+        var (_, authService, _) = Setup("Pedro", "Gomez", "pedro.gomez@gmail.com", "Password1!");
 
         var request = new LoginRequest
         {
@@ -96,17 +79,11 @@ public class AuthServiceTests
 
         Assert.AreEqual("Pedro Gomez", response.Name);
     }
-    
+
     [TestMethod]
     public void Login_WithEmptyEmail_ShouldThrowException()
     {
-        var userRepository = new UserRepository();
-        var authService = new AuthService(userRepository);
-
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole> { UserRole.SystemAdministrator }
-        );
-
-        userRepository.AddUser(user);
+        var (_, authService, _) = Setup();
 
         var request = new LoginRequest
         {
@@ -114,20 +91,13 @@ public class AuthServiceTests
             Password = "Password1!"
         };
 
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            authService.Login(request));
+        Assert.ThrowsException<InvalidOperationException>(() => authService.Login(request));
     }
-    
+
     [TestMethod]
     public void Login_WithEmptyPassword_ShouldThrowException()
     {
-        var userRepository = new UserRepository();
-        var authService = new AuthService(userRepository);
-
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole> { UserRole.SystemAdministrator }
-        );
-
-        userRepository.AddUser(user);
+        var (_, authService, _) = Setup();
 
         var request = new LoginRequest
         {
@@ -135,37 +105,27 @@ public class AuthServiceTests
             Password = ""
         };
 
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            authService.Login(request));
+        Assert.ThrowsException<InvalidOperationException>(() => authService.Login(request));
     }
-    
+
     [TestMethod]
     public void Login_WithNullRequest_ShouldThrowArgumentNullException()
     {
-        var userRepository = new UserRepository();
-        var authService = new AuthService(userRepository);
+        var (_, authService, _) = Setup();
 
-        Assert.ThrowsException<ArgumentNullException>(() =>
-            authService.Login(null!));
+        Assert.ThrowsException<ArgumentNullException>(() => authService.Login(null!));
     }
-    
+
     [TestMethod]
     public void Constructor_WithNullRepository_ShouldThrowArgumentNullException()
     {
-        Assert.ThrowsException<ArgumentNullException>(() =>
-            new AuthService(null!));
+        Assert.ThrowsException<ArgumentNullException>(() => new AuthService(null!));
     }
-    
+
     [TestMethod]
     public void Login_WithDifferentEmailCasing_ShouldReturnLoginResponse()
     {
-        var userRepository = new UserRepository();
-        var authService = new AuthService(userRepository);
-
-        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole> { UserRole.SystemAdministrator }
-        );
-
-        userRepository.AddUser(user);
+        var (_, authService, _) = Setup();
 
         var request = new LoginRequest
         {
@@ -178,5 +138,30 @@ public class AuthServiceTests
         Assert.IsNotNull(response);
         Assert.AreEqual("Juan Perez", response.Name);
         Assert.AreEqual("juan.perez@gmail.com", response.Email);
+    }
+    
+    [TestMethod]
+    public void Register_WithValidRequest_ShouldAddUser()
+    {
+        var userRepository = new UserRepository();
+        var authService = new AuthService(userRepository);
+
+        var request = new RegisterRequest
+        {
+            FirstName = "Juan",
+            LastName = "Perez",
+            Email = "juan.perez@gmail.com",
+            BirthDate = new DateTime(2000, 1, 1),
+            Password = "Password1!"
+        };
+
+        authService.Register(request);
+
+        var users = userRepository.GetAllUsers();
+
+        Assert.AreEqual(1, users.Count);
+        Assert.AreEqual("Juan", users[0].FirstName);
+        Assert.AreEqual("Perez", users[0].LastName);
+        Assert.AreEqual("juan.perez@gmail.com", users[0].Email);
     }
 }

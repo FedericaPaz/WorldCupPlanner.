@@ -7,6 +7,7 @@ public class UserMapper
 {
     public static User ToEntity(RegisterRequest dto)
     {
-        return new User(dto.FirstName, dto.LastName, dto.Email, dto.BirthDate, dto.Password);
+        return new User(dto.FirstName, dto.LastName, dto.Email, dto.BirthDate, dto.Password,   new List<UserRole> { UserRole.Editor }
+        );
     }
 }
