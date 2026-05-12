@@ -39,12 +39,20 @@
     private LoginRequest _request = new();
     private string _errorMessage = "";
 
+    protected override void OnInitialized()
+    {
+        if (SessionService.IsUserActive())
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+    
     private async Task HandleLogin()
     {
         try
         {
             await SessionService.Login(_request);
-            Navigation.NavigateTo("/");
+            Navigation.NavigateTo("/", replace: true);
         }
         catch (Exception)
         {

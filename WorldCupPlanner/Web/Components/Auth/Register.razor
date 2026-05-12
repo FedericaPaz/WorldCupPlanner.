@@ -4,6 +4,8 @@
 @using IServices
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
+@using Web.Services
+@inject SessionService SessionService
 
 <div class="auth-page">
     <div class="auth-card auth-card-large">
@@ -75,6 +77,14 @@
     private RegisterRequest _request = new();
     private string _errorMessage = "";
 
+    protected override void OnInitialized()
+    {
+        if (SessionService.IsUserActive())
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+    
     private void HandleRegister()
     {
         try
