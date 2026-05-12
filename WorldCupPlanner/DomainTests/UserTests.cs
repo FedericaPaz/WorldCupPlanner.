@@ -287,4 +287,11 @@ public class UserTests
         user.ChangePassword("NewPassword1!");
         Assert.IsTrue(user.HasPassword("NewPassword1!"));
     }
+
+    [TestMethod]
+    public void ChangePassword_WithInvalidPassword_ShouldThrowException()
+    {
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole>{UserRole.SystemAdministrator});
+        Assert.ThrowsException<ArgumentException>(() => user.ChangePassword("123"));
+    }
 }
