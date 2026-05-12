@@ -51,13 +51,11 @@ public class TeamServiceTests
     [DataRow("OFC", 1)]
     public void CreateTeam_WhenConfederationLimitExceeded_ShouldThrowException(string confName, int limit)
     {
+        var repo    = new TeamRepository();
+        var service = new TeamService(repo, new FixtureRepository(), new MatchRepository(), new CrucesRepository());
         for (int i = 0; i < limit; i++)
-        {
-            var request = CreateRequest($"Team{i}", confName, 1000 + i);
-            _teamService.Add(request);
-        }
-        var extraRequest = CreateRequest("ExtraName", confName, 2000);
-        Assert.ThrowsException<InvalidOperationException>(() => _teamService.Add(extraRequest));
+            service.Add(CreateRequest($"Team{i}", confName, 1000 + i));
+        Assert.ThrowsException<InvalidOperationException>(() => service.Add(CreateRequest("ExtraName", confName, 2000)));
     }
     
     [DataTestMethod]
@@ -69,13 +67,11 @@ public class TeamServiceTests
     [DataRow("OFC", 1)]
     public void CreateTeam_AtConfederationLimit_ShouldSucceed(string confName, int limit)
     {
-        var repository = new TeamRepository();
+        var repo    = new TeamRepository();
+        var service = new TeamService(repo, new FixtureRepository(), new MatchRepository(), new CrucesRepository());
         for (int i = 0; i < limit; i++)
-        {
-            var request = CreateRequest($"Team{i}", confName, 1000 + i);
-            _teamService.Add(request);
-        }
-        var teams = repository.GetAll().Count(t => t.Confederation.Name == confName);
+            service.Add(CreateRequest($"Team{i}", confName, 1000 + i));
+        var teams = repo.GetAll().Count(t => t.Confederation.Name == confName);
         Assert.AreEqual(limit, teams);
     }
     
