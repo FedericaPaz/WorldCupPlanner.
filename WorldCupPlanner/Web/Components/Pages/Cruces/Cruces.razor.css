@@ -36,6 +36,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
+    margin: 0 auto;
 }
 
 .btn-generar-cruces:hover, .btn-siguiente-ronda:hover {
