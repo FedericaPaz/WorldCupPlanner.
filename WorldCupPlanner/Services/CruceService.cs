@@ -9,17 +9,29 @@ namespace Services;
 public class CruceService : ICruceService
 {
     private readonly ICrucesRepository _repository;
+    private ICrucesRepository _crucesSimuladosRepository;
     private readonly IFixtureRepository _fixtureRepository;
     private readonly IStadiumRepository _stadiumRepository;
-    private readonly ICruceGeneratorService _generator;
+    private readonly ICrucesGeneratorService _generator;
+    private readonly ISimulationService _simulationService;
+    private readonly TournamentConfig _config;
 
-    public CruceService(ICrucesRepository repository, IFixtureRepository fixtureRepository, IStadiumRepository stadiumRepository, ICruceGeneratorService generator)
+    public void SetRepository(ICrucesRepository repository)
+    {
+        _crucesSimuladosRepository = repository;
+    }
+
+    public CruceService(ICrucesRepository repository, IFixtureRepository fixtureRepository, IStadiumRepository stadiumRepository, ICrucesGeneratorService generator, ISimulationService simulationService, TournamentConfig config)
     {
         _repository = repository;
+        _crucesSimuladosRepository = repository;
         _fixtureRepository = fixtureRepository;
         _stadiumRepository = stadiumRepository;
         _generator = generator;
+        _simulationService = simulationService;
+        _config = config;
     }
+    
 
     public void GenerateRoundOf32()
     {
@@ -49,5 +61,35 @@ public class CruceService : ICruceService
     public List<CruceResponse> GetAllCruces()
     {
         return _repository.GetAllCruces().Select(CruceMapper.ToResponse).ToList();;
+    }
+
+    public void SimulateCruces()
+    {
+        var cruces = _repository.GetAllCruces();
+        _simulationService.SimulateCruces(cruces, _config.SemillaSimulation);
+    }
+
+    public void SimulateAndAdvanceToFinal()
+    {
+        var todos = _crucesSimuladosRepository.GetAllCruces();
+        if (todos == null || todos.Count == 0)
+            throw new InvalidOperationException("No hay cruces generados.");
+        
+        _crucesSimuladosRepository.RemoveCruces();
+        var fixture = _fixtureRepository.GetFixture();
+        var grupos = fixture.GetGroups.ToList();
+        var estadios = _stadiumRepository.GetAllStadiums();
+        var rondaActual = _generator.GenerateRoundOf32(grupos, estadios, _config.SemillaCrucesFase);
+
+        _simulationService.SimulateCruces(rondaActual, _config.SemillaSimulation);
+        _crucesSimuladosRepository.AddCruces(rondaActual);
+        
+        while (rondaActual.Max(x => x.Phase) != TournamentPhase.Final)
+        {
+            var nuevos = _generator.GenerateNextRound(rondaActual, estadios, _config.SemillaCrucesFase);
+            _simulationService.SimulateCruces(nuevos, _config.SemillaSimulation);
+            _crucesSimuladosRepository.AddCruces(nuevos);
+            rondaActual = nuevos;
+        }
     }
 }
