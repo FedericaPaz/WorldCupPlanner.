@@ -36,6 +36,11 @@ public class MatchRepository : IMatchRepository
         return match;
     }
 
+    public void ClearMatches()
+    {
+        _matches.Clear();
+    }
+
     private void EnsureValidId(int matchId)
     {
         if (matchId <= 0)
