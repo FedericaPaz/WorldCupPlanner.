@@ -112,4 +112,12 @@ public class UserService
 
         return user;
     }
+    
+    public void ResetPassword(string email, string defaultPassword)
+    {
+        ValidateEmailNotEmpty(email);
+        var user = GetExistingUserOrThrow(email);
+        user.ChangePassword(defaultPassword);
+        _userRepository.UpdateUser(user);
+    }
 }

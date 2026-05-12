@@ -371,4 +371,16 @@ public class UserServiceTests
         CollectionAssert.Contains(result.Roles, UserRoleDto.SystemAdministrator);
         CollectionAssert.Contains(result.Roles, UserRoleDto.Editor);
     }
+    
+    [TestMethod]
+    public void ResetPassword_WithExistingUser_ShouldUpdatePassword()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+        userService.CreateUser("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
+        userService.ResetPassword("juan.perez@gmail.com", "NewPassword1!");
+        var user = userService.GetUser("juan.perez@gmail.com");
+        Assert.IsNotNull(user);
+        Assert.IsTrue(user.HasPassword("NewPassword1!"));
+    }
 }
