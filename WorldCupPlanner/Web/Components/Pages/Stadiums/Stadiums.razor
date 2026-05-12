@@ -87,6 +87,11 @@ else
 
     protected override void OnInitialized()
     {
+        if(!SessionService.IsSystemAdministrator())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
         LoadData();
     }
 

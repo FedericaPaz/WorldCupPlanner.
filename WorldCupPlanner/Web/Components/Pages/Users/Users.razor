@@ -8,6 +8,7 @@
 
 @inject UserService UserService
 @inject ILogService LogService
+@inject NavigationManager Navigation
 @inject SessionService SessionService
 
 <div class="users-shell">
@@ -176,6 +177,11 @@
 
     protected override void OnInitialized()
     {
+        if (!SessionService.IsSystemAdministrator())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
         LoadUsers();
     }
 
