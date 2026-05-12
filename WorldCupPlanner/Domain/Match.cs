@@ -190,4 +190,13 @@ public class Match
         if (groupToUpper < MinGroup || groupToUpper > MaxGroup)
             throw new ArgumentException($"El grupo debe ser una letra entre la {MinGroup} y la {MaxGroup}.");
     }
+    
+    public void ForceWinner(ITeam winner)
+    {
+        if (winner == null)
+            throw new ArgumentNullException(nameof(winner));
+        if (winner.Name != HomeTeam.Name && winner.Name != AwayTeam.Name)
+            throw new ArgumentException("El ganador debe ser uno de los equipos del partido.");
+        _winnerMatch = winner;
+    }
 }

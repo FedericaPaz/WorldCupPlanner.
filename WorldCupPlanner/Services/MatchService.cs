@@ -12,6 +12,7 @@ public class MatchService : IMatchService
     private readonly ITeamRepository _teamRepository;
     private readonly IStadiumRepository _stadiumRepository;
     private readonly IDateTimeMatch _clock;
+    private readonly ISimulationService _simulationService;
 
     public MatchService(IMatchRepository matchRepository, ITeamRepository teamRepository, IStadiumRepository stadiumRepository, IDateTimeMatch clock)
     {
@@ -102,5 +103,22 @@ public class MatchService : IMatchService
         var stadium = GetStadiumOrThrow(stadiumName);
 
         match.UpdateStadium(stadium);
+    }
+
+    public void SimulateMatch(int matchId, int seed)
+    {
+        var match = _matchRepository.GetMatchById(matchId);
+        var (home, away) = _simulationService.SimulateMatch(match, seed);
+        match.SetMatchResult(home,away);
+    }
+
+    public void SimulateAllGroupMatches(int seed)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SimulateAllCruceMatches(int seed)
+    {
+        throw new NotImplementedException();
     }
 }
