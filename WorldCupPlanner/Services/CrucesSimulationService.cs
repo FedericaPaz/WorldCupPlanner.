@@ -43,6 +43,6 @@ public class CrucesSimulationService : ISimulationService
             else
                 away++;
         }
-        match.SetMatchResult(home, away);
+        match.SimulateResult(home, away);
     }
 }

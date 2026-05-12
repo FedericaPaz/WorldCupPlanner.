@@ -17,6 +17,8 @@ public class FixtureServiceTests
     private TournamentConfig _config;
     private Fixture _fixture;
     private FixtureGenerator _fixtureGenerator;
+    private IMatchRepository _matchRepository;
+    private ICrucesRepository _crucesRepository;
     
     [TestInitialize]
     public void Setup()
@@ -25,7 +27,9 @@ public class FixtureServiceTests
         _teamRepository = new TeamRepository();
         _stadiumRepository = new StadiumRepository();
         _fixtureGenerator = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository);
-        _service = new FixtureService(_fixtureRepository, _fixtureGenerator, _teamRepository, _stadiumRepository);
+        _crucesRepository = new CrucesRepository();
+        _matchRepository = new MatchRepository();
+        _service = new FixtureService(_fixtureRepository, _fixtureGenerator, _teamRepository, _stadiumRepository,_matchRepository, _crucesRepository);
         
         _config = new TournamentConfig();
         _fixture = new Fixture(_config);
