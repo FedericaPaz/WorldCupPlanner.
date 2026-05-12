@@ -1,10 +1,12 @@
 @page "/matches/edit/{Id:int}"
 @rendermode InteractiveServer
+@using Domain
 @using DTOs
 @using IServices
 @inject IMatchService MatchService
 @inject IStadiumService StadiumService
 @inject NavigationManager Navigation
+@inject TournamentConfig Config
 
 <div class="edit-match-page">
     <button class="back-link" @onclick="GoBack">← Volver a partidos</button>
@@ -17,6 +19,11 @@
     @if (_match is null)
     {
         <p>Cargando partido...</p>
+    } else if (_match.isLocked)
+    {
+        <div class="alert alert-warning">
+            Este partido no puede editarse porque los cruces eliminatorios ya fueron generados.
+        </div>
     }
     else
     {
@@ -124,9 +131,14 @@
             if (_match is null)
                 return;
 
-            MatchService.UpdateMatchDate(_match.idMatch, _dateTime);
-            MatchService.UpdateMatchStadium(_match.idMatch, _stadiumName);
-            MatchService.SetMatchResult(_match.idMatch, _homeGoals, _awayGoals);
+            if (_dateTime != _match.dateMatch)
+                MatchService.UpdateMatchDate(_match.idMatch, _dateTime);
+
+            if (_stadiumName != _match.stadiumName)
+                MatchService.UpdateMatchStadium(_match.idMatch, _stadiumName);
+
+            if (!_match.homeGoals.HasValue && (_homeGoals > 0 || _awayGoals > 0))
+                MatchService.SetMatchResult(_match.idMatch, _homeGoals, _awayGoals);
 
             Navigation.NavigateTo("/matches");
         }
@@ -138,9 +150,8 @@
 
     private void SimulateResult()
     {
-        var random = new Random();
-        _homeGoals = random.Next(0, 6);
-        _awayGoals = random.Next(0, 6);
+        MatchService.SimulateMatch(_match!.idMatch, Config.SemillaSimulation);
+        LoadData();
     }
 
     private void GoBack()

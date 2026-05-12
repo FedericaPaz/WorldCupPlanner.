@@ -3,13 +3,20 @@
 @using DTOs
 @using IServices
 @inject IMatchService MatchService
+@inject ICruceService CruceService
 
 <div class="matches-page">
     <div class="page-header">
         <div>
             <h3>Listado de Partidos</h3>
-            <p>@_matches.Count de @_matches.Count partidos</p>
+            <p>@_pendientes pendientes · @_jugados jugados · @_matches.Count total</p>
         </div>
+        @if (_pendientes > 0)
+        {
+            <button class="btn-generar-cruces" @onclick="SimularPendientes" disabled="@_cargando">
+                @(_cargando ? "⏳ Simulando..." : $"🎲 Simular pendientes ({_pendientes})")
+            </button>
+        }
     </div>
 
     <div class="matches-card">
@@ -72,9 +79,53 @@
 
 @code {
     private List<MatchResponse> _matches = new();
+    private bool _cargando = false;
+    private string? _mensajeError;
+    private string? _mensajeExito;
+
+    private int _pendientes => _matches.Count(m => !m.homeGoals.HasValue);
+    private int _jugados    => _matches.Count(m =>  m.homeGoals.HasValue);
 
     protected override void OnInitialized()
     {
-        _matches = MatchService.GetAllMatches().ToList();
+        LoadData();
+    }
+
+    private void LoadData()
+    {
+        try
+        {
+            _matches = MatchService.GetAllMatches().ToList();
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = ex.Message;
+        }
+    }
+
+    private void SimularPendientes()
+    {
+        try
+        {
+            _cargando = true;
+            _mensajeError = null;
+            _mensajeExito = null;
+            StateHasChanged();
+
+            MatchService.SimulateGroupStage(); 
+            CruceService.SimulateCruces();
+
+            _mensajeExito = "Partidos simulados correctamente.";
+            LoadData();
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = ex.Message;
+        }
+        finally
+        {
+            _cargando = false;
+            StateHasChanged();
+        }
     }
 }
