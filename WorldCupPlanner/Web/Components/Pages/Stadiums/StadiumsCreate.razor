@@ -77,6 +77,14 @@
     private StadiumRequest _model = new();
     private string _errorMessage = string.Empty;
     private bool _isSubmitting;
+    
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsSystemAdministrator())
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
 
     private void NavigateBack()
     {

@@ -1,6 +1,7 @@
 ﻿using Domain;
 using IRepository;
 using DTOs.User;
+using Services.Mappers;
 
 namespace Services;
 
@@ -27,13 +28,14 @@ public class UserService
 
     public void CreateUser(UserRequestDto userDto)
     {
+        var roles = UserRoleMapper.ToDomain(userDto.Roles);
         var user = new User(
             userDto.FirstName,
             userDto.LastName,
             userDto.Email,
             userDto.BirthDate,
             userDto.Password,
-            userDto.Roles
+            roles
         );
 
         _userRepository.AddUser(user);
@@ -65,7 +67,7 @@ public class UserService
             LastName = user.LastName,
             Email = user.Email,
             BirthDate = user.BirthDate,
-            Roles = user.Roles
+            Roles = UserRoleMapper.ToDto(user.Roles)
         };
     }
     
@@ -85,7 +87,7 @@ public class UserService
         List<UserRole> roles)
     {
         ValidateEmailNotEmpty(email);
-        var existingUser = GetExistingUserOrThrow(email);
+        GetExistingUserOrThrow(email);
 
         var user = new User(firstName, lastName, email, birthDate, password, roles);
         _userRepository.UpdateUser(user);
@@ -109,5 +111,51 @@ public class UserService
         }
 
         return user;
+    }
+    
+    public void ResetPassword(string email, string defaultPassword)
+    {
+        ValidateEmailNotEmpty(email);
+        var user = GetExistingUserOrThrow(email);
+        user.ChangePassword(defaultPassword);
+        _userRepository.UpdateUser(user);
+    }
+    
+    public void ChangeOwnPassword(string email, string newPassword)
+    {
+        ValidateEmailNotEmpty(email);
+        var user = GetExistingUserOrThrow(email);
+        user.ChangePassword(newPassword);
+        _userRepository.UpdateUser(user);
+    }
+
+    public string GenerateDefaultPassword()
+    {
+        const string upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const string lower = "abcdefghijklmnopqrstuvwxyz";
+        const string digits = "0123456789";
+        const string specials = "!@#$%^&*()-_+=";
+        var rnd = new Random();
+        var all = upper + lower + digits + specials;
+        var pwd = new char[10];
+        pwd[0] = upper[rnd.Next(upper.Length)];
+        pwd[1] = lower[rnd.Next(lower.Length)];
+        pwd[2] = digits[rnd.Next(digits.Length)];
+        pwd[3] = specials[rnd.Next(specials.Length)];
+        for (int i = 4; i < pwd.Length; i++)
+        {
+            pwd[i] = all[rnd.Next(all.Length)];
+        }
+
+        // Shuffle
+        return new string(pwd.OrderBy(x => rnd.Next()).ToArray());
+    }
+    
+    public void UpdateUserWithoutPassword(string firstName, string lastName, string email, DateTime birthDate, List<UserRole> roles)
+    {
+        ValidateEmailNotEmpty(email);
+        var user = GetExistingUserOrThrow(email);
+        user.UpdateData(firstName, lastName, birthDate, roles);
+        _userRepository.UpdateUser(user);
     }
 }

@@ -16,6 +16,7 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<SessionService>();
 

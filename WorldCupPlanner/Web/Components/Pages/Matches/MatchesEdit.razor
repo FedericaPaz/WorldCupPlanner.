@@ -2,9 +2,11 @@
 @rendermode InteractiveServer
 @using DTOs
 @using IServices
+@using Web.Services
 @inject IMatchService MatchService
 @inject IStadiumService StadiumService
 @inject NavigationManager Navigation
+@inject SessionService SessionService
 
 <div class="edit-match-page">
     <button class="back-link" @onclick="GoBack">← Volver a partidos</button>
@@ -96,6 +98,11 @@
 
     protected override void OnInitialized()
     {
+        if (!SessionService.IsEditor())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
         LoadData();
     }
 

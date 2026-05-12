@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using DomainTests.TestHelpers;
 using Domain;
 
 namespace DomainTests;
@@ -15,7 +16,7 @@ public class UserTests
         var birthDate = new DateTime(2000, 1, 1);
         var password = "Password1!";
 
-        User user = new User(firstName, lastName, email, birthDate, password, GetValidRoles());
+        User user = new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles());
 
         Assert.AreEqual(firstName, user.FirstName);
         Assert.AreEqual(lastName, user.LastName);
@@ -33,7 +34,7 @@ public class UserTests
         var password = "Password1!";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
 
     [TestMethod]
@@ -46,7 +47,7 @@ public class UserTests
         var password = "Password1!";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
 
     [TestMethod]
@@ -59,7 +60,7 @@ public class UserTests
         var password = "Password1!";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
 
     [TestMethod]
@@ -72,7 +73,7 @@ public class UserTests
         var password = "Password1!";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
    
     [TestMethod]
@@ -85,7 +86,7 @@ public class UserTests
         string password = null!;
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
     
     [TestMethod]
@@ -98,7 +99,7 @@ public class UserTests
         var password = "";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
     
     [TestMethod]
@@ -111,7 +112,7 @@ public class UserTests
         var password = "Ab1!";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
     
     [TestMethod]
@@ -124,7 +125,7 @@ public class UserTests
         var password = "password1!";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
     
     [TestMethod]
@@ -137,7 +138,7 @@ public class UserTests
         var password = "PASSWORD1!";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
     
     [TestMethod]
@@ -150,7 +151,7 @@ public class UserTests
         var password = "Password!";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
     
     [TestMethod]
@@ -163,7 +164,7 @@ public class UserTests
         var password = "Password1";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
     
     [TestMethod]
@@ -176,7 +177,7 @@ public class UserTests
         var password = "Password1!";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            new User(firstName, lastName, email, birthDate, password, GetValidRoles()));
+            new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles()));
     }
     
     [TestMethod]
@@ -188,7 +189,7 @@ public class UserTests
         var birthDate = new DateTime(2000, 1, 1);
         var password = "Password1!";
 
-        User user = new User(firstName, lastName, email, birthDate, password, GetValidRoles());
+        User user = new User(firstName, lastName, email, birthDate, password, UserTestHelper.GetValidRoles());
 
         Assert.AreNotEqual(password, user.PasswordHash);
     }
@@ -279,8 +280,51 @@ public class UserTests
             ));
     }
 
-    private static List<UserRole> GetValidRoles()
+    [TestMethod]
+    public void ChangePassword_WithValidPassword_ShouldUpdatePassword()
     {
-        return new List<UserRole> { UserRole.SystemAdministrator };
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole>{UserRole.SystemAdministrator});
+        user.ChangePassword("NewPassword1!");
+        Assert.IsTrue(user.HasPassword("NewPassword1!"));
+    }
+
+    [TestMethod]
+    public void ChangePassword_WithInvalidPassword_ShouldThrowException()
+    {
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole>{UserRole.SystemAdministrator});
+        Assert.ThrowsException<ArgumentException>(() => user.ChangePassword("123"));
+    }
+
+    [TestMethod]
+    public void UpdateData_WithValidData_ShouldUpdateUserData()
+    {
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
+        user.UpdateData("Pedro", "Gomez", new DateTime(1995, 5, 5), new List<UserRole>{UserRole.Editor});
+        Assert.AreEqual("Pedro", user.FirstName);
+        Assert.AreEqual("Gomez", user.LastName);
+        Assert.AreEqual(new DateTime(1995, 5, 5), user.BirthDate);
+        Assert.AreEqual(1, user.Roles.Count);
+    }
+
+    [TestMethod]
+    public void UpdateData_ShouldKeepPassword()
+    {
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
+        user.UpdateData("Pedro", "Gomez", new DateTime(1995, 5, 5), new List<UserRole>{UserRole.Editor});
+        Assert.IsTrue(user.HasPassword("Password1!"));
+    }
+
+    [TestMethod]
+    public void UpdateData_WithInvalidBirthDate_ShouldThrowException()
+    {
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
+        Assert.ThrowsException<ArgumentException>(() => user.UpdateData("Pedro", "Gomez", DateTime.Today.AddDays(1), new List<UserRole>{UserRole.Editor}));
+    }
+
+    [TestMethod]
+    public void UpdateData_WithEmptyRoles_ShouldThrowException()
+    {
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
+        Assert.ThrowsException<ArgumentException>(() => user.UpdateData("Pedro", "Gomez", new DateTime(1995, 5, 5), new List<UserRole>()));
     }
 }
