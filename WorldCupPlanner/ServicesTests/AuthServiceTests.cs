@@ -53,4 +53,25 @@ public class AuthServiceTests
         Assert.ThrowsException<InvalidOperationException>(() =>
             authService.Login(request));
     }
+    
+    [TestMethod]
+    public void Login_WithNonExistingEmail_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var authService = new AuthService(userRepository);
+
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole> { UserRole.SystemAdministrator }
+        );
+
+        userRepository.AddUser(user);
+
+        var request = new LoginRequest
+        {
+            Email = "noexiste@gmail.com",
+            Password = "Password1!"
+        };
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            authService.Login(request));
+    }
 }
