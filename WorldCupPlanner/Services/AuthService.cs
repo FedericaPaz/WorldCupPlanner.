@@ -13,7 +13,7 @@ public class AuthService : IAuthService
 
     public AuthService(IUserRepository userRepository)
     {
-        _userRepository = userRepository;
+        _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
     }
 
     public LoginResponse Login(LoginRequest request)

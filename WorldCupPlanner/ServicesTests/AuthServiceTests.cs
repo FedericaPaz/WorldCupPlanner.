@@ -148,4 +148,11 @@ public class AuthServiceTests
         Assert.ThrowsException<ArgumentNullException>(() =>
             authService.Login(null!));
     }
+    
+    [TestMethod]
+    public void Constructor_WithNullRepository_ShouldThrowArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new AuthService(null!));
+    }
 }
