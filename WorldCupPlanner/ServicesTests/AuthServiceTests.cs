@@ -209,4 +209,14 @@ public class AuthServiceTests
         Assert.ThrowsException<InvalidOperationException>(() =>
             authService.Register(request));
     }
+    
+    [TestMethod]
+    public void Register_WithNullRequest_ShouldThrowArgumentNullException()
+    {
+        var userRepository = new UserRepository();
+        var authService = new AuthService(userRepository);
+
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            authService.Register(null!));
+    }
 }

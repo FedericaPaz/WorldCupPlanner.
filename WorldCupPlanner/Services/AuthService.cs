@@ -37,6 +37,9 @@ public class AuthService : IAuthService
 
     public void Register(RegisterRequest request)
     {
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
+        
         var exists = _userRepository.GetAllUsers().Any(p => p.Email == request.Email);
         if (exists)
             throw new InvalidOperationException("Ya existe un usuario con ese email.");
