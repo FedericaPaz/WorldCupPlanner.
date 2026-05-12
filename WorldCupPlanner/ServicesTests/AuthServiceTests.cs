@@ -238,4 +238,23 @@ public class AuthServiceTests
         Assert.ThrowsException<ArgumentException>(() =>
             authService.Register(request));
     }
+    
+    [TestMethod]
+    public void Register_WithFutureBirthDate_ShouldThrowArgumentException()
+    {
+        var userRepository = new UserRepository();
+        var authService = new AuthService(userRepository);
+
+        var request = new RegisterRequest
+        {
+            FirstName = "Juan",
+            LastName = "Perez",
+            Email = "juan.perez@gmail.com",
+            BirthDate = DateTime.Today.AddDays(1),
+            Password = "Password1!"
+        };
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            authService.Register(request));
+    }
 }
