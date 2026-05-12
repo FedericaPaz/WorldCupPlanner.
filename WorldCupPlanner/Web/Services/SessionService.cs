@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using DTOs;
+using DTOs.User;
 using IServices;
 
 namespace Web.Services;
@@ -43,8 +44,24 @@ public class SessionService
         await _localStorage.RemoveItemAsync("loggedUser");
     }
 
-    public LoginResponse GetCurrentUser()
+    public LoginResponse? GetCurrentUser()
     {
-        return _currentUser!;
+        return _currentUser;
+    }
+
+    public bool HasRole(UserRoleDto role)
+    {
+        return _currentUser is not null &&
+               _currentUser.Roles.Contains(role);
+    }
+
+    public bool IsSystemAdministrator()
+    {
+        return HasRole(UserRoleDto.SystemAdministrator);
+    }
+
+    public bool IsEditor()
+    {
+        return HasRole(UserRoleDto.Editor);
     }
 }

@@ -2,7 +2,10 @@
 @rendermode InteractiveServer
 @using DTOs
 @using IServices
+@using Web.Services
 @inject IMatchService MatchService
+@inject SessionService SessionService
+@inject NavigationManager Navigation
 
 <div class="matches-page">
     <div class="page-header">
@@ -75,6 +78,11 @@
 
     protected override void OnInitialized()
     {
+        if (!SessionService.IsEditor())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
         _matches = MatchService.GetAllMatches().ToList();
     }
 }

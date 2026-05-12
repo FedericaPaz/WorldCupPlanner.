@@ -1,5 +1,6 @@
 ﻿@using Web.Services
 @inherits LayoutComponentBase
+@implements IDisposable
 @inject SessionService SessionService
 @inject NavigationManager Navigation
 
@@ -41,20 +42,45 @@ else
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender) return;
+        if (!firstRender)
+        {
+            return;
+        }
 
         await SessionService.InitializeAsync();
 
-        var currentUri = Navigation.Uri;
-        var isAuthPage = currentUri.Contains("/login") || currentUri.Contains("/register");
+        Navigation.LocationChanged += OnLocationChanged;
+
+        RedirectIfNeeded();
+
+        StateHasChanged();
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        RedirectIfNeeded();
+        StateHasChanged();
+    }
+
+    private void RedirectIfNeeded()
+    {
+        var path = new Uri(Navigation.Uri).AbsolutePath.ToLowerInvariant();
+        var isAuthPage = path == "/login" || path == "/register";
 
         if (!SessionService.IsUserActive() && !isAuthPage)
         {
-            Navigation.NavigateTo("/login");
+            Navigation.NavigateTo("/login", replace: true);
+            return;
         }
-        else
+
+        if (SessionService.IsUserActive() && isAuthPage)
         {
-            StateHasChanged();
+            Navigation.NavigateTo("/", replace: true);
         }
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
     }
 }

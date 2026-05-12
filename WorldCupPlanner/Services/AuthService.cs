@@ -18,12 +18,8 @@ public class AuthService : IAuthService
 
     public LoginResponse Login(LoginRequest request)
     {
-        var user = _userRepository
-            .GetAllUsers()
-            .FirstOrDefault(p => p.Email == request.Email && p.PasswordHash == HashPassword(request.Password));
-        
-        Console.WriteLine(_userRepository.GetAllUsers().Count);
-        Console.WriteLine($"{request.Password} ----- {user?.PasswordHash}");
+        var users = _userRepository.GetAllUsers();
+        var user = users.FirstOrDefault(p => p.Email == request.Email && p.PasswordHash == HashPassword(request.Password));
 
         if (user is null)
             throw new InvalidOperationException("Credenciales Inválidas.");
@@ -31,7 +27,8 @@ public class AuthService : IAuthService
         return new LoginResponse 
         { 
             Name = $"{user.FirstName} {user.LastName}", 
-            Email = user.Email 
+            Email = user.Email,
+            Roles = UserRoleMapper.ToDto(user.Roles)
         };
     }
 

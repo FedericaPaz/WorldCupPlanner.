@@ -7,5 +7,5 @@ public class UserResponseDto
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public DateTime BirthDate { get; set; }
-    public List<UserRole> Roles { get; set; } = new();
+    public List<UserRoleDto> Roles { get; set; } = new();
 }

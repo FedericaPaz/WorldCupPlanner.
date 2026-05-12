@@ -80,8 +80,16 @@ else
 
     protected override void OnInitialized()
     {
+        if (!SessionService.IsSystemAdministrator())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
         var stadium = Service.GetAllStadiums()
-            .FirstOrDefault(s => s.stadiumName.Equals(Uri.UnescapeDataString(Name ?? ""), StringComparison.OrdinalIgnoreCase));
+            .FirstOrDefault(s => s.stadiumName.Equals(
+                Uri.UnescapeDataString(Name ?? ""),
+                StringComparison.OrdinalIgnoreCase));
 
         if (stadium == null)
         {

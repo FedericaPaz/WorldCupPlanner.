@@ -1,0 +1,261 @@
+﻿.users-shell {
+    padding: 32px;
+    background-color: #f9fafb;
+    min-height: 100vh;
+}
+
+.users-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.users-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.users-header p {
+    margin: 8px 0 0;
+    color: #6b7280;
+    font-size: 16px;
+}
+
+.primary-button {
+    background-color: #16a34a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.primary-button:hover {
+    background-color: #15803d;
+}
+
+.primary-button.full {
+    flex: 1;
+}
+
+.plus-icon {
+    font-size: 24px;
+    line-height: 18px;
+}
+
+.users-table-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.users-table th {
+    background-color: #f3f4f6;
+    color: #111827;
+    text-align: left;
+    padding: 18px 24px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.users-table td {
+    padding: 18px 24px;
+    border-top: 1px solid #e5e7eb;
+    color: #111827;
+    font-size: 15px;
+}
+
+.users-table tr:hover td {
+    background-color: #f9fafb;
+}
+
+.muted {
+    color: #6b7280 !important;
+}
+
+.actions-column {
+    text-align: right !important;
+}
+
+.actions-cell {
+    text-align: right;
+}
+
+.icon-button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: #374151;
+}
+
+.icon-button:hover {
+    background-color: #f3f4f6;
+}
+
+.icon-button.danger {
+    color: #dc2626;
+}
+
+.empty-state {
+    text-align: center;
+    color: #6b7280 !important;
+    padding: 32px !important;
+}
+
+.error-message {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.success-message {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #bbf7d0;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 24px;
+}
+
+.modal-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.close-button {
+    background: transparent;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #374151;
+    line-height: 1;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #111827;
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.15);
+}
+
+.form-control:disabled {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+.validation-message {
+    color: #dc2626;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.secondary-button {
+    flex: 1;
+    background: white;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.secondary-button:hover {
+    background: #f3f4f6;
+}
+
+.roles-options {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.role-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.role-option input {
+    width: 16px;
+    height: 16px;
+    accent-color: #16a34a;
+}
