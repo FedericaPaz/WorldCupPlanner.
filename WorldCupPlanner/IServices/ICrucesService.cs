@@ -8,5 +8,4 @@ public interface ICruceService
     void GenerateNextRound();
     List<CruceResponse> GetAllCruces();
     void SimulateCruces();
-    void SimulateAndAdvanceToFinal();
 }
