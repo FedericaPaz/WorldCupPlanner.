@@ -36,9 +36,26 @@ builder.Services.AddSingleton<FixtureGenerator>();
 builder.Services.AddSingleton<ILogRepository, LogRepository>();
 builder.Services.AddSingleton<ILogService, LogService>();
 
-builder.Services.AddSingleton<ICrucesRepository, CrucesRepository>();
-builder.Services.AddSingleton<ICruceGeneratorService, CruceGeneratorService>();
-builder.Services.AddSingleton<ICruceService, CruceService>();
+builder.Services.AddSingleton<TournamentConfig>();
+builder.Services.AddSingleton<ISimulationService, CrucesSimulationService>();
+
+builder.Services.AddSingleton<ICrucesGeneratorService, CrucesGeneratorService>();
+
+builder.Services.AddKeyedSingleton<ICruceService>("real", (sp, _) => new CruceService(
+    new CrucesRepository(),  
+    sp.GetRequiredService<IFixtureRepository>(),
+    sp.GetRequiredService<IStadiumRepository>(),
+    sp.GetRequiredService<ICrucesGeneratorService>(),
+    sp.GetRequiredService<ISimulationService>(),
+    sp.GetRequiredService<TournamentConfig>()));
+
+builder.Services.AddKeyedSingleton<ICruceService>("simulado", (sp, _) => new CruceService(
+    new CrucesRepository(), 
+    sp.GetRequiredService<IFixtureRepository>(),
+    sp.GetRequiredService<IStadiumRepository>(),
+    sp.GetRequiredService<ICrucesGeneratorService>(),
+    sp.GetRequiredService<ISimulationService>(),
+    sp.GetRequiredService<TournamentConfig>()));
 
 var app = builder.Build();
 
