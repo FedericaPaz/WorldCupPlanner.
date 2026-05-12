@@ -164,4 +164,49 @@ public class AuthServiceTests
         Assert.AreEqual("Perez", users[0].LastName);
         Assert.AreEqual("juan.perez@gmail.com", users[0].Email);
     }
+    
+    [TestMethod]
+    public void Register_WithValidRequest_ShouldCreateUserWithEditorRole()
+    {
+        var userRepository = new UserRepository();
+        var authService = new AuthService(userRepository);
+
+        var request = new RegisterRequest
+        {
+            FirstName = "Juan",
+            LastName = "Perez",
+            Email = "juan.perez@gmail.com",
+            BirthDate = new DateTime(2000, 1, 1),
+            Password = "Password1!"
+        };
+
+        authService.Register(request);
+
+        var user = userRepository.GetUser("juan.perez@gmail.com");
+
+        Assert.IsNotNull(user);
+        Assert.AreEqual(1, user.Roles.Count);
+        CollectionAssert.Contains(user.Roles, UserRole.Editor);
+    }
+    
+    [TestMethod]
+    public void Register_WithExistingEmail_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var authService = new AuthService(userRepository);
+
+        var request = new RegisterRequest
+        {
+            FirstName = "Juan",
+            LastName = "Perez",
+            Email = "juan.perez@gmail.com",
+            BirthDate = new DateTime(2000, 1, 1),
+            Password = "Password1!"
+        };
+
+        authService.Register(request);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            authService.Register(request));
+    }
 }
