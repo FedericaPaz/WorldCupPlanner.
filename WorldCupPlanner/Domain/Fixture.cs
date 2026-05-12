@@ -10,24 +10,11 @@ public class ClockStub : IDateTimeMatch
     public DateTime Now => _now;
 }
 
-public enum TournamentPhase
-{
-    NotStarted,
-    GroupStage,
-    RoundOf32,
-    RoundOf16,
-    QuarterFinals,
-    SemiFinals,
-    ThirdPlace,
-    Final,
-    Finished
-}
-
 public class Fixture
 {
     public TournamentPhase CurrentPhase { get; private set; }
     private List<Group> _groups;
-    private List<Match> _eliminatoryMatches = new List<Match>(); //eliminatoria
+    private List<Match> _eliminatoryMatches; //eliminatoria
     private readonly TournamentConfig _config;
     
     public List<Group> GetGroups

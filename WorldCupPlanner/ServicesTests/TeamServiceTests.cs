@@ -9,7 +9,7 @@ public class TeamServiceTests
 {
     private TeamDTO CreateRequest(string name, string confederationName, int fifaRanking)
     {
-        return new TeamDTO()
+        return new TeamDTO
         {
             Name = name,
             ConfederationName = confederationName,
@@ -25,7 +25,9 @@ public class TeamServiceTests
         var request = CreateRequest("Uruguay", "UEFA", 1000);
         
         teamService.Add(request);
+
         var result = teamRepository.Get("Uruguay");
+
         Assert.IsNotNull(result);
         Assert.AreEqual("Uruguay", result.Name);
         Assert.AreEqual("UEFA", result.Confederation.Name);
@@ -40,7 +42,10 @@ public class TeamServiceTests
         var request = CreateRequest("Uruguay", "UEFA", 1000);
         
         teamService.Add(request);
-        Assert.ThrowsException<ArgumentException>(() => teamService.Add(request));
+
+        var duplicatedRequest = CreateRequest("Uruguay", "UEFA", 1001);
+
+        Assert.ThrowsException<ArgumentException>(() => teamService.Add(duplicatedRequest));
     }
     
     [DataTestMethod]
@@ -51,7 +56,8 @@ public class TeamServiceTests
     [DataRow("AFC", 8)]
     [DataRow("OFC", 1)]
     public void CreateTeam_WhenConfederationLimitExceeded_ShouldThrowException(
-        string confName, int limit)
+        string confName,
+        int limit)
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
@@ -61,7 +67,9 @@ public class TeamServiceTests
             var request = CreateRequest($"Team{i}", confName, 1000 + i);
             teamService.Add(request);
         }
+
         var extraRequest = CreateRequest("ExtraName", confName, 2000);
+
         Assert.ThrowsException<InvalidOperationException>(() => teamService.Add(extraRequest));
     }
     
@@ -73,28 +81,22 @@ public class TeamServiceTests
     [DataRow("AFC", 8)]
     [DataRow("OFC", 1)]
     public void CreateTeam_AtConfederationLimit_ShouldSucceed(
-        string confName, int limit)
+        string confName,
+        int limit)
     {
-        var repo = new TeamRepository();
-        var service = new TeamService(repo);
+        var repository = new TeamRepository();
+        var service = new TeamService(repository);
 
         for (int i = 0; i < limit; i++)
         {
             var request = CreateRequest($"Team{i}", confName, 1000 + i);
             service.Add(request);
         }
-        var teams = repo.GetAll().Where(t => t.Confederation.Name == confName).Count();
+
+        var teams = repository.GetAll().Count(t => t.Confederation.Name == confName);
+
         Assert.AreEqual(limit, teams);
     }
-
-    /*[TestMethod]
-    public void AddTeam_WithNullConfederation_ShouldThrowException()
-    {
-        var teamRepository = new TeamRepository();
-        var teamService = new TeamService(teamRepository);
-        var confederation = new Confederation(null);
-        Assert.ThrowsException<ArgumentNullException>(() => teamService.Create("Uruguay", confederation, 1000));
-    }*/
     
     [TestMethod]
     public void Get_WhenTeamExists_ShouldReturnTeam()
@@ -102,62 +104,94 @@ public class TeamServiceTests
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
         var request = CreateRequest("Uruguay", "UEFA", 1000);
+
         teamService.Add(request);
         
         var result = teamService.Get("Uruguay");
+
         Assert.IsNotNull(result);
         Assert.AreEqual("Uruguay", result.Name);
         Assert.AreEqual("UEFA", result.ConfederationName);
         Assert.AreEqual(1000, result.FifaRanking);
     }
     
-    /*[TestMethod]
-    public void Get_WhenTeamDoesNotExist_ShouldReturnNull()
-    {
-        var teamRepository = new TeamRepository();
-        var teamService = new TeamService(teamRepository);
-
-        var result = teamService.Get("NonExistent");
-        Assert.IsNull(result);
-    }*/
-    
     [TestMethod]
     public void GetAll_ShouldReturnAllTeams()
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
+
         teamService.Add(CreateRequest("Brazil", "UEFA", 850));
         teamService.Add(CreateRequest("Argentina", "UEFA", 750));
 
         var results = teamService.GetAll();
+
         Assert.AreEqual(2, results.Count);
         Assert.IsTrue(results.Any(t => t.Name == "Brazil"));
         Assert.IsTrue(results.Any(t => t.Name == "Argentina"));
     }
     
-    /*[TestMethod]
+    [TestMethod]
     public void Update_WhenTeamExists_ShouldUpdateTeam()
     {
-        var teamRepository = new TeamRepository();
-        var teamService = new TeamService(teamRepository);
-        var confederation = new Confederation("UEFA");
-        teamService.Add("Brazil", confederation, 850);
-        var updatedConfederation = new Confederation("CONMEBOL");
-        teamService.Update("Brazil", updatedConfederation, 1000);
-        var result = teamService.Get("Brazil");
+        var repository = new TeamRepository();
+        var service = new TeamService(repository);
+
+        var originalTeam = new TeamDTO
+        {
+            Name = "Uruguay",
+            ConfederationName = "AFC",
+            FifaRanking = 500
+        };
+
+        service.Add(originalTeam);
+
+        var updatedTeam = new TeamDTO
+        {
+            Name = "Uruguay",
+            ConfederationName = "CONMEBOL",
+            FifaRanking = 1000
+        };
+
+        service.Update("Uruguay", updatedTeam);
+
+        var result = service.Get("Uruguay");
+
         Assert.IsNotNull(result);
-        Assert.AreEqual("CONMEBOL", result.Confederation.Name);
+        Assert.AreEqual("Uruguay", result.Name);
+        Assert.AreEqual("CONMEBOL", result.ConfederationName);
         Assert.AreEqual(1000, result.FifaRanking);
-    }*/
+    }
+
+    [TestMethod]
+    public void Update_WhenTeamDoesNotExist_ShouldThrowException()
+    {
+        var repository = new TeamRepository();
+        var service = new TeamService(repository);
+
+        var updatedTeam = new TeamDTO
+        {
+            Name = "Uruguay",
+            ConfederationName = "CONMEBOL",
+            FifaRanking = 1000
+        };
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            service.Update("Uruguay", updatedTeam));
+    }
     
     [TestMethod]
     public void Delete_WhenTeamExists_ShouldRemoveTeam()
     {
         var repository = new TeamRepository();
         var service = new TeamService(repository);
+
         service.Add(CreateRequest("Brazil", "UEFA", 850));
+
         service.Delete("Brazil");
+
         var result = service.Get("Brazil");
+
         Assert.IsNull(result);
     }
     
@@ -166,6 +200,7 @@ public class TeamServiceTests
     {
         var repository = new TeamRepository();
         var service = new TeamService(repository);
+
         Assert.ThrowsException<InvalidOperationException>(() => service.Delete("NonExistent"));
     }
     
@@ -174,7 +209,9 @@ public class TeamServiceTests
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
+
         List<ConfederationDTO> result = teamService.GetAllConfederations();
+
         Assert.AreEqual(6, result.Count);
         Assert.IsTrue(result.Any(c => c.Name == "UEFA"));
         Assert.IsTrue(result.Any(c => c.Name == "CONMEBOL"));
@@ -189,12 +226,72 @@ public class TeamServiceTests
     {
         var teamRepository = new TeamRepository();
         var teamService = new TeamService(teamRepository);
+
         List<ConfederationDTO> result = teamService.GetAllConfederations();
+
         ConfederationDTO? uefa = result.Find(c => c.Name == "UEFA");
         Assert.IsNotNull(uefa);
         Assert.AreEqual(16, uefa.MaxTeams);
+
         ConfederationDTO? ofc = result.Find(c => c.Name == "OFC");
         Assert.IsNotNull(ofc);
         Assert.AreEqual(1, ofc.MaxTeams);
+    }
+    
+    [TestMethod]
+    public void Add_WithExistingFifaRanking_ShouldThrowException()
+    {
+        var repository = new TeamRepository();
+        var service = new TeamService(repository);
+
+        var firstTeam = new TeamDTO
+        {
+            Name = "Uruguay",
+            ConfederationName = "CONMEBOL",
+            FifaRanking = 1000
+        };
+
+        var secondTeam = new TeamDTO
+        {
+            Name = "Argentina",
+            ConfederationName = "CONMEBOL",
+            FifaRanking = 1000
+        };
+
+        service.Add(firstTeam);
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            service.Add(secondTeam));
+    }
+    
+    [TestMethod]
+    public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
+    {
+        var repository = new TeamRepository();
+        var service = new TeamService(repository);
+
+        service.Add(new TeamDTO
+        {
+            Name = "Uruguay",
+            ConfederationName = "CONMEBOL",
+            FifaRanking = 1000
+        });
+
+        service.Add(new TeamDTO
+        {
+            Name = "Argentina",
+            ConfederationName = "CONMEBOL",
+            FifaRanking = 1001
+        });
+
+        var updatedTeam = new TeamDTO
+        {
+            Name = "Argentina",
+            ConfederationName = "CONMEBOL",
+            FifaRanking = 1000
+        };
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            service.Update("Argentina", updatedTeam));
     }
 }
