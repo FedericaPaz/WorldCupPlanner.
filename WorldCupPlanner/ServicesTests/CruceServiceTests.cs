@@ -13,6 +13,7 @@ public class CruceServiceTests
     private StadiumRepositoryStub _stubStadiumRepository;
     private CrucesGeneratorServiceStub _stubCrucesGenerator;
     private CruceService _service;
+    private IMatchRepository _matchRepository;
 
     [TestInitialize]
     public void Setup()
@@ -22,7 +23,7 @@ public class CruceServiceTests
         _stubStadiumRepository = new StadiumRepositoryStub();
         _stubCrucesGenerator = new CrucesGeneratorServiceStub();
 
-        _service = new CruceService(_stubCrucesRepository, _stubFixtureRepository, _stubStadiumRepository, _stubCrucesGenerator, new CrucesSimulationService(), new TournamentConfig());
+        _service = new CruceService(_stubCrucesRepository, _stubFixtureRepository, _stubStadiumRepository, _stubCrucesGenerator, new CrucesSimulationService(), new TournamentConfig(), _matchRepository);
     }
 
     private Fixture CreateFixture()
