@@ -13,13 +13,17 @@ public class AuthService : IAuthService
 
     public AuthService(IUserRepository userRepository)
     {
-        _userRepository = userRepository;
+        _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
     }
 
     public LoginResponse Login(LoginRequest request)
     {
-        var users = _userRepository.GetAllUsers();
-        var user = users.FirstOrDefault(p => p.Email == request.Email && p.PasswordHash == HashPassword(request.Password));
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
+
+        var user = _userRepository
+            .GetAllUsers()
+            .FirstOrDefault(p => p.Email.Equals(request.Email, StringComparison.OrdinalIgnoreCase) && p.PasswordHash == HashPassword(request.Password));
 
         if (user is null)
             throw new InvalidOperationException("Credenciales Inválidas.");
@@ -34,6 +38,9 @@ public class AuthService : IAuthService
 
     public void Register(RegisterRequest request)
     {
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
+        
         var exists = _userRepository.GetAllUsers().Any(p => p.Email == request.Email);
         if (exists)
             throw new InvalidOperationException("Ya existe un usuario con ese email.");
