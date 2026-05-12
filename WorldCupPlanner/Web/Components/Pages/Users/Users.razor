@@ -10,6 +10,7 @@
 @inject ILogService LogService
 @inject NavigationManager Navigation
 @inject SessionService SessionService
+@inject IJSRuntime JS
 
 <div class="users-shell">
     <div class="users-header">
@@ -71,6 +72,10 @@
                                 <button class="icon-button danger" @onclick="() => DeleteUser(user.Email)">
                                     Eliminar
                                 </button>
+                                
+                                <button class="icon-button" @onclick="() => ResetPassword(user.Email)">
+                                    Reiniciar contraseña
+                                </button>
                             </td>
                         </tr>
                     }
@@ -96,6 +101,13 @@
             {
                 <div class="error-message">
                     @_modalErrorMessage
+                </div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(_modalSuccessMessage))
+            {
+                <div class="success-message">
+                    @_modalSuccessMessage
                 </div>
             }
 
@@ -151,6 +163,30 @@
                         </label>
                     </div>
                 </div>
+
+                @if (_isEditing)
+                {
+                    <div class="form-group">
+                        <label>Password actions</label>
+                        <div class="form-row">
+                            <button type="button" class="secondary-button" @onclick="GenerateAndSetPassword">Generate default password</button>
+                            <button type="button" class="secondary-button" @onclick="ToggleCustomPassword">Set custom password</button>
+                        </div>
+
+                        @if (_showCustomPasswordInput)
+                        {
+                            <div class="form-group">
+                                <label>New password</label>
+                                <InputText type="password" class="form-control" @bind-Value="_customPassword" />
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm password</label>
+                                <InputText type="password" class="form-control" @bind-Value="_customPasswordConfirm" />
+                            </div>
+                            <button type="button" class="primary-button" @onclick="SetCustomPassword">Apply password</button>
+                        }
+                    </div>
+                }
 
                 <div class="modal-actions">
                     <button type="button" class="secondary-button" @onclick="CloseCreateModal">
@@ -350,4 +386,81 @@
 
         return string.Join(", ", roleNames);
     }
+
+    private void ResetPassword(string email)
+    {
+        try
+        {
+            var newPassword = UserService.GenerateDefaultPassword();
+            UserService.ResetPassword(email, newPassword);
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Usuarios",
+                "Reinicio de contraseña",
+                $"Se reinició la contraseña del usuario {email}"
+            );
+            _pageErrorMessage = $"New password for {email}: {newPassword}";
+            LoadUsers();
+        }
+        catch (Exception ex)
+        {
+            _pageErrorMessage = ex.Message;
+        }
+    }
+
+    // Password change helpers for admin when editing a user
+    private bool _showCustomPasswordInput = false;
+    private string _customPassword = string.Empty;
+    private string _customPasswordConfirm = string.Empty;
+    private string _modalSuccessMessage = string.Empty;
+
+    private void GenerateAndSetPassword()
+    {
+        try
+        {
+            var newPassword = UserService.GenerateDefaultPassword();
+            UserService.ResetPassword(_editingEmail, newPassword);
+            LogService.Register(GetCurrentUserEmail(), "Usuarios", "Reinicio de contraseña", $"Se reinició la contraseña del usuario {_editingEmail}");
+            _modalSuccessMessage = $"New password for {_editingEmail}: {newPassword}";
+            _modalErrorMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            _modalErrorMessage = ex.Message;
+            _modalSuccessMessage = string.Empty;
+        }
+    }
+
+    private void ToggleCustomPassword()
+    {
+        _showCustomPasswordInput = !_showCustomPasswordInput;
+        _modalSuccessMessage = string.Empty;
+        _modalErrorMessage = string.Empty;
+    }
+
+    private void SetCustomPassword()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(_customPassword) || _customPassword != _customPasswordConfirm)
+            {
+                _modalErrorMessage = "Passwords do not match or are empty.";
+                _modalSuccessMessage = string.Empty;
+                return;
+            }
+
+            UserService.ResetPassword(_editingEmail, _customPassword);
+            LogService.Register(GetCurrentUserEmail(), "Usuarios", "Reinicio de contraseña", $"Se reinició la contraseña del usuario {_editingEmail}");
+            _modalSuccessMessage = "Password updated.";
+            _modalErrorMessage = string.Empty;
+            _showCustomPasswordInput = false;
+            _customPassword = _customPasswordConfirm = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            _modalErrorMessage = ex.Message;
+            _modalSuccessMessage = string.Empty;
+        }
+    }
+
 }
