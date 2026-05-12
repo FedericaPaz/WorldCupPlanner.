@@ -279,4 +279,12 @@ public class UserTests
                 null
             ));
     }
+
+    [TestMethod]
+    public void ChangePassword_WithValidPassword_ShouldUpdatePassword()
+    {
+        var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", new List<UserRole>{UserRole.SystemAdministrator});
+        user.ChangePassword("NewPassword1!");
+        Assert.IsTrue(user.HasPassword("NewPassword1!"));
+    }
 }

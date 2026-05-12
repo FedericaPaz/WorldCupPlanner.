@@ -123,5 +123,16 @@ public class User
         byte[] hash = SHA256.HashData(bytes);
         return Convert.ToBase64String(hash);
     }
+
+    public bool HasPassword(string password)
+    {
+        return PasswordHash == HashPassword(password);
+    }
+    
+    public void ChangePassword(string newPassword)
+    {
+        ValidatePassword(newPassword);
+        PasswordHash = HashPassword(newPassword);
+    }
 }
 
