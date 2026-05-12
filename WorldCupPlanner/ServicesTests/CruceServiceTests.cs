@@ -1,5 +1,6 @@
 ﻿using Domain;
 using IRepository;
+using Repository;
 using Services;
 using ServicesTests.Stubs;
 
@@ -22,6 +23,7 @@ public class CruceServiceTests
         _stubFixtureRepository = new FixtureRepositoryStub();
         _stubStadiumRepository = new StadiumRepositoryStub();
         _stubCrucesGenerator = new CrucesGeneratorServiceStub();
+        _matchRepository = new MatchRepository();
 
         _service = new CruceService(_stubCrucesRepository, _stubFixtureRepository, _stubStadiumRepository, _stubCrucesGenerator, new CrucesSimulationService(), new TournamentConfig(), _matchRepository);
     }
@@ -40,6 +42,7 @@ public class CruceServiceTests
             foreach (Match match in grupo.MatchesInGroup)
                 grupoFixture.AddMatchToGroup(match);
         }
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
         return fixture;
     }
 
@@ -130,7 +133,7 @@ public class CruceServiceTests
         Assert.AreEqual(crucesGenerados.Count, _stubCrucesRepository.AddedCruces.Count);
         Assert.AreEqual(12, _stubCrucesGenerator.LastGroups.Count);
         Assert.AreEqual(4, _stubCrucesGenerator.LastStadiums.Count);
-        Assert.AreEqual(123, _stubCrucesGenerator.LastSeed);
+        Assert.AreEqual(new TournamentConfig().SemillaCrucesFase, _stubCrucesGenerator.LastSeed);
     }
     
     [TestMethod]
@@ -151,9 +154,9 @@ public class CruceServiceTests
             _stubStadiumRepository.AddStadium(e);
         _stubCrucesGenerator.SetGeneratedCruces(nuevosCruces);
         _service.GenerateNextRound();
+        Assert.AreEqual(new TournamentConfig().SemillaCrucesFase, _stubCrucesGenerator.LastSeed);
         Assert.AreEqual(16, _stubCrucesGenerator.LastRound.Count);
         Assert.AreEqual(4, _stubCrucesGenerator.LastStadiums.Count);
-        Assert.AreEqual(123, _stubCrucesGenerator.LastSeed);
         Assert.AreEqual(nuevosCruces.Count, _stubCrucesRepository.AddedCruces.Count);
     }
     
