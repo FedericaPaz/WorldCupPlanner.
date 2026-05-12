@@ -64,6 +64,6 @@ public class UserRepository : IUserRepository
 
     public List<User> GetAllUsers()
     {
-        return _users;
+        return new List<User>(_users);
     }
 }
