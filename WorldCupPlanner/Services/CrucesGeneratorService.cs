@@ -3,11 +3,11 @@ using IServices;
 
 namespace Services;
 
-public class CruceGeneratorService : ICruceGeneratorService
+public class CrucesGeneratorService : ICrucesGeneratorService
 {
     private readonly StandingCalculator _calculator;
     private Dictionary<string, char> _equipoAGrupo = new();
-    public CruceGeneratorService()
+    public CrucesGeneratorService()
     {
         _calculator = new StandingCalculator();
     }
@@ -49,7 +49,6 @@ public class CruceGeneratorService : ICruceGeneratorService
         }
         return cruces;
     }
-
     private (List<Team> primeros, List<Team> segundos, List<Team> mejoresTerceros) ObtenerClasificadosPorCategoria(List<Group> grupos)
     {
         var primerosPorGrupo = new List<Standing>();
@@ -91,7 +90,6 @@ public class CruceGeneratorService : ICruceGeneratorService
         
         return (primeros, segundos, mejoresTerceros);
     }
-    
     public List<Cruce> GenerateNextRound(List<Cruce> crucesAnteriores, List<Stadium> estadios, int semilla)
     {
         if (crucesAnteriores == null || crucesAnteriores.Count == 0)
