@@ -36,6 +36,10 @@ builder.Services.AddSingleton<FixtureGenerator>();
 builder.Services.AddSingleton<ILogRepository, LogRepository>();
 builder.Services.AddSingleton<ILogService, LogService>();
 
+builder.Services.AddSingleton<ICrucesRepository, CrucesRepository>();
+builder.Services.AddSingleton<ICruceGeneratorService, CruceGeneratorService>();
+builder.Services.AddSingleton<ICruceService, CruceService>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
