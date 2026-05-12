@@ -4,13 +4,11 @@
 @using global::Services
 @using IServices
 @using Web.Services
-@using global::Services.Mappers
 
 @inject UserService UserService
 @inject ILogService LogService
 @inject NavigationManager Navigation
 @inject SessionService SessionService
-@inject IJSRuntime JS
 
 <div class="users-shell">
     <div class="users-header">
@@ -19,7 +17,7 @@
             <p>Administre los usuarios del sistema</p>
         </div>
 
-        <button class="primary-button" @onclick="OpenCreateModal">
+        <button class="primary-button" @onclick="GoToCreate">
             <span class="plus-icon">+</span>
             Crear usuario
         </button>
@@ -29,6 +27,13 @@
     {
         <div class="error-message">
             @_pageErrorMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_pageSuccessMessage))
+    {
+        <div class="success-message">
+            @_pageSuccessMessage
         </div>
     }
 
@@ -65,15 +70,18 @@
                             <td class="muted">@user.BirthDate.ToString("yyyy-MM-dd")</td>
                             <td class="muted">@FormatRoles(user.Roles)</td>
                             <td class="actions-cell">
-                                <button class="icon-button" @onclick="() => OpenEditModal(user)">
+                                <button class="icon-button"
+                                        @onclick="() => GoToEdit(user.Email)">
                                     Editar
                                 </button>
 
-                                <button class="icon-button danger" @onclick="() => DeleteUser(user.Email)">
+                                <button class="icon-button danger"
+                                        @onclick="() => DeleteUser(user.Email)">
                                     Eliminar
                                 </button>
-                                
-                                <button class="icon-button" @onclick="() => ResetPassword(user.Email)">
+
+                                <button class="icon-button"
+                                        @onclick="() => ResetPassword(user.Email)">
                                     Reiniciar contraseña
                                 </button>
                             </td>
@@ -85,131 +93,10 @@
     </div>
 </div>
 
-@if (_showCreateModal)
-{
-    <div class="modal-backdrop">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h2>@(_isEditing ? "Editar Usuario" : "Crear Usuario")</h2>
-
-                <button class="close-button" @onclick="CloseCreateModal">
-                    ×
-                </button>
-            </div>
-
-            @if (!string.IsNullOrWhiteSpace(_modalErrorMessage))
-            {
-                <div class="error-message">
-                    @_modalErrorMessage
-                </div>
-            }
-
-            @if (!string.IsNullOrWhiteSpace(_modalSuccessMessage))
-            {
-                <div class="success-message">
-                    @_modalSuccessMessage
-                </div>
-            }
-
-            <EditForm Model="_userRequest" OnValidSubmit="SubmitUser">
-                <DataAnnotationsValidator />
-
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <InputText class="form-control" @bind-Value="_userRequest.FirstName" />
-                    <ValidationMessage For="@(() => _userRequest.FirstName)" />
-                </div>
-
-                <div class="form-group">
-                    <label>Apellido</label>
-                    <InputText class="form-control" @bind-Value="_userRequest.LastName" />
-                    <ValidationMessage For="@(() => _userRequest.LastName)" />
-                </div>
-
-                <div class="form-group">
-                    <label>Email</label>
-                    <InputText class="form-control" @bind-Value="_userRequest.Email" disabled="@_isEditing" />
-                    <ValidationMessage For="@(() => _userRequest.Email)" />
-                </div>
-
-                <div class="form-group">
-                    <label>Fecha de Nacimiento</label>
-                    <InputDate class="form-control" @bind-Value="_userRequest.BirthDate" />
-                    <ValidationMessage For="@(() => _userRequest.BirthDate)" />
-                </div>
-
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <InputText type="password" class="form-control" @bind-Value="_userRequest.Password" />
-                    <ValidationMessage For="@(() => _userRequest.Password)" />
-                </div>
-
-                <div class="form-group">
-                    <label>Roles</label>
-
-                    <div class="roles-options">
-                        <label class="role-option">
-                            <input type="checkbox"
-                                   checked="@_userRequest.Roles.Contains(UserRoleDto.SystemAdministrator)"
-                                   @onchange="ToggleSystemAdministratorRole" />
-                            Administrador
-                        </label>
-
-                        <label class="role-option">
-                            <input type="checkbox"
-                                   checked="@_userRequest.Roles.Contains(UserRoleDto.Editor)"
-                                   @onchange="ToggleEditorRole" />
-                            Editor
-                        </label>
-                    </div>
-                </div>
-
-                @if (_isEditing)
-                {
-                    <div class="form-group">
-                        <label>Password actions</label>
-                        <div class="form-row">
-                            <button type="button" class="secondary-button" @onclick="GenerateAndSetPassword">Generate default password</button>
-                            <button type="button" class="secondary-button" @onclick="ToggleCustomPassword">Set custom password</button>
-                        </div>
-
-                        @if (_showCustomPasswordInput)
-                        {
-                            <div class="form-group">
-                                <label>New password</label>
-                                <InputText type="password" class="form-control" @bind-Value="_customPassword" />
-                            </div>
-                            <div class="form-group">
-                                <label>Confirm password</label>
-                                <InputText type="password" class="form-control" @bind-Value="_customPasswordConfirm" />
-                            </div>
-                            <button type="button" class="primary-button" @onclick="SetCustomPassword">Apply password</button>
-                        }
-                    </div>
-                }
-
-                <div class="modal-actions">
-                    <button type="button" class="secondary-button" @onclick="CloseCreateModal">
-                        Cancelar
-                    </button>
-
-                    <button type="submit" class="primary-button full">
-                        @(_isEditing ? "Actualizar" : "Crear")
-                    </button>
-                </div>
-            </EditForm>
-        </div>
-    </div>
-}
-
 @code {
     private List<User> _users = new();
-    private UserRequestDto _userRequest = new();
-    private bool _showCreateModal;
-    private bool _isEditing;
-    private string _editingEmail = string.Empty;
     private string _pageErrorMessage = string.Empty;
-    private string _modalErrorMessage = string.Empty;
+    private string _pageSuccessMessage = string.Empty;
 
     protected override void OnInitialized()
     {
@@ -218,6 +105,7 @@
             Navigation.NavigateTo("/");
             return;
         }
+
         LoadUsers();
     }
 
@@ -226,94 +114,18 @@
         _users = UserService.GetAllUsers();
     }
 
-    private void OpenCreateModal()
+    private void GoToCreate()
     {
         _pageErrorMessage = string.Empty;
-        _modalErrorMessage = string.Empty;
-        _isEditing = false;
-        _editingEmail = string.Empty;
-
-        _userRequest = new UserRequestDto
-        {
-            BirthDate = DateTime.Today,
-            Roles = new List<UserRoleDto>()
-        };
-
-        _showCreateModal = true;
+        _pageSuccessMessage = string.Empty;
+        Navigation.NavigateTo("/users/create");
     }
 
-    private void OpenEditModal(User user)
+    private void GoToEdit(string email)
     {
         _pageErrorMessage = string.Empty;
-        _modalErrorMessage = string.Empty;
-        _isEditing = true;
-        _editingEmail = user.Email;
-
-        _userRequest = new UserRequestDto
-        {
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email,
-            BirthDate = user.BirthDate,
-            Password = string.Empty,
-            Roles = UserRoleMapper.ToDto(user.Roles)
-        };
-
-        _showCreateModal = true;
-    }
-
-    private void CloseCreateModal()
-    {
-        _showCreateModal = false;
-        _isEditing = false;
-        _editingEmail = string.Empty;
-        _modalErrorMessage = string.Empty;
-    }
-
-    private void SubmitUser()
-    {
-        try
-        {
-            _modalErrorMessage = string.Empty;
-            var currentUserEmail = GetCurrentUserEmail();
-
-            if (_isEditing)
-            {
-                UserService.UpdateUser(
-                    _userRequest.FirstName,
-                    _userRequest.LastName,
-                    _editingEmail,
-                    _userRequest.BirthDate,
-                    _userRequest.Password,
-                    UserRoleMapper.ToDomain(_userRequest.Roles)
-                );
-
-                LogService.Register(
-                    currentUserEmail,
-                    "Usuarios",
-                    "Edición",
-                    $"Se editó el usuario {_editingEmail}"
-                );
-            }
-            else
-            {
-                UserService.CreateUser(_userRequest);
-
-                LogService.Register(
-                    currentUserEmail,
-                    "Usuarios",
-                    "Alta",
-                    $"Se creó el usuario {_userRequest.Email}"
-                );
-            }
-
-            LoadUsers();
-            CloseCreateModal();
-        }
-        catch (Exception exception)
-        {
-            _modalErrorMessage = exception.Message;
-        }
+        _pageSuccessMessage = string.Empty;
+        Navigation.NavigateTo($"/users/edit/{Uri.EscapeDataString(email)}");
     }
 
     private void DeleteUser(string email)
@@ -321,6 +133,8 @@
         try
         {
             _pageErrorMessage = string.Empty;
+            _pageSuccessMessage = string.Empty;
+
             UserService.DeleteUser(email);
 
             LogService.Register(
@@ -330,37 +144,61 @@
                 $"Se eliminó el usuario {email}"
             );
 
+            _pageErrorMessage = string.Empty;
+            _pageSuccessMessage = "Usuario eliminado correctamente.";
+
             LoadUsers();
         }
         catch (Exception exception)
         {
+            _pageSuccessMessage = string.Empty;
             _pageErrorMessage = exception.Message;
         }
     }
 
-    private void ToggleSystemAdministratorRole(ChangeEventArgs args)
+    private void ResetPassword(string email)
     {
-        ToggleRole(UserRoleDto.SystemAdministrator, args);
+        try
+        {
+            _pageErrorMessage = string.Empty;
+            _pageSuccessMessage = string.Empty;
+
+            var newPassword = UserService.GenerateDefaultPassword();
+
+            UserService.ResetPassword(email, newPassword);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Usuarios",
+                "Reinicio de contraseña",
+                $"Se reinició la contraseña del usuario {email}"
+            );
+
+            _pageSuccessMessage = $"Nueva contraseña para {email}: {newPassword}";
+
+            LoadUsers();
+        }
+        catch (Exception exception)
+        {
+            _pageSuccessMessage = string.Empty;
+            _pageErrorMessage = exception.Message;
+        }
     }
 
-    private void ToggleEditorRole(ChangeEventArgs args)
+    private string FormatRoles(List<UserRole> roles)
     {
-        ToggleRole(UserRoleDto.Editor, args);
-    }
-
-    private void ToggleRole(UserRoleDto role, ChangeEventArgs args)
-    {
-        var isChecked = args.Value is bool value && value;
-
-        if (isChecked && !_userRequest.Roles.Contains(role))
+        if (roles.Count == 0)
         {
-            _userRequest.Roles.Add(role);
+            return "Sin rol";
         }
 
-        if (!isChecked && _userRequest.Roles.Contains(role))
-        {
-            _userRequest.Roles.Remove(role);
-        }
+        var roleNames = roles.Select(role =>
+            role == UserRole.SystemAdministrator
+                ? "Administrador"
+                : "Editor"
+        );
+
+        return string.Join(", ", roleNames);
     }
 
     private string GetCurrentUserEmail()
@@ -372,95 +210,4 @@
 
         return SessionService.GetCurrentUser()!.Email;
     }
-
-    private string FormatRoles(List<UserRole> roles)
-    {
-        if (roles.Count == 0)
-        {
-            return "Sin rol";
-        }
-
-        var roleNames = roles.Select(role =>
-            role == UserRole.SystemAdministrator ? "Administrador" : "Editor"
-        );
-
-        return string.Join(", ", roleNames);
-    }
-
-    private void ResetPassword(string email)
-    {
-        try
-        {
-            var newPassword = UserService.GenerateDefaultPassword();
-            UserService.ResetPassword(email, newPassword);
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Usuarios",
-                "Reinicio de contraseña",
-                $"Se reinició la contraseña del usuario {email}"
-            );
-            _pageErrorMessage = $"New password for {email}: {newPassword}";
-            LoadUsers();
-        }
-        catch (Exception ex)
-        {
-            _pageErrorMessage = ex.Message;
-        }
-    }
-
-    // Password change helpers for admin when editing a user
-    private bool _showCustomPasswordInput = false;
-    private string _customPassword = string.Empty;
-    private string _customPasswordConfirm = string.Empty;
-    private string _modalSuccessMessage = string.Empty;
-
-    private void GenerateAndSetPassword()
-    {
-        try
-        {
-            var newPassword = UserService.GenerateDefaultPassword();
-            UserService.ResetPassword(_editingEmail, newPassword);
-            LogService.Register(GetCurrentUserEmail(), "Usuarios", "Reinicio de contraseña", $"Se reinició la contraseña del usuario {_editingEmail}");
-            _modalSuccessMessage = $"New password for {_editingEmail}: {newPassword}";
-            _modalErrorMessage = string.Empty;
-        }
-        catch (Exception ex)
-        {
-            _modalErrorMessage = ex.Message;
-            _modalSuccessMessage = string.Empty;
-        }
-    }
-
-    private void ToggleCustomPassword()
-    {
-        _showCustomPasswordInput = !_showCustomPasswordInput;
-        _modalSuccessMessage = string.Empty;
-        _modalErrorMessage = string.Empty;
-    }
-
-    private void SetCustomPassword()
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(_customPassword) || _customPassword != _customPasswordConfirm)
-            {
-                _modalErrorMessage = "Passwords do not match or are empty.";
-                _modalSuccessMessage = string.Empty;
-                return;
-            }
-
-            UserService.ResetPassword(_editingEmail, _customPassword);
-            LogService.Register(GetCurrentUserEmail(), "Usuarios", "Reinicio de contraseña", $"Se reinició la contraseña del usuario {_editingEmail}");
-            _modalSuccessMessage = "Password updated.";
-            _modalErrorMessage = string.Empty;
-            _showCustomPasswordInput = false;
-            _customPassword = _customPasswordConfirm = string.Empty;
-        }
-        catch (Exception ex)
-        {
-            _modalErrorMessage = ex.Message;
-            _modalSuccessMessage = string.Empty;
-        }
-    }
-
 }

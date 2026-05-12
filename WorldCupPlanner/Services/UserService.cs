@@ -150,4 +150,12 @@ public class UserService
         // Shuffle
         return new string(pwd.OrderBy(x => rnd.Next()).ToArray());
     }
+    
+    public void UpdateUserWithoutPassword(string firstName, string lastName, string email, DateTime birthDate, List<UserRole> roles)
+    {
+        ValidateEmailNotEmpty(email);
+        var user = GetExistingUserOrThrow(email);
+        user.UpdateData(firstName, lastName, birthDate, roles);
+        _userRepository.UpdateUser(user);
+    }
 }

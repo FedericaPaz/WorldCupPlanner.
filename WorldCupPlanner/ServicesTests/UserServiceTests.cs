@@ -396,4 +396,41 @@ public class UserServiceTests
         Assert.IsTrue(user.HasPassword("NewPassword1!"));
         
     }
+    
+    [TestMethod]
+    public void UpdateUserWithoutPassword_WithExistingUser_ShouldUpdateDataAndKeepPassword()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+        userService.CreateUser("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
+        userService.UpdateUserWithoutPassword("Juan", "Gomez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), new List<UserRole>{UserRole.SystemAdministrator, UserRole.Editor});
+        var user = userService.GetUser("juan.perez@gmail.com");
+        Assert.IsNotNull(user);
+        Assert.AreEqual("Gomez", user.LastName);
+        Assert.AreEqual(2, user.Roles.Count);
+        // Password must remain unchanged
+        Assert.IsTrue(user.HasPassword("Password1!"));
+    }
+
+    [TestMethod]
+    public void UpdateUserWithoutPassword_WithNonExistingUser_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            userService.UpdateUserWithoutPassword("Juan", "Gomez", "nonexistent@gmail.com", new DateTime(2000, 1, 1), UserTestHelper.GetValidRoles())
+        );
+    }
+
+    [TestMethod]
+    public void UpdateUserWithoutPassword_WithEmptyEmail_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            userService.UpdateUserWithoutPassword("Juan", "Gomez", "", new DateTime(2000, 1, 1), UserTestHelper.GetValidRoles())
+        );
+    }
 }
