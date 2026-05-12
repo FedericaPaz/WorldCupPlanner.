@@ -74,4 +74,26 @@ public class AuthServiceTests
         Assert.ThrowsException<InvalidOperationException>(() =>
             authService.Login(request));
     }
+    
+    [TestMethod]
+    public void Login_WithValidCredentials_ShouldReturnFullName()
+    {
+        var userRepository = new UserRepository();
+        var authService = new AuthService(userRepository);
+
+        var user = new User("Pedro", "Gomez", "pedro.gomez@gmail.com", new DateTime(1999, 5, 10), "Password1!", new List<UserRole> { UserRole.SystemAdministrator }
+        );
+
+        userRepository.AddUser(user);
+
+        var request = new LoginRequest
+        {
+            Email = "pedro.gomez@gmail.com",
+            Password = "Password1!"
+        };
+
+        var response = authService.Login(request);
+
+        Assert.AreEqual("Pedro Gomez", response.Name);
+    }
 }
