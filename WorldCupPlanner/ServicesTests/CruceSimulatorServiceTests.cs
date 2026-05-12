@@ -6,13 +6,13 @@ namespace ServicesTests;
 [TestClass]
 public class CruceSimulatorServiceTests
 {
-    private CruceSimulationService _service;
+    private CrucesSimulationService _service;
     private const int Seed = 42;
 
     [TestInitialize]
     public void Setup()
     {
-        _service = new CruceSimulationService();
+        _service = new CrucesSimulationService();
     }
     
     private Match BuildMatch(string homeName, int homeRanking, string awayName, int awayRanking, char group = 'A')
