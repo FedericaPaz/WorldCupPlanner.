@@ -21,9 +21,9 @@ public class AuthService : IAuthService
         var user = _userRepository
             .GetAllUsers()
             .FirstOrDefault(p => p.Email == request.Email && p.PasswordHash == HashPassword(request.Password));
-        /*
+        
         Console.WriteLine(_userRepository.GetAllUsers().Count);
-        Console.WriteLine($"{request.Password} ----- {user?.PasswordHash}");*/
+        Console.WriteLine($"{request.Password} ----- {user?.PasswordHash}");
 
         if (user is null)
             throw new InvalidOperationException("Credenciales Inválidas.");

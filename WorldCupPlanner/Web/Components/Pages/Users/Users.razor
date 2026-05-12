@@ -334,7 +334,7 @@
             return "Sistema";
         }
 
-        return SessionService.GetCurrentUser().Email;
+        return SessionService.GetCurrentUser()!.Email;
     }
 
     private string FormatRoles(List<UserRole> roles)
