@@ -219,4 +219,23 @@ public class AuthServiceTests
         Assert.ThrowsException<ArgumentNullException>(() =>
             authService.Register(null!));
     }
+    
+    [TestMethod]
+    public void Register_WithInvalidPassword_ShouldThrowArgumentException()
+    {
+        var userRepository = new UserRepository();
+        var authService = new AuthService(userRepository);
+
+        var request = new RegisterRequest
+        {
+            FirstName = "Juan",
+            LastName = "Perez",
+            Email = "juan.perez@gmail.com",
+            BirthDate = new DateTime(2000, 1, 1),
+            Password = "abc"
+        };
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            authService.Register(request));
+    }
 }
