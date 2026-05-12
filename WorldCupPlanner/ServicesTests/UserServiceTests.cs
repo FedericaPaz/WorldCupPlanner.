@@ -271,6 +271,41 @@ public class UserServiceTests
         Assert.AreEqual("juan.perez@gmail.com", result.Email);
         Assert.AreEqual(new DateTime(2000, 1, 1), result.BirthDate);
     }
+
+    [TestMethod]
+    public void GetUserDto_WithNonExistingUser_ShouldReturnNull()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        var result = userService.GetUserDto("noone@gmail.com");
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void GetUserDto_WithEmptyEmail_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        Assert.ThrowsException<ArgumentException>(() => userService.GetUserDto(""));
+    }
+
+    [TestMethod]
+    public void GenerateDefaultPassword_ShouldReturnValidPassword()
+    {
+        var userRepository = new UserRepository();
+        var userService = new UserService(userRepository);
+
+        var pwd = userService.GenerateDefaultPassword();
+
+        Assert.IsNotNull(pwd);
+        Assert.AreEqual(10, pwd.Length);
+        Assert.IsTrue(pwd.Any(char.IsUpper));
+        Assert.IsTrue(pwd.Any(char.IsLower));
+        Assert.IsTrue(pwd.Any(char.IsDigit));
+        Assert.IsTrue(pwd.Any(ch => !char.IsLetterOrDigit(ch)));
+    }
     
     [TestMethod]
     public void CreateUser_WithRolesDto_ShouldCreateUserWithRoles()
