@@ -12,13 +12,17 @@ public class FixtureService : IFixtureService
     private readonly FixtureGenerator _fixtureGenerator;
     private readonly ITeamRepository _teamRepository;
     private readonly IStadiumRepository _stadiumRepository;
+    private readonly IMatchRepository _matchRepository;
+    private readonly ICrucesRepository _crucesRepository;
     
-    public FixtureService(IFixtureRepository fixtureRepository, FixtureGenerator fixtureGenerator,  ITeamRepository teamRepository, IStadiumRepository stadiumRepository)
+    public FixtureService(IFixtureRepository fixtureRepository, FixtureGenerator fixtureGenerator,  ITeamRepository teamRepository, IStadiumRepository stadiumRepository, IMatchRepository matchRepository, ICrucesRepository crucesRepository)
     {
         _fixtureRepository = fixtureRepository;
         _fixtureGenerator = fixtureGenerator;
         _teamRepository = teamRepository;
         _stadiumRepository = stadiumRepository;
+        _matchRepository = matchRepository;
+        _crucesRepository = crucesRepository;
     }
     
     public FixtureResponse GetFixture()
@@ -58,6 +62,19 @@ public class FixtureService : IFixtureService
     {
         var config = new TournamentConfig();
         _fixtureGenerator.GenerateGroupsStageFixture(config);
+
+        var fixture = _fixtureRepository.GetFixture();
+        var partidos = new List<Match>();
+        foreach (var grupo in fixture.GetGroups)
+        {
+            foreach (var partido in grupo.MatchesInGroup)
+                partidos.Add(partido);
+        }
+        
+        _matchRepository.ClearMatches();
+        _crucesRepository.RemoveCruces(); 
+        foreach (var match in partidos)
+            _matchRepository.AddMatch(match);
     }
     
     private void ValidateExistingFixture()

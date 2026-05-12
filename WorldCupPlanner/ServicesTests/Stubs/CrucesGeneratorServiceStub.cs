@@ -3,7 +3,7 @@ using IServices;
 
 namespace ServicesTests.Stubs;
 
-public class CruceGeneratorServiceStub : ICruceGeneratorService
+public class CrucesGeneratorServiceStub : ICrucesGeneratorService
 {
     private List<Cruce> _generatedCruces;
     private List<Group> _lastGroups;
@@ -11,7 +11,7 @@ public class CruceGeneratorServiceStub : ICruceGeneratorService
     private int _lastSeed;
     private List<Cruce> _lastRound;
         
-    public CruceGeneratorServiceStub() : base() { }
+    public CrucesGeneratorServiceStub() : base() { }
         
     public List<Cruce> GenerateRoundOf32(List<Group> groups, List<Stadium> stadiums, int seed)
     {

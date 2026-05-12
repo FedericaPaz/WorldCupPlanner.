@@ -1,0 +1,22 @@
+﻿.group-detail {
+    padding: 8px;
+}
+
+.match-card {
+    transition: transform 0.15s;
+}
+
+.match-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.match-score {
+    min-width: 80px;
+    text-align: center;
+}
+
+.matches-list {
+    max-height: 350px;
+    overflow-y: auto;
+}

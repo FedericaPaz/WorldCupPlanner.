@@ -10,4 +10,6 @@ public interface IMatchService
     List<MatchResponse> GetAllMatches();
     void UpdateMatchDate(int matchId, DateTime date);
     void UpdateMatchStadium(int matchId, string stadiumName);
+    void SimulateMatch(int matchId, int seed);
+    void SimulateGroupStage();
 }

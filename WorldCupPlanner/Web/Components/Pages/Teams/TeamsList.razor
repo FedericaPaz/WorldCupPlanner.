@@ -7,6 +7,7 @@
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject NavigationManager Navigation
+@inject IFixtureService FixtureService
 
 <div class="teams-page">
     <div class="teams-header">
@@ -146,9 +147,12 @@
         try
         {
             _errorMessage = null;
-
+            bool habiaFixture = FixtureService.HasFixture();
             TeamService.Delete(name);
-
+            
+            if (habiaFixture)
+                _errorMessage = "⚠️ El equipo fue eliminado. El fixture y los cruces fueron reiniciados.";
+        
             LogService.Register(
                 GetCurrentUserEmail(),
                 "Equipos",
@@ -163,7 +167,7 @@
             _errorMessage = ex.Message;
         }
     }
-
+    
     private string GetCurrentUserEmail()
     {
         if (!SessionService.IsUserActive())
@@ -173,4 +177,6 @@
 
         return SessionService.GetCurrentUser().Email;
     }
+    
+    
 }

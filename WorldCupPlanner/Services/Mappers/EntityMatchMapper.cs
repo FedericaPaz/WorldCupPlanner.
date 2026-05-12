@@ -18,7 +18,8 @@ public static class EntityMatchMapper
             group = match.Group,
             homeGoals = match.HomeGoals,
             awayGoals = match.AwayGoals,
-            winnerName = match.WinnerMatch?.Name
+            winnerName = match.WinnerMatch?.Name,
+            isLocked     = match.IsLocked
         };
     }
 }

@@ -18,6 +18,8 @@ public class Match
     private int? _awayGoals;
     private ITeam? _winnerMatch;
     private IDateTimeMatch _clock = null!;
+    private bool _isLocked = false;
+    public void Lock() => _isLocked = true;
 
     public int IdMatch => _idMatch;
 
@@ -69,6 +71,12 @@ public class Match
             EnsureValidGroup(value);
             _group = char.ToUpper(value);
         }
+    }
+
+    public bool IsLocked
+    {
+        get => _isLocked;
+        set => _isLocked = value;
     }
 
     public int? HomeGoals => _homeGoals;
@@ -148,11 +156,13 @@ public class Match
 
     public void UpdateDate(DateTime newDate)
     {
+        EnsureGroupPhaseIsEditable();
         DateMatch = newDate;
     }
 
     public void UpdateStadium(IStadium newStadium)
     {
+        EnsureGroupPhaseIsEditable();
         Stadium = newStadium;
     }
 
@@ -189,5 +199,28 @@ public class Match
 
         if (groupToUpper < MinGroup || groupToUpper > MaxGroup)
             throw new ArgumentException($"El grupo debe ser una letra entre la {MinGroup} y la {MaxGroup}.");
+    }
+    
+    public void ForceWinner(ITeam winner)
+    {
+        if (winner == null)
+            throw new ArgumentNullException(nameof(winner));
+        if (winner.Name != HomeTeam.Name && winner.Name != AwayTeam.Name)
+            throw new ArgumentException("El ganador debe ser uno de los equipos del partido.");
+        _winnerMatch = winner;
+    }
+    
+    private void EnsureGroupPhaseIsEditable()
+    {
+        if (IsLocked)
+            throw new InvalidOperationException("No se puede editar un partido de fase de grupos una vez generados los cruces.");
+    }
+    public void SimulateResult(int homeGoals, int awayGoals)
+    {
+        EnsureResultWasNotSet();
+        EnsureValidGoals(homeGoals, awayGoals);
+        _homeGoals = homeGoals;
+        _awayGoals = awayGoals;
+        SetWinnerFromResult(homeGoals, awayGoals);
     }
 }
