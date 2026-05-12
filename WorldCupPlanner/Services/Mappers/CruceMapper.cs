@@ -14,7 +14,7 @@ public static class CruceMapper
             AwayTeam = cruce.Partido.AwayTeam.Name,
             HomeGoals = cruce.Partido.HomeGoals,
             AwayGoals = cruce.Partido.AwayGoals,
-            Phase = cruce.Phase
+            Phase = (TournamentPhaseDTOs)cruce.Phase
         };
     }
 }
