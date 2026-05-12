@@ -1,7 +1,7 @@
 ﻿@page "/cruces"
 @using DTOs
 @using IServices
-@inject ICruceService CruceService
+@inject IServiceProvider ServiceProvider
 
 <div class="cruces-wrapper">
     <div class="cruces-header">
@@ -232,26 +232,28 @@
 </div>
 
 @code {
+    private ICruceService CruceService = null;
     private List<CruceResponse> _todosLosCruces = new();
     private bool _hayCruces = false;
     private bool _cargando = false;
     private string? _mensajeError = null;
     private string? _mensajeExito = null;
 
-    private List<CruceResponse> _ronda32avos => FiltrarPorFase(1);
-    private List<CruceResponse> _octavos => FiltrarPorFase(2);
-    private List<CruceResponse> _cuartos => FiltrarPorFase(3);
-    private List<CruceResponse> _semis => FiltrarPorFase(4);
-    private List<CruceResponse> _final => FiltrarPorFase(5);
+    private List<CruceResponse> _ronda32avos =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.RoundOf32).ToList();
+    private List<CruceResponse> _octavos =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.RoundOf16).ToList();
+    private List<CruceResponse> _cuartos =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.QuarterFinals).ToList();
+    private List<CruceResponse> _semis =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.SemiFinals).ToList();
+    private List<CruceResponse> _final =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.Final).ToList();
     private bool _tieneFinal => _final.Any();
-
-    private List<CruceResponse> FiltrarPorFase(int fase)
-    {
-        return _todosLosCruces.Where(x => (int)x.Phase == fase).ToList();
-    }
 
     protected override void OnInitialized()
     {
+        CruceService = ServiceProvider.GetRequiredKeyedService<ICruceService>("real");
         CargarCruces();
     }
 
