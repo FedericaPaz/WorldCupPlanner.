@@ -237,6 +237,27 @@ public class FixtureTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void IsValid_WithGroupsAndTeamsButMissingMatches_ReturnsFalse()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        fixture.InitializeGroups();
+
+        foreach (var group in fixture.GetGroups)
+        {
+            for (int i = 1; i <= 4; i++)
+            {
+                var team = new Team($"Team_{group.GroupLetter}_{i}", new Confederation("UEFA"), 1000);
+                group.AddTeamToGroup(team);
+            }
+        }
+
+        var result = fixture.IsValid();
+
+        Assert.IsFalse(result);
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();

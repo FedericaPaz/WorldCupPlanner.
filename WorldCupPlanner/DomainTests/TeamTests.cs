@@ -123,6 +123,7 @@ public class TeamTests
         Assert.AreEqual(MaxFifaRanking, team.FifaRanking);
     }
     
+    
     private void VerifyTeam(Team team, string expectedName, int expectedRanking)
     {
         Assert.IsNotNull(team);
