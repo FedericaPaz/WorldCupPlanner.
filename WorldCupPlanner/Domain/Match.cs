@@ -201,8 +201,9 @@ public class Match
     {
         if (group == '\0')
             throw new ArgumentNullException(nameof(group), "El grupo no puede ser vacío.");
-
+        
         char groupToUpper = char.ToUpper(group);
+        if (groupToUpper == 'N') return;
 
         if (groupToUpper < MinGroup || groupToUpper > MaxGroup)
             throw new ArgumentException($"El grupo debe ser una letra entre la {MinGroup} y la {MaxGroup}.");
