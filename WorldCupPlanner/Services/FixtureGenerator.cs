@@ -8,12 +8,28 @@ public class FixtureGenerator
     private readonly ITeamRepository _teamRepository;
     private readonly IStadiumRepository _stadiumRepository;
     private readonly IFixtureRepository _fixtureRepository;
-    
-    public FixtureGenerator(ITeamRepository teamRepository, IStadiumRepository stadiumRepository, IFixtureRepository fixtureRepository)
+    private readonly TournamentConfig _config;
+    private readonly IDateTimeMatch _clock;
+
+    private const int TeamsPerGroup = 4;
+    private const int GroupCount = 12;
+    private const int BomboSize = 12;
+    private const int MatchesPerGroup = 6;
+    private const int StartHour = 14;
+    private const int HoursBetweenMatches = 4;
+
+    public FixtureGenerator(
+        ITeamRepository teamRepository,
+        IStadiumRepository stadiumRepository,
+        IFixtureRepository fixtureRepository,
+        TournamentConfig config,
+        IDateTimeMatch clock)
     {
         _teamRepository = teamRepository;
         _stadiumRepository = stadiumRepository;
         _fixtureRepository = fixtureRepository;
+        _config = config;
+        _clock = clock;
     }
     
     public Fixture GenerateGroupsStageFixture(TournamentConfig config)
