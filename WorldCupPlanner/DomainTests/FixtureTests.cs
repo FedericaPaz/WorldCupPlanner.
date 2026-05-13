@@ -281,6 +281,18 @@ public class FixtureTests
             fixture.AdvanceToPhase(TournamentPhase.RoundOf32));
     }
     
+    [TestMethod]
+    public void CanAdvanceToPhase_ToFinished_WhenCurrentPhaseIsNotFinal_ReturnsFalse()
+    {
+        var fixture = CreateValidFixture();
+    
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+    
+        var result = fixture.CanAdvanceToPhase(TournamentPhase.Finished);
+    
+        Assert.IsFalse(result);
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
