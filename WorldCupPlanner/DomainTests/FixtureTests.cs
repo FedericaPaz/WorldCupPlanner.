@@ -305,6 +305,32 @@ public class FixtureTests
         Assert.AreEqual(TournamentPhase.NotStarted, fixture.CurrentPhase);
     }
     
+    [TestMethod]
+    public void IsStillValid_WhenFixtureHasNoGroups_ReturnsFalse()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+
+        var teams = new List<Team>();
+        var stadiums = new List<Stadium>();
+
+        var result = fixture.IsStillValid(teams, stadiums);
+
+        Assert.IsFalse(result);
+    }
+    
+    [TestMethod]
+    public void CanAdvanceToPhase_ToRoundOf16_WhenCurrentPhaseIsNotRoundOf32_ReturnsFalse()
+    {
+        var fixture = CreateValidFixture();
+
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+
+        var result = fixture.CanAdvanceToPhase(TournamentPhase.RoundOf16);
+
+        Assert.IsFalse(result);
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
