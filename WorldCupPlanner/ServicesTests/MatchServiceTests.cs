@@ -23,6 +23,8 @@ public class MatchServiceTests
     [TestInitialize]
     public void Setup()
     {
+        Match.ResetIdCounter();
+        
         _matchRepository = new MatchRepository();
         _teamRepository = new TeamRepositoryStub();
         _stadiumRepository = new StadiumRepositoryStub();
