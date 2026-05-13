@@ -295,4 +295,17 @@ public class MatchServiceTests
         Assert.ThrowsException<ArgumentException>(() =>
             _service.CreateMatch(request));
     }
+    
+    [TestMethod]
+    public void Create_WithLowercaseGroup_ShouldCreateMatchWithUppercaseGroup()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var request = CreateValidRequest(_clock.Now);
+        request.group = "a";
+
+        var response = _service.CreateMatch(request);
+
+        Assert.AreEqual('A', response.group);
+    }
 }
