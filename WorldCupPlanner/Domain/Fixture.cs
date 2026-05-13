@@ -26,6 +26,7 @@ public class Fixture
     {
         _config = config;
         _groups = new List<Group>();
+        _eliminatoryMatches = new List<Match>();
         CurrentPhase = TournamentPhase.NotStarted;
     }
 
@@ -99,5 +100,16 @@ public class Fixture
                 if (existingStadiums.All(s => s.StadiumName != match.Stadium.StadiumName)) return false;
         }
         return true;
+    }
+    
+    public void AddEliminatoryMatch(Match match)
+    {
+        if (match == null) throw new ArgumentNullException(nameof(match));
+        _eliminatoryMatches.Add(match);
+    }
+    public void SetGroups(List<Group> groups)
+    {
+        if (groups == null) throw new ArgumentNullException(nameof(groups));
+        _groups = groups;
     }
 }

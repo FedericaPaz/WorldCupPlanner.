@@ -14,43 +14,6 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         _config = config;
     }
     
-    public List<Cruce> GenerateRoundOf32(List<Group> grupos, List<Stadium> estadios, int semilla)
-    {
-        ValidateInputs(grupos, estadios);
-        _equipoAGrupo.Clear();
-        foreach (var grupo in grupos)
-        {
-            foreach (var team in grupo.TeamsInGroup)
-                _equipoAGrupo[team.Name] = grupo.GroupLetter;
-        }
-        
-        var (primeros, segundos, mejoresTerceros) = ObtenerClasificadosPorCategoria(grupos);
-        var cruces = new List<Cruce>();
-        int indiceEstadio = 0;
-        
-        //A1-A8: 8 primeros vs 8 mejores terceros
-        cruces.AddRange(EmparejaryCrearCruces(
-            primeros.Take(8).ToList(),         
-            mejoresTerceros, estadios, semilla, "A", ref indiceEstadio));
-        
-        // B1-B4: 4 primeros restantes vs 4 segundos con menor puntaje
-        cruces.AddRange(EmparejaryCrearCruces(
-            primeros.Skip(8).Take(4).ToList(), 
-            segundos.TakeLast(4).Reverse().ToList(), 
-            estadios, semilla + 1, "B", ref indiceEstadio));
-        
-        // B5-B8: 8 segundos entre sí
-        var segundosRestantes = segundos.Count > 4 ? segundos.Take(segundos.Count - 4).ToList() : new List<Team>();
-        if (segundosRestantes.Count >= 2)
-        {
-            cruces.AddRange(EmparejaryCrearCruces(
-                segundosRestantes.Take(segundosRestantes.Count / 2).ToList(),
-                segundosRestantes.Skip(segundosRestantes.Count / 2).ToList(),
-                estadios, semilla + 2, "B", ref indiceEstadio, empezarEn: 5
-            ));
-        }
-        return cruces;
-    }
     private (List<Team> primeros, List<Team> segundos, List<Team> mejoresTerceros) ObtenerClasificadosPorCategoria(List<Group> grupos)
     {
         var primerosPorGrupo = new List<Standing>();
@@ -100,13 +63,54 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         var siguienteFase = crucesAnteriores[0].ObtainNextPhase();
         return CrearCrucesProximaFase(ganadores, estadios, semilla, siguienteFase);
     }
-    
-    
+
+    public List<Cruce> GenerateRoundOf32(Fixture fixture, List<Stadium> estadios, int semilla)
+    {
+        var grupos = fixture.GetGroups.ToList();
+        ValidateInputs(grupos, estadios);
+        _equipoAGrupo.Clear();
+        foreach (var grupo in grupos)
+        {
+            foreach (var team in grupo.TeamsInGroup)
+                _equipoAGrupo[team.Name] = grupo.GroupLetter;
+        }
+        
+        var (primeros, segundos, mejoresTerceros) = ObtenerClasificadosPorCategoria(grupos);
+        var cruces = new List<Cruce>();
+        int indiceEstadio = 0;
+        
+        //A1-A8: 8 primeros vs 8 mejores terceros
+        cruces.AddRange(EmparejaryCrearCruces(
+            primeros.Take(8).ToList(),         
+            mejoresTerceros, estadios, semilla, "A", ref indiceEstadio));
+        
+        // B1-B4: 4 primeros restantes vs 4 segundos con menor puntaje
+        cruces.AddRange(EmparejaryCrearCruces(
+            primeros.Skip(8).Take(4).ToList(), 
+            segundos.TakeLast(4).Reverse().ToList(), 
+            estadios, semilla + 1, "B", ref indiceEstadio));
+        
+        // B5-B8: 8 segundos entre sí
+        var segundosRestantes = segundos.Count > 4 ? segundos.Take(segundos.Count - 4).ToList() : new List<Team>();
+        if (segundosRestantes.Count >= 2)
+        {
+            cruces.AddRange(EmparejaryCrearCruces(
+                segundosRestantes.Take(segundosRestantes.Count / 2).ToList(),
+                segundosRestantes.Skip(segundosRestantes.Count / 2).ToList(),
+                estadios, semilla + 2, "B", ref indiceEstadio, empezarEn: 5
+            ));
+        }
+        foreach (var cruce in cruces)
+            fixture.AddEliminatoryMatch(cruce.Partido);
+        return cruces;
+    }
+
+
     private List<Cruce> EmparejaryCrearCruces(List<Team> lista1, List<Team> lista2, List<Stadium> estadios, int semilla, string prefijoCruce, ref int indiceEstadioActual, int empezarEn = 1)
     {
         //var config = new TournamentConfig();
         var lista1Barajada = _config.Shuffle(lista1, semilla);
-        var lista2Barajada = _config.Shuffle(lista2, semilla ^ 0xFFFF);
+        var lista2Barajada = _config.Shuffle(lista2, semilla + 7);
         var disponibles = new List<Team>(lista2Barajada);
         var cruces = new List<Cruce>();
         int numeroCruce = empezarEn;
@@ -143,12 +147,14 @@ public class CrucesGeneratorService : ICrucesGeneratorService
             return false;
         return grupo1 == grupo2;
     }
+    
     private Match CrearPartido(Team local, Team visitante, Stadium estadio, int numeroCruce)
     {
         var fechaBase = _config.FechaInicioTorneo.AddDays(21 + numeroCruce);
         var clockCreacion = new ClockStub(_config.FechaInicioTorneo);
         return new Match(fechaBase, estadio, local, visitante, 'N', clockCreacion);
     }
+    
     private List<Cruce> CrearCrucesProximaFase(List<Team> ganadores, List<Stadium> estadios, int semilla, TournamentPhase fase)
     {
         if (ganadores.Count < 2)

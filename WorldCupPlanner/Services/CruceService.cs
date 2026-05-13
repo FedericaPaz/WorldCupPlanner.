@@ -42,9 +42,8 @@ public class CruceService : ICruceService
                 match.Lock();
         }
         
-        List<Group> grupos = fixture.GetGroups.ToList();
         List<Stadium> estadios = _stadiumRepository.GetAllStadiums();
-        List<Cruce> cruces = _generator.GenerateRoundOf32(grupos, estadios, _config.SemillaCrucesFase);
+        List<Cruce> cruces = _generator.GenerateRoundOf32(fixture, estadios, _config.SemillaCrucesFase);
         _repository.RemoveCruces();
         _repository.AddCruces(cruces);
         foreach (var cruce in cruces)

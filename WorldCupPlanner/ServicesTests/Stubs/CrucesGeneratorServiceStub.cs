@@ -13,8 +13,9 @@ public class CrucesGeneratorServiceStub : ICrucesGeneratorService
         
     public CrucesGeneratorServiceStub() : base() { }
         
-    public List<Cruce> GenerateRoundOf32(List<Group> groups, List<Stadium> stadiums, int seed)
+    public List<Cruce> GenerateRoundOf32(Fixture fixture, List<Stadium> stadiums, int seed)
     {
+        var groups = fixture.GetGroups.ToList();
         _lastGroups = groups;
         _lastStadiums = stadiums;
         _lastSeed = seed;
@@ -28,7 +29,7 @@ public class CrucesGeneratorServiceStub : ICrucesGeneratorService
         _lastSeed = seed;
         return _generatedCruces ?? new List<Cruce>();
     }
-        
+
     public void SetGeneratedCruces(List<Cruce> cruces)
     {
         _generatedCruces = cruces;
