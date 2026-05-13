@@ -308,4 +308,16 @@ public class MatchServiceTests
 
         Assert.AreEqual('A', response.group);
     }
+    
+    [TestMethod]
+    public void Create_WithNullGroup_ShouldThrowArgumentException()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var request = CreateValidRequest(_clock.Now);
+        request.group = null!;
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            _service.CreateMatch(request));
+    }
 }
