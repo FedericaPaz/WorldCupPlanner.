@@ -84,14 +84,11 @@ public class FixtureGenerator
 
     private void DistributeTeamsToGroups(List<Team> orderedTeams, List<Group> groups)
     {
-        var bombo1 = orderedTeams.Take(12).ToList();
-        var bombo2 = orderedTeams.Skip(12).Take(12).ToList();
-        var bombo3 = orderedTeams.Skip(24).Take(12).ToList();
-        var bombo4 = orderedTeams.Skip(36).Take(12).ToList();
-        DistributeBomboWithConfederationRules(bombo1, groups);
-        DistributeBomboWithConfederationRules(bombo2, groups);
-        DistributeBomboWithConfederationRules(bombo3, groups);
-        DistributeBomboWithConfederationRules(bombo4, groups);
+        for (int bombo = 0; bombo < 4; bombo++)
+        {
+            var bomboTeams = orderedTeams.Skip(bombo * BomboSize).Take(BomboSize).ToList();
+            DistributeBomboWithConfederationRules(bomboTeams, groups);
+        }
     }
 
     private void DistributeBomboWithConfederationRules(List<Team> bomboTeams, List<Group> groups)
