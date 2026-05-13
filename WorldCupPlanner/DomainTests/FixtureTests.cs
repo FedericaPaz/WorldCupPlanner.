@@ -270,6 +270,17 @@ public class FixtureTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void AdvanceToPhase_ToRoundOf32_WhenGroupMatchesAreNotPlayed_ShouldThrowException()
+    {
+        var fixture = CreateValidFixture();
+
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            fixture.AdvanceToPhase(TournamentPhase.RoundOf32));
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
