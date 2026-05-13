@@ -2,16 +2,19 @@
 @rendermode InteractiveServer
 @using DTOs
 @using IServices
+@using Web.Services
 @inject ICruceService CruceService
 @inject IFixtureService FixtureService
 @inject IMatchService MatchService
+@inject ILogService LogService
+@inject SessionService SessionService
 
 <div class="cruces-wrapper">
 
     <div class="cruces-header">
         <div>
             <h1 class="cruces-title">Cruces - Fase Eliminatoria</h1>
-            <p class="cruces-subtitle">Desde 32avos hasta la final</p>
+            <p class="crces-subtitle">Desde 32avos hasta la final</p>
         </div>
         @if (_hayCruces && !_tieneFinal)
         {
@@ -265,14 +268,19 @@
 
     private List<CruceResponse> _ronda32avos =>
         _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.RoundOf32).ToList();
+
     private List<CruceResponse> _octavos =>
         _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.RoundOf16).ToList();
+
     private List<CruceResponse> _cuartos =>
         _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.QuarterFinals).ToList();
+
     private List<CruceResponse> _semis =>
         _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.SemiFinals).ToList();
+
     private List<CruceResponse> _final =>
         _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.Final).ToList();
+
     private bool _tieneFinal => _final.Any();
 
     protected override void OnInitialized()
@@ -313,6 +321,14 @@
             StateHasChanged();
 
             CruceService.GenerateRoundOf32();
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Cruces",
+                "Sorteo",
+                "Se realizó el sorteo de cruces de 32avos de final"
+            );
+
             _mensajeExito = "32avos de final generados correctamente.";
             CargarCruces();
         }
@@ -337,6 +353,14 @@
             StateHasChanged();
 
             CruceService.GenerateNextRound();
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Cruces",
+                "Sorteo",
+                "Se realizó el sorteo de la siguiente ronda de cruces"
+            );
+
             _mensajeExito = "Siguiente ronda generada correctamente.";
             CargarCruces();
         }
@@ -361,6 +385,14 @@
             StateHasChanged();
 
             MatchService.SimulateGroupStage();
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Partidos",
+                "Modificación",
+                "Se simuló la fase de grupos"
+            );
+
             _mensajeExito = "Fase de grupos simulada correctamente.";
             CalcularEstadoFaseGrupos();
         }
@@ -373,5 +405,15 @@
             _cargando = false;
             StateHasChanged();
         }
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
     }
 }

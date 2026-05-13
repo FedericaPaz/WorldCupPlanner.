@@ -3,6 +3,9 @@
 @using IServices
 @using Microsoft.AspNetCore.Components.Forms
 @inject IImportService ImportService
+@using Web.Services
+@inject ILogService LogService
+@inject SessionService SessionService
 
 <div class="import-page">
     <div class="page-header">
@@ -112,10 +115,34 @@
         if (response.Success)
         {
             _successMessage = $"Se importaron {response.ImportedTeamsCount} equipos correctamente.";
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Importación",
+                "Éxito",
+                $"Se importaron {response.ImportedTeamsCount} equipos correctamente desde el archivo {_fileName}"
+            );
         }
         else
         {
             _errors = response.Errors;
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Importación",
+                "Error",
+                $"La importación del archivo {_fileName} finalizó con {_errors.Count} errores"
+            );
         }
+    }
+    
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
     }
 }

@@ -1,10 +1,13 @@
 ﻿@page "/Fixture"
 @using DTOs
 @using IServices
+@using Web.Services
 @inject IFixtureService FixtureService
 @inject ITeamService TeamService
 @inject IStadiumService StadiumService
 @inject NavigationManager Navigation
+@inject ILogService LogService
+@inject SessionService SessionService
 
 <h3 class="text-center my-4">Fixture - Fase de Grupos</h3>
 
@@ -157,9 +160,17 @@ else
     {
         _isGenerating = true;
         _error = null;
+
         try
         {
             FixtureService.GenerateFixture();
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Fixture",
+                "Generación",
+                "Se generó el fixture del torneo"
+            );
         }
         catch (Exception ex)
         {
@@ -175,12 +186,33 @@ else
     private async Task RegenerateFixture()
     {
         if (isReloading) return;
+
         isReloading = true;
+        _error = null;
         StateHasChanged();
-        await Task.Delay(500);
-        FixtureService.GenerateFixture();
-        isReloading = false;
-        StateHasChanged();
+
+        try
+        {
+            await Task.Delay(500);
+
+            FixtureService.GenerateFixture();
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Fixture",
+                "Generación",
+                "Se regeneró el fixture del torneo"
+            );
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            isReloading = false;
+            StateHasChanged();
+        }
     }
     
     private void SelectGroup(GroupResponse group)
@@ -193,5 +225,15 @@ else
     {
         SelectedGroup = null;
         StateHasChanged();
+    }
+    
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
     }
 }

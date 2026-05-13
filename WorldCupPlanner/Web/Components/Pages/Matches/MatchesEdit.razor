@@ -9,6 +9,7 @@
 @inject NavigationManager Navigation
 @inject TournamentConfig Config
 @inject SessionService SessionService
+@inject ILogService LogService
 
 <div class="edit-match-page">
     <button class="back-link" @onclick="GoBack">← Volver a partidos</button>
@@ -21,7 +22,8 @@
     @if (_match is null)
     {
         <p>Cargando partido...</p>
-    } else if (_match.isLocked)
+    } 
+    else if (_match.isLocked)
     {
         <div class="alert alert-warning">
             Este partido no puede editarse porque los cruces eliminatorios ya fueron generados.
@@ -110,6 +112,7 @@
             Navigation.NavigateTo("/");
             return;
         }
+
         LoadData();
     }
 
@@ -138,14 +141,44 @@
             if (_match is null)
                 return;
 
+            bool wasModified = false;
+
             if (_dateTime != _match.dateMatch)
+            {
                 MatchService.UpdateMatchDate(_match.idMatch, _dateTime);
+                wasModified = true;
+            }
 
             if (_stadiumName != _match.stadiumName)
+            {
                 MatchService.UpdateMatchStadium(_match.idMatch, _stadiumName);
+                wasModified = true;
+            }
 
-            if (!_match.homeGoals.HasValue && (_homeGoals > 0 || _awayGoals > 0))
-                MatchService.SetMatchResult(_match.idMatch, _homeGoals, _awayGoals);
+            int currentHomeGoals = _match.homeGoals ?? 0;
+            int currentAwayGoals = _match.awayGoals ?? 0;
+
+            bool resultChanged = _homeGoals != currentHomeGoals || _awayGoals != currentAwayGoals;
+
+            if (resultChanged)
+            {
+                if (!_match.homeGoals.HasValue && !_match.awayGoals.HasValue)
+                {
+                    MatchService.SetMatchResult(_match.idMatch, _homeGoals, _awayGoals);
+                }
+
+                wasModified = true;
+            }
+
+            if (wasModified)
+            {
+                LogService.Register(
+                    GetCurrentUserEmail(),
+                    "Partidos",
+                    "Modificación",
+                    $"Se modificó el partido {_match.homeTeamName} vs {_match.awayTeamName}"
+                );
+            }
 
             Navigation.NavigateTo("/matches");
         }
@@ -157,13 +190,40 @@
 
     private void SimulateResult()
     {
-        MatchService.SimulateMatch(_match!.idMatch, Config.SemillaSimulation);
-        LoadData();
+        try
+        {
+            if (_match is null)
+                return;
+
+            MatchService.SimulateMatch(_match.idMatch, Config.SemillaSimulation);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Partidos",
+                "Modificación",
+                $"Se simuló el resultado del partido {_match.homeTeamName} vs {_match.awayTeamName}"
+            );
+
+            LoadData();
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
     }
 
     private void GoBack()
     {
         Navigation.NavigateTo("/matches");
     }
-   
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
+    }
 }
