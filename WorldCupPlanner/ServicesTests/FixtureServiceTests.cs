@@ -255,4 +255,17 @@ public class FixtureServiceTests
             Assert.AreEqual(6, group.MatchesInGroup.Count);
         }
     }
+    
+    [TestMethod]
+    public void GenerateFixture_WithValidData_ShouldStoreGroupMatchesInMatchRepository()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+
+        var matches = _matchRepository.GetAllMatches();
+
+        Assert.AreEqual(72, matches.Count);
+    }
 }
