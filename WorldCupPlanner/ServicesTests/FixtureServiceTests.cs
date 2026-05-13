@@ -172,4 +172,16 @@ public class FixtureServiceTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void GetFixture_WhenFixtureExists_ShouldReturnCurrentPhase()
+    {
+        var fixture = CreateValidFixture();
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+
+        _fixtureRepository.AddFixture(fixture);
+
+        var result = _service.GetFixture();
+
+        Assert.AreEqual("GroupStage", result.CurrentPhase);
+    }
 }
