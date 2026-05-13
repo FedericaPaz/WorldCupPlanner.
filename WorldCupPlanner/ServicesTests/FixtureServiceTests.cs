@@ -65,6 +65,24 @@ public class FixtureServiceTests
         return fixture;
     }
     
+    private void AddRequiredTeams()
+    {
+        for (int i = 1; i <= 48; i++)
+        {
+            var team = new Team($"Team_{i}", new Confederation("UEFA"), 500 + i);
+            _teamRepository.Add(team);
+        }
+    }
+
+    private void AddRequiredStadiums()
+    {
+        for (int i = 1; i <= 12; i++)
+        {
+            var stadium = new Stadium($"Stadium_{i}", "Montevideo", "", 50000);
+            _stadiumRepository.AddStadium(stadium);
+        }
+    }
+    
     [TestMethod]
     public void HasFixture_WhenNoFixture_ReturnsFalse()
     {
@@ -141,6 +159,17 @@ public class FixtureServiceTests
     public void GetStandingsForGroup_WhenNoFixture_ThrowsException()
     {
         Assert.ThrowsException<InvalidOperationException>(() => _service.GetStandingsForGroup('A'));
+    }
+    
+    [TestMethod]
+    public void HasFixture_WhenFixtureExistsButIsInvalid_ReturnsFalse()
+    {
+        var invalidFixture = new Fixture(new TournamentConfig());
+        _fixtureRepository.AddFixture(invalidFixture);
+
+        var result = _service.HasFixture();
+
+        Assert.IsFalse(result);
     }
     
 }
