@@ -210,4 +210,17 @@ public class FixtureServiceTests
 
         Assert.IsTrue(_fixtureRepository.ContainsFixture());
     }
+    
+    [TestMethod]
+    public void GenerateFixture_WithValidData_ShouldCreateTwelveGroups()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+
+        var fixture = _fixtureRepository.GetFixture();
+
+        Assert.AreEqual(12, fixture.GetGroups.Count);
+    }
 }
