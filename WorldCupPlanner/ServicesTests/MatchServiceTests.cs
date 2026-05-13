@@ -267,4 +267,13 @@ public class MatchServiceTests
         Assert.ThrowsException<KeyNotFoundException>(() =>
             _service.UpdateMatchDate(99, _clock.Now));
     }
+    
+    [TestMethod]
+    public void UpdateMatchStadium_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
+    {
+        _stadiumRepository.AddStadium(CreateStadium("Maracana"));
+
+        Assert.ThrowsException<KeyNotFoundException>(() =>
+            _service.UpdateMatchStadium(99, "Maracana"));
+    }
 }
