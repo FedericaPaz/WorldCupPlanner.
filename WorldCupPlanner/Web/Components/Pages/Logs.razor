@@ -6,12 +6,14 @@
 <div class="logs-page">
     <div class="logs-header">
         <div>
+            <span class="logs-eyebrow">Auditoría</span>
             <h1>Log del sistema</h1>
-            <p>Registro de acciones realizadas dentro de WorldCup Planner 2026</p>
+            <p>Registro de acciones realizadas dentro de WorldCup Planner 2026.</p>
         </div>
 
         <div class="logs-counter">
-            @_logs.Count registros
+            <span class="logs-counter-number">@_logs.Count</span>
+            <span class="logs-counter-label">registros</span>
         </div>
     </div>
 
@@ -26,8 +28,9 @@
         }
         else
         {
-            <table class="logs-table">
-                <thead>
+            <div class="logs-table-wrapper">
+                <table class="logs-table">
+                    <thead>
                     <tr>
                         <th>Fecha</th>
                         <th>Usuario</th>
@@ -35,14 +38,14 @@
                         <th>Acción</th>
                         <th>Detalle</th>
                     </tr>
-                </thead>
+                    </thead>
 
-                <tbody>
+                    <tbody>
                     @foreach (var log in _logs)
                     {
                         <tr>
                             <td class="logs-date">
-                                @log.Timestamp.ToString("yyyy-MM-dd HH:mm:ss")
+                                @log.Timestamp.ToString("dd/MM/yyyy HH:mm")
                             </td>
 
                             <td>
@@ -66,8 +69,9 @@
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         }
     </div>
 </div>
@@ -77,6 +81,8 @@
 
     protected override void OnInitialized()
     {
-        _logs = LogService.GetAll();
+        _logs = LogService.GetAll()
+            .OrderByDescending(log => log.Timestamp)
+            .ToList();
     }
 }
