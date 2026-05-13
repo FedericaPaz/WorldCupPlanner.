@@ -100,6 +100,49 @@ public class TeamTests
         VerifyTeam(team, "Uruguay", MinFifaRanking);
     }
     
+    [TestMethod]
+    public void CreateTeam_WithNullName_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() =>
+            new Team(null!, _defaultConfederation, MinFifaRanking));
+    }
+    
+    [TestMethod]
+    public void CreateTeam_WithLowerBoundaryRanking_ShouldStoreRanking()
+    {
+        var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking);
+
+        Assert.AreEqual(MinFifaRanking, team.FifaRanking);
+    }
+    
+    [TestMethod]
+    public void CreateTeam_WithUpperBoundaryRanking_ShouldStoreRanking()
+    {
+        var team = new Team("Uruguay", _defaultConfederation, MaxFifaRanking);
+
+        Assert.AreEqual(MaxFifaRanking, team.FifaRanking);
+    }
+    
+    [TestMethod]
+    public void CreateTeam_WithConfederationWithEmptyName_ShouldThrowArgumentException()
+    {
+        var confederation = new Confederation("AFC");
+
+        var field = typeof(Confederation).GetField(
+                        "_name",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    ?? typeof(Confederation).GetField(
+                        "<Name>k__BackingField",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        Assert.IsNotNull(field);
+
+        field.SetValue(confederation, "");
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            new Team("Uruguay", confederation, MinFifaRanking));
+    }
+    
     private void VerifyTeam(Team team, string expectedName, int expectedRanking)
     {
         Assert.IsNotNull(team);

@@ -66,6 +66,39 @@ public class FixtureServiceTests
         }
         return fixture;
     }
+    
+    private void AddRequiredTeams()
+    {
+        AddTeamsForConfederation("UEFA", 16, 1000);
+        AddTeamsForConfederation("CONMEBOL", 7, 1200);
+        AddTeamsForConfederation("CONCACAF", 7, 1400);
+        AddTeamsForConfederation("CAF", 9, 1600);
+        AddTeamsForConfederation("AFC", 8, 1800);
+        AddTeamsForConfederation("OFC", 1, 2000);
+    }
+
+    private void AddTeamsForConfederation(string confederationName, int amount, int rankingBase)
+    {
+        for (int i = 1; i <= amount; i++)
+        {
+            var team = new Team(
+                $"{confederationName}_Team_{i}",
+                new Confederation(confederationName),
+                rankingBase + i
+            );
+
+            _teamRepository.Add(team);
+        }
+    }
+    
+    private void AddRequiredStadiums()
+    {
+        for (int i = 1; i <= 12; i++)
+        {
+            var stadium = new Stadium($"Stadium_{i}", "Montevideo", "", 50000);
+            _stadiumRepository.AddStadium(stadium);
+        }
+    }
 
     [TestMethod]
     public void HasFixture_WhenNoFixture_ReturnsFalse()
@@ -143,5 +176,112 @@ public class FixtureServiceTests
     public void GetStandingsForGroup_WhenNoFixture_ThrowsException()
     {
         Assert.ThrowsException<InvalidOperationException>(() => _service.GetStandingsForGroup('A'));
+    }
+    
+    [TestMethod]
+    public void HasFixture_WhenFixtureExistsButIsInvalid_ReturnsFalse()
+    {
+        var invalidFixture = new Fixture(new TournamentConfig());
+        _fixtureRepository.AddFixture(invalidFixture);
+
+        var result = _service.HasFixture();
+
+        Assert.IsFalse(result);
+    }
+    
+    [TestMethod]
+    public void GetFixture_WhenFixtureExists_ShouldReturnCurrentPhase()
+    {
+        var fixture = CreateValidFixture();
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+
+        _fixtureRepository.AddFixture(fixture);
+
+        var result = _service.GetFixture();
+
+        Assert.AreEqual("GroupStage", result.CurrentPhase);
+    }
+    
+    [TestMethod]
+    public void GenerateFixture_WithValidData_ShouldCreateFixture()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+
+        Assert.IsTrue(_fixtureRepository.ContainsFixture());
+    }
+    
+    [TestMethod]
+    public void GenerateFixture_WithValidData_ShouldCreateTwelveGroups()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+
+        var fixture = _fixtureRepository.GetFixture();
+
+        Assert.AreEqual(12, fixture.GetGroups.Count);
+    }
+    
+    [TestMethod]
+    public void GenerateFixture_WithValidData_ShouldCreateFourTeamsPerGroup()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+
+        var fixture = _fixtureRepository.GetFixture();
+
+        foreach (var group in fixture.GetGroups)
+        {
+            Assert.AreEqual(4, group.TeamsInGroup.Count);
+        }
+    }
+    
+    [TestMethod]
+    public void GenerateFixture_WithValidData_ShouldCreateSixMatchesPerGroup()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+
+        var fixture = _fixtureRepository.GetFixture();
+
+        foreach (var group in fixture.GetGroups)
+        {
+            Assert.AreEqual(6, group.MatchesInGroup.Count);
+        }
+    }
+    
+    [TestMethod]
+    public void GenerateFixture_WithValidData_ShouldStoreGroupMatchesInMatchRepository()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+
+        var matches = _matchRepository.GetAllMatches();
+
+        Assert.AreEqual(72, matches.Count);
+    }
+    
+    [TestMethod]
+    public void GenerateFixture_WhenCalledTwice_ShouldKeepOnlyCurrentFixtureMatches()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+        _service.GenerateFixture();
+
+        var matches = _matchRepository.GetAllMatches();
+
+        Assert.AreEqual(72, matches.Count);
     }
 }

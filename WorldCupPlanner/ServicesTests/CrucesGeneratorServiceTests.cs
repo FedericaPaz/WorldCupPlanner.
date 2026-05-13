@@ -152,28 +152,33 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_WithSameSeed_ShouldGenerateSameOrder()
     {
-        var cruces1 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, ConfigTest.SemillaFixture);
-        var cruces2 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, ConfigTest.SemillaFixture + 7);
-        Assert.AreEqual(cruces1[0].Partido.HomeTeam.Name, cruces2[0].Partido.HomeTeam.Name);
+        int semilla = ConfigTest.SemillaFixture;
+        var cruces1 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, semilla);
+        var cruces2 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, semilla);
+ 
+        for (int i = 0; i < cruces1.Count; i++)
+        {
+            Assert.AreEqual(cruces1[i].Partido.HomeTeam.Name, cruces2[i].Partido.HomeTeam.Name, $"Cruce {i}: local difiere con la misma semilla");
+            Assert.AreEqual(cruces1[i].Partido.AwayTeam.Name, cruces2[i].Partido.AwayTeam.Name, $"Cruce {i}: visitante difiere con la misma semilla");
+        }
     }
 
     [TestMethod]
     public void GenerateRoundOf32_WithDifferentSeed_ShouldGenerateDifferentOrder()
     {
-        var cruces1 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, ConfigTest.SemillaFixture);
-        var cruces2 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, ConfigTest.SemillaFixture + 7);
-
+        var cruces1 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, 100);
+        var cruces2 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, 99999);
+ 
         bool isDifferent = false;
         for (int i = 0; i < cruces1.Count; i++)
         {
-            if (cruces1[i].Partido.HomeTeam.Name != cruces2[i].Partido.HomeTeam.Name ||
-                cruces1[i].Partido.AwayTeam.Name != cruces2[i].Partido.AwayTeam.Name)
+            if (cruces1[i].Partido.HomeTeam.Name != cruces2[i].Partido.HomeTeam.Name || cruces1[i].Partido.AwayTeam.Name != cruces2[i].Partido.AwayTeam.Name)
             {
                 isDifferent = true;
                 break;
             }
         }
-        Assert.IsTrue(isDifferent, "Con semillas diferentes debería haber emparejamientos diferentes");
+        Assert.IsTrue(isDifferent, "Con semillas muy distintas debería haber al menos un emparejamiento diferente");
     }
 
     [TestMethod]

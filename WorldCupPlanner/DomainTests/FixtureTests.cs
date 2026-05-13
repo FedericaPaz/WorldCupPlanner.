@@ -237,6 +237,100 @@ public class FixtureTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void IsValid_WithGroupsAndTeamsButMissingMatches_ReturnsFalse()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        fixture.InitializeGroups();
+
+        foreach (var group in fixture.GetGroups)
+        {
+            for (int i = 1; i <= 4; i++)
+            {
+                var team = new Team($"Team_{group.GroupLetter}_{i}", new Confederation("UEFA"), 1000);
+                group.AddTeamToGroup(team);
+            }
+        }
+
+        var result = fixture.IsValid();
+
+        Assert.IsFalse(result);
+    }
+    
+    [TestMethod]
+    public void CanAdvanceToPhase_ToRoundOf32_WhenGroupMatchesAreNotPlayed_ReturnsFalse()
+    {
+        var fixture = CreateValidFixture();
+
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+
+        var result = fixture.CanAdvanceToPhase(TournamentPhase.RoundOf32);
+
+        Assert.IsFalse(result);
+    }
+    
+    [TestMethod]
+    public void AdvanceToPhase_ToRoundOf32_WhenGroupMatchesAreNotPlayed_ShouldThrowException()
+    {
+        var fixture = CreateValidFixture();
+
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            fixture.AdvanceToPhase(TournamentPhase.RoundOf32));
+    }
+    
+    [TestMethod]
+    public void CanAdvanceToPhase_ToFinished_WhenCurrentPhaseIsNotFinal_ReturnsFalse()
+    {
+        var fixture = CreateValidFixture();
+    
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+    
+        var result = fixture.CanAdvanceToPhase(TournamentPhase.Finished);
+    
+        Assert.IsFalse(result);
+    }
+    
+    [TestMethod]
+    public void AdvanceToPhase_WhenInvalid_ShouldKeepCurrentPhase()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            fixture.AdvanceToPhase(TournamentPhase.GroupStage));
+
+        Assert.AreEqual(TournamentPhase.NotStarted, fixture.CurrentPhase);
+    }
+    
+    [TestMethod]
+    public void IsStillValid_WhenFixtureHasNoGroups_ReturnsFalse()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+
+        var teams = new List<Team>();
+        var stadiums = new List<Stadium>();
+
+        var result = fixture.IsStillValid(teams, stadiums);
+
+        Assert.IsFalse(result);
+    }
+    
+    [TestMethod]
+    public void CanAdvanceToPhase_ToRoundOf16_WhenCurrentPhaseIsNotRoundOf32_ReturnsFalse()
+    {
+        var fixture = CreateValidFixture();
+
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+
+        var result = fixture.CanAdvanceToPhase(TournamentPhase.RoundOf16);
+
+        Assert.IsFalse(result);
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
