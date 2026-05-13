@@ -268,4 +268,18 @@ public class FixtureServiceTests
 
         Assert.AreEqual(72, matches.Count);
     }
+    
+    [TestMethod]
+    public void GenerateFixture_WhenCalledTwice_ShouldKeepOnlyCurrentFixtureMatches()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+        _service.GenerateFixture();
+
+        var matches = _matchRepository.GetAllMatches();
+
+        Assert.AreEqual(72, matches.Count);
+    }
 }
