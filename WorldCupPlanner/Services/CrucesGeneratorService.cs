@@ -63,15 +63,18 @@ public class CrucesGeneratorService : ICrucesGeneratorService
 
         return cruces;
     }
-
     public List<Cruce> GenerateNextRound(List<Cruce> crucesAnteriores, List<Stadium> estadios, int semilla)
     {
         if (crucesAnteriores == null || crucesAnteriores.Count == 0)
             throw new ArgumentException("Se requieren cruces anteriores para generar la siguiente ronda.");
 
+        DateTime fechaUltimoPartido = crucesAnteriores.Max(c => c.Partido.DateMatch);
+
+        if (crucesAnteriores[0].Phase == TournamentPhase.SemiFinals)
+            return GenerateSemiFinalsOutput(crucesAnteriores, estadios, semilla, fechaUltimoPartido);
+
         var ganadores = ObtainWinners(crucesAnteriores);
         var siguienteFase = crucesAnteriores[0].ObtainNextPhase();
-        DateTime fechaUltimoPartido = crucesAnteriores.Max(c => c.Partido.DateMatch);
         return CrearCrucesProximaFase(ganadores, estadios, semilla, siguienteFase, fechaUltimoPartido);
     }
 
@@ -259,11 +262,45 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         {
             var ganador = (Team?)cruce.GetWinner();
             if (ganador == null)
-                throw new InvalidOperationException(
-                    $"El cruce {cruce.Nombre} no tiene un ganador definido.");
+                throw new InvalidOperationException($"El cruce {cruce.Nombre} no tiene un ganador definido.");
             ganadores.Add(ganador);
         }
         return ganadores;
+    }
+    
+    private List<Cruce> GenerateSemiFinalsOutput(List<Cruce> semis, List<Stadium> estadios, int semilla, DateTime fechaBase)
+    {
+        if (semis.Count != 2)
+            throw new InvalidOperationException("Se esperan exactamente 2 semifinales.");
+
+        var ganadores = ObtainWinners(semis);
+        var perdedores = ObtainLosers(semis);
+
+        int indicePartido = 0;
+
+        var estadioTercero = estadios[indicePartido % estadios.Count];
+        var partidoTercero = CrearPartido(perdedores[0], perdedores[1], estadioTercero, indicePartido, estadios.Count, fechaBase);
+        var cruceTercero = new Cruce("TP1", partidoTercero, TournamentPhase.ThirdPlace);
+        indicePartido++;
+
+        var estadioFinal = estadios[indicePartido % estadios.Count];
+        var partidoFinal = CrearPartido(ganadores[0], ganadores[1], estadioFinal, indicePartido, estadios.Count, fechaBase);
+        var cruceFinal = new Cruce("F1", partidoFinal, TournamentPhase.Final);
+
+        return new List<Cruce> { cruceTercero, cruceFinal };
+    }
+    
+    private static List<Team> ObtainLosers(List<Cruce> cruces)
+    {
+        var perdedores = new List<Team>();
+        foreach (var cruce in cruces)
+        {
+            var perdedor = (Team?)cruce.GetLoser();
+            if (perdedor == null)
+                throw new InvalidOperationException($"El cruce {cruce.Nombre} no tiene un perdedor definido.");
+            perdedores.Add(perdedor);
+        }
+        return perdedores;
     }
 
     private static void ValidateInputs(List<Group> grupos, List<Stadium> estadios)

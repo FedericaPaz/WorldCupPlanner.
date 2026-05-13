@@ -15,7 +15,7 @@
             <h1 class="cruces-title">Cruces - Fase Eliminatoria</h1>
             <p class="crces-subtitle">Desde 32avos hasta la final</p>
         </div>
-        @if (_hayCruces && !_tieneFinal)
+        @if (_hayCruces && !_tieneFinal && !_tercerPuesto.Any())
         {
             var ultimaFase = _todosLosCruces.Max(x => x.Phase);
             var crucesUltimaRonda = _todosLosCruces.Where(x => x.Phase == ultimaFase).ToList();
@@ -204,6 +204,46 @@
                         </div>
                     </div>
                 }
+                @if (_tercerPuesto.Any())
+                {
+                    <div class="bracket-round">
+                        <h3 class="round-title">🥉 Tercer Puesto</h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _tercerPuesto)
+                            {
+                                <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">
+                                    <div class="match-header">
+                                        <span class="match-name">@partido.Name</span>
+                                    </div>
+                                    <div class="match-body">
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.HomeTeam</span>
+                                            <span class="team-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                        <div class="match-vs">vs</div>
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.AwayTeam</span>
+                                            <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                    </div>
+                                    <div class="match-status @(partido.HomeGoals.HasValue ? "completed-status" : "pending-status")">
+                                        @if (partido.HomeGoals.HasValue)
+                                        {
+                                            var ganador = partido.HomeGoals > partido.AwayGoals
+                                                ? partido.HomeTeam
+                                                : partido.AwayTeam;
+                                            <span>🥉 Tercer puesto: @ganador</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Pendiente</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
                 @if (_final.Any())
                 {
                     <div class="bracket-round final-round">
@@ -229,18 +269,21 @@
                                         </div>
                                     </div>
                                     <div class="match-status @(partido.HomeGoals.HasValue ? "completed-status" : "pending-status")">
-                                        @(partido.HomeGoals.HasValue ? "¡Campeón definido!" : "Pendiente")
+                                        @if (partido.HomeGoals.HasValue)
+                                        {
+                                            var ganador = partido.HomeGoals > partido.AwayGoals
+                                                ? partido.HomeTeam
+                                                : partido.AwayTeam;
+                                            <span> 🥇 Campeon: @ganador</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Pendiente</span>
+                                        }
                                     </div>
                                 </div>
                             }
                         </div>
-                    </div>
-                }
-                @if (_tieneFinal && _final.First().HomeGoals.HasValue)
-                {
-                    <div class="tournament-completed">
-                        <h2>🎉 ¡Torneo Completado!</h2>
-                        <p>El ganador ha sido coronado campeón mundial.</p>
                     </div>
                 }
             </div>
@@ -267,19 +310,16 @@
 
     private List<CruceResponse> _ronda32avos =>
         _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.RoundOf32).ToList();
-
     private List<CruceResponse> _octavos =>
         _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.RoundOf16).ToList();
-
     private List<CruceResponse> _cuartos =>
         _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.QuarterFinals).ToList();
-
     private List<CruceResponse> _semis =>
         _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.SemiFinals).ToList();
-
+    private List<CruceResponse> _tercerPuesto =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.ThirdPlace).ToList();
     private List<CruceResponse> _final =>
         _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.Final).ToList();
-
     private bool _tieneFinal => _final.Any();
 
     protected override void OnInitialized()
@@ -374,38 +414,6 @@
         }
     }
     
-    private void SimularFaseGrupos()
-    {
-        try
-        {
-            _cargando = true;
-            _mensajeError = null;
-            _mensajeExito = null;
-            StateHasChanged();
-
-            MatchService.SimulateGroupStage();
-
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Partidos",
-                "Modificación",
-                "Se simuló la fase de grupos"
-            );
-
-            _mensajeExito = "Fase de grupos simulada correctamente.";
-            CalcularEstadoFaseGrupos();
-        }
-        catch (Exception ex)
-        {
-            _mensajeError = ex.Message;
-        }
-        finally
-        {
-            _cargando = false;
-            StateHasChanged();
-        }
-    }
-
     private string GetCurrentUserEmail()
     {
         if (!SessionService.IsUserActive())

@@ -17,6 +17,7 @@ public class Match
     private int? _homeGoals;
     private int? _awayGoals;
     private ITeam? _winnerMatch;
+    private ITeam? _loserMatch;
     private IDateTimeMatch _clock = null!;
     private bool _isLocked = false;
     public void Lock() => _isLocked = true;
@@ -88,6 +89,7 @@ public class Match
     public int? HomeGoals => _homeGoals;
     public int? AwayGoals => _awayGoals;
     public ITeam? WinnerMatch => _winnerMatch;
+    public ITeam? LoserMatch  => _loserMatch;
 
     public Match(DateTime dateMatch, IStadium stadium, ITeam homeTeam, ITeam awayTeam, char group, IDateTimeMatch clock)
     {
@@ -129,6 +131,7 @@ public class Match
         _homeGoals = homeGoals;
         _awayGoals = awayGoals;
         SetWinnerFromResult(homeGoals, awayGoals);
+        SetLoserFromResult(homeGoals, awayGoals);
     }
 
     private void EnsureMatchWasPlayed()
@@ -157,6 +160,16 @@ public class Match
             _winnerMatch = AwayTeam;
         else
             _winnerMatch = null;
+    }
+
+    private void SetLoserFromResult(int homeGoals, int awayGoals)
+    {
+        if (homeGoals < awayGoals)
+            _loserMatch = HomeTeam;
+        else if (homeGoals > awayGoals)
+            _loserMatch = AwayTeam;
+        else
+            _loserMatch = null;
     }
 
     public void UpdateDate(DateTime newDate)
@@ -209,15 +222,6 @@ public class Match
             throw new ArgumentException($"El grupo debe ser una letra entre la {MinGroup} y la {MaxGroup}.");
     }
     
-    public void ForceWinner(ITeam winner)
-    {
-        if (winner == null)
-            throw new ArgumentNullException(nameof(winner));
-        if (winner.Name != HomeTeam.Name && winner.Name != AwayTeam.Name)
-            throw new ArgumentException("El ganador debe ser uno de los equipos del partido.");
-        _winnerMatch = winner;
-    }
-    
     private void EnsureGroupPhaseIsEditable()
     {
         if (IsLocked)
@@ -230,5 +234,6 @@ public class Match
         _homeGoals = homeGoals;
         _awayGoals = awayGoals;
         SetWinnerFromResult(homeGoals, awayGoals);
+        SetLoserFromResult(homeGoals, awayGoals);
     }
 }

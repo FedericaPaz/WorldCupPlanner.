@@ -226,7 +226,7 @@ public class CrucesGeneratorServiceTests
     }
 
     [TestMethod]
-    public void GenerateNextRound_FromSemis_ShouldGenerateFinals()
+    public void GenerateNextRound_FromSemis_ShouldGenerateThirdPlaceAndFinal()
     {
         var cruces32 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, 123);
         SimulateWinner(cruces32);
@@ -237,8 +237,17 @@ public class CrucesGeneratorServiceTests
         var semis = _service.GenerateNextRound(cuartos, _estadios, 123);
         SimulateWinner(semis);
         var finals = _service.GenerateNextRound(semis, _estadios, 123);
-        Assert.AreEqual(TournamentPhase.Final, finals[0].Phase);
-        Assert.AreEqual(1, finals.Count);
+
+        Assert.AreEqual(2, finals.Count);
+        Assert.IsTrue(finals.Any(c => c.Phase == TournamentPhase.ThirdPlace));
+        Assert.IsTrue(finals.Any(c => c.Phase == TournamentPhase.Final));
+
+        var tercerPuesto = finals.First(c => c.Phase == TournamentPhase.ThirdPlace);
+        var final = finals.First(c => c.Phase == TournamentPhase.Final);
+
+        var equiposTercero = new[] { tercerPuesto.Partido.HomeTeam.Name, tercerPuesto.Partido.AwayTeam.Name };
+        var equiposFinal = new[] { final.Partido.HomeTeam.Name, final.Partido.AwayTeam.Name };
+        Assert.IsFalse(equiposTercero.Intersect(equiposFinal).Any(), "Los equipos del tercer puesto no pueden estar en la final");
     }
 
     [TestMethod]

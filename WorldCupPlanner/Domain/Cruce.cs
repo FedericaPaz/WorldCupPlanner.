@@ -33,6 +33,11 @@ public class Cruce
     {
         return Partido.WinnerMatch;
     }
+    
+    public ITeam? GetLoser()
+    {
+        return Partido.LoserMatch;
+    }
 
     private bool IsValidNextPhase(TournamentPhase nextPhase)
     {
