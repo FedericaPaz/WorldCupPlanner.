@@ -260,6 +260,17 @@ public class TeamServiceTests
         Assert.AreEqual("Uruguay Nuevo", result.Name);
     }
 
+    [TestMethod]
+    public void Update_WithExistingNewName_ShouldThrowArgumentException()
+    {
+        _teamService.Add(CreateRequest("Uruguay", "CONMEBOL", 1000));
+        _teamService.Add(CreateRequest("Argentina", "CONMEBOL", 1001));
+
+        var request = CreateRequest("Argentina", "CONMEBOL", 1000);
+
+        Assert.ThrowsException<ArgumentException>(() => _teamService.Update("Uruguay", request));
+    }
+
     
     [TestMethod]
     public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
