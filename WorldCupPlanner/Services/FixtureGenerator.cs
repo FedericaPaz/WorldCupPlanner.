@@ -93,18 +93,16 @@ public class FixtureGenerator
 
     private void DistributeBomboWithConfederationRules(List<Team> bomboTeams, List<Group> groups)
     {
-        foreach (var team in bomboTeams)
+        for (int i = 0; i < bomboTeams.Count; i++)
         {
+            var team = bomboTeams[i];
             bool assigned = false;
-            int startIndex = bomboTeams.IndexOf(team) % groups.Count;
             for (int offset = 0; offset < groups.Count && !assigned; offset++)
             {
-                int groupIndex = (startIndex + offset) % groups.Count;
+                int groupIndex = (i + offset) % groups.Count;
                 var group = groups[groupIndex];
-            
-                if (group.TeamsInGroup.Count >= 4)
-                    continue;
-            
+                if (group.TeamsInGroup.Count >= TeamsPerGroup) continue;
+
                 if (CanAddTeamToGroup(team, group))
                 {
                     group.AddTeamToGroup(team);
@@ -112,21 +110,21 @@ public class FixtureGenerator
                 }
             }
             if (!assigned)
-                throw new InvalidOperationException($"No se pudo ubicar al equipo {team.Name} en ningún grupo.");
+                throw new InvalidOperationException($"No se pudo ubicar al equipo {team.Name} en ningún grupo respetando las restricciones de confederación.");
         }
     }
-    
-    private bool CanAddTeamToGroup(Team team, Group group)
+
+    private static bool CanAddTeamToGroup(Team team, Group group)
     {
+        var teams = group.TeamsInGroup;
         var confederation = team.Confederation.Name;
-        var teamsInGroup = group.TeamsInGroup;
+
         if (confederation == "UEFA")
         {
-            int uefaCount = teamsInGroup.Count(t => ((Team)t).Confederation.Name == "UEFA");
+            int uefaCount = teams.Count(t => t.Confederation.Name == "UEFA");
             return uefaCount < 2;
         }
-        bool confederationAlreadyPresent = teamsInGroup.Any(t => ((Team)t).Confederation.Name == confederation);
-        return !confederationAlreadyPresent;
+        return teams.All(t => t.Confederation.Name != confederation);
     }
 
     private void GenerateMatches(Fixture fixture, List<Stadium> stadiums, TournamentConfig config)
