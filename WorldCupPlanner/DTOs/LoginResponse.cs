@@ -1,5 +1,4 @@
-﻿using Domain;
-using DTOs.User;
+﻿using DTOs.User;
 
 namespace DTOs;
 

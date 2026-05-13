@@ -1,5 +1,4 @@
 ﻿namespace DTOs.User;
-using Domain;
 
 public class UserResponseDto
 {
