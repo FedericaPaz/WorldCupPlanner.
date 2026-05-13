@@ -160,6 +160,12 @@ public class TeamServiceTests
     }
     
     [TestMethod]
+    public void Add_WithNullRequest_ShouldThrowArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => _teamService.Add(null!));
+    }
+
+    [TestMethod]
     public void Add_WithExistingFifaRanking_ShouldThrowException()
     {
         var firstTeam = new TeamDTO { Name = "Uruguay", ConfederationName = "CONMEBOL", FifaRanking = 1000 };
@@ -167,6 +173,7 @@ public class TeamServiceTests
         _teamService.Add(firstTeam);
         Assert.ThrowsException<ArgumentException>(() => _teamService.Add(secondTeam));
     }
+    
     
     [TestMethod]
     public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
@@ -176,4 +183,6 @@ public class TeamServiceTests
         var updatedTeam = new TeamDTO { Name = "Argentina", ConfederationName = "CONMEBOL", FifaRanking = 1000 };
         Assert.ThrowsException<ArgumentException>(() => _teamService.Update("Argentina", updatedTeam));
     }
+    
+    
 }
