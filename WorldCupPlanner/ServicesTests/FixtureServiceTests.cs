@@ -223,4 +223,20 @@ public class FixtureServiceTests
 
         Assert.AreEqual(12, fixture.GetGroups.Count);
     }
+    
+    [TestMethod]
+    public void GenerateFixture_WithValidData_ShouldCreateFourTeamsPerGroup()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+
+        var fixture = _fixtureRepository.GetFixture();
+
+        foreach (var group in fixture.GetGroups)
+        {
+            Assert.AreEqual(4, group.TeamsInGroup.Count);
+        }
+    }
 }
