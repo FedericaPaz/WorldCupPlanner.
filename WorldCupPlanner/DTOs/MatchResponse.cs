@@ -11,6 +11,6 @@ public class MatchResponse
     public int? homeGoals { get; set; }
     public int? awayGoals { get; set; }
     public string? winnerName { get; set; }
-    
     public bool isLocked { get; set; }
+    public string phase { get; set; } = string.Empty;
 }

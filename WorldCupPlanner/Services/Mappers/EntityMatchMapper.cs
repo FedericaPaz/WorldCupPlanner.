@@ -19,7 +19,8 @@ public static class EntityMatchMapper
             homeGoals = match.HomeGoals,
             awayGoals = match.AwayGoals,
             winnerName = match.WinnerMatch?.Name,
-            isLocked     = match.IsLocked
+            isLocked     = match.IsLocked,
+            phase        = match.Group == 'N' ? "Eliminatoria" : "Grupos" 
         };
     }
 }
