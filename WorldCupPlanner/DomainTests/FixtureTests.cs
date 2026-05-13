@@ -293,6 +293,18 @@ public class FixtureTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void AdvanceToPhase_WhenInvalid_ShouldKeepCurrentPhase()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            fixture.AdvanceToPhase(TournamentPhase.GroupStage));
+
+        Assert.AreEqual(TournamentPhase.NotStarted, fixture.CurrentPhase);
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
