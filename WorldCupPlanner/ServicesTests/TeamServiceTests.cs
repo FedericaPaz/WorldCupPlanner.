@@ -234,6 +234,16 @@ public class TeamServiceTests
     }
     
     [TestMethod]
+    public void Update_WithEmptyNewConfederation_ShouldThrowArgumentException()
+    {
+        _teamService.Add(CreateRequest("Uruguay", "CONMEBOL", 1000));
+
+        var request = CreateRequest("Uruguay", "", 1000);
+
+        Assert.ThrowsException<ArgumentException>(() => _teamService.Update("Uruguay", request));
+    }
+    
+    [TestMethod]
     public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
     {
         _teamService.Add(new TeamDTO { Name = "Uruguay", ConfederationName = "CONMEBOL", FifaRanking = 1000 });
