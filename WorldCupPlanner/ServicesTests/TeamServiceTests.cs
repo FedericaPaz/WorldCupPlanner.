@@ -271,6 +271,15 @@ public class TeamServiceTests
         Assert.ThrowsException<ArgumentException>(() => _teamService.Update("Uruguay", request));
     }
 
+    [TestMethod]
+    public void GenerateMissingTeams_WhenRepositoryIsEmpty_ShouldGenerate48Teams()
+    {
+        _teamService.GenerateMissingTeams();
+
+        var result = _teamService.GetAll();
+
+        Assert.AreEqual(48, result.Count);
+    }
     
     [TestMethod]
     public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
