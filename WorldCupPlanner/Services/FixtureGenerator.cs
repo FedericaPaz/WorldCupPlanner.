@@ -31,23 +31,24 @@ public class FixtureGenerator
         _config = config;
         _clock = clock;
     }
-    
-    public Fixture GenerateGroupsStageFixture(TournamentConfig config)
+
+    public Fixture GenerateGroupsStageFixture()
     {
         var teams = _teamRepository.GetAll();
         var stadiums = _stadiumRepository.GetAllStadiums();
-        if (teams.Count != 48) throw new Exception("Se necesitan 48 equipos");
-        
-        if (stadiums.Count < 4) throw new Exception("Se necesitan 4 estadios");
-        
-        var fixture = new Fixture(config);
+
+        if (teams.Count != 48)
+            throw new InvalidOperationException("Se necesitan 48 equipos para generar el fixture.");
+        if (stadiums.Count < 4)
+            throw new InvalidOperationException("Se necesitan al menos 4 estadios para generar el fixture.");
+
+        var fixture = new Fixture(_config);
         fixture.InitializeGroups();
-        
-        var orderedTeams = OrderTeamsWithTieBreak(teams, config.SemillaFixture, config);
+
+        var orderedTeams = OrderTeamsWithTieBreak(teams);
         DistributeTeamsToGroups(orderedTeams, fixture.GetGroups.ToList());
-        
-        GenerateMatches(fixture, stadiums, config);
-        
+        GenerateMatches(fixture, stadiums);
+
         fixture.AdvanceToPhase(TournamentPhase.GroupStage);
         _fixtureRepository.AddFixture(fixture);
         return fixture;
