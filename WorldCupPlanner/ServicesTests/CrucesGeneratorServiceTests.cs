@@ -6,6 +6,15 @@ namespace ServicesTests;
 [TestClass]
 public class CrucesGeneratorServiceTests
 {
+    private static readonly TournamentConfig ConfigTest = new TournamentConfig
+    {
+        FechaInicioTorneo = new DateTime(2027, 1, 1)
+    };
+    
+    private static readonly DateTime FechaCreacionClock  = new DateTime(2027, 6, 10);
+    private static readonly DateTime FechaPartido        = new DateTime(2027, 6, 12);
+    private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
+
     private List<Group> Create12GroupsWithTeams()
     {
         var grupos = new List<Group>();
@@ -52,26 +61,25 @@ public class CrucesGeneratorServiceTests
 
     private Match CreateMatch(Team homeTeam, Team awayTeam, int homeGoals, int awayGoals, char groupLetter)
     {
-        DateTime fechaPartido = DateTime.Now.AddHours(-2);
-        DateTime fechaActual  =  DateTime.Now;
-        Match match = new Match(fechaPartido,
+        var match = new Match(FechaPartido,
             new Stadium("Centenario", "Montevideo", "Desc", 50000),
-            homeTeam, awayTeam, groupLetter, new ClockStub(fechaActual));
-
+            homeTeam, awayTeam, groupLetter,
+            new ClockStub(FechaCreacionClock));
+        match.SetClock(new ClockStub(FechaResultadoClock));
         match.SetMatchResult(homeGoals, awayGoals);
         return match;
     }
     
     private void SimulateWinner(List<Cruce> cruces)
     {
-        foreach (Cruce cruce in cruces)
-            cruce.Partido.SetMatchResult(2, 0);
+        foreach (var cruce in cruces)
+            cruce.Partido.SimulateResult(2, 0); 
     }
     
     [TestMethod]
     public void GenerateRoundOf32_ShouldGenerate16Cruces()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Group> grupos = Create12GroupsWithTeams();
         List<Stadium> estadios = CreateStadiums();
         List<Cruce> cruces = service.GenerateRoundOf32(grupos, estadios, 123);
@@ -81,7 +89,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_WithEmptyGroups_ShouldThrowException()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Stadium> estadios = CreateStadiums();
         Assert.ThrowsException<ArgumentException>(() => service.GenerateRoundOf32(new List<Group>(), estadios, 123));
     }
@@ -89,7 +97,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_WithNullGroups_ShouldThrowException()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Stadium> estadios = CreateStadiums();
         Assert.ThrowsException<ArgumentNullException>(() => service.GenerateRoundOf32(null, estadios, 123));
     }
@@ -97,7 +105,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_WithEmptyStadiums_ShouldThrowException()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Group> grupos = Create12GroupsWithTeams();
         Assert.ThrowsException<ArgumentException>(() => service.GenerateRoundOf32(grupos, new List<Stadium>(), 123));
     } 
@@ -105,7 +113,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_ShouldUseQualifiedTeams()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Group> grupos = Create12GroupsWithTeams();
         List<Cruce> cruces = service.GenerateRoundOf32(grupos, CreateStadiums(), 123);
         Assert.IsTrue(grupos.SelectMany(g => g.TeamsInGroup)
@@ -115,7 +123,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_WithLessThan12Groups_ShouldThrowException()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Group> grupos = Create12GroupsWithTeams().Take(6).ToList();
         List<Stadium> estadios = CreateStadiums();
         Assert.ThrowsException<ArgumentException>(() => service.GenerateRoundOf32(grupos, estadios, 123));
@@ -124,7 +132,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_ShouldGenerateRoundOf32Phase()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         Assert.AreEqual(TournamentPhase.RoundOf32, cruces[0].Phase);
     }
@@ -132,7 +140,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_ShouldRotateStadiums()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         Assert.AreEqual("Estadio 1", cruces[0].Partido.Stadium.StadiumName);
         Assert.AreEqual("Estadio 2", cruces[1].Partido.Stadium.StadiumName);
@@ -141,7 +149,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_WithSameSeed_ShouldGenerateSameOrder()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces1 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         List<Cruce> cruces2 =service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         Assert.AreEqual(cruces1[0].Partido.HomeTeam.Name, cruces2[0].Partido.HomeTeam.Name);
@@ -150,7 +158,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_WithDifferentSeed_ShouldGenerateDifferentOrder()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces1 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         List<Cruce> cruces2 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 456);
         
@@ -169,7 +177,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateNextRound_ShouldGenerateRoundOf16()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces32 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         SimulateWinner(cruces32);
         List<Cruce> cruces16 = service.GenerateNextRound(cruces32, CreateStadiums(), 123);
@@ -180,7 +188,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateNextRound_WithoutWinners_ShouldThrowException()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         Assert.ThrowsException<InvalidOperationException>(() => service.GenerateNextRound(cruces, CreateStadiums(), 123));
     }
@@ -188,7 +196,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateNextRound_FromRoundOf16_ShouldGenerateQuarterFinals()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces32 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         SimulateWinner(cruces32);
         List<Cruce> cruces16 = service.GenerateNextRound(cruces32, CreateStadiums(), 123);
@@ -201,7 +209,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateNextRound_FromQuarters_ShouldGenerateSemiFinals()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces32 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         SimulateWinner(cruces32);
         List<Cruce> cruces16 = service.GenerateNextRound(cruces32, CreateStadiums(), 123);
@@ -216,7 +224,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateNextRound_FromSemis_ShouldGenerateFinals()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces32 = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         SimulateWinner(cruces32);
         List<Cruce> cruces16 = service.GenerateNextRound(cruces32, CreateStadiums(), 123);
@@ -233,7 +241,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_ShouldHaveGroupA_WithNames_A1_to_A8()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         var crucesA = cruces.Where(c => c.Nombre.StartsWith("A")).ToList();
         Assert.AreEqual(8, crucesA.Count, "Debe haber 8 cruces del grupo A");
@@ -244,7 +252,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_ShouldHaveCorrectStructure_A_8_B_4_B_4()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         var crucesA = cruces.Count(c => c.Nombre.StartsWith("A"));
         var crucesB = cruces.Count(c => c.Nombre.StartsWith("B"));
@@ -255,7 +263,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_NoDuplicateTeams()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         var todosEquipos = new HashSet<string>();
         foreach (var cruce in cruces)
@@ -273,7 +281,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_AllTeamsFromGroups_Simple()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Group> grupos = Create12GroupsWithTeams();
         List<Stadium> estadios = CreateStadiums();
         List<Cruce> cruces = service.GenerateRoundOf32(grupos, estadios, 123);
@@ -316,7 +324,7 @@ public class CrucesGeneratorServiceTests
     [TestMethod]
     public void GenerateRoundOf32_AllCrucesHaveValidMatch()
     {
-        CrucesGeneratorService service = new CrucesGeneratorService();
+        var service = new CrucesGeneratorService(ConfigTest);
         List<Cruce> cruces = service.GenerateRoundOf32(Create12GroupsWithTeams(), CreateStadiums(), 123);
         foreach (var cruce in cruces)
         {

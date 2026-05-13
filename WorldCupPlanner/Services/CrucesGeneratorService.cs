@@ -6,10 +6,12 @@ namespace Services;
 public class CrucesGeneratorService : ICrucesGeneratorService
 {
     private readonly StandingCalculator _calculator;
+    private readonly TournamentConfig _config;
     private Dictionary<string, char> _equipoAGrupo = new();
-    public CrucesGeneratorService()
+    public CrucesGeneratorService(TournamentConfig config)
     {
         _calculator = new StandingCalculator();
+        _config = config;
     }
     
     public List<Cruce> GenerateRoundOf32(List<Group> grupos, List<Stadium> estadios, int semilla)
@@ -100,12 +102,11 @@ public class CrucesGeneratorService : ICrucesGeneratorService
     }
     
     
-    private List<Cruce> EmparejaryCrearCruces(List<Team> lista1, List<Team> lista2,
-        List<Stadium> estadios, int semilla, string prefijoCruce, ref int indiceEstadioActual, int empezarEn = 1)
+    private List<Cruce> EmparejaryCrearCruces(List<Team> lista1, List<Team> lista2, List<Stadium> estadios, int semilla, string prefijoCruce, ref int indiceEstadioActual, int empezarEn = 1)
     {
-        var config = new TournamentConfig();
-        var lista1Barajada = config.Shuffle(lista1, semilla);
-        var lista2Barajada = config.Shuffle(lista2, semilla ^ 0xFFFF);
+        //var config = new TournamentConfig();
+        var lista1Barajada = _config.Shuffle(lista1, semilla);
+        var lista2Barajada = _config.Shuffle(lista2, semilla ^ 0xFFFF);
         var disponibles = new List<Team>(lista2Barajada);
         var cruces = new List<Cruce>();
         int numeroCruce = empezarEn;
@@ -124,7 +125,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
             }
             if (emparejado != null)
             {
-                var partido = CrearPartido(equipo1, emparejado, estadios[indiceEstadioActual % estadios.Count]);
+                var partido = CrearPartido(equipo1, emparejado, estadios[indiceEstadioActual % estadios.Count], numeroCruce);
                 var nombreCruce = $"{prefijoCruce}{numeroCruce}";
                 cruces.Add(new Cruce(nombreCruce, partido, TournamentPhase.RoundOf32));
                 disponibles.RemoveAt(indiceEmparejado);
@@ -142,18 +143,11 @@ public class CrucesGeneratorService : ICrucesGeneratorService
             return false;
         return grupo1 == grupo2;
     }
-    private Match CrearPartido(Team local, Team visitante, Stadium estadio)
+    private Match CrearPartido(Team local, Team visitante, Stadium estadio, int numeroCruce)
     {
-        var fechaPartido = DateTime.Now.AddHours(-2);
-        var fechaActual = DateTime.Now;
-        return new Match(
-            fechaPartido,          
-            estadio,               
-            local,                 
-            visitante,             
-            'A',                
-            new ClockStub(fechaActual) 
-        );
+        var fechaBase = _config.FechaInicioTorneo.AddDays(21 + numeroCruce);
+        var clockCreacion = new ClockStub(_config.FechaInicioTorneo);
+        return new Match(fechaBase, estadio, local, visitante, 'A', clockCreacion);
     }
     private List<Cruce> CrearCrucesProximaFase(List<Team> ganadores, List<Stadium> estadios, int semilla, TournamentPhase fase)
     {
@@ -178,7 +172,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         {
             if (i + 1 < ganadoresBarajados.Count)
             {
-                var partido = CrearPartido(ganadoresBarajados[i], ganadoresBarajados[i + 1], estadios[indiceEstadio % estadios.Count]);
+                var partido = CrearPartido(ganadoresBarajados[i], ganadoresBarajados[i + 1], estadios[indiceEstadio % estadios.Count], numeroCruce);
                 var nombreCruce = $"{prefijo}{numeroCruce}";
                 cruces.Add(new Cruce(nombreCruce, partido, fase));
                 indiceEstadio++;

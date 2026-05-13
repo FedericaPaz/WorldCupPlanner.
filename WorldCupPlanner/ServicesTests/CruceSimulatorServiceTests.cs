@@ -6,6 +6,10 @@ namespace ServicesTests;
 [TestClass]
 public class CruceSimulatorServiceTests
 {
+    private static readonly DateTime FechaCreacionClock  = new DateTime(2027, 6, 10);
+    private static readonly DateTime FechaPartido        = new DateTime(2027, 6, 12);
+    private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
+    
     private CrucesSimulationService _service;
     private const int Seed = 42;
 
@@ -20,31 +24,28 @@ public class CruceSimulatorServiceTests
         var home    = new Team(homeName, new Confederation("UEFA"), homeRanking);
         var away    = new Team(awayName, new Confederation("UEFA"), awayRanking);
         var stadium = new Stadium("Estadio Test", "Ciudad", "", 50000);
-        var clock   = new ClockStub(DateTime.Now.AddHours(2));
-        return new Match(DateTime.Now, stadium, home, away, group, clock);
+        return new Match(FechaPartido, stadium, home, away, group, new ClockStub(FechaCreacionClock));
     }
     
     private Group BuildGroupWithMatches()
     {
         var teams = new[]
         {
-            new Team("TeamA", new Confederation("UEFA"),   1800),
-            new Team("TeamB", new Confederation("UEFA"),   1700),
+            new Team("TeamA", new Confederation("UEFA"),     1800),
+            new Team("TeamB", new Confederation("UEFA"),     1700),
             new Team("TeamC", new Confederation("CONMEBOL"), 1600),
-            new Team("TeamD", new Confederation("CAF"),    1500),
+            new Team("TeamD", new Confederation("CAF"),      1500),
         };
 
         var stadium = new Stadium("Est1", "Ciudad", "", 50000);
-        var clock   = new ClockStub(DateTime.Now.AddHours(2));
         var group   = new Group('A');
-
         foreach (var t in teams)
             group.AddTeamToGroup(t);
-
         var matchups = new[] { (0,3),(1,2),(0,2),(1,3),(0,1),(2,3) };
         foreach (var (h, a) in matchups)
         {
-            var m = new Match(DateTime.Now, stadium, teams[h], teams[a], 'A', clock);
+            var m = new Match(FechaPartido, stadium, teams[h], teams[a], 'A',
+                new ClockStub(FechaCreacionClock));
             group.AddMatchToGroup(m);
         }
         return group;
@@ -52,11 +53,10 @@ public class CruceSimulatorServiceTests
     
     private Cruce BuildCruce(string nombre)
     {
-        var home    = new Team("Alemania",  new Confederation("UEFA"),     2000);
-        var away    = new Team("Australia", new Confederation("AFC"),       400);
+        var home    = new Team("Alemania",  new Confederation("UEFA"), 2000);
+        var away    = new Team("Australia", new Confederation("AFC"),   400);
         var stadium = new Stadium("Test Stadium2", "Ciudad", "", 50000);
-        var clock   = new ClockStub(DateTime.Now.AddHours(2));
-        var match   = new Match(DateTime.Now, stadium, home, away, 'A', clock);
+        var match   = new Match(FechaPartido, stadium, home, away, 'A', new ClockStub(FechaCreacionClock));
         return new Cruce(nombre, match, TournamentPhase.RoundOf32);
     }
     
@@ -125,6 +125,7 @@ public class CruceSimulatorServiceTests
         Match.ResetIdCounter();
         var group = BuildGroupWithMatches();
         var primerPartido = group.MatchesInGroup[0];
+        primerPartido.SetClock(new ClockStub(FechaResultadoClock));
         primerPartido.SetMatchResult(3, 0);
         _service.SimulateGroupStage(new List<Group> { group }, Seed);
         Assert.AreEqual(3, primerPartido.HomeGoals);
@@ -145,6 +146,7 @@ public class CruceSimulatorServiceTests
     {
         Match.ResetIdCounter();
         var cruce = BuildCruce("B1");
+        cruce.Partido.SetClock(new ClockStub(FechaResultadoClock));
         cruce.Partido.SetMatchResult(2, 1);
         _service.SimulateCruces(new List<Cruce> { cruce }, Seed);
         Assert.AreEqual(2, cruce.Partido.HomeGoals);

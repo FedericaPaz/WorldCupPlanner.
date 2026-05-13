@@ -22,13 +22,19 @@ public class Match
     public void Lock() => _isLocked = true;
 
     public int IdMatch => _idMatch;
+    
+    public void SetClock(IDateTimeMatch clock)
+    {
+        if (clock == null) throw new ArgumentNullException(nameof(clock));
+        _clock = clock;
+    }
 
     public DateTime DateMatch
     {
         get => _dateMatch;
         set
         {
-            //EnsureValidDate(value);
+            EnsureValidDate(value);
             _dateMatch = value;
         }
     }
@@ -87,14 +93,13 @@ public class Match
     {
         EnsureValidClock(clock);
         _clock = clock;
-
-        DateMatch = dateMatch;
+        
         Stadium = stadium;
         HomeTeam = homeTeam;
         AwayTeam = awayTeam;
         EnsureDifferentTeams();
-
         Group = group;
+        DateMatch = dateMatch;
         _idMatch = ++_idCounter;
     }
 
@@ -166,12 +171,14 @@ public class Match
         Stadium = newStadium;
     }
 
-   /* private void EnsureValidDate(DateTime dateMatch)
+    private void EnsureValidDate(DateTime dateMatch)
     {
+        if (_clock == null)
+            throw new InvalidOperationException("El reloj no fue configurado.");
+
         if (dateMatch < _clock.Now)
             throw new ArgumentException("La fecha no puede ser pasada.");
-    }*/
-
+    }
     private void EnsureValidStadium(IStadium stadium)
     {
         if (stadium == null)

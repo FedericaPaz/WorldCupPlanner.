@@ -7,6 +7,10 @@ namespace RepositoryTests;
 [TestClass]
 public class CrucesRepositoryTests
 {
+    private static readonly DateTime FechaCreacionClock  = new DateTime(2027, 6, 10);
+    private static readonly DateTime FechaPartido        = new DateTime(2027, 6, 12);
+    private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
+    
     private CrucesRepository _crucesRepository;
 
     [TestInitialize]
@@ -20,14 +24,15 @@ public class CrucesRepositoryTests
         List<Cruce> cruces = new List<Cruce>();
         for (int i = 0; i < cant; i++)
         {
-            Team local = new Team($"Local{i}", new Confederation("UEFA"), 500);
+            Team local     = new Team($"Local{i}",     new Confederation("UEFA"),    500);
             Team visitante = new Team($"Visitante{i}", new Confederation("CONMEBOL"), 501);
-            Match partido = new Match(DateTime.Now.AddHours(-2),
+            Match partido = new Match(FechaPartido,
                 new Stadium("Estadio", "Ciudad", "Desc", 50000),
-                    local, visitante, 'A', new ClockStub(DateTime.Now));
+                local, visitante, 'A',
+                new ClockStub(FechaCreacionClock));
+            partido.SetClock(new ClockStub(FechaResultadoClock));
             partido.SetMatchResult(2, 0);
-            Cruce cruce = new Cruce($"C{i}", partido, phase);
-            cruces.Add(cruce);
+            cruces.Add(new Cruce($"C{i}", partido, phase));
         }
         return cruces;
     }
