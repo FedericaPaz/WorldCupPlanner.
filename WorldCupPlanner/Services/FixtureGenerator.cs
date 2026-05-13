@@ -52,19 +52,34 @@ public class FixtureGenerator
         _fixtureRepository.AddFixture(fixture);
         return fixture;
     }
-    
-    private List<Team> OrderTeamsWithTieBreak(List<Team> teams, int seed, TournamentConfig config)
+
+    private List<Team> OrderTeamsWithTieBreak(List<Team> teams)
     {
-        var groupedByRanking = teams.GroupBy(t => t.FifaRanking).OrderByDescending(g => g.Key);
+        var rng = new Random(_config.SemillaFixture);
         var result = new List<Team>();
+
+        var groupedByRanking = teams.GroupBy(t => t.FifaRanking)
+            .OrderByDescending(g => g.Key);
+
         foreach (var group in groupedByRanking)
         {
             var teamsInGroup = group.ToList();
             if (teamsInGroup.Count > 1)
-                teamsInGroup = config.Shuffle(teamsInGroup, seed);
+                teamsInGroup = ApplyFisherYates(teamsInGroup, rng);
             result.AddRange(teamsInGroup);
         }
         return result;
+    }
+
+    private static List<T> ApplyFisherYates<T>(List<T> list, Random rng)
+    {
+        var arr = list.ToArray();
+        for (int i = arr.Length - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            (arr[i], arr[j]) = (arr[j], arr[i]);
+        }
+        return arr.ToList();
     }
 
     private void DistributeTeamsToGroups(List<Team> orderedTeams, List<Group> groups)
