@@ -293,7 +293,20 @@ public class TeamServiceTests
         Assert.AreEqual(48, result.Count);
     }
 
-    
+    [TestMethod]
+    public void GenerateMissingTeams_ShouldRespectConfederationLimits()
+    {
+        _teamService.GenerateMissingTeams();
+
+        var result = _teamRepository.GetAll();
+
+        Assert.AreEqual(16, result.Count(t => t.Confederation.Name == "UEFA"));
+        Assert.AreEqual(7, result.Count(t => t.Confederation.Name == "CONMEBOL"));
+        Assert.AreEqual(7, result.Count(t => t.Confederation.Name == "CONCACAF"));
+        Assert.AreEqual(9, result.Count(t => t.Confederation.Name == "CAF"));
+        Assert.AreEqual(8, result.Count(t => t.Confederation.Name == "AFC"));
+        Assert.AreEqual(1, result.Count(t => t.Confederation.Name == "OFC"));
+    }
     
     [TestMethod]
     public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
