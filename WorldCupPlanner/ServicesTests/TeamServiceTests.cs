@@ -199,6 +199,13 @@ public class TeamServiceTests
         Assert.ThrowsException<ArgumentException>(() => _teamService.Add(secondTeam));
     }
     
+    [TestMethod]
+    public void Get_WhenTeamDoesNotExist_ShouldReturnNull()
+    {
+        var result = _teamService.Get("Uruguay");
+
+        Assert.IsNull(result);
+    }
     
     [TestMethod]
     public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
