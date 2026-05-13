@@ -37,4 +37,9 @@ public class TeamRepositoryStub : ITeamRepository
     {
         return new List<Team>(_teams);
     }
+
+    public void Clear()
+    {
+        _teams.Clear();
+    }
 }

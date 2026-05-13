@@ -36,7 +36,7 @@ public class TeamService : ITeamService
         if (existingTeam != null)
             throw new ArgumentException($"Ya existe un equipo con el nombre '{request.Name}'.");
 
-        ValidateRankingIsNotUsed(request.FifaRanking);
+        //ValidateRankingIsNotUsed(request.FifaRanking);
 
         var confederationName = request.ConfederationName;
         var normalizedConf = confederationName.Trim().ToUpperInvariant();
@@ -80,7 +80,7 @@ public class TeamService : ITeamService
         if (existingTeam is null)
             throw new InvalidOperationException($"No existe un equipo con el nombre '{currentName}'.");
 
-        ValidateRankingIsNotUsedByAnotherTeam(request.FifaRanking, currentName);
+        //ValidateRankingIsNotUsedByAnotherTeam(request.FifaRanking, currentName);
 
         if (!currentName.Equals(request.Name, StringComparison.OrdinalIgnoreCase))
         {
@@ -164,21 +164,8 @@ public class TeamService : ITeamService
                     name = conf.name + "_" + confIndex.ToString("D2");
                 }
                 confIndex++;
+                
                 int ranking = random.Next(RankingMin, RankingMax + 1);
-                bool rankingExists = true;
-                while (rankingExists)
-                {
-                    rankingExists = false;
-                    foreach (var t in _repository.GetAll())
-                    {
-                        if (t.FifaRanking == ranking)
-                        {
-                            ranking = random.Next(RankingMin, RankingMax + 1);
-                            rankingExists = true;
-                            break;
-                        }
-                    }
-                }
                 _repository.Add(new Team(name, new Confederation(conf.name), ranking));
             }
         }
@@ -196,16 +183,16 @@ public class TeamService : ITeamService
             throw new ArgumentException("La confederación del equipo no puede estar vacía.");
     }
 
-    private void ValidateRankingIsNotUsed(int fifaRanking)
+    /*private void ValidateRankingIsNotUsed(int fifaRanking)
     {
         var rankingAlreadyExists = _repository.GetAll()
             .Any(t => t.FifaRanking == fifaRanking);
 
         if (rankingAlreadyExists)
             throw new ArgumentException($"Ya existe un equipo con el ranking FIFA {fifaRanking}.");
-    }
+    }*/
 
-    private void ValidateRankingIsNotUsedByAnotherTeam(int fifaRanking, string currentName)
+    /*private void ValidateRankingIsNotUsedByAnotherTeam(int fifaRanking, string currentName)
     {
         var rankingBelongsToAnotherTeam = _repository.GetAll()
             .Any(t =>
@@ -214,7 +201,7 @@ public class TeamService : ITeamService
 
         if (rankingBelongsToAnotherTeam)
             throw new ArgumentException($"Ya existe otro equipo con el ranking FIFA {fifaRanking}.");
-    }
+    }*/
 
     private int CountConfederation(string confederationName)
     {

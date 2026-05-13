@@ -51,4 +51,9 @@ public class TeamRepository :  ITeamRepository
         _teams.Remove(existingTeam);
         _teams.Add(team);
     }
+
+    public void Clear()
+    {
+        _teams.Clear();
+    }
 }

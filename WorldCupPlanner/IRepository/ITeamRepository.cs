@@ -11,4 +11,5 @@ public interface ITeamRepository
     void Update(Team team);
     void Delete(Team team);
     List<Team> GetAll();
+    void Clear();
 }

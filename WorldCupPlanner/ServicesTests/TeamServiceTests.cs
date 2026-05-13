@@ -162,21 +162,21 @@ public class TeamServiceTests
         Assert.AreEqual(1, ofc.MaxTeams);
     }
     
-    [TestMethod]
+    /*[TestMethod]
     public void Add_WithExistingFifaRanking_ShouldThrowException()
     {
         var firstTeam = new TeamDTO { Name = "Uruguay", ConfederationName = "CONMEBOL", FifaRanking = 1000 };
         var secondTeam = new TeamDTO { Name = "Argentina", ConfederationName = "CONMEBOL", FifaRanking = 1000 };
         _teamService.Add(firstTeam);
         Assert.ThrowsException<ArgumentException>(() => _teamService.Add(secondTeam));
-    }
+    }*/
     
-    [TestMethod]
+    /*[TestMethod]
     public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
     {
         _teamService.Add(new TeamDTO { Name = "Uruguay", ConfederationName = "CONMEBOL", FifaRanking = 1000 });
         _teamService.Add(new TeamDTO { Name = "Argentina", ConfederationName = "CONMEBOL", FifaRanking = 1001 });
         var updatedTeam = new TeamDTO { Name = "Argentina", ConfederationName = "CONMEBOL", FifaRanking = 1000 };
         Assert.ThrowsException<ArgumentException>(() => _teamService.Update("Argentina", updatedTeam));
-    }
+    }*/
 }
