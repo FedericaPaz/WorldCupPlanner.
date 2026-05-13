@@ -12,17 +12,20 @@ public class TeamService : ITeamService
     private readonly IFixtureRepository _fixtureRepository;
     private readonly IMatchRepository _matchRepository;
     private readonly ICrucesRepository _crucesRepository;
+    private readonly TournamentConfig _config;
 
     public TeamService(
         ITeamRepository repository,
         IFixtureRepository fixtureRepository,
         IMatchRepository matchRepository,
-        ICrucesRepository crucesRepository)
+        ICrucesRepository crucesRepository,
+        TournamentConfig config)
     {
         _repository = repository;
         _fixtureRepository = fixtureRepository;
         _matchRepository = matchRepository;
         _crucesRepository = crucesRepository;
+        _config = config;
     }
 
     public void Add(TeamDTO request)
@@ -145,25 +148,38 @@ public class TeamService : ITeamService
             ("AFC", afc),
             ("OFC", ofc)
         };
-
-        int teamIndex = 1;
-        int rankingBase = 500;
-
+        
+        var random = new Random(_config.SemillaCompletar);
+        const int RankingMin = 300;
+        const int RankingMax = 2500;
         foreach (var conf in confederations)
         {
-            int added = 0;
-
-            while (added < conf.limit && teamIndex <= missing)
+            int confIndex = 1;
+            for (int i = 0; i < conf.limit; i++)
             {
-                var team = new Team(
-                    $"Team_{teamIndex}",
-                    new Confederation(conf.name),
-                    rankingBase + teamIndex
-                );
-
-                _repository.Add(team);
-                teamIndex++;
-                added++;
+                string name = conf.name + "_" + confIndex.ToString("D2");
+                while (_repository.Get(name) != null)
+                {
+                    confIndex++;
+                    name = conf.name + "_" + confIndex.ToString("D2");
+                }
+                confIndex++;
+                int ranking = random.Next(RankingMin, RankingMax + 1);
+                bool rankingExists = true;
+                while (rankingExists)
+                {
+                    rankingExists = false;
+                    foreach (var t in _repository.GetAll())
+                    {
+                        if (t.FifaRanking == ranking)
+                        {
+                            ranking = random.Next(RankingMin, RankingMax + 1);
+                            rankingExists = true;
+                            break;
+                        }
+                    }
+                }
+                _repository.Add(new Team(name, new Confederation(conf.name), ranking));
             }
         }
     }
