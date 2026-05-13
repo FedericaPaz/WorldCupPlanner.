@@ -1,0 +1,143 @@
+.import-page {
+    padding: 2rem;
+    color: #1f2937;
+}
+
+.page-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.page-header p {
+    margin-top: 0.5rem;
+    color: #6b7280;
+    font-size: 1.1rem;
+}
+
+.import-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+.card h3 {
+    margin-top: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.upload-box {
+    border: 2px dashed #e5e7eb;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    display: block;
+    cursor: pointer;
+    color: #374151;
+}
+
+.upload-box input {
+    display: none;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.upload-box strong {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.upload-box span {
+    color: #6b7280;
+}
+
+.file-name {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #15803d;
+}
+
+.btn-import {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: none;
+    border-radius: 10px;
+    background: #16a34a;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-import:disabled {
+    background: #9bd7aa;
+    cursor: not-allowed;
+}
+
+.format-box {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    color: #166534;
+}
+
+.format-box code {
+    display: block;
+    background: white;
+    border: 1px solid #d1fae5;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    color: #111827;
+}
+
+.mt {
+    margin-top: 1.5rem;
+}
+
+.message {
+    margin-top: 2rem;
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+.message.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.message.error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.message table {
+    width: 100%;
+    margin-top: 1rem;
+    border-collapse: collapse;
+}
+
+.message th,
+.message td {
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid #fecaca;
+}

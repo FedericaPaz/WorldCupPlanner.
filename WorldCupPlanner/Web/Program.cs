@@ -16,7 +16,6 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<SessionService>();
 
@@ -36,6 +35,8 @@ builder.Services.AddSingleton<FixtureGenerator>();
 
 builder.Services.AddSingleton<ILogRepository, LogRepository>();
 builder.Services.AddSingleton<ILogService, LogService>();
+
+builder.Services.AddScoped<IImportService, ImportService>();
 
 builder.Services.AddSingleton<TournamentConfig>();
 builder.Services.AddSingleton<ISimulationService, CrucesSimulationService>();
