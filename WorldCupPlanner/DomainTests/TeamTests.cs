@@ -100,6 +100,13 @@ public class TeamTests
         VerifyTeam(team, "Uruguay", MinFifaRanking);
     }
     
+    [TestMethod]
+    public void CreateTeam_WithNullName_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() =>
+            new Team(null!, _defaultConfederation, MinFifaRanking));
+    }
+    
     private void VerifyTeam(Team team, string expectedName, int expectedRanking)
     {
         Assert.IsNotNull(team);
