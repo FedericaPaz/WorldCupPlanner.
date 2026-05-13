@@ -282,6 +282,20 @@ public class TeamServiceTests
     }
     
     [TestMethod]
+    public void GenerateMissingTeams_WhenRepositoryAlreadyHas48Teams_ShouldNotAddMoreTeams()
+    {
+        _teamService.GenerateMissingTeams();
+
+        _teamService.GenerateMissingTeams();
+
+        var result = _teamService.GetAll();
+
+        Assert.AreEqual(48, result.Count);
+    }
+
+    
+    
+    [TestMethod]
     public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
     {
         _teamService.Add(new TeamDTO { Name = "Uruguay", ConfederationName = "CONMEBOL", FifaRanking = 1000 });
