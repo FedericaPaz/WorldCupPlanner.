@@ -1,9 +1,7 @@
 ﻿using Domain;
-using DTOs;
 using IRepository;
 using Repository;
 using Services;
-using Services.Mappers;
 
 namespace ServicesTests;
 
@@ -19,29 +17,38 @@ public class FixtureServiceTests
     private FixtureGenerator _fixtureGenerator;
     private IMatchRepository _matchRepository;
     private ICrucesRepository _crucesRepository;
-    
+    private static readonly DateTime ClockDate = new DateTime(2026, 1, 1);
+
     [TestInitialize]
     public void Setup()
     {
         _fixtureRepository = new FixtureRepository();
         _teamRepository = new TeamRepository();
         _stadiumRepository = new StadiumRepository();
-        _fixtureGenerator = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository);
-        _crucesRepository = new CrucesRepository();
         _matchRepository = new MatchRepository();
-        _service = new FixtureService(_fixtureRepository, _fixtureGenerator, _teamRepository, _stadiumRepository,_matchRepository, _crucesRepository);
-        
+        _crucesRepository = new CrucesRepository();
+
         _config = new TournamentConfig();
+        var clock = new ClockStub(ClockDate);
+
+        _fixtureGenerator = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository, _config, clock);
+        _service = new FixtureService(
+            _fixtureRepository, _fixtureGenerator, _teamRepository,
+            _stadiumRepository, _matchRepository, _crucesRepository);
         _fixture = new Fixture(_config);
         Match.ResetIdCounter();
     }
-    
+
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
-    
+        var clock = new ClockStub(ClockDate);
+        var matchDate = ClockDate.AddMonths(5);
+
+        var stadium = new Stadium("Estadio", "Ciudad", "", 50000);
+        _stadiumRepository.AddStadium(stadium);
         foreach (var group in fixture.GetGroups)
         {
             for (int i = 1; i <= 4; i++)
@@ -50,21 +57,16 @@ public class FixtureServiceTests
                 _teamRepository.Add(team);
                 group.AddTeamToGroup(team);
             }
-        
-            var clock = new ClockStub(DateTime.Now);
-            var stadium = new Stadium("Estadio", "Ciudad", "", 50000);
-            _stadiumRepository.AddStadium(stadium);
             var teams = group.TeamsInGroup.ToList();
-        
             for (int i = 0; i < 6; i++)
             {
-                var match = new Match(clock.Now, stadium, teams[0], teams[1], group.GroupLetter, clock);
+                var match = new Match(matchDate, stadium, teams[0], teams[1], group.GroupLetter, clock);
                 group.AddMatchToGroup(match);
             }
         }
         return fixture;
     }
-    
+
     [TestMethod]
     public void HasFixture_WhenNoFixture_ReturnsFalse()
     {
@@ -80,7 +82,7 @@ public class FixtureServiceTests
         var result = _service.HasFixture();
         Assert.IsTrue(result);
     }
-    
+
     [TestMethod]
     public void GetFixture_WhenNoFixture_ReturnsEmptyResponse()
     {
@@ -90,7 +92,7 @@ public class FixtureServiceTests
         Assert.AreEqual(0, result.Groups.Count);
         Assert.AreEqual("", result.CurrentPhase);
     }
-    
+
     [TestMethod]
     public void GetFixture_WhenFixtureExists_ReturnsFixtureResponse()
     {
@@ -99,7 +101,7 @@ public class FixtureServiceTests
         var result = _service.GetFixture();
         Assert.IsNotNull(result);
     }
-    
+
     [TestMethod]
     public void GetFixture_ReturnsCorrectGroupData()
     {
@@ -128,7 +130,7 @@ public class FixtureServiceTests
             Assert.IsTrue(standing.TeamName.StartsWith("Team_A"));
         }
     }
-    
+
     [TestMethod]
     public void GetStandingsForGroup_WithInvalidGroup_ThrowsArgumentException()
     {
@@ -136,11 +138,10 @@ public class FixtureServiceTests
         _fixtureRepository.AddFixture(fixture);
         Assert.ThrowsException<ArgumentException>(() => _service.GetStandingsForGroup('Z'));
     }
-    
+
     [TestMethod]
     public void GetStandingsForGroup_WhenNoFixture_ThrowsException()
     {
         Assert.ThrowsException<InvalidOperationException>(() => _service.GetStandingsForGroup('A'));
     }
-    
 }

@@ -61,7 +61,7 @@ public class FixtureService : IFixtureService
     public void GenerateFixture()
     {
         var config = new TournamentConfig();
-        _fixtureGenerator.GenerateGroupsStageFixture(config);
+        _fixtureGenerator.GenerateGroupsStageFixture();
 
         var fixture = _fixtureRepository.GetFixture();
         var partidos = new List<Match>();
