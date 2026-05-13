@@ -283,4 +283,16 @@ public class MatchServiceTests
         Assert.ThrowsException<KeyNotFoundException>(() =>
             _service.SetMatchResult(99, 1, 0));
     }
+    
+    [TestMethod]
+    public void Create_WithInvalidGroup_ShouldThrowArgumentException()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var request = CreateValidRequest(_clock.Now);
+        request.group = "M";
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            _service.CreateMatch(request));
+    }
 }
