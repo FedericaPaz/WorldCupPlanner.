@@ -244,6 +244,24 @@ public class TeamServiceTests
     }
     
     [TestMethod]
+    public void Update_WithNewName_ShouldRenameTeam()
+    {
+        _teamService.Add(CreateRequest("Uruguay", "CONMEBOL", 1000));
+
+        var request = CreateRequest("Uruguay Nuevo", "CONMEBOL", 1000);
+
+        _teamService.Update("Uruguay", request);
+
+        Assert.IsNull(_teamService.Get("Uruguay"));
+
+        var result = _teamService.Get("Uruguay Nuevo");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Uruguay Nuevo", result.Name);
+    }
+
+    
+    [TestMethod]
     public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
     {
         _teamService.Add(new TeamDTO { Name = "Uruguay", ConfederationName = "CONMEBOL", FifaRanking = 1000 });
