@@ -23,6 +23,8 @@ public class MatchServiceTests
     [TestInitialize]
     public void Setup()
     {
+        Match.ResetIdCounter();
+        
         _matchRepository = new MatchRepository();
         _teamRepository = new TeamRepositoryStub();
         _stadiumRepository = new StadiumRepositoryStub();
@@ -259,5 +261,101 @@ public class MatchServiceTests
         AddDefaultTeamsAndStadium();
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
         Assert.ThrowsException<KeyNotFoundException>(() => _service.UpdateMatchStadium(created.idMatch, "Maracana"));
+    }
+    
+    [TestMethod]
+    public void UpdateMatchDate_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
+    {
+        Assert.ThrowsException<KeyNotFoundException>(() =>
+            _service.UpdateMatchDate(99, _clock.Now));
+    }
+    
+    [TestMethod]
+    public void UpdateMatchStadium_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
+    {
+        _stadiumRepository.AddStadium(CreateStadium("Maracana"));
+
+        Assert.ThrowsException<KeyNotFoundException>(() =>
+            _service.UpdateMatchStadium(99, "Maracana"));
+    }
+    
+    [TestMethod]
+    public void SetMatchResult_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
+    {
+        Assert.ThrowsException<KeyNotFoundException>(() =>
+            _service.SetMatchResult(99, 1, 0));
+    }
+    
+    [TestMethod]
+    public void Create_WithInvalidGroup_ShouldThrowArgumentException()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var request = CreateValidRequest(_clock.Now);
+        request.group = "M";
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            _service.CreateMatch(request));
+    }
+    
+    [TestMethod]
+    public void Create_WithLowercaseGroup_ShouldCreateMatchWithUppercaseGroup()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var request = CreateValidRequest(_clock.Now);
+        request.group = "a";
+
+        var response = _service.CreateMatch(request);
+
+        Assert.AreEqual('A', response.group);
+    }
+    
+    [TestMethod]
+    public void Create_WithNullGroup_ShouldThrowArgumentException()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var request = CreateValidRequest(_clock.Now);
+        request.group = null!;
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            _service.CreateMatch(request));
+    }
+    
+    [TestMethod]
+    public void SimulateMatch_WithExistingMatch_ShouldSetMatchResult()
+    {
+        AddDefaultTeamsAndStadium();
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        _service.SimulateMatch(created.idMatch, 1);
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+        Assert.AreEqual(2, match.HomeGoals);
+        Assert.AreEqual(1, match.AwayGoals);
+    }
+
+    [TestMethod]
+    public void SimulateMatch_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
+    {
+        Assert.ThrowsException<KeyNotFoundException>(() => _service.SimulateMatch(99, 1));
+    }
+
+    [TestMethod]
+    public void SimulateMatch_WithFutureMatch_ShouldThrowInvalidOperationException()
+    {
+        AddDefaultTeamsAndStadium();
+        var created = _service.CreateMatch(CreateValidRequest(new DateTime(2028, 1, 1)));
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            _service.SimulateMatch(created.idMatch, 1));
+    }
+
+    [TestMethod]
+    public void SimulateGroupStage_WithoutFixture_ShouldThrowInvalidOperationException()
+    {
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            _service.SimulateGroupStage());
     }
 }

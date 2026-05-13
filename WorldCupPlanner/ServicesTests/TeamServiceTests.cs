@@ -1,7 +1,7 @@
 ﻿using DTOs;
-using Domain;
 using Repository;
 using Services;
+using Domain;
 
 namespace ServicesTests;
 
@@ -179,4 +179,143 @@ public class TeamServiceTests
         var updatedTeam = new TeamDTO { Name = "Argentina", ConfederationName = "CONMEBOL", FifaRanking = 1000 };
         Assert.ThrowsException<ArgumentException>(() => _teamService.Update("Argentina", updatedTeam));
     }*/
+    
+    [TestMethod]
+    public void Add_WithNullRequest_ShouldThrowArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => _teamService.Add(null!));
+    }
+
+    [TestMethod]
+    public void Add_WithEmptyName_ShouldThrowArgumentException()
+    {
+        var request = CreateRequest("", "UEFA", 1000);
+
+        Assert.ThrowsException<ArgumentException>(() => _teamService.Add(request));
+    }
+    
+    [TestMethod]
+    public void Add_WithEmptyConfederation_ShouldThrowArgumentException()
+    {
+        var request = CreateRequest("Uruguay", "", 1000);
+
+        Assert.ThrowsException<ArgumentException>(() => _teamService.Add(request));
+    }
+    
+    [TestMethod]
+    public void Add_WithInvalidConfederation_ShouldThrowArgumentException()
+    {
+        var request = CreateRequest("Uruguay", "INVALIDA", 1000);
+
+        Assert.ThrowsException<ArgumentException>(() => _teamService.Add(request));
+    }
+    
+    [TestMethod]
+    public void Get_WhenTeamDoesNotExist_ShouldReturnNull()
+    {
+        var result = _teamService.Get("Uruguay");
+
+        Assert.IsNull(result);
+    }
+    
+    [TestMethod]
+    public void Update_WithEmptyCurrentName_ShouldThrowArgumentException()
+    {
+        var request = CreateRequest("Uruguay", "CONMEBOL", 1000);
+
+        Assert.ThrowsException<ArgumentException>(() => _teamService.Update("", request));
+    }
+    
+    [TestMethod]
+    public void Update_WithNullRequest_ShouldThrowArgumentNullException()
+    {
+        _teamService.Add(CreateRequest("Uruguay", "CONMEBOL", 1000));
+
+        Assert.ThrowsException<ArgumentNullException>(() => _teamService.Update("Uruguay", null!));
+    }
+    
+    [TestMethod]
+    public void Update_WithEmptyNewName_ShouldThrowArgumentException()
+    {
+        _teamService.Add(CreateRequest("Uruguay", "CONMEBOL", 1000));
+
+        var request = CreateRequest("", "CONMEBOL", 1000);
+
+        Assert.ThrowsException<ArgumentException>(() => _teamService.Update("Uruguay", request));
+    }
+    
+    [TestMethod]
+    public void Update_WithEmptyNewConfederation_ShouldThrowArgumentException()
+    {
+        _teamService.Add(CreateRequest("Uruguay", "CONMEBOL", 1000));
+
+        var request = CreateRequest("Uruguay", "", 1000);
+
+        Assert.ThrowsException<ArgumentException>(() => _teamService.Update("Uruguay", request));
+    }
+    
+    [TestMethod]
+    public void Update_WithNewName_ShouldRenameTeam()
+    {
+        _teamService.Add(CreateRequest("Uruguay", "CONMEBOL", 1000));
+
+        var request = CreateRequest("Uruguay Nuevo", "CONMEBOL", 1000);
+
+        _teamService.Update("Uruguay", request);
+
+        Assert.IsNull(_teamService.Get("Uruguay"));
+
+        var result = _teamService.Get("Uruguay Nuevo");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Uruguay Nuevo", result.Name);
+    }
+
+    [TestMethod]
+    public void Update_WithExistingNewName_ShouldThrowArgumentException()
+    {
+        _teamService.Add(CreateRequest("Uruguay", "CONMEBOL", 1000));
+        _teamService.Add(CreateRequest("Argentina", "CONMEBOL", 1001));
+
+        var request = CreateRequest("Argentina", "CONMEBOL", 1000);
+
+        Assert.ThrowsException<ArgumentException>(() => _teamService.Update("Uruguay", request));
+    }
+
+    [TestMethod]
+    public void GenerateMissingTeams_WhenRepositoryIsEmpty_ShouldGenerate48Teams()
+    {
+        _teamService.GenerateMissingTeams();
+
+        var result = _teamService.GetAll();
+
+        Assert.AreEqual(48, result.Count);
+    }
+    
+    [TestMethod]
+    public void GenerateMissingTeams_WhenRepositoryAlreadyHas48Teams_ShouldNotAddMoreTeams()
+    {
+        _teamService.GenerateMissingTeams();
+
+        _teamService.GenerateMissingTeams();
+
+        var result = _teamService.GetAll();
+
+        Assert.AreEqual(48, result.Count);
+    }
+
+    [TestMethod]
+    public void GenerateMissingTeams_ShouldRespectConfederationLimits()
+    {
+        _teamService.GenerateMissingTeams();
+
+        var result = _teamRepository.GetAll();
+
+        Assert.AreEqual(16, result.Count(t => t.Confederation.Name == "UEFA"));
+        Assert.AreEqual(7, result.Count(t => t.Confederation.Name == "CONMEBOL"));
+        Assert.AreEqual(7, result.Count(t => t.Confederation.Name == "CONCACAF"));
+        Assert.AreEqual(9, result.Count(t => t.Confederation.Name == "CAF"));
+        Assert.AreEqual(8, result.Count(t => t.Confederation.Name == "AFC"));
+        Assert.AreEqual(1, result.Count(t => t.Confederation.Name == "OFC"));
+    }
 }
