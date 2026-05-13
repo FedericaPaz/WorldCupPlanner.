@@ -127,40 +127,79 @@ public class FixtureGenerator
         return teams.All(t => t.Confederation.Name != confederation);
     }
 
-    private void GenerateMatches(Fixture fixture, List<Stadium> stadiums, TournamentConfig config)
+    private void GenerateMatches(Fixture fixture, List<Stadium> stadiums)
     {
-        var orderedStadiums = stadiums.OrderBy(s => s.StadiumName).ToList();
-        var clock = new ClockStub(DateTime.Now);
+        var orderedStadiums = stadiums
+            .OrderBy(s => NormalizeName(s.StadiumName))
+            .ToList();
+
+        DateTime lastRoundDate = _config.FechaInicioTorneo
+            .AddDays(2 * _config.SeparacionEntreFechas)
+            .Date
+            .AddHours(StartHour);
+
+        var slotsUsedPerDay = new Dictionary<DateTime, int>();
         int matchCounter = 0;
-        
         foreach (var group in fixture.GetGroups)
         {
             var teams = group.TeamsInGroup.ToList();
+            // Jornada 1: E1vsE4, E2vsE3 | Jornada 2: E1vsE3, E2vsE4 | Jornada 3: E1vsE2, E3vsE4
             var matchups = new (int home, int away)[]
             {
-                (0, 3), (1, 2), (0, 2), (1, 3), (0, 1), (2, 3) 
+                (0, 3), (1, 2),  
+                (0, 2), (1, 3),  
+                (0, 1), (2, 3)   
             };
-            
+
             for (int i = 0; i < matchups.Length; i++)
             {
                 int jornada = i / 2;
-                DateTime fecha = config.FechaInicioTorneo.AddDays(jornada * config.SeparacionEntreFechas);
-                if (jornada == 2) fecha = fecha.Date.AddHours(14);
+                DateTime matchDate;
+                if (jornada == 2)
+                {
+                    matchDate = lastRoundDate;
+                }
                 else
-                    fecha = (i % 2 == 0) ? fecha.Date.AddHours(14) : fecha.Date.AddHours(18);
-                
-                var estadio = orderedStadiums[matchCounter % orderedStadiums.Count];
+                {
+                    DateTime baseDay = _config.FechaInicioTorneo.AddDays(jornada * _config.SeparacionEntreFechas).Date;
+                    matchDate = AssignMatchSlot(baseDay, slotsUsedPerDay);
+                }
+
+                var stadium = orderedStadiums[matchCounter % orderedStadiums.Count];
                 var match = new Match(
-                    fecha,
-                    estadio,
+                    matchDate,
+                    stadium,
                     teams[matchups[i].home],
                     teams[matchups[i].away],
                     group.GroupLetter,
-                    clock
+                    _clock
                 );
+
                 group.AddMatchToGroup(match);
                 matchCounter++;
             }
         }
     }
+    
+    private DateTime AssignMatchSlot(DateTime baseDay, Dictionary<DateTime, int> slotsUsedPerDay)
+    {
+        DateTime day = baseDay;
+        while (true)
+        {
+            int usedSlots = slotsUsedPerDay.GetValueOrDefault(day, 0);
+            if (usedSlots < _config.MaxPartidosPorDia)
+            {
+                int hour = StartHour + (usedSlots * HoursBetweenMatches);
+                slotsUsedPerDay[day] = usedSlots + 1;
+                return day.AddHours(hour);
+            }
+            day = day.AddDays(1);
+        }
+    }
+    
+    private static string NormalizeName(string name)
+    {
+        return string.Join(' ', name.ToLowerInvariant().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+    }
+
 }
