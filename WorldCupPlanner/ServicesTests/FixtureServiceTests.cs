@@ -67,13 +67,28 @@ public class FixtureServiceTests
     
     private void AddRequiredTeams()
     {
-        for (int i = 1; i <= 48; i++)
+        AddTeamsForConfederation("UEFA", 16, 1000);
+        AddTeamsForConfederation("CONMEBOL", 7, 1200);
+        AddTeamsForConfederation("CONCACAF", 7, 1400);
+        AddTeamsForConfederation("CAF", 9, 1600);
+        AddTeamsForConfederation("AFC", 8, 1800);
+        AddTeamsForConfederation("OFC", 1, 2000);
+    }
+
+    private void AddTeamsForConfederation(string confederationName, int amount, int rankingBase)
+    {
+        for (int i = 1; i <= amount; i++)
         {
-            var team = new Team($"Team_{i}", new Confederation("UEFA"), 500 + i);
+            var team = new Team(
+                $"{confederationName}_Team_{i}",
+                new Confederation(confederationName),
+                rankingBase + i
+            );
+
             _teamRepository.Add(team);
         }
     }
-
+    
     private void AddRequiredStadiums()
     {
         for (int i = 1; i <= 12; i++)
@@ -183,5 +198,16 @@ public class FixtureServiceTests
         var result = _service.GetFixture();
 
         Assert.AreEqual("GroupStage", result.CurrentPhase);
+    }
+    
+    [TestMethod]
+    public void GenerateFixture_WithValidData_ShouldCreateFixture()
+    {
+        AddRequiredTeams();
+        AddRequiredStadiums();
+
+        _service.GenerateFixture();
+
+        Assert.IsTrue(_fixtureRepository.ContainsFixture());
     }
 }
