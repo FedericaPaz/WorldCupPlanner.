@@ -276,4 +276,11 @@ public class MatchServiceTests
         Assert.ThrowsException<KeyNotFoundException>(() =>
             _service.UpdateMatchStadium(99, "Maracana"));
     }
+    
+    [TestMethod]
+    public void SetMatchResult_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
+    {
+        Assert.ThrowsException<KeyNotFoundException>(() =>
+            _service.SetMatchResult(99, 1, 0));
+    }
 }
