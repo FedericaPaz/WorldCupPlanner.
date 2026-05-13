@@ -258,6 +258,18 @@ public class FixtureTests
         Assert.IsFalse(result);
     }
     
+    [TestMethod]
+    public void CanAdvanceToPhase_ToRoundOf32_WhenGroupMatchesAreNotPlayed_ReturnsFalse()
+    {
+        var fixture = CreateValidFixture();
+
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+
+        var result = fixture.CanAdvanceToPhase(TournamentPhase.RoundOf32);
+
+        Assert.IsFalse(result);
+    }
+    
     private Fixture CreateValidFixture()
     {
         var config = new TournamentConfig();
