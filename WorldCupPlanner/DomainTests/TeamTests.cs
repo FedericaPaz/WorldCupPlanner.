@@ -107,6 +107,14 @@ public class TeamTests
             new Team(null!, _defaultConfederation, MinFifaRanking));
     }
     
+    [TestMethod]
+    public void CreateTeam_WithLowerBoundaryRanking_ShouldStoreRanking()
+    {
+        var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking);
+
+        Assert.AreEqual(MinFifaRanking, team.FifaRanking);
+    }
+    
     private void VerifyTeam(Team team, string expectedName, int expectedRanking)
     {
         Assert.IsNotNull(team);
