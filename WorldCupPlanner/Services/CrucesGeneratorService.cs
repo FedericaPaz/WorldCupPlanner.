@@ -147,7 +147,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
     {
         var fechaBase = _config.FechaInicioTorneo.AddDays(21 + numeroCruce);
         var clockCreacion = new ClockStub(_config.FechaInicioTorneo);
-        return new Match(fechaBase, estadio, local, visitante, 'A', clockCreacion);
+        return new Match(fechaBase, estadio, local, visitante, 'N', clockCreacion);
     }
     private List<Cruce> CrearCrucesProximaFase(List<Team> ganadores, List<Stadium> estadios, int semilla, TournamentPhase fase)
     {
