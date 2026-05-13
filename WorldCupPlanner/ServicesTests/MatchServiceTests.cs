@@ -260,4 +260,11 @@ public class MatchServiceTests
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
         Assert.ThrowsException<KeyNotFoundException>(() => _service.UpdateMatchStadium(created.idMatch, "Maracana"));
     }
+    
+    [TestMethod]
+    public void UpdateMatchDate_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
+    {
+        Assert.ThrowsException<KeyNotFoundException>(() =>
+            _service.UpdateMatchDate(99, _clock.Now));
+    }
 }
