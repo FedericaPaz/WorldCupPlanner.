@@ -83,7 +83,7 @@ public class Fixture
         return _eliminatoryMatches.All(match => match.HomeGoals.HasValue && match.AwayGoals.HasValue);
     }
 
-    public bool IsStillValid(List<Team> existingTeams, List<Stadium> existingStadiums)
+    public bool IsStillValid(List<ITeam> existingTeams, List<IStadium> existingStadiums)
     {
         if (!IsValid()) return false;
         if (existingTeams == null) throw new ArgumentNullException(nameof(existingTeams));
