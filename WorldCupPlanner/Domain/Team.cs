@@ -5,8 +5,8 @@ namespace Domain;
 public class Team : ITeam
 {
     private const int MaxNameLength = 60;
-    private const int MinRanking = 300;
-    private const int MaxRanking = 2500;
+    public const int MinRanking = 300;
+    public const int MaxRanking = 2500;
 
     private string _name;
     private Confederation _confederation;

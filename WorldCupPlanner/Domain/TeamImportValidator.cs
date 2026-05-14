@@ -30,8 +30,8 @@ public class TeamImportValidator : ITeamImportValidator
         if (!Confederation.IsValidName(confederationName))
             errors.Add(new ImportError(row.RowNumber, "La confederación no es válida."));
 
-        if (!int.TryParse(rankingValue, out int ranking) || ranking < 300 || ranking > 2500)
-            errors.Add(new ImportError(row.RowNumber, "El ranking FIFA debe estar entre 300 y 2500."));
+        if (!int.TryParse(rankingValue, out int ranking) || ranking < Team.MinRanking || ranking > Team.MaxRanking)
+            errors.Add(new ImportError(row.RowNumber, $"El ranking FIFA debe estar entre {Team.MinRanking} y {Team.MaxRanking}."));
 
         return errors;
     }
