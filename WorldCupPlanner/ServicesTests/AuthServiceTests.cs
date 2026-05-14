@@ -93,7 +93,7 @@ public class AuthServiceTests
 
         Assert.IsNotNull(user);
         Assert.AreEqual(1, user.Roles.Count);
-        CollectionAssert.Contains(user.Roles, UserRole.SystemAdministrator);
+        Assert.IsTrue(user.Roles.Contains(UserRole.SystemAdministrator));
     }
 
     [TestMethod]

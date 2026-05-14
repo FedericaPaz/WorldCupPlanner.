@@ -34,4 +34,9 @@ public static class UserRoleMapper
     {
         return roles.Select(ToDto).ToList();
     }
+
+    public static List<UserRoleDto> ToDto(IReadOnlyList<UserRole> roles)
+    {
+        return roles.Select(ToDto).ToList();
+    }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Domain;
+﻿using Domain;
 using DTOs.User;
 using Repository;
 using Services;
@@ -333,8 +332,8 @@ public class UserServiceTests
 
         Assert.IsNotNull(createdUser);
         Assert.AreEqual(2, createdUser.Roles.Count);
-        CollectionAssert.Contains(createdUser.Roles, UserRole.SystemAdministrator);
-        CollectionAssert.Contains(createdUser.Roles, UserRole.Editor);
+        Assert.IsTrue(createdUser.Roles.Contains(UserRole.SystemAdministrator));
+        Assert.IsTrue(createdUser.Roles.Contains(UserRole.Editor));
     }
     
     [TestMethod]
@@ -371,8 +370,8 @@ public class UserServiceTests
 
         Assert.IsNotNull(updatedUser);
         Assert.AreEqual(2, updatedUser.Roles.Count);
-        CollectionAssert.Contains(updatedUser.Roles, UserRole.SystemAdministrator);
-        CollectionAssert.Contains(updatedUser.Roles, UserRole.Editor);
+        Assert.IsTrue(updatedUser.Roles.Contains(UserRole.SystemAdministrator));
+        Assert.IsTrue(updatedUser.Roles.Contains(UserRole.Editor));
     }
     
     [TestMethod]
@@ -443,7 +442,6 @@ public class UserServiceTests
         Assert.IsNotNull(user);
         Assert.AreEqual("Gomez", user.LastName);
         Assert.AreEqual(2, user.Roles.Count);
-        // Password must remain unchanged
         Assert.IsTrue(user.HasPassword("Password1!"));
     }
 

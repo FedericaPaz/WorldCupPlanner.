@@ -212,10 +212,11 @@ public class UserTests
             roles
         );
 
+        Assert.IsNotNull(user.Roles);
         Assert.AreEqual(2, user.Roles.Count);
-        CollectionAssert.Contains(user.Roles, UserRole.SystemAdministrator);
-        CollectionAssert.Contains(user.Roles, UserRole.Editor);
+        CollectionAssert.AreEquivalent(roles, user.Roles.ToList());
     }
+
     
     [TestMethod]
     public void CreateUser_WithoutRoles_ShouldThrowException()

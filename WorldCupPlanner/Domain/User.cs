@@ -10,7 +10,12 @@ public class User
     public string Email { get; private set; }
     public DateTime BirthDate { get; private set; }
     public string PasswordHash { get; private set; }
-    public List<UserRole> Roles { get; private set; }
+    private List<UserRole> _roles;
+
+    public IReadOnlyList<UserRole> Roles
+    {
+        get { return _roles; }
+    }
 
     private readonly IDateTimeMatch? _clock;
 
@@ -38,7 +43,7 @@ public class User
         Email = email;
         BirthDate = birthDate;
         PasswordHash = HashPassword(password);
-        Roles = roles ?? new List<UserRole>();
+        _roles = roles ?? new List<UserRole>();
     }
 
     public void UpdateData(
@@ -55,7 +60,7 @@ public class User
         FirstName = firstName;
         LastName = lastName;
         BirthDate = birthDate;
-        Roles = roles;
+        _roles = roles;
     }
 
     public bool HasPassword(string password)
@@ -72,19 +77,19 @@ public class User
     private static void ValidateFirstName(string firstName)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            throw new ArgumentException("El nombre no puede estar vacío.");
+            throw new ArgumentException("El nombre no puede estar vacío.", nameof(firstName));
     }
 
     private static void ValidateLastName(string lastName)
     {
         if (string.IsNullOrWhiteSpace(lastName))
-            throw new ArgumentException("El apellido no puede estar vacío.");
+            throw new ArgumentException("El apellido no puede estar vacío.", nameof(lastName));
     }
 
     private static void ValidateEmailNotEmpty(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
-            throw new ArgumentException("El email no puede estar vacío.");
+            throw new ArgumentException("El email no puede estar vacío.", nameof(email));
     }
 
     private void ValidateBirthDate(DateTime birthDate)
@@ -92,43 +97,43 @@ public class User
         DateTime today = _clock?.Now.Date ?? DateTime.Today;
 
         if (birthDate > today)
-            throw new ArgumentException("La fecha de nacimiento no puede ser futura.");
+            throw new ArgumentException("La fecha de nacimiento no puede ser futura.", nameof(birthDate));
     }
 
     private static void ValidatePassword(string password)
     {
         if (string.IsNullOrWhiteSpace(password))
-            throw new ArgumentException("La contraseña no puede estar vacía.");
+            throw new ArgumentException("La contraseña no puede estar vacía.", nameof(password));
 
         if (password.Length < 8)
-            throw new ArgumentException("La contraseña debe tener al menos 8 caracteres.");
+            throw new ArgumentException("La contraseña debe tener al menos 8 caracteres.", nameof(password));
 
         if (!password.Any(char.IsUpper))
-            throw new ArgumentException("La contraseña debe contener al menos una letra mayúscula.");
+            throw new ArgumentException("La contraseña debe contener al menos una letra mayúscula.", nameof(password));
 
         if (!password.Any(char.IsLower))
-            throw new ArgumentException("La contraseña debe contener al menos una letra minúscula.");
+            throw new ArgumentException("La contraseña debe contener al menos una letra minúscula.", nameof(password));
 
         if (!password.Any(char.IsDigit))
-            throw new ArgumentException("La contraseña debe contener al menos un número.");
+            throw new ArgumentException("La contraseña debe contener al menos un número.", nameof(password));
 
         if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
-            throw new ArgumentException("La contraseña debe contener al menos un carácter especial.");
+            throw new ArgumentException("La contraseña debe contener al menos un carácter especial.", nameof(password));
     }
 
     private static void ValidateEmailFormat(string email)
     {
         if (!email.Contains("@"))
-            throw new ArgumentException("El formato del email no es válido.");
+            throw new ArgumentException("El formato del email no es válido.", nameof(email));
     }
 
     private static void ValidateRoles(List<UserRole>? roles)
     {
         if (roles is null || roles.Count == 0)
-            throw new ArgumentException("El usuario debe tener al menos un rol asignado.");
+            throw new ArgumentException("El usuario debe tener al menos un rol asignado.", nameof(roles));
 
         if (roles.Count != roles.Distinct().Count())
-            throw new ArgumentException("El usuario no puede tener roles duplicados.");
+            throw new ArgumentException("El usuario no puede tener roles duplicados.", nameof(roles));
     }
 
     private static string HashPassword(string password)
