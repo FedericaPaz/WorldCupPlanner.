@@ -9,6 +9,7 @@
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject TournamentConfig Config
+@inject NavigationManager Navigation
 
 <div class="cruces-wrapper">
 
@@ -326,6 +327,10 @@
 
     protected override void OnInitialized()
     {
+        if (!SessionService.IsEditor())
+        {
+            Navigation.NavigateTo("/");
+        }
         CargarCruces();
         CalcularEstadoFaseGrupos();
     }

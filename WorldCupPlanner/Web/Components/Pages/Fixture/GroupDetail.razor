@@ -1,6 +1,9 @@
 ﻿@using DTOs
 @using IServices
+@using Web.Services
 @inject IFixtureService FixtureService
+@inject NavigationManager Navigation
+@inject SessionService SessionService
 
 <div class="group-detail">
     @if (_standingsError != null)
@@ -97,6 +100,14 @@
     private List<StandingResponse>? _standings;
     private string? _standingsError;
 
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsEditor())
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+    
     protected override void OnParametersSet()
     {
         try
