@@ -170,7 +170,7 @@
             FirstName = user.FirstName,
             LastName = user.LastName,
             BirthDate = user.BirthDate,
-            Roles = UserRoleMapper.ToDto(user.Roles)
+            Roles = UserRoleMapper.ToDto(user.Roles.ToList())
         };
     }
 

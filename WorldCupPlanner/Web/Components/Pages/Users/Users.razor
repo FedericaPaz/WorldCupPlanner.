@@ -68,7 +68,7 @@
                             <td>@user.LastName</td>
                             <td class="muted">@user.Email</td>
                             <td class="muted">@user.BirthDate.ToString("yyyy-MM-dd")</td>
-                            <td class="muted">@FormatRoles(user.Roles)</td>
+                            <td class="muted">@FormatRoles(user.Roles.ToList())</td>
                             <td class="actions-cell">
                                 <button class="icon-button"
                                         @onclick="() => GoToEdit(user.Email)">

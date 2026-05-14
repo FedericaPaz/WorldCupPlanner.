@@ -67,7 +67,7 @@ public class UserService
             LastName = user.LastName,
             Email = user.Email,
             BirthDate = user.BirthDate,
-            Roles = UserRoleMapper.ToDto(user.Roles)
+            Roles = UserRoleMapper.ToDto(user.Roles.ToList())
         };
     }
     
