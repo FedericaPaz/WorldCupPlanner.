@@ -74,7 +74,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
             return GenerateSemiFinalsOutput(crucesAnteriores, estadios, semilla, fechaUltimoPartido);
 
         var ganadores = ObtainWinners(crucesAnteriores);
-        var siguienteFase = crucesAnteriores[0].ObtainNextPhase();
+        var siguienteFase = crucesAnteriores[0].GetNextPhase();
         return CrearCrucesProximaFase(ganadores, estadios, semilla, siguienteFase, fechaUltimoPartido);
     }
 

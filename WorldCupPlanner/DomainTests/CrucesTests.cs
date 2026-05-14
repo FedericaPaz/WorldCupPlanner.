@@ -164,7 +164,7 @@ public class CrucesTests
     {
         var partido = CreateBasicMatch();
         var cruce = new Cruce("A1", partido, TournamentPhase.RoundOf32);
-        var nextPhase = cruce.ObtainNextPhase();
+        var nextPhase = cruce.GetNextPhase();
         Assert.AreEqual(TournamentPhase.RoundOf16, nextPhase);
     }
     
@@ -173,7 +173,7 @@ public class CrucesTests
     {
         var partido = CreateBasicMatch();
         var cruce = new Cruce("A1", partido, TournamentPhase.RoundOf16);
-        var nextPhase = cruce.ObtainNextPhase();
+        var nextPhase = cruce.GetNextPhase();
         Assert.AreEqual(TournamentPhase.QuarterFinals, nextPhase);
     }
     
@@ -182,7 +182,7 @@ public class CrucesTests
     {
         var partido = CreateBasicMatch();
         var cruce = new Cruce("A1", partido, TournamentPhase.QuarterFinals);
-        var nextPhase = cruce.ObtainNextPhase();
+        var nextPhase = cruce.GetNextPhase();
         Assert.AreEqual(TournamentPhase.SemiFinals, nextPhase);
     }
     
@@ -191,7 +191,7 @@ public class CrucesTests
     {
         var partido = CreateBasicMatch();
         var cruce = new Cruce("A1", partido, TournamentPhase.SemiFinals);
-        var nextPhase = cruce.ObtainNextPhase();
+        var nextPhase = cruce.GetNextPhase();
         Assert.AreEqual(TournamentPhase.Final, nextPhase);
     }
 
@@ -200,6 +200,6 @@ public class CrucesTests
     {
         var partido = CreateBasicMatch();
         var cruce = new Cruce("A1", partido, TournamentPhase.GroupStage);
-        Assert.ThrowsException<InvalidOperationException>(()=> cruce.ObtainNextPhase());
+        Assert.ThrowsException<InvalidOperationException>(()=> cruce.GetNextPhase());
     }
 }
