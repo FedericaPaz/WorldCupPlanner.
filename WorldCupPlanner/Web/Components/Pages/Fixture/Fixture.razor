@@ -1,4 +1,5 @@
 ﻿@page "/Fixture"
+@using Domain
 @using DTOs
 @using IServices
 @using Web.Services
@@ -8,6 +9,7 @@
 @inject NavigationManager Navigation
 @inject ILogService LogService
 @inject SessionService SessionService
+@inject TournamentConfig Config
 
 <h3 class="text-center my-4">Fixture - Fase de Grupos</h3>
 
@@ -169,7 +171,7 @@ else
                 GetCurrentUserEmail(),
                 "Fixture",
                 "Generación",
-                "Se generó el fixture del torneo"
+                $"Se generó el fixture del torneo con semilla {Config.SemillaFixture}"
             );
         }
         catch (Exception ex)
@@ -182,7 +184,7 @@ else
             StateHasChanged();
         }
     }
-    
+
     private async Task RegenerateFixture()
     {
         if (isReloading) return;
@@ -201,7 +203,7 @@ else
                 GetCurrentUserEmail(),
                 "Fixture",
                 "Generación",
-                "Se regeneró el fixture del torneo"
+                $"Se regeneró el fixture del torneo con semilla {Config.SemillaFixture}"
             );
         }
         catch (Exception ex)

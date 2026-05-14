@@ -11,6 +11,7 @@
 @inject SessionService SessionService
 @inject ILogService LogService
 
+
 <div class="edit-match-page">
     <button class="back-link" @onclick="GoBack">← Volver a partidos</button>
 
@@ -201,7 +202,7 @@
                 GetCurrentUserEmail(),
                 "Partidos",
                 "Modificación",
-                $"Se simuló el resultado del partido {_match.homeTeamName} vs {_match.awayTeamName}"
+                $"Se simuló el resultado del partido {_match.homeTeamName} vs {_match.awayTeamName} con semilla {Config.SemillaSimulation}"
             );
 
             LoadData();

@@ -45,7 +45,7 @@
                     {
                         <tr>
                             <td class="logs-date">
-                                @log.Timestamp.ToString("dd/MM/yyyy HH:mm")
+                                @ToUruguayTime(log.Timestamp).ToString("dd/MM/yyyy HH:mm")
                             </td>
 
                             <td>
@@ -84,5 +84,26 @@
         _logs = LogService.GetAll()
             .OrderByDescending(log => log.Timestamp)
             .ToList();
+    }
+    
+    private static DateTime ToUruguayTime(DateTime timestamp)
+    {
+        var utcTimestamp = timestamp.Kind == DateTimeKind.Utc
+            ? timestamp
+            : DateTime.SpecifyKind(timestamp, DateTimeKind.Utc);
+
+        return TimeZoneInfo.ConvertTimeFromUtc(utcTimestamp, GetUruguayTimeZone());
+    }
+
+    private static TimeZoneInfo GetUruguayTimeZone()
+    {
+        try
+        {
+            return TimeZoneInfo.FindSystemTimeZoneById("America/Montevideo");
+        }
+        catch (TimeZoneNotFoundException)
+        {
+            return TimeZoneInfo.FindSystemTimeZoneById("Montevideo Standard Time");
+        }
     }
 }
