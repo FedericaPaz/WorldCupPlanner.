@@ -83,7 +83,7 @@ public class Match
     public bool IsLocked
     {
         get => _isLocked;
-        set => _isLocked = value;
+        private set => _isLocked = value;
     }
 
     public int? HomeGoals => _homeGoals;
@@ -95,8 +95,8 @@ public class Match
     {
         EnsureValidClock(clock);
         _clock = clock;
-        
         Stadium = stadium;
+        
         HomeTeam = homeTeam;
         AwayTeam = awayTeam;
         EnsureDifferentTeams();
@@ -113,8 +113,10 @@ public class Match
 
     private void EnsureDifferentTeams()
     {
-        if (HomeTeam.Name == AwayTeam.Name)
+        if (ReferenceEquals(HomeTeam, AwayTeam))
             throw new ArgumentException("El equipo local y el equipo visitante deben ser diferentes.");
+        if (HomeTeam.Name == AwayTeam.Name)
+            throw new ArgumentException("No se puede crear un partido con dos equipos con el mismo nombre.");
     }
 
     public static void ResetIdCounter()
@@ -136,7 +138,7 @@ public class Match
 
     private void EnsureMatchWasPlayed()
     {
-        if (_clock.Now < DateMatch)
+        if (_clock.Now.ToUniversalTime() < DateMatch.ToUniversalTime())
             throw new InvalidOperationException("El partido todavía no se jugó.");
     }
 
@@ -188,8 +190,7 @@ public class Match
     {
         if (_clock == null)
             throw new InvalidOperationException("El reloj no fue configurado.");
-
-        if (dateMatch < _clock.Now)
+        if (dateMatch.ToUniversalTime() < _clock.Now.ToUniversalTime())
             throw new ArgumentException("La fecha no puede ser pasada.");
     }
     private void EnsureValidStadium(IStadium stadium)
@@ -213,7 +214,7 @@ public class Match
     private void EnsureValidGroup(char group)
     {
         if (group == '\0')
-            throw new ArgumentNullException(nameof(group), "El grupo no puede ser vacío.");
+            throw new ArgumentException("El grupo no puede ser vacío.", nameof(group));
         
         char groupToUpper = char.ToUpper(group);
         if (groupToUpper == 'N') return;
