@@ -1,5 +1,4 @@
-﻿/* ─── Teams ─────────────────────────────── */
-.teams-page {
+﻿.teams-page {
     padding: 1.5rem;
 }
 
@@ -7,17 +6,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .teams-header h1 {
     margin: 0;
+    font-size: 1.5rem;
 }
 
 .teams-header p {
+    margin: 0;
     color: gray;
     font-size: 14px;
-    margin: 0;
 }
 
 .teams-header-actions {
@@ -25,7 +25,6 @@
     gap: 0.75rem;
 }
 
-/* ── Buttons ── */
 .primary-action-button {
     background: green;
     color: white;
@@ -40,24 +39,11 @@
     outline: 2px solid #00000033;
 }
 
-.secondary-action-button {
-    background: green;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-}
-
-.secondary-action-button:focus {
-    outline: 2px solid #00000033;
-}
-
-/* ── Messages ── */
 .teams-message {
-    margin-top: 1rem;
-    padding: 0.5rem 0;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 14px;
 }
 
 .teams-message.error {
@@ -68,7 +54,6 @@
     color: green;
 }
 
-/* ── Empty state ── */
 .teams-empty {
     text-align: center;
     padding: 3rem 1rem;
@@ -90,7 +75,6 @@
     font-size: 14px;
 }
 
-/* ── Table ── */
 .teams-card {
     background: white;
     border-radius: 12px;
@@ -155,7 +139,6 @@
     color: #222;
 }
 
-/* ── Action buttons ── */
 .teams-actions-column {
     width: 140px;
     text-align: center;
@@ -163,22 +146,43 @@
 
 .teams-actions-cell {
     display: flex;
-    gap: 8px;
+    gap: 0.5rem;
     justify-content: center;
 }
 
 .table-action-button {
-    background: none !important;
-    border: none !important;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    border: none;
     cursor: pointer;
-    font-size: 14px;
-    padding: 4px;
+    font-weight: 500;
 }
 
-.table-action-button.edit {
-    color: #555 !important;
+.table-action-button.edit:hover {
+    background: #bbdefb;
 }
 
 .table-action-button.danger {
-    color: #c62828 !important;
+    background: #ffebee;
+    color: #c62828;
+}
+
+.table-action-button.danger:hover {
+    background: #ffcdd2;
+}
+
+.btn-bg-green {
+    background: green;
+    border-color: green;
+}
+
+.edit-button {
+    border-color: green;
+    color: green;
+}
+
+.edit-button:hover {
+    color: #fff;
+    background: green;
 }
