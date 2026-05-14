@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class CsvParser
+public class CsvParser : ICsvParser
 {
     public ParsedCsv Parse(string csvContent)
     {

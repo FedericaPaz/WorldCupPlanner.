@@ -1,9 +1,9 @@
 ﻿@page "/users"
-@using Domain
-@using DTOs.User
 @using global::Services
 @using IServices
 @using Web.Services
+@using DTOs
+@using DTOs.User
 
 @inject UserService UserService
 @inject ILogService LogService
@@ -94,7 +94,7 @@
 </div>
 
 @code {
-    private List<User> _users = new();
+    private List<UserResponseDto> _users = new();
     private string _pageErrorMessage = string.Empty;
     private string _pageSuccessMessage = string.Empty;
 
@@ -185,19 +185,16 @@
         }
     }
 
-    private string FormatRoles(List<UserRole> roles)
+    private string FormatRoles(List<UserRoleDto> roles)
     {
         if (roles.Count == 0)
-        {
             return "Sin rol";
-        }
 
         var roleNames = roles.Select(role =>
-            role == UserRole.SystemAdministrator
+            role == UserRoleDto.SystemAdministrator
                 ? "Administrador"
                 : "Editor"
         );
-
         return string.Join(", ", roleNames);
     }
 

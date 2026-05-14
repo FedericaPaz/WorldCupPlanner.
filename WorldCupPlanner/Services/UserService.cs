@@ -41,9 +41,11 @@ public class UserService
         _userRepository.AddUser(user);
     }
     
-    public List<User> GetAllUsers()
+    public List<UserResponseDto> GetAllUsers()
     {
-        return _userRepository.GetAllUsers();
+        return _userRepository.GetAllUsers()
+            .Select(UserMapper.ToDto)
+            .ToList();
     }
 
     public User? GetUser(string email)

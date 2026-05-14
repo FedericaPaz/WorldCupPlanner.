@@ -28,14 +28,13 @@ public class FixtureServiceTests
         _stadiumRepository = new StadiumRepository();
         _matchRepository = new MatchRepository();
         _crucesRepository = new CrucesRepository();
-
         _config = new TournamentConfig();
         var clock = new ClockStub(ClockDate);
 
         _fixtureGenerator = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository, _config, clock);
         _service = new FixtureService(
             _fixtureRepository, _fixtureGenerator, _teamRepository,
-            _stadiumRepository, _matchRepository, _crucesRepository);
+            _stadiumRepository, _matchRepository, _crucesRepository,_config);
         _fixture = new Fixture(_config);
         Match.ResetIdCounter();
     }

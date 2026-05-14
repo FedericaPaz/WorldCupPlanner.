@@ -12,16 +12,18 @@ public class ImportService : IImportService
     private readonly TeamImporter _teamImporter;
     private readonly ITeamService _teamService;
 
-    public ImportService(ITeamRepository teamRepository, ITeamService teamService)
+    public ImportService(ITeamRepository teamRepository, ITeamService teamService, TeamImporter teamImporter)
     {
         if (teamRepository == null)
             throw new ArgumentNullException(nameof(teamRepository));
         if (teamService == null)
             throw new ArgumentNullException(nameof(teamService));
+        if (teamImporter == null)
+            throw new ArgumentNullException(nameof(teamImporter));
 
         _teamRepository = teamRepository;
         _teamService = teamService;
-        _teamImporter = new TeamImporter();
+        _teamImporter = teamImporter;
     }
 
     public ImportResponse ImportTeams(string csvContent)

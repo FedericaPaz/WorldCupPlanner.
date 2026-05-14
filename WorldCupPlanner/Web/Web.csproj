@@ -19,4 +19,15 @@
         <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Components\Auth\ChangePassword.razor" />
+      <_ContentIncludedByDefault Remove="Components\Auth\Login.razor" />
+      <_ContentIncludedByDefault Remove="Components\Auth\Register.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Components\Pages\Auth\ChangePassword.razor" />
+      <AdditionalFiles Include="Components\Pages\Auth\Register.razor" />
+    </ItemGroup>
+
 </Project>

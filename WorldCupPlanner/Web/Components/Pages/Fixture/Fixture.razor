@@ -1,5 +1,4 @@
 ﻿@page "/Fixture"
-@using Domain
 @using DTOs
 @using IServices
 @using Web.Services
@@ -9,7 +8,7 @@
 @inject NavigationManager Navigation
 @inject ILogService LogService
 @inject SessionService SessionService
-@inject TournamentConfig Config
+@inject IConfigService ConfigService
 
 <h3 class="text-center my-4">Fixture - Fase de Grupos</h3>
 
@@ -172,12 +171,11 @@ else
         try
         {
             FixtureService.GenerateFixture();
-
             LogService.Register(
                 GetCurrentUserEmail(),
                 "Fixture",
                 "Generación",
-                $"Se generó el fixture del torneo con semilla {Config.SemillaFixture}"
+                $"Se generó el fixture del torneo con semilla {ConfigService.GetConfig().SemillaFixture}"
             );
         }
         catch (Exception ex)
@@ -202,14 +200,12 @@ else
         try
         {
             await Task.Delay(500);
-
             FixtureService.GenerateFixture();
-
             LogService.Register(
                 GetCurrentUserEmail(),
                 "Fixture",
                 "Generación",
-                $"Se regeneró el fixture del torneo con semilla {Config.SemillaFixture}"
+                $"Se regeneró el fixture del torneo con semilla {ConfigService.GetConfig().SemillaFixture}"
             );
         }
         catch (Exception ex)
@@ -241,7 +237,6 @@ else
         {
             return "Sistema";
         }
-
         return SessionService.GetCurrentUser().Email;
     }
 }

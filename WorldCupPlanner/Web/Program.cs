@@ -9,8 +9,7 @@ using Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.Services.AddBlazoredLocalStorage();
 
@@ -36,9 +35,14 @@ builder.Services.AddSingleton<FixtureGenerator>();
 builder.Services.AddSingleton<ILogRepository, LogRepository>();
 builder.Services.AddSingleton<ILogService, LogService>();
 
+builder.Services.AddScoped<ICsvParser, CsvParser>();
+builder.Services.AddScoped<ITeamImportValidator, TeamImportValidator>();
+builder.Services.AddScoped<ITeamFactory, TeamFactory>();
+builder.Services.AddScoped<TeamImporter>();
 builder.Services.AddScoped<IImportService, ImportService>();
 
 builder.Services.AddSingleton<TournamentConfig>();
+builder.Services.AddSingleton<IConfigService, ConfigService>();
 builder.Services.AddSingleton<ISimulationService, CrucesSimulationService>();
 
 builder.Services.AddSingleton<ICrucesRepository, CrucesRepository>();
