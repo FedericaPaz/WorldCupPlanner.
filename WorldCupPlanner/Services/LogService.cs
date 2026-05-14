@@ -1,6 +1,8 @@
 ﻿using Domain;
+using DTOs;
 using IRepository;
 using IServices;
+using Services.Mappers;
 
 namespace Services;
 
@@ -24,8 +26,8 @@ public class LogService : ILogService
         _logRepository.Add(logEntry);
     }
 
-    public List<LogEntry> GetAll()
+    public List<LogEntryDTO> GetAll()
     {
-        return _logRepository.GetAll();
+        return _logRepository.GetAll().Select(LogMapper.ToDTO).ToList();
     }
 }
