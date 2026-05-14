@@ -147,10 +147,10 @@ public class CruceSimulatorServiceTests
     {
         Match.ResetIdCounter();
         var cruce = BuildCruce("B1");
-        cruce.Partido.SetClock(new ClockStub(FechaResultadoClock));
-        cruce.Partido.SetMatchResult(2, 1);
+        cruce.Match.SetClock(new ClockStub(FechaResultadoClock));
+        cruce.Match.SetMatchResult(2, 1);
         _service.SimulateCruces(new List<Cruce> { cruce }, Seed);
-        Assert.AreEqual(2, cruce.Partido.HomeGoals);
-        Assert.AreEqual(1, cruce.Partido.AwayGoals);
+        Assert.AreEqual(2, cruce.Match.HomeGoals);
+        Assert.AreEqual(1, cruce.Match.AwayGoals);
     }
 }

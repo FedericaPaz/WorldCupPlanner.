@@ -9,11 +9,11 @@ public static class CruceMapper
     {
         return new CruceResponse
         {
-            Name = cruce.Nombre,
-            HomeTeam = cruce.Partido.HomeTeam.Name,
-            AwayTeam = cruce.Partido.AwayTeam.Name,
-            HomeGoals = cruce.Partido.HomeGoals,
-            AwayGoals = cruce.Partido.AwayGoals,
+            Name = cruce.Name,
+            HomeTeam = cruce.Match.HomeTeam.Name,
+            AwayTeam = cruce.Match.AwayTeam.Name,
+            HomeGoals = cruce.Match.HomeGoals,
+            AwayGoals = cruce.Match.AwayGoals,
             Phase = (TournamentPhaseDTOs)cruce.Phase
         };
     }

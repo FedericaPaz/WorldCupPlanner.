@@ -61,7 +61,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         }
 
         foreach (var cruce in cruces)
-            fixture.AddEliminatoryMatch(cruce.Partido);
+            fixture.AddEliminatoryMatch(cruce.Match);
 
         return cruces;
     }
@@ -70,7 +70,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         if (crucesAnteriores == null || crucesAnteriores.Count == 0)
             throw new ArgumentException("Se requieren cruces anteriores para generar la siguiente ronda.");
 
-        DateTime fechaUltimoPartido = crucesAnteriores.Max(c => c.Partido.DateMatch);
+        DateTime fechaUltimoPartido = crucesAnteriores.Max(c => c.Match.DateMatch);
 
         if (crucesAnteriores[0].Phase == TournamentPhase.SemiFinals)
             return GenerateSemiFinalsOutput(crucesAnteriores, estadios, semilla, fechaUltimoPartido);
@@ -262,7 +262,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         {
             var ganador = (Team?)cruce.GetWinner();
             if (ganador == null)
-                throw new InvalidOperationException($"El cruce {cruce.Nombre} no tiene un ganador definido.");
+                throw new InvalidOperationException($"El cruce {cruce.Name} no tiene un ganador definido.");
             ganadores.Add(ganador);
         }
         return ganadores;
@@ -297,7 +297,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         {
             var team = teamExtractor(cruce);
             if (team == null)
-                throw new InvalidOperationException($"El cruce {cruce.Nombre} no tiene un participante definido.");
+                throw new InvalidOperationException($"El cruce {cruce.Name} no tiene un participante definido.");
             teams.Add(team);
         }
         return teams;

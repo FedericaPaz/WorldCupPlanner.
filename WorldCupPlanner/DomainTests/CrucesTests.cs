@@ -29,8 +29,8 @@ public class CrucesTests
         string nombre = "A1";
         var fase = TournamentPhase.RoundOf16;
         var cruce = new Cruce(nombre, partido, fase);
-        Assert.AreEqual(nombre, cruce.Nombre);
-        Assert.AreEqual(partido, cruce.Partido);
+        Assert.AreEqual(nombre, cruce.Name);
+        Assert.AreEqual(partido, cruce.Match);
         Assert.AreEqual(fase, cruce.Phase);
     }
 

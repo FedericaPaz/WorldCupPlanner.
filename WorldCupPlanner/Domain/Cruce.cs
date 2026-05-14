@@ -2,21 +2,21 @@
 
 public class Cruce
 {
-    private string _nombre;
-    private Match _partido;
+    private string _name;
+    private Match _match;
     private TournamentPhase _phase;
     private Cruce? _nextCruce;
 
-    public string Nombre
+    public string Name
     {
-        get { return _nombre; }
-        private set { _nombre = value; }
+        get { return _name; }
+        private set { _name = value; }
     }
 
-    public Match Partido
+    public Match Match
     {
-        get { return _partido; }
-        private set { _partido = value; }
+        get { return _match; }
+        private set { _match = value; }
     }
 
     public TournamentPhase Phase
@@ -31,16 +31,16 @@ public class Cruce
         private set { _nextCruce = value; }
     }
     
-    public Cruce(string nombre, Match partido, TournamentPhase phase)
+    public Cruce(string name, Match match, TournamentPhase phase)
     {
-        if (string.IsNullOrEmpty(nombre))
-            throw new ArgumentException("El nombre del cruce no puede ser vacío o nulo", nameof(nombre));
+        if (string.IsNullOrEmpty(name))
+            throw new ArgumentException("El nombre del cruce no puede ser vacío o nulo", nameof(name));
         
-        if (partido == null)
-            throw new ArgumentNullException(nameof(partido), "El partido no puede ser nulo");
+        if (match == null)
+            throw new ArgumentNullException(nameof(match), "El partido no puede ser nulo");
         
-        Nombre = nombre;
-        Partido = partido;
+        Name = name;
+        Match = match;
         Phase = phase;
     }
 
@@ -51,18 +51,18 @@ public class Cruce
         if (cruce == this)
             throw new InvalidOperationException("El cruce no puede ser igual a sí mismo");
         if (!IsValidNextPhase(cruce.Phase))
-            throw new InvalidOperationException($"El cruce {cruce.Nombre} no es válido para la fase {Phase}");
+            throw new InvalidOperationException($"El cruce {cruce.Name} no es válido para la fase {Phase}");
         NextCruce = cruce;
     }
 
     public ITeam? GetWinner()
     {
-        return Partido.WinnerMatch;
+        return Match.WinnerMatch;
     }
     
     public ITeam? GetLoser()
     {
-        return Partido.LoserMatch;
+        return Match.LoserMatch;
     }
 
     private bool IsValidNextPhase(TournamentPhase nextPhase)

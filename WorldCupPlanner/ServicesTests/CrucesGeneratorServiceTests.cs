@@ -84,7 +84,7 @@ public class CrucesGeneratorServiceTests
     private void SimulateWinner(List<Cruce> cruces)
     {
         foreach (var cruce in cruces)
-            cruce.Partido.SimulateResult(2, 0);
+            cruce.Match.SimulateResult(2, 0);
     }
 
     [TestMethod]
@@ -123,7 +123,7 @@ public class CrucesGeneratorServiceTests
 
         bool encontrado = grupos
             .SelectMany(g => g.TeamsInGroup)
-            .Any(e => e.Name == cruces[0].Partido.HomeTeam.Name);
+            .Any(e => e.Name == cruces[0].Match.HomeTeam.Name);
 
         Assert.IsTrue(encontrado);
     }
@@ -147,8 +147,8 @@ public class CrucesGeneratorServiceTests
     public void GenerateRoundOf32_ShouldRotateStadiums()
     {
         var cruces = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, ConfigTest.SemillaFixture);
-        Assert.AreEqual("Estadio 1", cruces[0].Partido.Stadium.StadiumName);
-        Assert.AreEqual("Estadio 2", cruces[1].Partido.Stadium.StadiumName);
+        Assert.AreEqual("Estadio 1", cruces[0].Match.Stadium.StadiumName);
+        Assert.AreEqual("Estadio 2", cruces[1].Match.Stadium.StadiumName);
     }
 
     [TestMethod]
@@ -160,8 +160,8 @@ public class CrucesGeneratorServiceTests
 
         for (int i = 0; i < cruces1.Count; i++)
         {
-            Assert.AreEqual(cruces1[i].Partido.HomeTeam.Name, cruces2[i].Partido.HomeTeam.Name, $"Cruce {i}: local difiere con la misma semilla");
-            Assert.AreEqual(cruces1[i].Partido.AwayTeam.Name, cruces2[i].Partido.AwayTeam.Name, $"Cruce {i}: visitante difiere con la misma semilla");
+            Assert.AreEqual(cruces1[i].Match.HomeTeam.Name, cruces2[i].Match.HomeTeam.Name, $"Cruce {i}: local difiere con la misma semilla");
+            Assert.AreEqual(cruces1[i].Match.AwayTeam.Name, cruces2[i].Match.AwayTeam.Name, $"Cruce {i}: visitante difiere con la misma semilla");
         }
     }
 
@@ -174,7 +174,7 @@ public class CrucesGeneratorServiceTests
         bool isDifferent = false;
         for (int i = 0; i < cruces1.Count; i++)
         {
-            if (cruces1[i].Partido.HomeTeam.Name != cruces2[i].Partido.HomeTeam.Name || cruces1[i].Partido.AwayTeam.Name != cruces2[i].Partido.AwayTeam.Name)
+            if (cruces1[i].Match.HomeTeam.Name != cruces2[i].Match.HomeTeam.Name || cruces1[i].Match.AwayTeam.Name != cruces2[i].Match.AwayTeam.Name)
             {
                 isDifferent = true;
                 break;
@@ -247,8 +247,8 @@ public class CrucesGeneratorServiceTests
         var tercerPuesto = finals.First(c => c.Phase == TournamentPhase.ThirdPlace);
         var final = finals.First(c => c.Phase == TournamentPhase.Final);
 
-        var equiposTercero = new[] { tercerPuesto.Partido.HomeTeam.Name, tercerPuesto.Partido.AwayTeam.Name };
-        var equiposFinal = new[] { final.Partido.HomeTeam.Name, final.Partido.AwayTeam.Name };
+        var equiposTercero = new[] { tercerPuesto.Match.HomeTeam.Name, tercerPuesto.Match.AwayTeam.Name };
+        var equiposFinal = new[] { final.Match.HomeTeam.Name, final.Match.AwayTeam.Name };
         Assert.IsFalse(equiposTercero.Intersect(equiposFinal).Any(), "Los equipos del tercer puesto no pueden estar en la final");
     }
 
@@ -256,18 +256,18 @@ public class CrucesGeneratorServiceTests
     public void GenerateRoundOf32_ShouldHaveGroupA_WithNames_A1_to_A8()
     {
         var cruces = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, 123);
-        var crucesA = cruces.Where(c => c.Nombre.StartsWith("A")).ToList();
+        var crucesA = cruces.Where(c => c.Name.StartsWith("A")).ToList();
         Assert.AreEqual(8, crucesA.Count, "Debe haber 8 cruces del grupo A");
         for (int i = 0; i < 8; i++)
-            Assert.AreEqual($"A{i + 1}", crucesA[i].Nombre);
+            Assert.AreEqual($"A{i + 1}", crucesA[i].Name);
     }
 
     [TestMethod]
     public void GenerateRoundOf32_ShouldHaveCorrectStructure_A_8_B_4_B_4()
     {
         var cruces = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, 123);
-        Assert.AreEqual(8, cruces.Count(c => c.Nombre.StartsWith("A")), "8 cruces tipo A");
-        Assert.AreEqual(8, cruces.Count(c => c.Nombre.StartsWith("B")), "8 cruces tipo B");
+        Assert.AreEqual(8, cruces.Count(c => c.Name.StartsWith("A")), "8 cruces tipo A");
+        Assert.AreEqual(8, cruces.Count(c => c.Name.StartsWith("B")), "8 cruces tipo B");
     }
 
     [TestMethod]
@@ -277,8 +277,8 @@ public class CrucesGeneratorServiceTests
         var todosEquipos = new HashSet<string>();
         foreach (var cruce in cruces)
         {
-            var home = cruce.Partido.HomeTeam.Name;
-            var away = cruce.Partido.AwayTeam.Name;
+            var home = cruce.Match.HomeTeam.Name;
+            var away = cruce.Match.AwayTeam.Name;
             Assert.IsFalse(todosEquipos.Contains(home), $"Equipo {home} aparece múltiples veces");
             Assert.IsFalse(todosEquipos.Contains(away), $"Equipo {away} aparece múltiples veces");
             todosEquipos.Add(home);
@@ -300,8 +300,8 @@ public class CrucesGeneratorServiceTests
         string mensajeError = "";
         foreach (var cruce in cruces)
         {
-            string local = cruce.Partido.HomeTeam.Name;
-            string visitante = cruce.Partido.AwayTeam.Name;
+            string local = cruce.Match.HomeTeam.Name;
+            string visitante = cruce.Match.AwayTeam.Name;
             bool localEncontrado = false;
             bool visitanteEncontrado = false;
             foreach (var grupo in grupos)
@@ -332,11 +332,11 @@ public class CrucesGeneratorServiceTests
         var cruces = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, 123);
         foreach (var cruce in cruces)
         {
-            Assert.IsNotNull(cruce.Partido, "El partido no puede ser nulo");
-            Assert.IsNotNull(cruce.Partido.HomeTeam, "El equipo local no puede ser nulo");
-            Assert.IsNotNull(cruce.Partido.AwayTeam, "El equipo visitante no puede ser nulo");
-            Assert.IsNotNull(cruce.Partido.Stadium, "El estadio no puede ser nulo");
-            Assert.AreNotEqual(cruce.Partido.HomeTeam.Name, cruce.Partido.AwayTeam.Name, "No pueden jugar contra sí mismos");
+            Assert.IsNotNull(cruce.Match, "El partido no puede ser nulo");
+            Assert.IsNotNull(cruce.Match.HomeTeam, "El equipo local no puede ser nulo");
+            Assert.IsNotNull(cruce.Match.AwayTeam, "El equipo visitante no puede ser nulo");
+            Assert.IsNotNull(cruce.Match.Stadium, "El estadio no puede ser nulo");
+            Assert.AreNotEqual(cruce.Match.HomeTeam.Name, cruce.Match.AwayTeam.Name, "No pueden jugar contra sí mismos");
         }
     }
 }

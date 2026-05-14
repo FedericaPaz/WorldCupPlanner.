@@ -47,7 +47,7 @@ public class CruceService : ICruceService
         _repository.RemoveCruces();
         _repository.AddCruces(cruces);
         foreach (var cruce in cruces)
-            _matchRepository.AddMatch(cruce.Partido);
+            _matchRepository.AddMatch(cruce.Match);
     }
 
     public void GenerateNextRound()
@@ -64,7 +64,7 @@ public class CruceService : ICruceService
         List<Cruce> nuevos = _generator.GenerateNextRound(ultimaRonda, _stadiumRepository.GetAllStadiums(), _config.SemillaCrucesFase);
         _repository.AddCruces(nuevos);
         foreach (var cruce in nuevos)
-            _matchRepository.AddMatch(cruce.Partido);
+            _matchRepository.AddMatch(cruce.Match);
     }
 
     public List<CruceResponse> GetAllCruces()

@@ -27,7 +27,7 @@ public class CrucesSimulationService : ISimulationService
     public void SimulateCruces(List<Cruce> cruces, int seed)
     {
         foreach (var cruce in cruces.Where(c => c.GetWinner() == null))
-            SimulateAndSetResult(cruce.Partido, seed);
+            SimulateAndSetResult(cruce.Match, seed);
     }
 
     private void SimulateAndSetResult(Match match, int seed)
