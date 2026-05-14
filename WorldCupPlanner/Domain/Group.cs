@@ -6,13 +6,14 @@ public class Group
     private const int MaxMatches = 6;
     private const char FirstGroupLetter = 'A';
     private const char LastGroupLetter = 'L';
-    
+
     private char _groupLetter;
     private readonly List<Team> _teamsInGroup = new List<Team>();
     private readonly List<Match> _matchesInGroup = new List<Match>();
-    
+
     public char GroupLetter
     {
+        // Letter that identifies the group (A-L). Intentionally immutable.
         get => _groupLetter;
     }
 
@@ -25,7 +26,7 @@ public class Group
     {
         get => _matchesInGroup;
     }
-    
+
     public Group(char groupLetter)
     {
         EnsureValidGroupLetter(groupLetter);
@@ -34,10 +35,10 @@ public class Group
 
     private static void EnsureValidGroupLetter(char groupLetter)
     {
-        if (groupLetter < FirstGroupLetter || groupLetter > LastGroupLetter) 
+        if (groupLetter < FirstGroupLetter || groupLetter > LastGroupLetter)
             throw new ArgumentException("El grupo debe ser una letra de la A a la L.");
     }
-    
+
     public void AddTeamToGroup(Team team)
     {
         EnsureTeamIsNotNull(team);
@@ -63,8 +64,8 @@ public class Group
         if (_teamsInGroup.Contains(team))
             throw new InvalidOperationException("El equipo ya está en el grupo.");
     }
-    
-    
+
+
     public void AddMatchToGroup(Match match)
     {
         EnsureMatchIsNotNull(match);
@@ -74,7 +75,7 @@ public class Group
         EnsureMatchIsNotAlreadyRegistered(match);
         _matchesInGroup.Add(match);
     }
-    
+
 
     private static void EnsureMatchIsNotNull(Match match)
     {
@@ -90,10 +91,10 @@ public class Group
 
     private void EnsureGroupHasSpaceForMatch()
     {
-        if (_matchesInGroup.Count >= 6)
-            throw new InvalidOperationException("El grupo ya tiene 6 partidos.");
+        if (_matchesInGroup.Count >= MaxMatches)
+            throw new InvalidOperationException($"El grupo ya tiene {MaxMatches} partidos.");
     }
-    
+
     private void EnsureMatchTeamsBelongToGroup(Match match)
     {
         if (!_teamsInGroup.Contains(match.HomeTeam) || !_teamsInGroup.Contains(match.AwayTeam))
@@ -108,6 +109,9 @@ public class Group
 
     public void RemoveTeamFromGroup(Team team)
     {
+        EnsureTeamIsNotNull(team);
+        if (!_teamsInGroup.Contains(team))
+            throw new InvalidOperationException("El equipo no pertenece al grupo.");
         _teamsInGroup.Remove(team);
     }
 }
