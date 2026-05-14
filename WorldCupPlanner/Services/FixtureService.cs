@@ -81,7 +81,8 @@ public class FixtureService : IFixtureService
     {
         if (!_fixtureRepository.ContainsFixture()) return;
         var fixture = _fixtureRepository.GetFixture();
-        if (!fixture.IsStillValid(_teamRepository.GetAll(), _stadiumRepository.GetAllStadiums()))
+        if (!fixture.IsStillValid(_teamRepository.GetAll().Cast<ITeam>().ToList(),
+                _stadiumRepository.GetAllStadiums().Cast<IStadium>().ToList()))
             _fixtureRepository.RemoveFixture(fixture);
     }
 }
