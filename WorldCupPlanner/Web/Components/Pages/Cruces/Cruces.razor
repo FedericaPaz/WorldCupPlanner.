@@ -8,6 +8,7 @@
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject NavigationManager Navigation
+@inject IConfigService ConfigService
 
 <div class="cruces-wrapper">
 
@@ -370,7 +371,7 @@
                 GetCurrentUserEmail(),
                 "Cruces",
                 "Sorteo",
-                $"Se realizó el sorteo de cruces de 32avos de final con semilla {FixtureService.GetConfig().SemillaCrucesFase}"
+                $"Se realizó el sorteo de cruces de 32avos de final con semilla {ConfigService.GetConfig().SemillaCrucesFase}"
             );
 
             _mensajeExito = "32avos de final generados correctamente.";
@@ -402,7 +403,7 @@
                 GetCurrentUserEmail(),
                 "Cruces",
                 "Sorteo",
-                $"Se realizó el sorteo de la siguiente ronda de cruces con semilla {FixtureService.GetConfig().SemillaCrucesFase}"
+                $"Se realizó el sorteo de la siguiente ronda de cruces con semilla {ConfigService.GetConfig().SemillaCrucesFase}"
             );
 
             _mensajeExito = "Siguiente ronda generada correctamente.";

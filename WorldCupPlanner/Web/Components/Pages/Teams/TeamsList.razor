@@ -1,5 +1,4 @@
 ﻿@page "/teams"
-@using Domain
 @using DTOs
 @using IServices
 @using Web.Services
@@ -7,7 +6,7 @@
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject NavigationManager Navigation
-@inject TournamentConfig Config
+@inject IConfigService ConfigService
 
 <div class="row align-items-center mb-3">
     <div class="col">
@@ -103,16 +102,13 @@ else
         try
         {
             _errorMessage = null;
-
             TeamService.GenerateMissingTeams();
-
             LogService.Register(
                 GetCurrentUserEmail(),
                 "Equipos",
                 "Generación automática",
-                $"Se generaron automáticamente los equipos faltantes con semilla {Config.SemillaCompletar}"
+                $"Se generaron automáticamente los equipos faltantes con semilla {ConfigService.GetConfig().SemillaCompletar}"
             );
-
             LoadTeams();
         }
         catch (Exception ex)
@@ -131,16 +127,13 @@ else
         try
         {
             _errorMessage = null;
-
             TeamService.Delete(name);
-
             LogService.Register(
                 GetCurrentUserEmail(),
                 "Equipos",
                 "Eliminación",
                 $"Se eliminó el equipo {name}"
             );
-
             LoadTeams();
         }
         catch (Exception ex)
@@ -155,7 +148,6 @@ else
         {
             return "Sistema";
         }
-
         return SessionService.GetCurrentUser().Email;
     }
 }

@@ -42,6 +42,7 @@ builder.Services.AddScoped<TeamImporter>();
 builder.Services.AddScoped<IImportService, ImportService>();
 
 builder.Services.AddSingleton<TournamentConfig>();
+builder.Services.AddSingleton<IConfigService, ConfigService>();
 builder.Services.AddSingleton<ISimulationService, CrucesSimulationService>();
 
 builder.Services.AddSingleton<ICrucesRepository, CrucesRepository>();

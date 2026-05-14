@@ -87,21 +87,7 @@ public class FixtureService : IFixtureService
         foreach (var match in partidos)
             _matchRepository.AddMatch(match);
     }
-
-    public TournamentConfigDTO GetConfig()
-    {
-        return new TournamentConfigDTO
-        {
-            SemillaFixture = _config.SemillaFixture,
-            SemillaCompletar = _config.SemillaCompletar,
-            SemillaCrucesFase = _config.SemillaCrucesFase,
-            SemillaSimulation = _config.SemillaSimulation,
-            FechaInicioTorneo = _config.FechaInicioTorneo,
-            MaxPartidosPorDia = _config.MaxPartidosPorDia,
-            SeparacionEntreFechas = _config.SeparacionEntreFechas
-        };
-    }
-
+    
     private void ValidateExistingFixture()
     {
         if (!_fixtureRepository.ContainsFixture()) return;
