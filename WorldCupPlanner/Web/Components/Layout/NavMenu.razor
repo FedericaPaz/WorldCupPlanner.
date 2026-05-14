@@ -13,7 +13,7 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
         
-        us@if (!(SessionService.IsSystemAdministrator() && SessionService.IsEditor()))
+        @if (!(SessionService.IsSystemAdministrator() && SessionService.IsEditor()))
         {
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
