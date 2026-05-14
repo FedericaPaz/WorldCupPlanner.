@@ -1,7 +1,50 @@
 ﻿@page "/"
+@using Web.Services
+@inject SessionService SessionService
+@inject NavigationManager Navigation
 
-<PageTitle>Home</PageTitle>
+<PageTitle>WorldCup 2026</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="home-page">
+    <div class="hero-section">
+        <div class="hero-badge">
+            <span class="badge-icon">⚽</span>
+            <span>Mundial de Fútbol 2026</span>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-icon">🏆</div>
+            <h1 class="hero-title">WorldCup <span class="highlight">2026</span></h1>
+            <p class="hero-subtitle">Bienvenido al sistema de gestión del Mundial de Fútbol 2026</p>
+            
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">48</div>
+                    <div class="stat-label">Equipos</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Grupos</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <div class="stat-number">104</div>
+                    <div class="stat-label">Partidos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-Welcome to your new app.
+@code {
+    private void IrAFixture()
+    {
+        Navigation.NavigateTo("/fixture");
+    }
+    
+    private void IrACruces()
+    {
+        Navigation.NavigateTo("/cruces");
+    }
+}
