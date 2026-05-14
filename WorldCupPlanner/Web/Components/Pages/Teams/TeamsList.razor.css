@@ -2,7 +2,6 @@
     padding: 1.5rem;
 }
 
-/* ── Header ── */
 .teams-header {
     display: flex;
     justify-content: space-between;
@@ -26,7 +25,6 @@
     gap: 0.75rem;
 }
 
-/* ── Buttons ── */
 .primary-action-button {
     background: #2e7d32;
     color: white;
@@ -41,21 +39,6 @@
     background: #1b5e20;
 }
 
-.secondary-action-button {
-    background: #1565c0;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-}
-
-.secondary-action-button:hover {
-    background: #0d47a1;
-}
-
-/* ── Messages ── */
 .teams-message {
     padding: 0.75rem 1rem;
     border-radius: 8px;
@@ -69,7 +52,6 @@
     border: 1px solid #ef9a9a;
 }
 
-/* ── Empty state ── */
 .teams-empty {
     text-align: center;
     padding: 3rem 1rem;
@@ -91,7 +73,6 @@
     font-size: 14px;
 }
 
-/* ── Table ── */
 .teams-card {
     background: white;
     border-radius: 12px;
@@ -131,31 +112,11 @@
     background: #fafafa;
 }
 
-/* ── Badges ── */
-.ranking-badge {
-    background: #e3f2fd;
-    color: #1565c0;
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.confederation-badge {
-    background: #f3e5f5;
-    color: #6a1b9a;
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 500;
-}
-
 .team-name {
     font-weight: 500;
     color: #222;
 }
 
-/* ── Action buttons ── */
 .teams-actions-column {
     width: 140px;
     text-align: center;
@@ -174,11 +135,6 @@
     border: none;
     cursor: pointer;
     font-weight: 500;
-}
-
-.table-action-button.edit {
-    background: #e3f2fd;
-    color: #1565c0;
 }
 
 .table-action-button.edit:hover {
