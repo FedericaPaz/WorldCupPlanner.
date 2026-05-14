@@ -101,7 +101,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         var mejoresTerceros = OrdenarYDesempatar(tercerosPorGrupo).Take(8).ToList();
         return (primeros, segundos, mejoresTerceros);
     }
-    
+
     private List<Team> OrdenarYDesempatar(List<Standing> standings)
     {
         var ordenados = standings
@@ -219,12 +219,12 @@ public class CrucesGeneratorService : ICrucesGeneratorService
 
         string prefijo = fase switch
         {
-            TournamentPhase.RoundOf16     => "C",
+            TournamentPhase.RoundOf16 => "C",
             TournamentPhase.QuarterFinals => "D",
-            TournamentPhase.SemiFinals    => "S",
-            TournamentPhase.Final         => "F",
-            TournamentPhase.ThirdPlace    => "TP",
-            _                             => "X"
+            TournamentPhase.SemiFinals => "S",
+            TournamentPhase.Final => "F",
+            TournamentPhase.ThirdPlace => "TP",
+            _ => "X"
         };
 
         for (int i = 0; i + 1 < ganadoresBarajados.Count; i += 2)
@@ -245,13 +245,13 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         int slotEnDia = slotIndex % _config.MaxPartidosPorDia;
         int diaOffset = slotIndex / _config.MaxPartidosPorDia;
         int hour = StartHour + slotEnDia * HoursBetweenMatches;
-        
+
         DateTime diaBase;
         if (ultimaFecha.HasValue)
             diaBase = ultimaFecha.Value.Date.AddDays(_config.SeparacionEntreFechas);
         else
             diaBase = _config.FechaInicioTorneo.AddDays(21).Date;
-        
+
         var matchDate = diaBase.AddDays(21 + diaOffset).Date.AddHours(hour);
         return new Match(matchDate, estadio, local, visitante, 'N', _clock);
     }
@@ -268,7 +268,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         }
         return ganadores;
     }
-    
+
     private List<Cruce> GenerateSemiFinalsOutput(List<Cruce> semis, List<Stadium> estadios, int semilla, DateTime fechaBase)
     {
         if (semis.Count != 2)
@@ -290,7 +290,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
 
         return new List<Cruce> { cruceTercero, cruceFinal };
     }
-    
+
     private static List<Team> ObtainLosers(List<Cruce> cruces)
     {
         var perdedores = new List<Team>();

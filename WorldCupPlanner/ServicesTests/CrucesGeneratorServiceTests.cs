@@ -12,8 +12,8 @@ public class CrucesGeneratorServiceTests
         FechaInicioTorneo = new DateTime(2027, 1, 1)
     };
 
-    private static readonly DateTime FechaCreacionClock  = new DateTime(2026, 12, 1);
-    private static readonly DateTime FechaPartido        = new DateTime(2027, 6, 12);
+    private static readonly DateTime FechaCreacionClock = new DateTime(2026, 12, 1);
+    private static readonly DateTime FechaPartido = new DateTime(2027, 6, 12);
     private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
 
     private CrucesGeneratorService _service;
@@ -157,7 +157,7 @@ public class CrucesGeneratorServiceTests
         int semilla = ConfigTest.SemillaFixture;
         var cruces1 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, semilla);
         var cruces2 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, semilla);
- 
+
         for (int i = 0; i < cruces1.Count; i++)
         {
             Assert.AreEqual(cruces1[i].Partido.HomeTeam.Name, cruces2[i].Partido.HomeTeam.Name, $"Cruce {i}: local difiere con la misma semilla");
@@ -170,7 +170,7 @@ public class CrucesGeneratorServiceTests
     {
         var cruces1 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, 100);
         var cruces2 = _service.GenerateRoundOf32(CreateDefaultFixture(), _estadios, 99999);
- 
+
         bool isDifferent = false;
         for (int i = 0; i < cruces1.Count; i++)
         {
