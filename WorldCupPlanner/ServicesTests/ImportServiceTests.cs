@@ -1,5 +1,5 @@
 using Domain;
-using Repository;
+using IRepository;
 using Services;
 using ServicesTests.Stubs;
 using ServicesTests.TestHelpers;
@@ -9,22 +9,23 @@ namespace ServicesTests;
 [TestClass]
 public class ImportServiceTests
 {
-    private TeamRepository _teamRepository;
+    private ITeamRepository _teamRepository;
     private TeamServiceStub _teamService;
+    private TeamImporter _teamImporter;
     private ImportService _service;
-    
+
     [TestInitialize]
     public void Setup()
     {
-        _teamRepository = new TeamRepository();
+        _teamRepository = new TeamRepositoryStub();
         _teamService = new TeamServiceStub(_teamRepository);
-        _service = new ImportService(_teamRepository, _teamService);
+        _teamImporter = new TeamImporter(new CsvParser(), new TeamImportValidator(), new TeamFactory());
+        _service = new ImportService(_teamRepository, _teamService, _teamImporter);
     }
-    
-    
+
     [TestMethod]
     public void ImportTeams_WithInvalidCsv_ShouldNotSaveTeams()
-    { 
+    {
         string csv = """
                      Nombre,Confederacion,RankingFIFA
                      Uruguay,CONMEBOL,1800
@@ -33,7 +34,7 @@ public class ImportServiceTests
         Assert.IsFalse(response.Success);
         Assert.AreEqual(0, _teamRepository.GetAll().Count);
     }
-    
+
     [TestMethod]
     public void ImportTeams_WithValidCsv_ShouldSaveTeams()
     {
@@ -48,13 +49,14 @@ public class ImportServiceTests
         Assert.AreEqual(48, response.ImportedTeamsCount);
         Assert.AreEqual(48, _teamRepository.GetAll().Count);
     }
-    
+
     [TestMethod]
     public void CreateImportService_WithNullRepository_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => new ImportService(null, _teamService));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new ImportService(null, _teamService, _teamImporter));
     }
-    
+
     [TestMethod]
     public void ImportTeams_WithInvalidCsv_ShouldReturnErrors()
     {
@@ -66,13 +68,21 @@ public class ImportServiceTests
         Assert.IsFalse(response.Success);
         Assert.AreEqual(1, response.Errors.Count);
     }
-    
+
     [TestMethod]
     public void CreateImportService_WithNullTeamService_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => new ImportService(_teamRepository, null));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new ImportService(_teamRepository, null, _teamImporter));
     }
-    
+
+    [TestMethod]
+    public void CreateImportService_WithNullTeamImporter_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new ImportService(_teamRepository, _teamService, null));
+    }
+
     [TestMethod]
     public void ImportTeams_WithValidCsv_ShouldReturnImportedTeamsCount48()
     {
@@ -81,7 +91,7 @@ public class ImportServiceTests
         Assert.IsTrue(response.Success);
         Assert.AreEqual(48, response.ImportedTeamsCount);
     }
-    
+
     [TestMethod]
     public void ImportTeams_WithValidCsv_ShouldClearPreviousTeams()
     {
@@ -93,7 +103,7 @@ public class ImportServiceTests
         Assert.IsTrue(response.Success);
         Assert.AreEqual(48, _teamRepository.GetAll().Count);
     }
-    
+
     [TestMethod]
     public void ImportTeams_WithValidCsv_ShouldSaveThroughSaveImportedTeams()
     {
@@ -102,7 +112,7 @@ public class ImportServiceTests
         Assert.IsTrue(response.Success);
         Assert.AreEqual(48, _teamRepository.GetAll().Count);
     }
-    
+
     [TestMethod]
     public void ImportTeams_WithValidCsvButLessThan48Teams_ShouldReturnError()
     {
@@ -110,7 +120,7 @@ public class ImportServiceTests
             Environment.NewLine,
             ImportCsvBuilder.CreateValidCsvWith48Teams()
                 .Split(Environment.NewLine)
-                .Take(48) 
+                .Take(48)
         );
         var response = _service.ImportTeams(csv);
         Assert.IsFalse(response.Success);
@@ -118,7 +128,7 @@ public class ImportServiceTests
         Assert.AreEqual(0, response.Errors[0].RowNumber);
         StringAssert.Contains(response.Errors[0].Message, "exactamente 48 equipos");
     }
-    
+
     [TestMethod]
     public void ImportTeams_WithValidCsvButMoreThan48Teams_ShouldReturnError()
     {
@@ -131,12 +141,12 @@ public class ImportServiceTests
         Assert.AreEqual(0, response.Errors[0].RowNumber);
         StringAssert.Contains(response.Errors[0].Message, "exactamente 48 equipos");
     }
-    
+
     [TestMethod]
     public void ImportTeams_WhenTeamServiceAddFails_ShouldReturnError()
     {
         var teamServiceWithError = new TeamServiceStubWithError();
-        var service = new ImportService(_teamRepository, teamServiceWithError);
+        var service = new ImportService(_teamRepository, teamServiceWithError, _teamImporter);
         string csv = ImportCsvBuilder.CreateValidCsvWith48Teams();
         var response = service.ImportTeams(csv);
         Assert.IsFalse(response.Success);

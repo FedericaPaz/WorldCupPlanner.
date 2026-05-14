@@ -1,11 +1,11 @@
 ﻿using DTOs;
 using IServices;
-using Repository;
+using IRepository;
 using Domain;
 
 namespace ServicesTests.Stubs;
 
-public class TeamServiceStub(TeamRepository teamRepository) : ITeamService
+public class TeamServiceStub(ITeamRepository teamRepository) : ITeamService
 {
     public void Add(TeamDTO request)
     {

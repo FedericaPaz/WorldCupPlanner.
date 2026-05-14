@@ -1,6 +1,6 @@
 namespace Domain;
 
-public class TeamFactory
+public class TeamFactory : ITeamFactory
 {
     public Team CreateTeam(string name, string confederationName, string rankingValue)
     {

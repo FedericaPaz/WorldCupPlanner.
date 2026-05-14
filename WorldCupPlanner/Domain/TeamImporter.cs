@@ -2,9 +2,23 @@ namespace Domain;
 
 public class TeamImporter
 {
-    private readonly CsvParser _parser = new();
-    private readonly TeamImportValidator _validator = new();
-    private readonly TeamFactory _factory = new();
+    private readonly ICsvParser _parser;
+    private readonly ITeamImportValidator _validator;
+    private readonly ITeamFactory _factory;
+
+    public TeamImporter(ICsvParser parser, ITeamImportValidator validatoR, ITeamFactory factory)
+    {
+        if(parser == null)
+            throw new ArgumentNullException(nameof(parser));
+        if(validatoR == null)
+            throw new ArgumentNullException(nameof(validatoR));
+        if(factory == null)
+            throw new ArgumentNullException(nameof(factory));
+        
+        _parser = parser;
+        _validator = validatoR;
+        _factory = factory;
+    }
 
     public ImportResult Import(string csvContent)
     {
