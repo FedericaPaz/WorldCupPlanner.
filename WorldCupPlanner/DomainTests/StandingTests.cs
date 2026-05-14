@@ -82,7 +82,9 @@ public class StandingTests
     {
         var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
         var standing = new Standing(team);
-        Assert.ThrowsException<ArgumentException>(() => standing.AddMatchResult(-1, 0));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => standing.AddMatchResult(-1, 0));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => standing.AddMatchResult(0, -1));
+        Assert.ThrowsException<ArgumentOutOfRangeException>(() => standing.AddMatchResult(-2, -3));
     }
 
     [TestMethod]

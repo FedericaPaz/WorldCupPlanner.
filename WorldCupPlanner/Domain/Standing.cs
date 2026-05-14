@@ -65,7 +65,7 @@ public class Standing
         get { return _losses; }
         private set { _losses = value; }
     }
-    
+
     public Standing(Team team)
     {
         if (team == null)
@@ -85,10 +85,13 @@ public class Standing
         UpdateResultStatistics(goalsFor, goalsAgainst);
     }
 
-    private static void EnsureGoalsAreValid(int goalsFor, int goalsAgainst)
+    private void EnsureGoalsAreValid(int goalsFor, int goalsAgainst)
     {
-        if (goalsFor < 0 || goalsAgainst < 0)
-            throw new ArgumentException("Los goles no pueden ser negativos.");
+        if (goalsFor < 0)
+            throw new ArgumentOutOfRangeException(nameof(goalsFor), "Los goles no pueden ser negativos.");
+
+        if (goalsAgainst < 0)
+            throw new ArgumentOutOfRangeException(nameof(goalsAgainst), "Los goles no pueden ser negativos.");
     }
 
     private void UpdateGoals(int goalsFor, int goalsAgainst)
