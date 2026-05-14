@@ -108,7 +108,7 @@
 
     protected override void OnInitialized()
     {
-        if (!SessionService.IsEditor())
+        if (!SessionService.IsEditor() )
         {
             Navigation.NavigateTo("/");
             return;

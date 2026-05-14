@@ -60,6 +60,12 @@ else
 
     protected override void OnInitialized()
     {
+        if (!SessionService.IsSystemAdministrator() && !SessionService.IsEditor() )
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+        
         _confederations = TeamService.GetAllConfederations();
 
         var currentName = Uri.UnescapeDataString(Name ?? string.Empty);

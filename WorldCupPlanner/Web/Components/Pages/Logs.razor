@@ -1,7 +1,10 @@
 ﻿@page "/logs"
 @using Domain
 @using IServices
+@using Web.Services
 @inject ILogService LogService
+@inject SessionService SessionService
+@inject NavigationManager Navigation
 
 <div class="logs-page">
     <div class="logs-header">
@@ -81,6 +84,11 @@
 
     protected override void OnInitialized()
     {
+        if (!SessionService.IsSystemAdministrator())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
         _logs = LogService.GetAll()
             .OrderByDescending(log => log.Timestamp)
             .ToList();

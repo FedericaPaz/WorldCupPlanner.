@@ -153,6 +153,12 @@ else
 
     protected override void OnInitialized()
     {
+        if (!SessionService.IsEditor())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+        
         _teamCount = TeamService.GetAll().Count;
         _stadiumCount = StadiumService.GetAllStadiums().Count;
         _canGenerate = _teamCount >= 48 && _stadiumCount >= 4;

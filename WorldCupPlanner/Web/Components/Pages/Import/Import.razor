@@ -4,6 +4,7 @@
 @inject IImportService ImportService
 @using Web.Services
 @inject ILogService LogService
+@inject NavigationManager Navigation
 @inject SessionService SessionService
 
 <div class="import-page">
@@ -89,6 +90,14 @@
     private string _successMessage = string.Empty;
     private List<ImportErrorResponse> _errors = new();
 
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsEditor())
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+    
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         var file = e.File;
