@@ -4,3 +4,9 @@
     display: block;
     margin-bottom: 1rem;
 }
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}

@@ -7,7 +7,7 @@
     border-radius: 12px;
     padding: 1.5rem;
     background: white;
-    margin-top: 1rem;
+    margin: 1rem auto 0;
     max-width: 900px;
 }
 
@@ -46,7 +46,7 @@
     margin-bottom: 1rem;
 }
 
-label {
+.edit-match-page label {
     font-size: 13px;
     color: gray;
     display: block;
@@ -63,7 +63,7 @@ label {
 }
 
 .disabled {
-    background: #f3f6f4;
+    background: #f5f5f5;
 }
 
 .result-header {
@@ -78,7 +78,7 @@ label {
 }
 
 .simulate-btn {
-    background: #8b5cf6;
+    background: green;
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -91,7 +91,7 @@ label {
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     padding: 1rem;
-    background: #fff;
+    background: white;
 }
 
 .goals-input {
@@ -133,9 +133,15 @@ label {
     background: none;
     color: gray;
     cursor: pointer;
+    padding: 0;
+    font-size: 14px;
 }
 
 .message.error {
-    color: red;
-    margin-top: 1rem;
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
 }

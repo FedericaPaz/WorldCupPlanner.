@@ -19,14 +19,78 @@
     margin: 0;
 }
 
+.btn-generar-cruces,
 .filter-button {
-    background: #f3f6f4;
-    color: black;
+    background: green;
+    color: white;
     padding: 10px 20px;
     border-radius: 8px;
     font-size: 14px;
     border: none;
     cursor: pointer;
+}
+
+.btn-generar-cruces[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-limpiar {
+    padding: 10px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    color: black;
+    cursor: pointer;
+    font-size: 14px;
+    align-self: end;
+}
+
+
+.message {
+    margin-top: 1rem;
+    padding: 0.5rem 0;
+}
+
+.error-message {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.success-message {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #bbf7d0;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.filtros-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+    align-items: end;
+}
+
+.filtro-group label {
+    display: block;
+    font-size: 13px;
+    color: gray;
+    margin-bottom: 4px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-sizing: border-box;
 }
 
 .matches-card {
@@ -43,21 +107,31 @@
 }
 
 .matches-table thead {
-    background: #f3f6f4;
+    background: #f5f5f5;
 }
 
 .matches-table th {
     text-align: left;
-    padding: 1rem;
-    font-weight: 700;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: #555;
     font-size: 14px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .matches-table td {
-    padding: 1rem;
-    border-top: 1px solid #e0e0e0;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
     vertical-align: middle;
     font-size: 14px;
+}
+
+.matches-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.matches-table tbody tr:hover {
+    background: #fafafa;
 }
 
 .date-cell,
@@ -67,6 +141,7 @@
 
 .teams-cell {
     font-weight: 500;
+    color: #222;
 }
 
 .result-pill {
@@ -96,4 +171,17 @@
     color: #555;
     text-decoration: none;
     font-size: 18px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: gray;
+}
+
+.py-4 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
 }

@@ -1,24 +1,23 @@
-﻿.teams-page {
+﻿/* ─── Teams ─────────────────────────────── */
+.teams-page {
     padding: 1.5rem;
 }
 
-/* ── Header ── */
 .teams-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .teams-header h1 {
     margin: 0;
-    font-size: 1.5rem;
 }
 
 .teams-header p {
-    margin: 0;
     color: gray;
     font-size: 14px;
+    margin: 0;
 }
 
 .teams-header-actions {
@@ -28,7 +27,7 @@
 
 /* ── Buttons ── */
 .primary-action-button {
-    background: #2e7d32;
+    background: green;
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -37,12 +36,12 @@
     cursor: pointer;
 }
 
-.primary-action-button:hover {
-    background: #1b5e20;
+.primary-action-button:focus {
+    outline: 2px solid #00000033;
 }
 
 .secondary-action-button {
-    background: #1565c0;
+    background: green;
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -51,22 +50,22 @@
     cursor: pointer;
 }
 
-.secondary-action-button:hover {
-    background: #0d47a1;
+.secondary-action-button:focus {
+    outline: 2px solid #00000033;
 }
 
 /* ── Messages ── */
 .teams-message {
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    font-size: 14px;
+    margin-top: 1rem;
+    padding: 0.5rem 0;
 }
 
 .teams-message.error {
-    background: #ffebee;
-    color: #c62828;
-    border: 1px solid #ef9a9a;
+    color: red;
+}
+
+.teams-message.success {
+    color: green;
 }
 
 /* ── Empty state ── */
@@ -97,6 +96,7 @@
     border-radius: 12px;
     border: 1px solid #e0e0e0;
     overflow: hidden;
+    margin-top: 1.5rem;
 }
 
 .teams-table {
@@ -163,48 +163,22 @@
 
 .teams-actions-cell {
     display: flex;
-    gap: 0.5rem;
+    gap: 8px;
     justify-content: center;
 }
 
 .table-action-button {
-    padding: 5px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-    border: none;
+    background: none !important;
+    border: none !important;
     cursor: pointer;
-    font-weight: 500;
+    font-size: 14px;
+    padding: 4px;
 }
 
 .table-action-button.edit {
-    background: #e3f2fd;
-    color: #1565c0;
-}
-
-.table-action-button.edit:hover {
-    background: #bbdefb;
+    color: #555 !important;
 }
 
 .table-action-button.danger {
-    background: #ffebee;
-    color: #c62828;
-}
-
-.table-action-button.danger:hover {
-    background: #ffcdd2;
-}
-
-.btn-bg-green {
-    background: green;
-    border-color: green;
-}
-
-.edit-button {
-    border-color: green;
-    color: green;
-}
-
-.edit-button:hover {
-    color: #fff;
-    background: green;
+    color: #c62828 !important;
 }

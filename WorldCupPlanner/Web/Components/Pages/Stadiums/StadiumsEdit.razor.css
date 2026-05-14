@@ -1,5 +1,4 @@
-/* ─── Stadium Form ──────────────────────────── */
-.stadium-form-container {
+.stadiums-create .card {
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     padding: 1.5rem;
@@ -7,52 +6,111 @@
     margin-top: 1rem;
 }
 
-.form-header {
+.card-header {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
-.form-icon {
+.card-header .icon {
     background: #e8f5e9;
     padding: 10px;
     border-radius: 8px;
     font-size: 24px;
 }
 
-.form-title {
+.card-title {
     margin: 0;
 }
 
-.form-subtitle {
+.card-sub {
     color: gray;
     font-size: 14px;
     margin: 0;
 }
 
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-label {
-    font-size: 13px;
-    color: gray;
-    display: block;
-    margin-bottom: 4px;
-}
-
-.required {
-    color: red;
-}
-
-.form-input {
+.form-control {
     width: 100%;
     padding: 10px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
+    margin-top: 4px;
+    box-sizing: border-box;
 }
 
-.form-textarea {
-    min-height: 80px;
+.form-section {
+    margin-bottom: 1rem;
+}
+
+.btn-submit {
+    flex: 1;
+    padding: 12px;
+    background: green;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-submit[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-cancel {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    color: black;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.validation-summary {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.validation-summary ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.validation-summary li {
+    margin: 0;
+}
+
+.validation-message,
+.validation-message * {
+    color: #e50000;
+    font-size: 13px;
+    margin-top: 4px;
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.back-link {
+    margin-bottom: 0.5rem;
+}
+
+.error-message {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
 }
