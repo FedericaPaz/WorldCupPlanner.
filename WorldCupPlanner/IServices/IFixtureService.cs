@@ -8,4 +8,5 @@ public interface IFixtureService
     bool HasFixture();
     List<StandingResponse> GetStandingsForGroup(char groupLetter);
     void GenerateFixture();
+    TournamentConfigDTO GetConfig();
 }

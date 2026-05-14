@@ -1,5 +1,4 @@
 ﻿@page "/cruces"
-@using Domain
 @using DTOs
 @using IServices
 @using Web.Services
@@ -8,7 +7,6 @@
 @inject IMatchService MatchService
 @inject ILogService LogService
 @inject SessionService SessionService
-@inject TournamentConfig Config
 @inject NavigationManager Navigation
 
 <div class="cruces-wrapper">
@@ -372,7 +370,7 @@
                 GetCurrentUserEmail(),
                 "Cruces",
                 "Sorteo",
-                $"Se realizó el sorteo de cruces de 32avos de final con semilla {Config.SemillaCrucesFase}"
+                $"Se realizó el sorteo de cruces de 32avos de final con semilla {FixtureService.GetConfig().SemillaCrucesFase}"
             );
 
             _mensajeExito = "32avos de final generados correctamente.";
@@ -404,7 +402,7 @@
                 GetCurrentUserEmail(),
                 "Cruces",
                 "Sorteo",
-                $"Se realizó el sorteo de la siguiente ronda de cruces con semilla {Config.SemillaCrucesFase}"
+                $"Se realizó el sorteo de la siguiente ronda de cruces con semilla {FixtureService.GetConfig().SemillaCrucesFase}"
             );
 
             _mensajeExito = "Siguiente ronda generada correctamente.";
