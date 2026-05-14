@@ -76,16 +76,28 @@ public class TeamService : ITeamService
         ValidateRequest(request);
 
         var existingTeam = _repository.Get(currentName);
-
         if (existingTeam is null)
             throw new InvalidOperationException($"No existe un equipo con el nombre '{currentName}'.");
 
-        //ValidateRankingIsNotUsedByAnotherTeam(request.FifaRanking, currentName);
+        var newConf = request.ConfederationName.Trim().ToUpperInvariant();
+        var oldConf = existingTeam.Confederation.Name.Trim().ToUpperInvariant();
+
+        if (!newConf.Equals(oldConf, StringComparison.OrdinalIgnoreCase))
+        {
+            var maxTeams = Confederation.GetMaxTeamsForName(newConf);
+            if (maxTeams == 0)
+                throw new ArgumentException($"La confederación '{request.ConfederationName}' no es válida.");
+
+            var currentCount = _repository.GetAll()
+                .Count(t => t.Confederation.Name == newConf);
+
+            if (currentCount >= maxTeams)
+                throw new InvalidOperationException($"La confederación '{request.ConfederationName}' alcanzó su límite de {maxTeams} equipos.");
+        }
 
         if (!currentName.Equals(request.Name, StringComparison.OrdinalIgnoreCase))
         {
             var teamWithNewName = _repository.Get(request.Name);
-
             if (teamWithNewName is not null)
                 throw new ArgumentException($"Ya existe un equipo con el nombre '{request.Name}'.");
 
@@ -192,12 +204,18 @@ public class TeamService : ITeamService
             throw new ArgumentException($"Ya existe un equipo con el ranking FIFA {fifaRanking}.");
     }*/
 
-    /*private void ValidateRankingIsNotUsedByAnotherTeam(int fifaRanking, string currentName)
+   /* private void ValidateRankingIsNotUsedByAnotherTeam(int fifaRanking, string currentName)
     {
-        var rankingBelongsToAnotherTeam = _repository.GetAll()
-            .Any(t =>
-                t.FifaRanking == fifaRanking &&
-                !t.Name.Equals(currentName, StringComparison.OrdinalIgnoreCase));
+        var todos = _repository.GetAll();
+        Console.WriteLine($"Validando ranking {fifaRanking} para {currentName}");
+        foreach (var t in todos)
+            Console.WriteLine($"  - {t.Name}: {t.FifaRanking}");
+
+        var rankingBelongsToAnotherTeam = todos.Any(t =>
+            t.FifaRanking == fifaRanking &&
+            !t.Name.Equals(currentName, StringComparison.OrdinalIgnoreCase));
+
+        Console.WriteLine($"  Resultado: {rankingBelongsToAnotherTeam}");
 
         if (rankingBelongsToAnotherTeam)
             throw new ArgumentException($"Ya existe otro equipo con el ranking FIFA {fifaRanking}.");
