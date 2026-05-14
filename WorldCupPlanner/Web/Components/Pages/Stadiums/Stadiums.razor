@@ -1,5 +1,4 @@
 @page "/stadiums"
-@rendermode InteractiveServer
 
 @using DTOs
 @using IServices
@@ -9,7 +8,7 @@
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject NavigationManager Navigation
-@inject Microsoft.JSInterop.IJSRuntime JS
+
 
 @if (_stadiums == null)
 {
@@ -84,6 +83,7 @@ else
     private List<StadiumRequest>? _stadiums;
     private string _error = string.Empty;
     private string _success = string.Empty;
+    private string? _estadioAEliminar;
 
     protected override void OnInitialized()
     {
@@ -110,19 +110,13 @@ else
         Navigation.NavigateTo($"/stadiums/edit/{Uri.EscapeDataString(name)}");
     }
 
-    private async Task Delete(string name)
+    private void Delete(string name)
     {
         _error = string.Empty;
         _success = string.Empty;
 
         try
         {
-            var ok = await JS.InvokeAsync<bool>("confirm", $"¿Eliminar '{name}'?");
-            if (!ok)
-            {
-                return;
-            }
-
             Service.DeleteStadium(name);
 
             LogService.Register(
@@ -133,11 +127,7 @@ else
             );
 
             LoadData();
-
             _success = "Estadio eliminado correctamente.";
-
-            await Task.Delay(2000);
-            _success = string.Empty;
         }
         catch (InvalidOperationException ex)
         {
