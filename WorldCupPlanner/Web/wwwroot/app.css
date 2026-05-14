@@ -178,3 +178,10 @@
 .logs-empty p {
     margin-top: 0.5rem;
 }
+
+.bi.auth-icon {
+    font-size: 4rem;
+    color: #16a34a;
+    display: block;
+    margin-bottom: 1rem;
+}
