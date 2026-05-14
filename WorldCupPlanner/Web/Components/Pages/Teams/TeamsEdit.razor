@@ -8,48 +8,74 @@
 @inject SessionService SessionService
 @inject NavigationManager Navigation
 
-<h3>Editar equipo</h3>
+<div class="teams-edit">
 
-@if (!string.IsNullOrWhiteSpace(_errorMessage))
-{
-    <div class="alert alert-danger">@_errorMessage</div>
-}
+    <div class="back-link">
+        <button class="btn-cancel" @onclick="GoBack">
+            ← Volver a equipos
+        </button>
+    </div>
 
-@if (_request is null)
-{
-    <p>Cargando equipo...</p>
-}
-else
-{
-    <EditForm Model="_request" OnSubmit="HandleSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="mb-3">
-            <label class="form-label">Nombre</label>
-            <InputText class="form-control" @bind-Value="_request.Name" />
+    <div class="card">
+        <div class="card-header">
+            <div class="icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <h3 class="card-title">Editar Equipo</h3>
+                <p class="card-sub">Modifique la información del equipo</p>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Confederación</label>
-            <InputSelect class="form-control" @bind-Value="_request.ConfederationName">
-                <option value="">Seleccione una confederación...</option>
-                @foreach (var conf in _confederations)
-                {
-                    <option value="@conf.Name">@conf.Name (@conf.MaxTeams cupos máximos)</option>
-                }
-            </InputSelect>
-        </div>
+        @if (!string.IsNullOrWhiteSpace(_errorMessage))
+        {
+            <div class="message error">@_errorMessage</div>
+        }
 
-        <div class="mb-3">
-            <label class="form-label">Ranking FIFA</label>
-            <InputNumber class="form-control" @bind-Value="_request.FifaRanking" />
-        </div>
+        @if (_request is null)
+        {
+            <p>Cargando equipo...</p>
+        }
+        else
+        {
+            <EditForm Model="_request" OnSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
-        <button type="submit" class="btn btn-primary">Guardar cambios</button>
-        <button type="button" class="btn btn-secondary ms-2" @onclick="GoBack">Volver</button>
-    </EditForm>
-}
+                <div class="form-section">
+                    <label>Nombre</label>
+                    <InputText class="form-control" @bind-Value="_request.Name" />
+                </div>
+
+                <div class="form-section">
+                    <label>Confederación</label>
+                    <InputSelect class="form-control" @bind-Value="_request.ConfederationName">
+                        <option value="">Seleccione una confederación...</option>
+                        @foreach (var conf in _confederations)
+                        {
+                            <option value="@conf.Name">@conf.Name (@conf.MaxTeams cupos máximos)</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="form-section">
+                    <label>Ranking FIFA</label>
+                    <InputNumber class="form-control" @bind-Value="_request.FifaRanking" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" @onclick="GoBack">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="btn-submit">
+                        Guardar cambios
+                    </button>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>
 
 @code {
     [Parameter] public string? Name { get; set; }
@@ -60,12 +86,12 @@ else
 
     protected override void OnInitialized()
     {
-        if (!SessionService.IsSystemAdministrator() && !SessionService.IsEditor() )
+        if (!SessionService.IsSystemAdministrator() && !SessionService.IsEditor())
         {
             Navigation.NavigateTo("/");
             return;
         }
-        
+
         _confederations = TeamService.GetAllConfederations();
 
         var currentName = Uri.UnescapeDataString(Name ?? string.Empty);

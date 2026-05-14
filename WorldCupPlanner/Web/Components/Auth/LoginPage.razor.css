@@ -1,12 +1,13 @@
 ﻿.auth-page {
-    min-height: 100vh;
+    position: fixed;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #1e3c2c 0%, #2a4a35 50%, #0f2a1c 100%);
-    position: relative;
-    overflow: hidden;
     padding: 24px;
+    box-sizing: border-box;
+    z-index: 1000;
 }
 
 .auth-card {

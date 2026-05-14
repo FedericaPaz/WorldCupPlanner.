@@ -26,7 +26,7 @@
 }
 
 .primary-action-button {
-    background: #2e7d32;
+    background: green;
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -35,8 +35,8 @@
     cursor: pointer;
 }
 
-.primary-action-button:hover {
-    background: #1b5e20;
+.primary-action-button:focus {
+    outline: 2px solid #00000033;
 }
 
 .teams-message {
@@ -47,9 +47,11 @@
 }
 
 .teams-message.error {
-    background: #ffebee;
-    color: #c62828;
-    border: 1px solid #ef9a9a;
+    color: red;
+}
+
+.teams-message.success {
+    color: green;
 }
 
 .teams-empty {
@@ -78,6 +80,7 @@
     border-radius: 12px;
     border: 1px solid #e0e0e0;
     overflow: hidden;
+    margin-top: 1.5rem;
 }
 
 .teams-table {
@@ -110,6 +113,25 @@
 
 .teams-table tbody tr:hover {
     background: #fafafa;
+}
+
+/* ── Badges ── */
+.ranking-badge {
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.confederation-badge {
+    background: #f3e5f5;
+    color: #6a1b9a;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .team-name {
