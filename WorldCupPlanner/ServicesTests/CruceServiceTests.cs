@@ -40,7 +40,7 @@ public class CruceServiceTests
         List<Group> grupos = Create12GroupsWithTeams();
         foreach (Group grupo in grupos)
         {
-            Group grupoFixture = fixture.GetGroups.First(x => x.GroupLetter == grupo.GroupLetter);
+            Group grupoFixture = fixture.Groups.First(x => x.GroupLetter == grupo.GroupLetter);
             foreach (Team team in grupo.TeamsInGroup)
                 grupoFixture.AddTeamToGroup(team);
             foreach (Match match in grupo.MatchesInGroup)

@@ -1,6 +1,7 @@
 ﻿using Repository;
 using Services;
 using Domain;
+using ServicesTests.Stubs;
 
 namespace ServicesTests;
 
@@ -104,7 +105,7 @@ public class FixtureGeneratorTests
         AddTeams(48);
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
-        Assert.AreEqual(12, fixture.GetGroups.Count);
+        Assert.AreEqual(12, fixture.Groups.Count);
     }
 
     [TestMethod]
@@ -113,7 +114,7 @@ public class FixtureGeneratorTests
         AddTeams(48);
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
-        int totalEquipos = fixture.GetGroups.Sum(g => g.TeamsInGroup.Count);
+        int totalEquipos = fixture.Groups.Sum(g => g.TeamsInGroup.Count);
         Assert.AreEqual(48, totalEquipos);
     }
 
@@ -123,7 +124,7 @@ public class FixtureGeneratorTests
         AddTeams(48);
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
             Assert.AreEqual(4, group.TeamsInGroup.Count);
     }
 
@@ -133,7 +134,7 @@ public class FixtureGeneratorTests
         AddTeams(48);
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
             Assert.AreEqual(6, group.MatchesInGroup.Count);
     }
 
@@ -150,7 +151,7 @@ public class FixtureGeneratorTests
         AddStadiums(4);
 
         var fixture = generator.GenerateGroupsStageFixture();
-        var primerGrupo = fixture.GetGroups[0];
+        var primerGrupo = fixture.Groups[0];
         var partidos = primerGrupo.MatchesInGroup.ToList();
 
         Assert.AreEqual(startDate.Date, partidos[0].DateMatch.Date);
@@ -169,7 +170,7 @@ public class FixtureGeneratorTests
         AddTeams(48);
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             foreach (var match in group.MatchesInGroup)
             {
@@ -185,7 +186,7 @@ public class FixtureGeneratorTests
         AddTeams(48);
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             int uefaCount = group.TeamsInGroup.Count(t => t.Confederation.Name == "UEFA");
             Assert.IsTrue(uefaCount <= 2,
@@ -199,7 +200,7 @@ public class FixtureGeneratorTests
         AddTeams(48);
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             var nonUefa = group.TeamsInGroup
                 .Where(t => t.Confederation.Name != "UEFA")
@@ -230,12 +231,12 @@ public class FixtureGeneratorTests
         var generator2 = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository, _config, _clock);
         var fixture2 = generator2.GenerateGroupsStageFixture();
 
-        for (int i = 0; i < fixture1.GetGroups.Count; i++)
+        for (int i = 0; i < fixture1.Groups.Count; i++)
         {
-            var teams1 = fixture1.GetGroups[i].TeamsInGroup.Select(t => t.Name).ToList();
-            var teams2 = fixture2.GetGroups[i].TeamsInGroup.Select(t => t.Name).ToList();
+            var teams1 = fixture1.Groups[i].TeamsInGroup.Select(t => t.Name).ToList();
+            var teams2 = fixture2.Groups[i].TeamsInGroup.Select(t => t.Name).ToList();
             CollectionAssert.AreEqual(teams1, teams2,
-                $"Grupo {fixture1.GetGroups[i].GroupLetter} difiere entre generaciones con la misma semilla");
+                $"Grupo {fixture1.Groups[i].GroupLetter} difiere entre generaciones con la misma semilla");
         }
     }
     
@@ -259,8 +260,8 @@ public class FixtureGeneratorTests
         }
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
-        Assert.AreEqual(12, fixture.GetGroups.Count);
-        Assert.AreEqual(48, fixture.GetGroups.Sum(g => g.TeamsInGroup.Count));
+        Assert.AreEqual(12, fixture.Groups.Count);
+        Assert.AreEqual(48, fixture.Groups.Sum(g => g.TeamsInGroup.Count));
     }
 
     [TestMethod]
@@ -294,12 +295,12 @@ public class FixtureGeneratorTests
             _teamRepository, _stadiumRepository, _fixtureRepository, _config, _clock);
         var fixture2 = generator2.GenerateGroupsStageFixture();
 
-        for (int i = 0; i < fixture1.GetGroups.Count; i++)
+        for (int i = 0; i < fixture1.Groups.Count; i++)
         {
-            var teams1 = fixture1.GetGroups[i].TeamsInGroup.Select(t => t.Name).ToList();
-            var teams2 = fixture2.GetGroups[i].TeamsInGroup.Select(t => t.Name).ToList();
+            var teams1 = fixture1.Groups[i].TeamsInGroup.Select(t => t.Name).ToList();
+            var teams2 = fixture2.Groups[i].TeamsInGroup.Select(t => t.Name).ToList();
             CollectionAssert.AreEqual(teams1, teams2,
-                $"Grupo {fixture1.GetGroups[i].GroupLetter} difiere con misma semilla y rankings empatados");
+                $"Grupo {fixture1.Groups[i].GroupLetter} difiere con misma semilla y rankings empatados");
         }
     }
 
@@ -329,10 +330,10 @@ public class FixtureGeneratorTests
         var fixture2 = generator2.GenerateGroupsStageFixture();
 
         bool isDifferent = false;
-        for (int i = 0; i < fixture1.GetGroups.Count; i++)
+        for (int i = 0; i < fixture1.Groups.Count; i++)
         {
-            var teams1 = fixture1.GetGroups[i].TeamsInGroup.Select(t => t.Name).ToList();
-            var teams2 = fixture2.GetGroups[i].TeamsInGroup.Select(t => t.Name).ToList();
+            var teams1 = fixture1.Groups[i].TeamsInGroup.Select(t => t.Name).ToList();
+            var teams2 = fixture2.Groups[i].TeamsInGroup.Select(t => t.Name).ToList();
             if (!teams1.SequenceEqual(teams2)) { isDifferent = true; break; }
         }
         Assert.IsTrue(isDifferent, "Semillas distintas deberían producir distribuciones distintas");
@@ -345,7 +346,7 @@ public class FixtureGeneratorTests
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
 
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             var partidos = group.MatchesInGroup.ToList();
             Assert.AreEqual(partidos[4].DateMatch, partidos[5].DateMatch,
@@ -360,7 +361,7 @@ public class FixtureGeneratorTests
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
 
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             var partidos = group.MatchesInGroup.ToList();
             Assert.IsTrue(partidos[2].DateMatch > partidos[0].DateMatch,
@@ -376,7 +377,7 @@ public class FixtureGeneratorTests
         AddTeams(48);
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
             foreach (var match in group.MatchesInGroup)
                 Assert.IsNotNull(match.Stadium);
     }
@@ -387,7 +388,7 @@ public class FixtureGeneratorTests
         AddTeams(48);
         AddStadiums(4);
         var fixture = _generator.GenerateGroupsStageFixture();
-        var letras = fixture.GetGroups.Select(g => g.GroupLetter).OrderBy(c => c).ToList();
+        var letras = fixture.Groups.Select(g => g.GroupLetter).OrderBy(c => c).ToList();
         var esperadas = Enumerable.Range('A', 12).Select(c => (char)c).ToList();
         CollectionAssert.AreEqual(esperadas, letras);
     }

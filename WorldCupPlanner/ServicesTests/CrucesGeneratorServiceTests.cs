@@ -1,5 +1,6 @@
 ﻿using Services;
 using Domain;
+using ServicesTests.Stubs;
 
 namespace ServicesTests;
 
@@ -11,7 +12,7 @@ public class CrucesGeneratorServiceTests
         FechaInicioTorneo = new DateTime(2027, 1, 1)
     };
 
-    private static readonly DateTime FechaCreacionClock  = new DateTime(2027, 6, 10);
+    private static readonly DateTime FechaCreacionClock  = new DateTime(2026, 12, 1);
     private static readonly DateTime FechaPartido        = new DateTime(2027, 6, 12);
     private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
 
@@ -21,7 +22,8 @@ public class CrucesGeneratorServiceTests
     [TestInitialize]
     public void TestInitialize()
     {
-        _service  = new CrucesGeneratorService(ConfigTest);
+        var clock = new ClockStub(FechaCreacionClock);
+        _service = new CrucesGeneratorService(ConfigTest, clock);
         _estadios = CreateStadiums();
     }
 

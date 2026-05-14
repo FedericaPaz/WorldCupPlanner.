@@ -129,7 +129,7 @@ public class MatchService : IMatchService
         var fixture = _fixtureRepository.GetFixture();
         if (fixture == null)
             throw new InvalidOperationException("No hay fixture generado.");
-        var grupos = fixture.GetGroups.ToList();
+        var grupos = fixture.Groups.ToList();
         _simulationService.SimulateGroupStage(grupos, _config.SemillaSimulation);
     }
 }

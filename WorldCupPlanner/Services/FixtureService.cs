@@ -49,7 +49,7 @@ public class FixtureService : IFixtureService
     public List<StandingResponse> GetStandingsForGroup(char groupLetter)
     {
         var fixture = _fixtureRepository.GetFixture();
-        var group = fixture.GetGroups.FirstOrDefault(g => g.GroupLetter == groupLetter);
+        var group = fixture.Groups.FirstOrDefault(g => g.GroupLetter == groupLetter);
         if (group == null)
             throw new ArgumentException($"Grupo {groupLetter} no encontrado");
             
@@ -65,7 +65,7 @@ public class FixtureService : IFixtureService
 
         var fixture = _fixtureRepository.GetFixture();
         var partidos = new List<Match>();
-        foreach (var grupo in fixture.GetGroups)
+        foreach (var grupo in fixture.Groups)
         {
             foreach (var partido in grupo.MatchesInGroup)
                 partidos.Add(partido);

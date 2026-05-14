@@ -1,4 +1,5 @@
 ﻿using Domain;
+using ServicesTests.Stubs;
 
 namespace DomainTests;
 
@@ -26,12 +27,12 @@ public class FixtureTests
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
             
-        Assert.AreEqual(12, fixture.GetGroups.Count);
-        Assert.AreEqual('A', fixture.GetGroups[0].GroupLetter);
-        Assert.AreEqual('L', fixture.GetGroups[11].GroupLetter);
+        Assert.AreEqual(12, fixture.Groups.Count);
+        Assert.AreEqual('A', fixture.Groups[0].GroupLetter);
+        Assert.AreEqual('L', fixture.Groups[11].GroupLetter);
             
         var expectedLetters = Enumerable.Range('A', 12).Select(c => (char)c).ToList();
-        var actualLetters = fixture.GetGroups.Select(g => g.GroupLetter).ToList();
+        var actualLetters = fixture.Groups.Select(g => g.GroupLetter).ToList();
         CollectionAssert.AreEqual(expectedLetters, actualLetters);
     }
     
@@ -51,12 +52,12 @@ public class FixtureTests
         var config = new TournamentConfig();
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
-        var firstGroupReference = fixture.GetGroups;
+        var firstGroupReference = fixture.Groups;
         fixture.InitializeGroups();
             
-        Assert.AreEqual(12, fixture.GetGroups.Count);
-        Assert.AreEqual('A', fixture.GetGroups[0].GroupLetter);
-        Assert.AreNotSame(firstGroupReference, fixture.GetGroups);
+        Assert.AreEqual(12, fixture.Groups.Count);
+        Assert.AreEqual('A', fixture.Groups[0].GroupLetter);
+        Assert.AreNotSame(firstGroupReference, fixture.Groups);
     }
     
     [TestMethod]
@@ -120,7 +121,7 @@ public class FixtureTests
     {
         var fixture = CreateValidFixture();
         fixture.AdvanceToPhase(TournamentPhase.GroupStage);
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             foreach (var match in group.MatchesInGroup)
                 match.SetMatchResult(1, 0);
@@ -163,7 +164,7 @@ public class FixtureTests
         List<Team> teams = new List<Team>();
         List<Stadium> stadiums = new List<Stadium>();
     
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             foreach (var team in group.TeamsInGroup)
                 teams.Add((Team)team);
@@ -185,13 +186,13 @@ public class FixtureTests
         List<Team> teams = new List<Team>();
         List<Stadium> stadiums = new List<Stadium>();
     
-        for (int i = 1; i < fixture.GetGroups.Count; i++)
+        for (int i = 1; i < fixture.Groups.Count; i++)
         {
-            var group = fixture.GetGroups[i];
+            var group = fixture.Groups[i];
             foreach (var team in group.TeamsInGroup)
                 teams.Add((Team)team);
         }
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             foreach (var match in group.MatchesInGroup)
             {
@@ -210,7 +211,7 @@ public class FixtureTests
         List<Team> teams = new List<Team>();
         List<Stadium> stadiums = new List<Stadium>();
     
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             foreach (var team in group.TeamsInGroup)
                 teams.Add((Team)team);
@@ -244,7 +245,7 @@ public class FixtureTests
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
 
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             for (int i = 1; i <= 4; i++)
             {
@@ -337,7 +338,7 @@ public class FixtureTests
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
     
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             for (int i = 1; i <= 4; i++)
             {

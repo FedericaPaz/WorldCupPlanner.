@@ -45,7 +45,7 @@ public class FixtureGenerator
         fixture.InitializeGroups();
 
         var orderedTeams = OrderTeamsWithTieBreak(teams);
-        DistributeTeamsToGroups(orderedTeams, fixture.GetGroups.ToList());
+        DistributeTeamsToGroups(orderedTeams, fixture.Groups.ToList());
         GenerateMatches(fixture, stadiums);
 
         fixture.AdvanceToPhase(TournamentPhase.GroupStage);
@@ -129,7 +129,7 @@ public class FixtureGenerator
             .OrderBy(s => NormalizeName(s.StadiumName))
             .ToList();
 
-        var groups = fixture.GetGroups.ToList();
+        var groups = fixture.Groups.ToList();
         int matchCounter = 0;
 
         for (int groupIndex = 0; groupIndex < groups.Count; groupIndex++)

@@ -12,7 +12,7 @@ public static class FixtureMapper
         
         return new FixtureResponse
         {
-            Groups = fixture.GetGroups.Select(g => g.ToEntity()).ToList(),
+            Groups = fixture.Groups.Select(g => g.ToEntity()).ToList(),
             CurrentPhase = fixture.CurrentPhase.ToString()
         };
     }

@@ -2,6 +2,7 @@
 using IRepository;
 using Repository;
 using Services;
+using ServicesTests.Stubs;
 
 namespace ServicesTests;
 
@@ -49,7 +50,7 @@ public class FixtureServiceTests
 
         var stadium = new Stadium("Estadio", "Ciudad", "", 50000);
         _stadiumRepository.AddStadium(stadium);
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             for (int i = 1; i <= 4; i++)
             {
@@ -223,7 +224,7 @@ public class FixtureServiceTests
 
         var fixture = _fixtureRepository.GetFixture();
 
-        Assert.AreEqual(12, fixture.GetGroups.Count);
+        Assert.AreEqual(12, fixture.Groups.Count);
     }
     
     [TestMethod]
@@ -236,7 +237,7 @@ public class FixtureServiceTests
 
         var fixture = _fixtureRepository.GetFixture();
 
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             Assert.AreEqual(4, group.TeamsInGroup.Count);
         }
@@ -252,7 +253,7 @@ public class FixtureServiceTests
 
         var fixture = _fixtureRepository.GetFixture();
 
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             Assert.AreEqual(6, group.MatchesInGroup.Count);
         }

@@ -1,26 +1,23 @@
 ﻿namespace Domain;
 
-public class ClockStub : IDateTimeMatch
-{
-    private readonly DateTime _now;
-    public ClockStub(DateTime now)
-    {
-        _now = now;
-    }
-    public DateTime Now => _now;
-}
-
 public class Fixture
 {
-    public TournamentPhase CurrentPhase { get; private set; }
+    private TournamentPhase _currentPhase;
     private List<Group> _groups;
-    private List<Match> _eliminatoryMatches; //eliminatoria
+    private List<Match> _eliminatoryMatches;
     private readonly TournamentConfig _config;
-    
-    public List<Group> GetGroups
+
+    private const int ExpectedGroups = 12;
+    private const int TeamsPerGroup = 4;
+    private const int MatchesPerGroup = 6;
+
+    public TournamentPhase CurrentPhase
     {
-        get => _groups;
+        get { return _currentPhase; }
+        private set { _currentPhase = value; }
     }
+
+    public IReadOnlyList<Group> Groups => _groups;
 
     public Fixture(TournamentConfig config)
     {
@@ -33,29 +30,29 @@ public class Fixture
     public void InitializeGroups()
     {
         _groups = new List<Group>();
-        for (char c = 'A'; c <= 'L'; c++)
-            _groups.Add(new Group(c));
+        for (int i = 0; i < ExpectedGroups; i++)
+            _groups.Add(new Group((char)('A' + i)));
     }
-    
+
     public void AdvanceToPhase(TournamentPhase newPhase)
     {
         if (!CanAdvanceToPhase(newPhase))
             throw new InvalidOperationException($"No se puede avanzar a {newPhase}");
-            
+
         CurrentPhase = newPhase;
     }
-    
+
     public bool IsValid()
     {
-        if (_groups.Count != 12)
+        if (_groups.Count != ExpectedGroups)
             return false;
-        
+
         foreach (var group in _groups)
         {
-            if (group.TeamsInGroup.Count != 4)
+            if (group.TeamsInGroup.Count != TeamsPerGroup)
                 return false;
-        
-            if (group.MatchesInGroup.Count != 6)
+
+            if (group.MatchesInGroup.Count != MatchesPerGroup)
                 return false;
         }
         return true;
@@ -85,10 +82,12 @@ public class Fixture
     {
         return _eliminatoryMatches.All(match => match.HomeGoals.HasValue && match.AwayGoals.HasValue);
     }
-    
+
     public bool IsStillValid(List<Team> existingTeams, List<Stadium> existingStadiums)
     {
         if (!IsValid()) return false;
+        if (existingTeams == null) throw new ArgumentNullException(nameof(existingTeams));
+        if (existingStadiums == null) throw new ArgumentNullException(nameof(existingStadiums));
         foreach (var group in _groups)
         {
             foreach (var team in group.TeamsInGroup)
@@ -101,7 +100,7 @@ public class Fixture
         }
         return true;
     }
-    
+
     public void AddEliminatoryMatch(Match match)
     {
         if (match == null) throw new ArgumentNullException(nameof(match));

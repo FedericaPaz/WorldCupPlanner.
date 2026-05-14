@@ -36,7 +36,7 @@ public class CruceService : ICruceService
         if (!fixture.CanAdvanceToPhase(TournamentPhase.RoundOf32))
             throw new InvalidOperationException("Todos los partidos de la fase de grupos deben estar jugados antes de generar los cruces.");
         
-        foreach (var group in fixture.GetGroups)
+        foreach (var group in fixture.Groups)
         {
             foreach (var match in group.MatchesInGroup)
                 match.Lock();

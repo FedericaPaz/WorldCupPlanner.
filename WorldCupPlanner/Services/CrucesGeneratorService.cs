@@ -7,18 +7,20 @@ public class CrucesGeneratorService : ICrucesGeneratorService
 {
     private readonly StandingCalculator _calculator;
     private readonly TournamentConfig _config;
+    private readonly IDateTimeMatch _clock;
 
     private const int StartHour = 14;
     private const int HoursBetweenMatches = 4;
-    public CrucesGeneratorService(TournamentConfig config)
+    public CrucesGeneratorService(TournamentConfig config, IDateTimeMatch clock)
     {
         _calculator = new StandingCalculator();
         _config = config;
+        _clock = clock;
     }
 
     public List<Cruce> GenerateRoundOf32(Fixture fixture, List<Stadium> estadios, int semilla)
     {
-        var grupos = fixture.GetGroups.ToList();
+        var grupos = fixture.Groups.ToList();
         ValidateInputs(grupos, estadios);
 
         var equipoAGrupo = BuildEquipoAGrupoMap(grupos);
@@ -251,8 +253,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
             diaBase = _config.FechaInicioTorneo.AddDays(21).Date;
         
         var matchDate = diaBase.AddDays(21 + diaOffset).Date.AddHours(hour);
-        var clockCreacion = new ClockStub(_config.FechaInicioTorneo);
-        return new Match(matchDate, estadio, local, visitante, 'N', clockCreacion);
+        return new Match(matchDate, estadio, local, visitante, 'N', _clock);
     }
 
     private static List<Team> ObtainWinners(List<Cruce> cruces)
