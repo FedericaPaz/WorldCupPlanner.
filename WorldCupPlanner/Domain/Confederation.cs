@@ -1,11 +1,7 @@
-﻿
-namespace Domain;
+﻿namespace Domain;
 
 public class Confederation
 {
-    public string Name { get; private set; }
-    public int MaxTeams { get; }
-
     private static readonly Dictionary<string, int> _confederationLimits = new()
     {
         ["UEFA"] = 16,
@@ -16,62 +12,98 @@ public class Confederation
         ["OFC"] = 1
     };
 
+    private string _name = string.Empty;
+    private int _maxTeams;
+
+    public string Name
+    {
+        get { return _name; }
+        private set
+        {
+            EnsureValidName(value);
+            _name = NormalizeName(value);
+        }
+    }
+
+    public int MaxTeams
+    {
+        get { return _maxTeams; }
+        private set { _maxTeams = value; }
+    }
+
     public Confederation(string name)
     {
-        if (name is null)
-            throw new ArgumentNullException(nameof(name), "Confederation name cannot be null.");
-
-        var normalized = NormalizeName(name);
-
-        if (string.IsNullOrEmpty(normalized))
-            throw new ArgumentException("Confederation name cannot be empty or whitespace.", nameof(name));
-
-        if (!_confederationLimits.ContainsKey(normalized))
-            throw new ArgumentException($"Confederation name '{name}' is invalid.", nameof(name));
-
-        Name = normalized;
-        MaxTeams = _confederationLimits[normalized];
+        Name = name;
+        MaxTeams = GetMaxTeamsForName(Name);
     }
-    
+
     public static bool IsValidName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
+        {
             return false;
+        }
 
-        var normalized = NormalizeName(name);
-        return _confederationLimits.ContainsKey(normalized);
+        string normalizedName = NormalizeName(name);
+        return _confederationLimits.ContainsKey(normalizedName);
     }
 
     public static int GetMaxTeamsForName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
+        {
             return 0;
+        }
 
-        var normalized = NormalizeName(name);
-        return _confederationLimits.GetValueOrDefault(normalized, 0);
+        string normalizedName = NormalizeName(name);
+        return _confederationLimits.GetValueOrDefault(normalizedName, 0);
     }
 
-    private static string NormalizeName(string name)
+    public static List<string> GetAllowedNames()
     {
-        return name.Trim().ToUpperInvariant();
+        List<string> allowedNames = new List<string>();
+
+        foreach (string confederationName in _confederationLimits.Keys)
+        {
+            allowedNames.Add(confederationName);
+        }
+
+        allowedNames.Sort();
+        return allowedNames;
     }
 
     public override bool Equals(object? obj)
     {
-        return obj is Confederation other && Name == other.Name;
+        return obj is Confederation otherConfederation && Name == otherConfederation.Name;
     }
 
     public override int GetHashCode()
     {
         return Name.GetHashCode(StringComparison.InvariantCulture);
     }
-    
-    public static List<string> GetAllowedNames()
+
+    private static void EnsureValidName(string name)
     {
-        List<string> names = new List<string>();
-        foreach (var key in _confederationLimits.Keys)
-            names.Add(key);
-        names.Sort();
-        return names;
+        if (name is null)
+        {
+            throw new ArgumentNullException(nameof(name), "Confederation name cannot be null.");
+        }
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Confederation name cannot be empty or whitespace.", nameof(name));
+        }
+
+        string normalizedName = NormalizeName(name);
+
+        if (!_confederationLimits.ContainsKey(normalizedName))
+        {
+            throw new ArgumentException($"Confederation name '{name}' is invalid.", nameof(name));
+        }
+    }
+
+    private static string NormalizeName(string name)
+    {
+        return name.Trim().ToUpperInvariant();
     }
 }

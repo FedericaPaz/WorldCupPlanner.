@@ -12,24 +12,12 @@ public class Team : ITeam
     private Confederation _confederation;
     private int _fifaRanking;
     
-    public string Name
-    {
-        get => _name;
-        private set => _name = value;
-    }
+    public string Name => _name;
 
-    public Confederation Confederation
-    {
-        get => _confederation;
-        private set => _confederation = value;
-    }
+    public Confederation Confederation => _confederation;
 
-    public int FifaRanking
-    {
-        get => _fifaRanking;
-        private set => _fifaRanking = value;
-    }
-    
+    public int FifaRanking => _fifaRanking;
+
     public Team(string name, Confederation confederation, int fifaRanking)
     {
         ValidateName(name);

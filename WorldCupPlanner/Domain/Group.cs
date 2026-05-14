@@ -13,7 +13,6 @@ public class Group
 
     public char GroupLetter
     {
-        // Letter that identifies the group (A-L). Intentionally immutable.
         get => _groupLetter;
     }
 

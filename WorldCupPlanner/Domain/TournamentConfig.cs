@@ -10,17 +10,82 @@ public class TournamentConfig
     private const int DefaultMaxPartidosPorDia = 3;
     private const int DefaultSeparacionEntreFechas = 3;
 
-    public int SemillaFixture { get; set; }
-    public int SemillaCompletar { get; set; }
-    public int SemillaCrucesFase { get; set; }
-    public int SemillaSimulation { get; set; }
-    public DateTime FechaInicioTorneo { get; set; }
-    public int MaxPartidosPorDia { get; set; }
-    public int SeparacionEntreFechas { get; set; }
+    private int _semillaFixture;
+    private int _semillaCompletar;
+    private int _semillaCrucesFase;
+    private int _semillaSimulation;
+    private DateTime _fechaInicioTorneo;
+    private int _maxPartidosPorDia;
+    private int _separacionEntreFechas;
+
+    public int SemillaFixture
+    {
+        get { return _semillaFixture; }
+        set
+        {
+            EnsureNonNegative(value, nameof(SemillaFixture));
+            _semillaFixture = value;
+        }
+    }
+
+    public int SemillaCompletar
+    {
+        get { return _semillaCompletar; }
+        set
+        {
+            EnsureNonNegative(value, nameof(SemillaCompletar));
+            _semillaCompletar = value;
+        }
+    }
+
+    public int SemillaCrucesFase
+    {
+        get { return _semillaCrucesFase; }
+        set
+        {
+            EnsureNonNegative(value, nameof(SemillaCrucesFase));
+            _semillaCrucesFase = value;
+        }
+    }
+
+    public int SemillaSimulation
+    {
+        get { return _semillaSimulation; }
+        set
+        {
+            EnsureNonNegative(value, nameof(SemillaSimulation));
+            _semillaSimulation = value;
+        }
+    }
+
+    public DateTime FechaInicioTorneo
+    {
+        get { return _fechaInicioTorneo; }
+        set { _fechaInicioTorneo = value; }
+    }
+
+    public int MaxPartidosPorDia
+    {
+        get { return _maxPartidosPorDia; }
+        set
+        {
+            EnsurePositive(value, nameof(MaxPartidosPorDia));
+            _maxPartidosPorDia = value;
+        }
+    }
+
+    public int SeparacionEntreFechas
+    {
+        get { return _separacionEntreFechas; }
+        set
+        {
+            EnsureNonNegative(value, nameof(SeparacionEntreFechas));
+            _separacionEntreFechas = value;
+        }
+    }
 
     public TournamentConfig()
-        : this(
-            DefaultSemillaFixture,
+        : this(DefaultSemillaFixture,
             DefaultSemillaCompletar,
             DefaultSemillaCrucesFase,
             DefaultSemillaSimulation,
@@ -39,24 +104,6 @@ public class TournamentConfig
         int maxPartidosPorDia,
         int separacionEntreFechas)
     {
-        if (semillaFixture < 0)
-            throw new ArgumentOutOfRangeException(nameof(semillaFixture));
-
-        if (semillaCompletar < 0)
-            throw new ArgumentOutOfRangeException(nameof(semillaCompletar));
-
-        if (semillaCrucesFase < 0)
-            throw new ArgumentOutOfRangeException(nameof(semillaCrucesFase));
-
-        if (semillaSimulation < 0)
-            throw new ArgumentOutOfRangeException(nameof(semillaSimulation));
-
-        if (maxPartidosPorDia <= 0)
-            throw new ArgumentOutOfRangeException(nameof(maxPartidosPorDia));
-
-        if (separacionEntreFechas < 0)
-            throw new ArgumentOutOfRangeException(nameof(separacionEntreFechas));
-
         SemillaFixture = semillaFixture;
         SemillaCompletar = semillaCompletar;
         SemillaCrucesFase = semillaCrucesFase;
@@ -68,13 +115,38 @@ public class TournamentConfig
 
     public List<T> Shuffle<T>(List<T> list, int seed)
     {
-        var random = new Random(seed);
-        var result = new List<T>(list);
+        if (list == null)
+        {
+            throw new ArgumentNullException(nameof(list));
+        }
+
+        EnsureNonNegative(seed, nameof(seed));
+
+        Random random = new Random(seed);
+        List<T> result = new List<T>(list);
+
         for (int i = result.Count - 1; i > 0; i--)
         {
-            int j = random.Next(i + 1);
-            (result[i], result[j]) = (result[j], result[i]);
+            int randomIndex = random.Next(i + 1);
+            (result[i], result[randomIndex]) = (result[randomIndex], result[i]);
         }
+
         return result;
+    }
+
+    private static void EnsureNonNegative(int value, string parameterName)
+    {
+        if (value < 0)
+        {
+            throw new ArgumentOutOfRangeException(parameterName);
+        }
+    }
+
+    private static void EnsurePositive(int value, string parameterName)
+    {
+        if (value <= 0)
+        {
+            throw new ArgumentOutOfRangeException(parameterName);
+        }
     }
 }

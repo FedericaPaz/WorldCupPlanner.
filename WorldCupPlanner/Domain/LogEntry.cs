@@ -3,10 +3,10 @@
 public class LogEntry
 {
     private DateTime _timestamp;
-    private string _userEmail;
-    private string _category;
-    private string _action;
-    private string _detail;
+    private string _userEmail = string.Empty;
+    private string _category = string.Empty;
+    private string _action = string.Empty;
+    private string _detail = string.Empty;
 
     public DateTime Timestamp
     {
@@ -17,45 +17,57 @@ public class LogEntry
     public string UserEmail
     {
         get { return _userEmail; }
-        private set { _userEmail = value; }
+        private set
+        {
+            EnsureRequiredText(value, "El usuario del log es requerido.", nameof(UserEmail));
+            _userEmail = value.Trim();
+        }
     }
 
     public string Category
     {
         get { return _category; }
-        private set { _category = value; }
+        private set
+        {
+            EnsureRequiredText(value, "La categoría del log es requerida.", nameof(Category));
+            _category = value.Trim();
+        }
     }
 
     public string Action
     {
         get { return _action; }
-        private set { _action = value; }
+        private set
+        {
+            EnsureRequiredText(value, "La acción del log es requerida.", nameof(Action));
+            _action = value.Trim();
+        }
     }
 
     public string Detail
     {
         get { return _detail; }
-        private set { _detail = value; }
+        private set
+        {
+            EnsureRequiredText(value, "El detalle del log es requerido.", nameof(Detail));
+            _detail = value.Trim();
+        }
     }
 
     public LogEntry(string userEmail, string category, string action, string detail)
     {
-        if (string.IsNullOrWhiteSpace(userEmail))
-            throw new ArgumentException("El usuario del log es requerido.", nameof(userEmail));
-
-        if (string.IsNullOrWhiteSpace(category))
-            throw new ArgumentException("La categoría del log es requerida.", nameof(category));
-
-        if (string.IsNullOrWhiteSpace(action))
-            throw new ArgumentException("La acción del log es requerida.", nameof(action));
-
-        if (string.IsNullOrWhiteSpace(detail))
-            throw new ArgumentException("El detalle del log es requerido.", nameof(detail));
-
         Timestamp = DateTime.UtcNow;
         UserEmail = userEmail;
         Category = category;
         Action = action;
         Detail = detail;
+    }
+
+    private static void EnsureRequiredText(string value, string errorMessage, string parameterName)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentException(errorMessage, parameterName);
+        }
     }
 }

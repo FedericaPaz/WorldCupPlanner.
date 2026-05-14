@@ -5,19 +5,66 @@ namespace Domain;
 
 public class User
 {
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
-    public string Email { get; private set; }
-    public DateTime BirthDate { get; private set; }
-    public string PasswordHash { get; private set; }
-    private List<UserRole> _roles;
+    private const int MinPasswordLength = 8;
+
+    private string _firstName = string.Empty;
+    private string _lastName = string.Empty;
+    private string _email = string.Empty;
+    private DateTime _birthDate;
+    private string _passwordHash = string.Empty;
+    private List<UserRole> _roles = new();
+    private readonly IDateTimeMatch? _clock;
+
+    public string FirstName
+    {
+        get { return _firstName; }
+        private set
+        {
+            EnsureRequiredText(value, "El nombre no puede estar vacío.", nameof(FirstName));
+            _firstName = value.Trim();
+        }
+    }
+
+    public string LastName
+    {
+        get { return _lastName; }
+        private set
+        {
+            EnsureRequiredText(value, "El apellido no puede estar vacío.", nameof(LastName));
+            _lastName = value.Trim();
+        }
+    }
+
+    public string Email
+    {
+        get { return _email; }
+        private set
+        {
+            EnsureValidEmail(value);
+            _email = value.Trim();
+        }
+    }
+
+    public DateTime BirthDate
+    {
+        get { return _birthDate; }
+        private set
+        {
+            EnsureValidBirthDate(value);
+            _birthDate = value;
+        }
+    }
+
+    public string PasswordHash
+    {
+        get { return _passwordHash; }
+        private set { _passwordHash = value; }
+    }
 
     public IReadOnlyList<UserRole> Roles
     {
         get { return _roles; }
     }
-
-    private readonly IDateTimeMatch? _clock;
 
     public User(
         string firstName,
@@ -25,25 +72,17 @@ public class User
         string email,
         DateTime birthDate,
         string password,
-        List<UserRole>? roles = null,
+        List<UserRole> roles,
         IDateTimeMatch? clock = null)
     {
         _clock = clock;
-
-        ValidateFirstName(firstName);
-        ValidateLastName(lastName);
-        ValidateEmailNotEmpty(email);
-        ValidateBirthDate(birthDate);
-        ValidatePassword(password);
-        ValidateEmailFormat(email);
-        ValidateRoles(roles);
 
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         BirthDate = birthDate;
-        PasswordHash = HashPassword(password);
-        _roles = roles ?? new List<UserRole>();
+        ChangePassword(password);
+        SetRoles(roles);
     }
 
     public void UpdateData(
@@ -52,15 +91,10 @@ public class User
         DateTime birthDate,
         List<UserRole> roles)
     {
-        ValidateFirstName(firstName);
-        ValidateLastName(lastName);
-        ValidateBirthDate(birthDate);
-        ValidateRoles(roles);
-
         FirstName = firstName;
         LastName = lastName;
         BirthDate = birthDate;
-        _roles = roles;
+        SetRoles(roles);
     }
 
     public bool HasPassword(string password)
@@ -70,76 +104,112 @@ public class User
 
     public void ChangePassword(string newPassword)
     {
-        ValidatePassword(newPassword);
+        EnsureValidPassword(newPassword);
         PasswordHash = HashPassword(newPassword);
     }
 
-    private static void ValidateFirstName(string firstName)
+    private void SetRoles(List<UserRole> roles)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
-            throw new ArgumentException("El nombre no puede estar vacío.", nameof(firstName));
+        EnsureValidRoles(roles);
+        _roles = new List<UserRole>(roles);
     }
 
-    private static void ValidateLastName(string lastName)
+    private static void EnsureRequiredText(string value, string message, string parameterName)
     {
-        if (string.IsNullOrWhiteSpace(lastName))
-            throw new ArgumentException("El apellido no puede estar vacío.", nameof(lastName));
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentException(message, parameterName);
+        }
     }
 
-    private static void ValidateEmailNotEmpty(string email)
+    private static void EnsureValidEmail(string email)
     {
-        if (string.IsNullOrWhiteSpace(email))
-            throw new ArgumentException("El email no puede estar vacío.", nameof(email));
+        EnsureRequiredText(email, "El email no puede estar vacío.", nameof(email));
+
+        if (!email.Contains("@"))
+        {
+            throw new ArgumentException("El formato del email no es válido.", nameof(email));
+        }
     }
 
-    private void ValidateBirthDate(DateTime birthDate)
+    private void EnsureValidBirthDate(DateTime birthDate)
     {
         DateTime today = _clock?.Now.Date ?? DateTime.Today;
 
         if (birthDate > today)
+        {
             throw new ArgumentException("La fecha de nacimiento no puede ser futura.", nameof(birthDate));
+        }
     }
 
-    private static void ValidatePassword(string password)
+    private static void EnsureValidPassword(string password)
     {
-        if (string.IsNullOrWhiteSpace(password))
-            throw new ArgumentException("La contraseña no puede estar vacía.", nameof(password));
+        EnsureRequiredText(password, "La contraseña no puede estar vacía.", nameof(password));
+        EnsurePasswordHasValidLength(password);
+        EnsurePasswordHasUppercase(password);
+        EnsurePasswordHasLowercase(password);
+        EnsurePasswordHasNumber(password);
+        EnsurePasswordHasSpecialCharacter(password);
+    }
 
-        if (password.Length < 8)
+    private static void EnsurePasswordHasValidLength(string password)
+    {
+        if (password.Length < MinPasswordLength)
+        {
             throw new ArgumentException("La contraseña debe tener al menos 8 caracteres.", nameof(password));
+        }
+    }
 
+    private static void EnsurePasswordHasUppercase(string password)
+    {
         if (!password.Any(char.IsUpper))
+        {
             throw new ArgumentException("La contraseña debe contener al menos una letra mayúscula.", nameof(password));
+        }
+    }
 
+    private static void EnsurePasswordHasLowercase(string password)
+    {
         if (!password.Any(char.IsLower))
+        {
             throw new ArgumentException("La contraseña debe contener al menos una letra minúscula.", nameof(password));
+        }
+    }
 
+    private static void EnsurePasswordHasNumber(string password)
+    {
         if (!password.Any(char.IsDigit))
+        {
             throw new ArgumentException("La contraseña debe contener al menos un número.", nameof(password));
+        }
+    }
 
-        if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+    private static void EnsurePasswordHasSpecialCharacter(string password)
+    {
+        if (!password.Any(character => !char.IsLetterOrDigit(character)))
+        {
             throw new ArgumentException("La contraseña debe contener al menos un carácter especial.", nameof(password));
+        }
     }
 
-    private static void ValidateEmailFormat(string email)
+    private static void EnsureValidRoles(List<UserRole> roles)
     {
-        if (!email.Contains("@"))
-            throw new ArgumentException("El formato del email no es válido.", nameof(email));
-    }
-
-    private static void ValidateRoles(List<UserRole>? roles)
-    {
-        if (roles is null || roles.Count == 0)
+        if (roles == null || roles.Count == 0)
+        {
             throw new ArgumentException("El usuario debe tener al menos un rol asignado.", nameof(roles));
+        }
 
         if (roles.Count != roles.Distinct().Count())
+        {
             throw new ArgumentException("El usuario no puede tener roles duplicados.", nameof(roles));
+        }
     }
 
     private static string HashPassword(string password)
     {
-        byte[] bytes = Encoding.UTF8.GetBytes(password);
-        byte[] hash = SHA256.HashData(bytes);
-        return Convert.ToBase64String(hash);
+        byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+        byte[] hashedPassword = SHA256.HashData(passwordBytes);
+
+        return Convert.ToBase64String(hashedPassword);
     }
 }
