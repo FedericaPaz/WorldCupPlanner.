@@ -209,9 +209,9 @@
     {
         try
         {
+            string currentUserEmail = GetCurrentUserEmail();
             string newPassword = UserService.GenerateDefaultPassword();
-
-            UserService.ResetPassword(_editingEmail, newPassword);
+            UserService.ChangeOwnPassword(currentUserEmail, newPassword);
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -248,7 +248,7 @@
                 return;
             }
 
-            UserService.ResetPassword(_editingEmail, _customPassword);
+            UserService.ChangeOwnPassword(GetCurrentUserEmail(), _customPassword);
 
             LogService.Register(
                 GetCurrentUserEmail(),
