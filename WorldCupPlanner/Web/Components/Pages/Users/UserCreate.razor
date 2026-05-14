@@ -1,0 +1,190 @@
+@page "/users/create"
+@using DTOs
+@using DTOs.User
+@using IServices
+@using Web.Services
+
+@inject IAuthService AuthService
+@inject ILogService LogService
+@inject NavigationManager Navigation
+@inject SessionService SessionService
+
+<div class="user-create-page">
+    <div class="user-create-header">
+        <div>
+            <span class="user-create-eyebrow">Usuarios</span>
+            <h1>Crear usuario</h1>
+            <p>Alta de un nuevo usuario para WorldCup Planner 2026.</p>
+        </div>
+
+        <button type="button" class="user-create-back" @onclick="GoBack">
+            ← Volver
+        </button>
+    </div>
+
+    <div class="user-create-card">
+        <div class="user-create-card-header">
+            <div class="user-create-icon">👤</div>
+            <div>
+                <h2>Datos del usuario</h2>
+                <p>Completá la información y asigná al menos un rol.</p>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(_errorMessage))
+        {
+            <div class="error-message">
+                @_errorMessage
+            </div>
+        }
+
+        <EditForm Model="_request" OnValidSubmit="CreateUser">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="user-create-grid">
+                <div class="user-create-field">
+                    <label>Nombre</label>
+                    <InputText class="user-create-input" @bind-Value="_request.FirstName" />
+                </div>
+
+                <div class="user-create-field">
+                    <label>Apellido</label>
+                    <InputText class="user-create-input" @bind-Value="_request.LastName" />
+                </div>
+
+                <div class="user-create-field">
+                    <label>Email</label>
+                    <InputText class="user-create-input" @bind-Value="_request.Email" />
+                </div>
+
+                <div class="user-create-field">
+                    <label>Fecha de nacimiento</label>
+                    <InputDate class="user-create-input" @bind-Value="_request.BirthDate" />
+                </div>
+
+                <div class="user-create-field">
+                    <label>Contraseña</label>
+                    <InputText class="user-create-input" type="password" @bind-Value="_request.Password" />
+                </div>
+
+                <div class="user-create-field">
+                    <label>Roles</label>
+
+                    <div class="user-create-roles">
+                        <label class="user-role-card">
+                            <input type="checkbox"
+                                   checked="@_request.Roles.Contains(UserRoleDto.SystemAdministrator)"
+                                   @onchange="ToggleSystemAdministratorRole" />
+                            <span>
+                                <strong>Administrador</strong>
+                                <small>Acceso completo al sistema</small>
+                            </span>
+                        </label>
+
+                        <label class="user-role-card">
+                            <input type="checkbox"
+                                   checked="@_request.Roles.Contains(UserRoleDto.Editor)"
+                                   @onchange="ToggleEditorRole" />
+                            <span>
+                                <strong>Editor</strong>
+                                <small>Gestión operativa del torneo</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-create-actions">
+                <button type="button" class="user-secondary-button" @onclick="GoBack">
+                    Cancelar
+                </button>
+
+                <button type="submit" class="user-primary-button">
+                    Crear usuario
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private RegisterRequest _request = new()
+    {
+        BirthDate = DateTime.Today,
+        Roles = new List<UserRoleDto>()
+    };
+
+    private string _errorMessage = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsSystemAdministrator())
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private void CreateUser()
+    {
+        try
+        {
+            _errorMessage = string.Empty;
+
+            AuthService.Register(_request);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Usuarios",
+                "Alta",
+                $"Se creó el usuario {_request.Email}"
+            );
+
+            Navigation.NavigateTo("/users");
+        }
+        catch (Exception exception)
+        {
+            _errorMessage = exception.Message;
+        }
+    }
+
+    private void ToggleSystemAdministratorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.SystemAdministrator, args);
+    }
+
+    private void ToggleEditorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.Editor, args);
+    }
+
+    private void ToggleRole(UserRoleDto role, ChangeEventArgs args)
+    {
+        bool isChecked = args.Value is bool value && value;
+
+        if (isChecked && !_request.Roles.Contains(role))
+        {
+            _request.Roles.Add(role);
+        }
+
+        if (!isChecked && _request.Roles.Contains(role))
+        {
+            _request.Roles.Remove(role);
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/users");
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser()!.Email;
+    }
+}
