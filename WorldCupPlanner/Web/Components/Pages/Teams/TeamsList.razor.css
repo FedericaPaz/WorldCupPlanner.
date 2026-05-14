@@ -193,3 +193,18 @@
 .table-action-button.danger:hover {
     background: #ffcdd2;
 }
+
+.btn-bg-green {
+    background: green;
+    border-color: green;
+}
+
+.edit-button {
+    border-color: green;
+    color: green;
+}
+
+.edit-button:hover {
+    color: #fff;
+    background: green;
+}
