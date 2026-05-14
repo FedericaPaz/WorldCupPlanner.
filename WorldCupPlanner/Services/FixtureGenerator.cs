@@ -43,14 +43,16 @@ public class FixtureGenerator
 
         var fixture = new Fixture(_config);
         fixture.InitializeGroups();
+
         var orderedTeams = OrderTeamsWithTieBreak(teams);
         DistributeTeamsToGroups(orderedTeams, fixture.GetGroups.ToList());
         GenerateMatches(fixture, stadiums);
+
         fixture.AdvanceToPhase(TournamentPhase.GroupStage);
         _fixtureRepository.AddFixture(fixture);
         return fixture;
     }
-    
+
     private List<Team> OrderTeamsWithTieBreak(List<Team> teams)
     {
         var rng = new Random(_config.SemillaFixture);
@@ -59,6 +61,7 @@ public class FixtureGenerator
         var groupedByRanking = teams
             .GroupBy(t => t.FifaRanking)
             .OrderByDescending(g => g.Key);
+
         foreach (var rankingGroup in groupedByRanking)
         {
             var tied = rankingGroup.ToList();
@@ -80,51 +83,45 @@ public class FixtureGenerator
         return arr.ToList();
     }
 
-
     private void DistributeTeamsToGroups(List<Team> orderedTeams, List<Group> groups)
     {
-        for (int bombo = 0; bombo < 4; bombo++)
-        {
-            var bomboTeams = orderedTeams.Skip(bombo * BomboSize).Take(BomboSize).ToList();
-            DistributeBomboWithConfederationRules(bomboTeams, groups);
-        }
+        bool success = TryAssignAll(orderedTeams, 0, groups);
+        if (!success)
+            throw new InvalidOperationException("No se pudo distribuir los equipos respetando las restricciones de confederación.");
     }
-
-    private void DistributeBomboWithConfederationRules(List<Team> bomboTeams, List<Group> groups)
+    
+    private bool TryAssignAll(List<Team> teams, int index, List<Group> groups)
     {
-        for (int i = 0; i < bomboTeams.Count; i++)
+        if (index == teams.Count) return true;
+
+        var team = teams[index];
+        int roundRobinGroup = index % groups.Count;
+
+        for (int offset = 0; offset < groups.Count; offset++)
         {
-            var team = bomboTeams[i];
-            bool assigned = false;
+            int groupIndex = (roundRobinGroup + offset) % groups.Count;
+            var group = groups[groupIndex];
 
-            for (int offset = 0; offset < groups.Count && !assigned; offset++)
-            {
-                int groupIndex = (i + offset) % groups.Count;
-                var group = groups[groupIndex];
+            if (group.TeamsInGroup.Count >= TeamsPerGroup) continue;
+            if (!CanAddTeamToGroup(team, group)) continue;
 
-                if (group.TeamsInGroup.Count >= TeamsPerGroup) continue;
-                if (CanAddTeamToGroup(team, group))
-                {
-                    group.AddTeamToGroup(team);
-                    assigned = true;
-                }
-            }
-            if (!assigned) throw new InvalidOperationException($"No se pudo ubicar al equipo {team.Name} en ningún grupo respetando las restricciones de confederación.");
+            group.AddTeamToGroup(team);
+            if (TryAssignAll(teams, index + 1, groups)) return true;
+            group.RemoveTeamFromGroup(team);
         }
+        return false;
     }
 
     private static bool CanAddTeamToGroup(Team team, Group group)
     {
         var teams = group.TeamsInGroup;
         var confederation = team.Confederation.Name;
+
         if (confederation == "UEFA")
-        {
-            int uefaCount = teams.Count(t => t.Confederation.Name == "UEFA");
-            return uefaCount < 2;
-        }
+            return teams.Count(t => t.Confederation.Name == "UEFA") < 2;
+
         return teams.All(t => t.Confederation.Name != confederation);
     }
-
 
     private void GenerateMatches(Fixture fixture, List<Stadium> stadiums)
     {
@@ -134,16 +131,18 @@ public class FixtureGenerator
 
         var groups = fixture.GetGroups.ToList();
         int matchCounter = 0;
+
         for (int groupIndex = 0; groupIndex < groups.Count; groupIndex++)
         {
             var group = groups[groupIndex];
             var teams = group.TeamsInGroup.ToList();
             var matchDates = CalculateMatchDatesForGroup(groupIndex);
+
             var matchups = new (int home, int away)[]
             {
-                (0, 3), (1, 2),  
-                (0, 2), (1, 3),  
-                (0, 1), (2, 3), 
+                (0, 3), (1, 2),  // Jornada 1
+                (0, 2), (1, 3),  // Jornada 2
+                (0, 1), (2, 3),  // Jornada 3
             };
 
             for (int i = 0; i < matchups.Length; i++)
@@ -174,21 +173,32 @@ public class FixtureGenerator
 
         return new[]
         {
-            round1Date, round1Date,  
-            round2Date, round2Date,  
-            round3Date, round3Date, 
+            round1Date, round1Date,
+            round2Date, round2Date,
+            round3Date, round3Date,
         };
     }
-    
+
     private DateTime CalculateRoundDate(int batchIndex, int roundOffset, int positionInBatch)
     {
         int daysFromStart = batchIndex + roundOffset;
         int hour = StartHour + (positionInBatch % _config.MaxPartidosPorDia) * HoursBetweenMatches;
         return _config.FechaInicioTorneo.Date.AddDays(daysFromStart).AddHours(hour);
     }
-    
+
     private static string NormalizeName(string name)
     {
-        return string.Join(' ', name.ToLowerInvariant().Split(' ', StringSplitOptions.RemoveEmptyEntries));
+        var lower = name.ToLowerInvariant();
+        var chars = lower.ToCharArray();
+        var result = "";
+        foreach (var c in chars)
+        {
+            if (char.IsLetterOrDigit(c))
+                result += c;
+            else
+                result += ' ';
+        }
+        return string.Join(" ", result.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
     }
+
 }

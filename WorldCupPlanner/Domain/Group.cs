@@ -105,4 +105,9 @@ public class Group
         if (_matchesInGroup.Contains(match))
             throw new InvalidOperationException("El partido ya está registrado en el grupo.");
     }
+
+    public void RemoveTeamFromGroup(Team team)
+    {
+        _teamsInGroup.Remove(team);
+    }
 }
