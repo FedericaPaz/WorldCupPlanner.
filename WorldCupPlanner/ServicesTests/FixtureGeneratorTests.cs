@@ -1,6 +1,8 @@
 ﻿using Repository;
 using Services;
-using Domain;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.Interfaces;
 using ServicesTests.Stubs;
 
 namespace ServicesTests;

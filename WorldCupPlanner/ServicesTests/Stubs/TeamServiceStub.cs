@@ -1,7 +1,7 @@
-﻿using DTOs;
-using IServices;
+﻿using IServices;
 using IRepository;
-using Domain;
+using Domain.Entities;
+using DTOs.Team;
 
 namespace ServicesTests.Stubs;
 

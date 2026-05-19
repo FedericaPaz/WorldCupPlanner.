@@ -1,6 +1,5 @@
 using IServices;
-using Domain;
-using System.Collections.Generic;
+using Domain.Entities;
 
 namespace ServicesTests.Stubs
 {

@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DomainTests.TestHelpers;
-using Domain;
+﻿using DomainTests.TestHelpers;
+using Domain.Entities;
+using Domain.Enums;
 
 namespace DomainTests;
 

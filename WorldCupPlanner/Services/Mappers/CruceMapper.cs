@@ -1,5 +1,5 @@
-﻿using Domain;
-using DTOs;
+﻿using Domain.Entities;
+using DTOs.Cruces;
 
 namespace Services.Mappers;
 

@@ -1,6 +1,6 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Domain;
-using DTOs;
+using Domain.Entities;
+using Domain.Enums;
+using DTOs.Auth;
 using DTOs.User;
 using Repository;
 using Services;

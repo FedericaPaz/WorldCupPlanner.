@@ -1,4 +1,4 @@
-using DTOs;
+using DTOs.Team;
 using IServices;
 
 namespace ServicesTests.Stubs;

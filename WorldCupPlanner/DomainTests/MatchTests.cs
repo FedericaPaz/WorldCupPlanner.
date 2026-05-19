@@ -1,4 +1,4 @@
-using Domain;
+using Domain.Entities;
 using DomainTests.Stubs;
 
 namespace DomainTests;

@@ -1,4 +1,5 @@
-using Domain;
+using Domain.Import;
+using Domain.Import.Interfaces;
 using IRepository;
 using Services;
 using ServicesTests.Stubs;

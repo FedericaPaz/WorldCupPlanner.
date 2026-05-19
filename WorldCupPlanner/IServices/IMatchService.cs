@@ -1,4 +1,4 @@
-using DTOs;
+using DTOs.Match;
 
 namespace IServices;
 

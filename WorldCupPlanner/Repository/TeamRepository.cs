@@ -1,5 +1,5 @@
 ﻿using IRepository;
-using Domain;
+using Domain.Entities;
 
 namespace Repository;
 

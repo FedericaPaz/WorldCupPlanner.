@@ -1,5 +1,6 @@
 ﻿using Services;
-using Domain;
+using Domain.Entities;
+using Domain.Enums;
 using ServicesTests.Stubs;
 
 namespace ServicesTests;

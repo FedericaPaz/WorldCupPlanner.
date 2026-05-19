@@ -1,4 +1,5 @@
-using Domain;
+using Domain.Import;
+using Domain.Import.Interfaces;
 
 namespace DomainTests;
 

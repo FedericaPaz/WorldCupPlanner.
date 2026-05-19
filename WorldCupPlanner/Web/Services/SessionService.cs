@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using DTOs;
+using DTOs.Auth;
 using DTOs.User;
 using IServices;
 

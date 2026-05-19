@@ -1,5 +1,5 @@
 ﻿using Repository;
-using Domain;
+using Domain.Entities;
 
 namespace RepositoryTests;
 

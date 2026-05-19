@@ -1,5 +1,6 @@
-using Domain;
-using DTOs;
+using Domain.Entities;
+using Domain.Import;
+using DTOs.Import;
 using IRepository;
 using IServices;
 using Services.Mappers;

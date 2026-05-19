@@ -1,6 +1,6 @@
-﻿using IRepository;
-using Repository;
-using Domain;
+﻿using Repository;
+using Domain.Entities;
+using Domain.Enums;
 using ServicesTests.Stubs;
 
 namespace RepositoryTests;

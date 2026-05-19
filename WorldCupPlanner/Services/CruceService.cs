@@ -1,5 +1,6 @@
-﻿using Domain;
-using DTOs;
+﻿using Domain.Entities;
+using Domain.Enums;
+using DTOs.Cruces;
 using IRepository;
 using IServices;
 using Services.Mappers;

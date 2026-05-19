@@ -1,6 +1,6 @@
-using DTOs;
-using Domain;
+using Domain.Entities;
 using DomainTests.Stubs;
+using DTOs.Match;
 using IServices;
 using Repository;
 using Services;

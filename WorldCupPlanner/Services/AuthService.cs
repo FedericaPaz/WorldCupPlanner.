@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using DTOs;
+using DTOs.Auth;
 using IRepository;
 using IServices;
 using Services.Mappers;

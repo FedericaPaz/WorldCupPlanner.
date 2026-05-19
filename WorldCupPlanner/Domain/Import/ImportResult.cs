@@ -1,0 +1,34 @@
+using Domain.Entities;
+
+namespace Domain.Import;
+
+public class ImportResult
+{
+    private readonly List<Team> _teams = new();
+    private readonly List<ImportError> _errors = new();
+
+    public IReadOnlyList<Team> Teams
+    {
+        get { return _teams; }
+    }
+
+    public IReadOnlyList<ImportError> Errors
+    {
+        get { return _errors; }
+    }
+
+    public bool Success
+    {
+        get { return _errors.Count == 0; }
+    }
+
+    public void AddError(ImportError error)
+    {
+        _errors.Add(error);
+    }
+    
+    public void AddTeam(Team team)
+    {
+        _teams.Add(team);
+    }
+}

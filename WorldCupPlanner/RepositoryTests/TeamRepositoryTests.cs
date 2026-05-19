@@ -1,6 +1,5 @@
-﻿using Domain;
+﻿using Domain.Entities;
 using Repository;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RepositoryTests;
 

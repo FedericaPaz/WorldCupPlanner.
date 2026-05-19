@@ -1,6 +1,4 @@
-using Domain;
-
-using Domain;
+using Domain.Entities;
 
 namespace IRepository;
 

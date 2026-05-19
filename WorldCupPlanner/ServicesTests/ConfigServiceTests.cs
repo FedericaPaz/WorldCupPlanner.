@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.Entities;
 using Services;
 
 namespace ServicesTests;

@@ -1,5 +1,5 @@
-﻿using Domain;
-using DTOs;
+﻿using Domain.Entities;
+using DTOs.Team;
 using IRepository;
 using IServices;
 using Services.Mappers;

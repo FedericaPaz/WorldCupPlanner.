@@ -1,4 +1,5 @@
-using Domain;
+using Domain.Calculators;
+using Domain.Entities;
 using DomainTests.Stubs;
 
 namespace DomainTests;

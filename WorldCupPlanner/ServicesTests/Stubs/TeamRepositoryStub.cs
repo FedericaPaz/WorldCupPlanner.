@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Entities;
 using IRepository;
 
 namespace ServicesTests.Stubs;

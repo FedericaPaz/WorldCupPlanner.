@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Enums;
 using DTOs.User;
 
 namespace ServicesTests.TestHelpers;

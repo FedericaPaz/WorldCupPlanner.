@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.Enums;
 using DTOs.User;
 using Repository;
 using Services;

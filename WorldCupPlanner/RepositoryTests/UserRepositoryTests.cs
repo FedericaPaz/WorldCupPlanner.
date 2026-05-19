@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Repository;
+﻿using Repository;
 using RepositoryTests.TestHelpers;
 
 namespace RepositoryTests;

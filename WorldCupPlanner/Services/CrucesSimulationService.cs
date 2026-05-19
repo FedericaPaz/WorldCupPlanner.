@@ -1,5 +1,5 @@
 ﻿using IServices;
-using Domain;
+using Domain.Entities;
 
 namespace Services;
 

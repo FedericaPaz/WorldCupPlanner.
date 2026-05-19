@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IServices", "IServices\ISer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryTests", "RepositoryTests\RepositoryTests.csproj", "{4CED6683-D042-4AB6-B448-BB75A71FF0C5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BF348B32-CB2C-4DBC-94FD-11D43FC31B49}"
+EndProject
 
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,5 +83,10 @@ Global
 
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D83D9229-EEE8-404F-92C9-17D54A772DE0} = {BF348B32-CB2C-4DBC-94FD-11D43FC31B49}
+		{4CED6683-D042-4AB6-B448-BB75A71FF0C5} = {BF348B32-CB2C-4DBC-94FD-11D43FC31B49}
+		{59F1783A-EFAC-4C73-885C-E2EA07E791CE} = {BF348B32-CB2C-4DBC-94FD-11D43FC31B49}
 	EndGlobalSection
 EndGlobal

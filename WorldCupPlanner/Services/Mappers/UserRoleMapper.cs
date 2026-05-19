@@ -1,5 +1,5 @@
 using DTOs.User;
-using Domain;
+using Domain.Enums;
 
 namespace Services.Mappers;
 

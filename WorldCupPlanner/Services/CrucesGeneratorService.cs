@@ -1,4 +1,7 @@
-﻿using Domain;
+﻿using Domain.Calculators;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.Interfaces;
 using IServices;
 
 namespace Services;

@@ -1,7 +1,7 @@
-﻿using DTOs;
-using Repository;
+﻿using Repository;
 using Services;
-using Domain;
+using Domain.Entities;
+using DTOs.Team;
 
 namespace ServicesTests;
 
