@@ -14,4 +14,13 @@ public class MatchIncidentTests
         var incident = new MatchIncident(IncidentType.YellowCard, team, 1);
         Assert.AreEqual(IncidentType.YellowCard, incident.Type);
     }
+    
+    [TestMethod]
+    public void MatchIncidentWithValidData_CreatingMatchIncident_StoresTeam()
+    {
+        var confederation = new Confederation("UEFA");
+        var team = new Team("Uruguay", confederation, 1500);
+        var incident = new MatchIncident(IncidentType.YellowCard, team, 1);
+        Assert.AreEqual(team, incident.Team);
+    }
 }
