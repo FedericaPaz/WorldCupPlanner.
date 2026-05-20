@@ -31,4 +31,15 @@ public class NotificationTests
 
         Assert.IsTrue(notification.IsRead);
     }
+    
+    [TestMethod]
+    public void CreateNotification_WithValidData_ShouldAssignId()
+    {
+        var notification = new Notification(
+            "periodista@test.com",
+            "Se cargó un nuevo resultado",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+
+        Assert.AreNotEqual(Guid.Empty, notification.Id);
+    }
 }
