@@ -8,31 +8,29 @@ public class MatchIncident
     private Team _team;
     private int _quantity;
 
-    public IncidentType Type
-    {
-        get { return _type; }
-    }
-
-    public Team Team
-    {
-        get { return _team; }
-    }
-
-    public int Quantity
-    {
-        get { return _quantity; }
-    }
+    public IncidentType Type => _type;
+    public Team Team => _team;
+    public int Quantity => _quantity;
     
     public MatchIncident(IncidentType type, Team team, int quantity)
     {
-        if (team == null)
-            throw new ArgumentNullException(nameof(team));
-        
-        if (quantity < 0)
-            throw new ArgumentException("La cantidad de incidencias no puede ser negativa.");
+        EnsureTeamIsNotNull(team);
+        EnsureQuantityIsValid(quantity);
         
         _type = type;
         _team = team;
         _quantity = quantity;
+    }
+
+    private static void EnsureTeamIsNotNull(Team team)
+    {
+        if (team == null)
+            throw new ArgumentNullException(nameof(team));
+    }
+
+    private static void EnsureQuantityIsValid(int quantity)
+    {
+        if (quantity < 0)
+            throw new ArgumentException("La cantidad de incidencias no puede ser negativa.");
     }
 }
