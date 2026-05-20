@@ -333,13 +333,7 @@ public class UserTests
     public void CreateUser_WithJournalistRole_ShouldContainJournalistRole()
     {
         var user = new User(
-            "Juan",
-            "Perez",
-            "juan.perez@test.com",
-            new DateTime(1995, 1, 1),
-            "Aa123456!",
-            new List<UserRole> { UserRole.Journalist });
-
+            "Juan", "Perez", "juan.perez@test.com", new  DateTime(1995, 1, 1), "Aa123456!", new List<UserRole> { UserRole.Journalist });
         CollectionAssert.Contains(user.Roles.ToList(), UserRole.Journalist);
     }
 }
