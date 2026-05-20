@@ -1,4 +1,5 @@
 using Domain.Entities;
+using DomainTests.Stubs;
 
 namespace DomainTests;
 
@@ -25,5 +26,14 @@ public class NotificationTests
     {
         var notification = new Notification("journalist@test.com", "Mensaje");
         Assert.AreEqual("Mensaje", notification.Message);
+    }
+    
+    [TestMethod]
+    public void CreateNotification_WithValidData_ShouldSetTimestampToCurrentTime()
+    {
+        var now = new DateTime(2026, 6, 1, 10, 30, 0);
+        var clock = new DateTimeMatchStub(now);
+        var notification = new Notification("journalist@test.com", "Resultado cargado.", clock);
+        Assert.AreEqual(now, notification.Timestamp);
     }
 }
