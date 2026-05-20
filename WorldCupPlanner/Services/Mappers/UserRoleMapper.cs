@@ -21,6 +21,7 @@ public static class UserRoleMapper
         {
             UserRole.SystemAdministrator => UserRoleDto.SystemAdministrator,
             UserRole.Editor => UserRoleDto.Editor,
+            UserRole.Journalist => UserRoleDto.Journalist,
             _ => throw new ArgumentException("Rol inválido.")
         };
     }
