@@ -41,4 +41,21 @@ public class NotificationService : INotificationService
         return _notificationRepository.GetUnreadByUserEmail(userEmail);
     }
     
+    public void MarkAsRead(Guid notificationId, string userEmail)
+    {
+        var notification = _notificationRepository.GetById(notificationId);
+
+        if (notification is null)
+        {
+            throw new InvalidOperationException("La notificación no existe.");
+        }
+
+        if (notification.UserEmail != userEmail)
+        {
+            throw new InvalidOperationException("La notificación no pertenece al usuario.");
+        }
+
+        notification.MarkAsRead(DateTime.UtcNow);
+        _notificationRepository.Update(notification);
+    }
 }

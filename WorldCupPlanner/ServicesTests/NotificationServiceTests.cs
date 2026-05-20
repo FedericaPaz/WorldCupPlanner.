@@ -57,4 +57,27 @@ public class NotificationServiceTests
         Assert.AreEqual(1, unreadNotifications.Count);
         Assert.AreSame(notification, unreadNotifications[0]);
     }
+    
+    [TestMethod]
+    public void MarkAsRead_WithExistingNotification_ShouldMarkNotificationAsRead()
+    {
+        var userRepository = new UserRepository();
+        var notificationRepository = new InMemoryNotificationRepository();
+
+        var notification = new Notification(
+            "periodista@test.com",
+            "Se cargó un nuevo resultado",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+
+        notificationRepository.Add(notification);
+
+        var service = new NotificationService(userRepository, notificationRepository);
+
+        service.MarkAsRead(notification.Id, "periodista@test.com");
+
+        var storedNotification = notificationRepository.GetById(notification.Id);
+
+        Assert.IsNotNull(storedNotification);
+        Assert.IsTrue(storedNotification.IsRead);
+    }
 }
