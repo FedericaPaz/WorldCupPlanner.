@@ -333,8 +333,15 @@ public class Match
     
     public void AddIncident(MatchIncident incident)
     {
-        if (incident == null)
-            throw new ArgumentNullException(nameof(incident));
+        EnsureIncidentIsNotNull(incident);
         _incidents.Add(incident);
+    }
+    
+    private static void EnsureIncidentIsNotNull(MatchIncident incident)
+    {
+        if (incident == null)
+        {
+            throw new ArgumentNullException(nameof(incident));
+        }
     }
 }
