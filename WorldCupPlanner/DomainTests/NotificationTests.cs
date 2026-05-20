@@ -50,4 +50,10 @@ public class NotificationTests
     {
         Assert.ThrowsException<ArgumentException>(() => new Notification("", "Resultado cargado."));
     }
+    
+    [TestMethod]
+    public void EmptyMessage_CreatingNotification_ThrowsArgumentException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Notification("journalist@test.com", ""));
+    }
 }

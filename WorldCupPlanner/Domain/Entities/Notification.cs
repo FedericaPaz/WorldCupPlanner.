@@ -32,6 +32,10 @@ public class Notification
     {
         if (string.IsNullOrWhiteSpace(recipientEmail))
             throw new ArgumentException("El destinatario es requerido.");
+        
+        if (string.IsNullOrWhiteSpace(message))
+            throw new ArgumentException("El mensaje es requerido.");
+        
         _timestamp = clock?.Now ?? DateTime.Now;
         _message = message;
         _recipientEmail = recipientEmail;
