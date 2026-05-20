@@ -28,22 +28,38 @@ public class Notification
         get => _isRead;
     }
     
-    public Notification(string recipientEmail, string message, IDateTimeMatch? clock = null)
+    public Notification(
+        string recipientEmail,
+        string message,
+        IDateTimeMatch? clock = null)
     {
-        if (string.IsNullOrWhiteSpace(recipientEmail))
-            throw new ArgumentException("El destinatario es requerido.");
-        
-        if (string.IsNullOrWhiteSpace(message))
-            throw new ArgumentException("El mensaje es requerido.");
-        
-        _timestamp = clock?.Now ?? DateTime.Now;
-        _message = message;
+        EnsureRecipientEmailIsValid(recipientEmail);
+        EnsureMessageIsValid(message);
+
         _recipientEmail = recipientEmail;
+        _message = message;
+        _timestamp = clock?.Now ?? DateTime.UtcNow;
         _isRead = false;
     }
 
     public void MarkAsRead()
     {
         _isRead = true;
+    }
+
+    private static void EnsureRecipientEmailIsValid(string recipientEmail)
+    {
+        if (string.IsNullOrWhiteSpace(recipientEmail))
+        {
+            throw new ArgumentException("El destinatario es requerido.");
+        }
+    }
+
+    private static void EnsureMessageIsValid(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            throw new ArgumentException("El mensaje es requerido.");
+        }
     }
 }
