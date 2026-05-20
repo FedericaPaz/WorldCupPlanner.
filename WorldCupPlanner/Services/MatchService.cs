@@ -84,10 +84,13 @@ public class MatchService : IMatchService
         return new Match(request.dateMatch, stadium, homeTeam, awayTeam, request.group[0], _clock);
     }
 
-    public void SetMatchResult(int matchId, int homeGoals, int awayGoals)
+    public void SetMatchResult(int matchId, MatchResultRequest request)
     {
+        if (request == null)
+            throw new ArgumentNullException(nameof(request));
+
         var match = _matchRepository.GetMatchById(matchId);
-        match.SetMatchResult(homeGoals, awayGoals);
+        match.SetMatchResult(request.homeGoals, request.awayGoals);
     }
 
     public MatchResponse GetMatchById(int matchId)

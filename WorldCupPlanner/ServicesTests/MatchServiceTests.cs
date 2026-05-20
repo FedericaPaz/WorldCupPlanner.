@@ -147,7 +147,8 @@ public class MatchServiceTests
     {
         AddDefaultTeamsAndStadium();
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-        _service.SetMatchResult(created.idMatch, 2, 1);
+        var request = new MatchResultRequest { homeGoals = 2, awayGoals = 1 };
+        _service.SetMatchResult(created.idMatch, request);
         var match = _matchRepository.GetMatchById(created.idMatch);
         Assert.AreEqual(2, match.HomeGoals);
         Assert.AreEqual(1, match.AwayGoals);
@@ -158,7 +159,8 @@ public class MatchServiceTests
     {
         AddDefaultTeamsAndStadium();
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-        Assert.ThrowsException<ArgumentException>(() => _service.SetMatchResult(created.idMatch, -1, 0));
+        var request = new MatchResultRequest { homeGoals = -1, awayGoals = 0 };
+        Assert.ThrowsException<ArgumentException>(() => _service.SetMatchResult(created.idMatch, request));
     }
 
     [TestMethod]
@@ -166,7 +168,8 @@ public class MatchServiceTests
     {
         AddDefaultTeamsAndStadium();
         var created = _service.CreateMatch(CreateValidRequest(new DateTime(2027, 6, 10)));
-        Assert.ThrowsException<InvalidOperationException>(() => _service.SetMatchResult(created.idMatch, 2, 1));
+        var request = new MatchResultRequest { homeGoals = 2, awayGoals = 1 };
+        Assert.ThrowsException<InvalidOperationException>(() => _service.SetMatchResult(created.idMatch, request));
     }
 
     [TestMethod]
@@ -174,8 +177,9 @@ public class MatchServiceTests
     {
         AddDefaultTeamsAndStadium();
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-        _service.SetMatchResult(created.idMatch, 1, 0);
-        Assert.ThrowsException<InvalidOperationException>(() => _service.SetMatchResult(created.idMatch, 2, 0));
+        _service.SetMatchResult(created.idMatch, new MatchResultRequest { homeGoals = 1, awayGoals = 0 });
+        var request = new MatchResultRequest { homeGoals = 2, awayGoals = 0 };
+        Assert.ThrowsException<InvalidOperationException>(() => _service.SetMatchResult(created.idMatch, request));
     }
 
     [TestMethod]
@@ -282,20 +286,17 @@ public class MatchServiceTests
     [TestMethod]
     public void SetMatchResult_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
     {
-        Assert.ThrowsException<KeyNotFoundException>(() =>
-            _service.SetMatchResult(99, 1, 0));
+        var request = new MatchResultRequest { homeGoals = 1, awayGoals = 0 };
+        Assert.ThrowsException<KeyNotFoundException>(() => _service.SetMatchResult(99, request));
     }
     
     [TestMethod]
     public void Create_WithInvalidGroup_ShouldThrowArgumentException()
     {
         AddDefaultTeamsAndStadium();
-
         var request = CreateValidRequest(_clock.Now);
         request.group = "M";
-
-        Assert.ThrowsException<ArgumentException>(() =>
-            _service.CreateMatch(request));
+        Assert.ThrowsException<ArgumentException>(() => _service.CreateMatch(request));
     }
     
     [TestMethod]
