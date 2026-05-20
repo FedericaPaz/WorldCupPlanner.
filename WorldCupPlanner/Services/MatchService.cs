@@ -96,6 +96,7 @@ public class MatchService : IMatchService
 
         AddIncidentIfNeeded(match, IncidentType.YellowCard, match.HomeTeam, request.homeYellowCards);
         AddIncidentIfNeeded(match, IncidentType.YellowCard, match.AwayTeam, request.awayYellowCards);
+        AddIncidentIfNeeded(match, IncidentType.RedCard, match.HomeTeam, request.homeRedCards);
     }
     
     private static void AddIncidentIfNeeded(Match match, IncidentType type, ITeam team, int quantity)

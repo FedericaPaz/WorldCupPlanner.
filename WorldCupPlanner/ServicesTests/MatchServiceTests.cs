@@ -403,4 +403,28 @@ public class MatchServiceTests
         Assert.AreEqual(match.AwayTeam, match.Incidents[0].Team);
         Assert.AreEqual(2, match.Incidents[0].Quantity);
     }
+    
+    [TestMethod]
+    public void SetResult_WithHomeRedCards_ShouldAddHomeRedCardIncident()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1,
+            homeRedCards = 1
+        };
+
+        _service.SetMatchResult(created.idMatch, request);
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+
+        Assert.AreEqual(1, match.Incidents.Count);
+        Assert.AreEqual(IncidentType.RedCard, match.Incidents[0].Type);
+        Assert.AreEqual(match.HomeTeam, match.Incidents[0].Team);
+        Assert.AreEqual(1, match.Incidents[0].Quantity);
+    }
 }
