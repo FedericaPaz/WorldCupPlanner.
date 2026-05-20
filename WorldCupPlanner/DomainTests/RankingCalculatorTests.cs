@@ -67,11 +67,35 @@ public class RankingCalculatorTests
     }
 
     [TestMethod]
+    public void CalculateNewRanking_WithRoundOf32_ShouldApplyEliminatoryMultiplier()
+    {
+        int groupResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.GroupStage);
+        int roundOf32Result = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.RoundOf32);
+        Assert.IsTrue(roundOf32Result > groupResult);
+    }
+    
+    [TestMethod]
     public void CalculateNewRanking_WithRoundOf16_ShouldApplyEliminatoryMultiplier()
     {
         int groupResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.GroupStage);
         int roundOf16Result = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.RoundOf16);
         Assert.IsTrue(roundOf16Result > groupResult);
+    }
+    
+    [TestMethod]
+    public void CalculateNewRanking_WithQuarterFinals_ShouldApplyEliminatoryMultiplier()
+    {
+        int groupResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.GroupStage);
+        int quarterFinalsResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.QuarterFinals);
+        Assert.IsTrue(quarterFinalsResult > groupResult);
+    }
+    
+    [TestMethod]
+    public void CalculateNewRanking_WithSemiFinals_ShouldApplyEliminatoryMultiplier()
+    {
+        int groupResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.GroupStage);
+        int semiFinalsResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.SemiFinals);
+        Assert.IsTrue(semiFinalsResult > groupResult);
     }
 
     [TestMethod]
