@@ -58,4 +58,34 @@ public class RankingCalculatorTests
         Assert.IsTrue(Math.Abs(winnerGain - loserLoss) <= 1);
     }
     
+    [TestMethod]
+    public void CalculateNewRanking_EliminatoryPhase_ShouldHaveGreaterImpactThanGroupPhase()
+    {
+        int groupResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.GroupStage);
+        int eliminatoryResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.RoundOf32);
+        Assert.IsTrue(eliminatoryResult > groupResult);
+    }
+
+    [TestMethod]
+    public void CalculateNewRanking_WithRoundOf16_ShouldApplyEliminatoryMultiplier()
+    {
+        int groupResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.GroupStage);
+        int roundOf16Result = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.RoundOf16);
+        Assert.IsTrue(roundOf16Result > groupResult);
+    }
+
+    [TestMethod]
+    public void CalculateNewRanking_WithFinal_ShouldApplyEliminatoryMultiplier()
+    {
+        int groupResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.GroupStage);
+        int finalResult = _calculator.CalculateNewRanking(1200, 1500, 1.0, TournamentPhase.Final);
+        Assert.IsTrue(finalResult > groupResult);
+    }
+
+    [TestMethod]
+    public void CalculateNewRanking_WithInvalidPhase_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() =>
+            _calculator.CalculateNewRanking(1500, 1200, 1.0, TournamentPhase.NotStarted));
+    }
 }
