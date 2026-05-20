@@ -19,4 +19,11 @@ public class NotificationTests
         );
         Assert.AreEqual("journalist@test.com", notification.RecipientEmail);
     }
+    
+    [TestMethod]
+    public void CreateNotification_WithValidData_ShouldStoreMessage()
+    {
+        var notification = new Notification("journalist@test.com", "Mensaje");
+        Assert.AreEqual("Mensaje", notification.Message);
+    }
 }
