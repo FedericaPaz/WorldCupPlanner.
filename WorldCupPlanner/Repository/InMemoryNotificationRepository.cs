@@ -25,4 +25,14 @@ public class InMemoryNotificationRepository : INotificationRepository
                 !notification.IsRead)
             .ToList();
     }
+    
+    public void Update(Notification notification)
+    {
+        var existingNotification = GetById(notification.Id);
+
+        if (existingNotification is null)
+        {
+            throw new InvalidOperationException("La notificación no existe.");
+        }
+    }
 }

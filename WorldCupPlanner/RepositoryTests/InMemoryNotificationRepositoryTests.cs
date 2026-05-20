@@ -41,4 +41,28 @@ public class InMemoryNotificationRepositoryTests
         Assert.AreEqual(1, unreadNotifications.Count);
         Assert.AreSame(unreadNotification, unreadNotifications[0]);
     }
+    
+    [TestMethod]
+    public void Update_WithExistingNotification_ShouldKeepUpdatedNotification()
+    {
+        var repository = new InMemoryNotificationRepository();
+
+        var notification = new Notification(
+            "periodista@test.com",
+            "Resultado nuevo",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+
+        repository.Add(notification);
+
+        var readAt = new DateTime(2026, 6, 1, 15, 0, 0);
+        notification.MarkAsRead(readAt);
+
+        repository.Update(notification);
+
+        var storedNotification = repository.GetById(notification.Id);
+
+        Assert.IsNotNull(storedNotification);
+        Assert.IsTrue(storedNotification.IsRead);
+        Assert.AreEqual(readAt, storedNotification.ReadAt);
+    }
 }
