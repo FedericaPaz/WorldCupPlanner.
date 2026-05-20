@@ -153,11 +153,17 @@ public class TeamTests
     [TestMethod]
     public void TeamWithValidFlagBase64_CreatingTeam_StoresFlagBase64()
     {
-        var confederation = new Confederation("UEFA");
         string flagBase64 = "data:image/png;base64,abc123";
 
         var team = new Team("Uruguay", _defaultConfederation, 1500, flagBase64);
 
         Assert.AreEqual(flagBase64, team.FlagBase64);
+    }
+    
+    [TestMethod]
+    public void TeamWithoutFlagBase64_CreatingTeam_StoresEmptyFlag()
+    {
+        var team = new Team("Uruguay", _defaultConfederation, 1500);
+        Assert.AreEqual(string.Empty, team.FlagBase64);
     }
 }
