@@ -64,10 +64,7 @@ public class NotificationServiceTests
         var userRepository = new UserRepository();
         var notificationRepository = new InMemoryNotificationRepository();
 
-        var notification = new Notification(
-            "periodista@test.com",
-            "Se cargó un nuevo resultado",
-            new DateTime(2026, 6, 1, 14, 30, 0));
+        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
 
         notificationRepository.Add(notification);
 
@@ -79,5 +76,21 @@ public class NotificationServiceTests
 
         Assert.IsNotNull(storedNotification);
         Assert.IsTrue(storedNotification.IsRead);
+    }
+    
+    [TestMethod]
+    public void MarkAsRead_WhenNotificationBelongsToAnotherUser_ShouldThrowException()
+    {
+        var userRepository = new UserRepository();
+        var notificationRepository = new InMemoryNotificationRepository();
+
+        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
+
+        notificationRepository.Add(notification);
+
+        var service = new NotificationService(userRepository, notificationRepository);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            service.MarkAsRead(notification.Id, "otro@test.com"));
     }
 }
