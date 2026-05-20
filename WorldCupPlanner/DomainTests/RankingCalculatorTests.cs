@@ -88,4 +88,19 @@ public class RankingCalculatorTests
         Assert.ThrowsException<ArgumentException>(() =>
             _calculator.CalculateNewRanking(1500, 1200, 1.0, TournamentPhase.NotStarted));
     }
+    
+    [TestMethod]
+    public void CalculateNewRanking_WhenResultExceedsMax_ShouldClampToMaxRanking()
+    {
+        int result = _calculator.CalculateNewRanking(2490, 2000, 1.0, TournamentPhase.Final);
+        Assert.AreEqual(2500, result);
+    }
+
+    [TestMethod]
+    public void CalculateNewRanking_WhenResultGoesBelowMin_ShouldClampToMinRanking()
+    {
+        int result = _calculator.CalculateNewRanking(310, 500, 0.0, TournamentPhase.Final);
+        Assert.AreEqual(300, result);
+    }
+    
 }

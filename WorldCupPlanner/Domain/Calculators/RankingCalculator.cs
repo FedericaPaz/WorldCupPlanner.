@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using Domain.Entities;
 
 namespace Domain.Calculators;
 
@@ -12,7 +13,12 @@ public class RankingCalculator
         double probability = 1.0 / (1 + Math.Pow(10, (opponentRanking - currentRanking) / 1000.0));
         double multiplier = GetPhaseMultiplier(tournamentPhase);
         double newRanking = currentRanking + (30 * (result - probability)) * multiplier;
-        return (int)Math.Round(newRanking, MidpointRounding.AwayFromZero);
+        return Clamp((int)Math.Round(newRanking, MidpointRounding.AwayFromZero));
+    }
+    
+    private static int Clamp(int ranking)
+    {
+        return Math.Clamp(ranking, Team.MinRanking, Team.MaxRanking);
     }
     
     private static double GetPhaseMultiplier(TournamentPhase tournamentPhase)
