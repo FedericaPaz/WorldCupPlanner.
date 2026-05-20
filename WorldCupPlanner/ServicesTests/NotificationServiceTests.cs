@@ -37,4 +37,24 @@ public class NotificationServiceTests
         Assert.AreEqual("Se cargó un nuevo resultado", journalistNotifications[0].Message);
         Assert.AreEqual(0, editorNotifications.Count);
     }
+    
+    [TestMethod]
+    public void GetUnreadNotifications_WhenUserHasUnreadNotifications_ShouldReturnUnreadNotifications()
+    {
+        var userRepository = new UserRepository();
+        var notificationRepository = new InMemoryNotificationRepository();
+
+        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
+
+        notificationRepository.Add(notification);
+
+        var service = new NotificationService(userRepository, notificationRepository);
+
+        var unreadNotifications = service
+            .GetUnreadNotifications("periodista@test.com")
+            .ToList();
+
+        Assert.AreEqual(1, unreadNotifications.Count);
+        Assert.AreSame(notification, unreadNotifications[0]);
+    }
 }

@@ -35,4 +35,10 @@ public class NotificationService : INotificationService
             }
         }
     }
+    
+    public IEnumerable<Notification> GetUnreadNotifications(string userEmail)
+    {
+        return _notificationRepository.GetUnreadByUserEmail(userEmail);
+    }
+    
 }
