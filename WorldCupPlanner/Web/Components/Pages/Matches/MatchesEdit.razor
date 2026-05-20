@@ -76,6 +76,12 @@
 
                     <label>Goles</label>
                     <input class="form-control goals-input" type="number" min="0" @bind="_homeGoals" />
+                    
+                    <label>Amarillas</label>
+                    <input class="form-control" type="number" min="0" @bind="_homeYellowCards" />
+
+                    <label>Rojas</label>
+                    <input class="form-control" type="number" min="0" @bind="_homeRedCards" />
                 </div>
 
                 <div class="team-result-card">
@@ -84,6 +90,12 @@
 
                     <label>Goles</label>
                     <input class="form-control goals-input" type="number" min="0" @bind="_awayGoals" />
+                    
+                    <label>Amarillas</label>
+                    <input class="form-control" type="number" min="0" @bind="_awayYellowCards" />
+
+                    <label>Rojas</label>
+                    <input class="form-control" type="number" min="0" @bind="_awayRedCards" />
                 </div>
             </div>
 
@@ -106,6 +118,10 @@
     private string _stadiumName = string.Empty;
     private int _homeGoals;
     private int _awayGoals;
+    private int _homeYellowCards;
+    private int _awayYellowCards;
+    private int _homeRedCards;
+    private int _awayRedCards;
 
     protected override void OnInitialized()
     {
@@ -129,6 +145,10 @@
             _stadiumName = _match.stadiumName;
             _homeGoals = _match.homeGoals ?? 0;
             _awayGoals = _match.awayGoals ?? 0;
+            _homeYellowCards = _match.homeYellowCards;
+            _awayYellowCards = _match.awayYellowCards;
+            _homeRedCards = _match.homeRedCards;
+            _awayRedCards = _match.awayRedCards;
         }
         catch (Exception ex)
         {
@@ -160,13 +180,29 @@
             int currentHomeGoals = _match.homeGoals ?? 0;
             int currentAwayGoals = _match.awayGoals ?? 0;
 
-            bool resultChanged = _homeGoals != currentHomeGoals || _awayGoals != currentAwayGoals;
+            bool resultChanged =
+                _homeGoals != currentHomeGoals ||
+                _awayGoals != currentAwayGoals ||
+                _homeYellowCards != _match.homeYellowCards ||
+                _awayYellowCards != _match.awayYellowCards ||
+                _homeRedCards != _match.homeRedCards ||
+                _awayRedCards != _match.awayRedCards;
 
             if (resultChanged)
             {
                 if (!_match.homeGoals.HasValue && !_match.awayGoals.HasValue)
                 {
-                    MatchService.SetMatchResult(_match.idMatch, _homeGoals, _awayGoals);
+                    var request = new MatchResultRequest
+                    {
+                        homeGoals = _homeGoals,
+                        awayGoals = _awayGoals,
+                        homeYellowCards = _homeYellowCards,
+                        awayYellowCards = _awayYellowCards,
+                        homeRedCards = _homeRedCards,
+                        awayRedCards = _awayRedCards
+                    };
+
+                    MatchService.SetMatchResult(_match.idMatch, request);
                 }
 
                 wasModified = true;
