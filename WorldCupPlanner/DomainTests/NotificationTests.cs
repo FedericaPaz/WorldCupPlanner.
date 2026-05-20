@@ -44,4 +44,10 @@ public class NotificationTests
         notification.MarkAsRead();
         Assert.IsTrue(notification.IsRead);
     }
+    
+    [TestMethod]
+    public void EmptyRecipientEmail_CreatingNotification_ThrowsArgumentException()
+    {
+        Assert.ThrowsException<ArgumentException>(() => new Notification("", "Resultado cargado."));
+    }
 }

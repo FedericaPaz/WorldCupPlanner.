@@ -30,6 +30,8 @@ public class Notification
     
     public Notification(string recipientEmail, string message, IDateTimeMatch? clock = null)
     {
+        if (string.IsNullOrWhiteSpace(recipientEmail))
+            throw new ArgumentException("El destinatario es requerido.");
         _timestamp = clock?.Now ?? DateTime.Now;
         _message = message;
         _recipientEmail = recipientEmail;
