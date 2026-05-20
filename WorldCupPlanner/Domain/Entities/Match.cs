@@ -333,6 +333,8 @@ public class Match
     
     public void AddIncident(MatchIncident incident)
     {
+        if (incident == null)
+            throw new ArgumentNullException(nameof(incident));
         _incidents.Add(incident);
     }
 }

@@ -247,4 +247,17 @@ public class MatchTests
       match.AddIncident(incident);
       Assert.AreEqual(1, match.Incidents.Count);
    }
+   
+   [TestMethod]
+   public void AddIncident_WithNullIncident_ShouldThrowArgumentNullException()
+   {
+      var now = new DateTime(2026, 6, 1, 10, 0, 0);
+      var clock = new DateTimeMatchStub(now);
+      var confederation = new Confederation("UEFA");
+      var homeTeam = new Team("Uruguay", confederation, 1500);
+      var awayTeam = new Team("España", confederation, 1600);
+      var stadium = new Stadium("Centenario", "Montevideo", "", 60000);
+      var match = new Match(now.AddDays(1), stadium, homeTeam, awayTeam, 'A', clock);
+      Assert.ThrowsException<ArgumentNullException>(() => match.AddIncident(null!));
+   }
 }
