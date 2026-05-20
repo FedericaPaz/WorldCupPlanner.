@@ -16,4 +16,13 @@ public class InMemoryNotificationRepository : INotificationRepository
     {
         return _notifications.FirstOrDefault(notification => notification.Id == id);
     }
+    
+    public IEnumerable<Notification> GetUnreadByUserEmail(string userEmail)
+    {
+        return _notifications
+            .Where(notification =>
+                notification.UserEmail == userEmail &&
+                !notification.IsRead)
+            .ToList();
+    }
 }

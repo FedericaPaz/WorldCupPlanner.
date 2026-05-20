@@ -15,4 +15,30 @@ public class InMemoryNotificationRepositoryTests
         var storedNotification = repository.GetById(notification.Id);
         Assert.AreSame(notification, storedNotification);
     }
+    
+    [TestMethod]
+    public void GetUnreadByUserEmail_WhenUserHasReadAndUnreadNotifications_ShouldReturnOnlyUnread()
+    {
+        var repository = new InMemoryNotificationRepository();
+
+        var unreadNotification = new Notification(
+            "periodista@test.com",
+            "Resultado nuevo",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+
+        var readNotification = new Notification(
+            "periodista@test.com",
+            "Resultado viejo",
+            new DateTime(2026, 6, 1, 13, 30, 0));
+
+        readNotification.MarkAsRead(new DateTime(2026, 6, 1, 15, 0, 0));
+
+        repository.Add(unreadNotification);
+        repository.Add(readNotification);
+
+        var unreadNotifications = repository.GetUnreadByUserEmail("periodista@test.com").ToList();
+
+        Assert.AreEqual(1, unreadNotifications.Count);
+        Assert.AreSame(unreadNotification, unreadNotifications[0]);
+    }
 }
