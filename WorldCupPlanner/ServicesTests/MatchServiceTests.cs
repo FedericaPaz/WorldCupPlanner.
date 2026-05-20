@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using DomainTests.Stubs;
 using DTOs.Match;
 using IServices;
@@ -358,5 +359,24 @@ public class MatchServiceTests
     {
         Assert.ThrowsException<InvalidOperationException>(() =>
             _service.SimulateGroupStage());
+    }
+    
+    [TestMethod]
+    public void SetResult_WithHomeYellowCards_ShouldAddHomeYellowCardIncident()
+    {
+        AddDefaultTeamsAndStadium();
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1,
+            homeYellowCards = 1
+        };
+        _service.SetMatchResult(created.idMatch, request);
+        var match = _matchRepository.GetMatchById(created.idMatch);
+        Assert.AreEqual(1, match.Incidents.Count);
+        Assert.AreEqual(IncidentType.YellowCard, match.Incidents[0].Type);
+        Assert.AreEqual(match.HomeTeam, match.Incidents[0].Team);
+        Assert.AreEqual(1, match.Incidents[0].Quantity);
     }
 }

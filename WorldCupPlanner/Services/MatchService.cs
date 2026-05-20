@@ -4,6 +4,7 @@ using DTOs.Match;
 using IRepository;
 using IServices;
 using Services.Mappers;
+using Domain.Enums;
 
 namespace Services;
 
@@ -90,7 +91,18 @@ public class MatchService : IMatchService
             throw new ArgumentNullException(nameof(request));
 
         var match = _matchRepository.GetMatchById(matchId);
+
         match.SetMatchResult(request.homeGoals, request.awayGoals);
+
+        AddIncidentIfNeeded(match, IncidentType.YellowCard, match.HomeTeam, request.homeYellowCards);
+    }
+    
+    private static void AddIncidentIfNeeded(Match match, IncidentType type, ITeam team, int quantity)
+    {
+        if (quantity > 0)
+        {
+            match.AddIncident(new MatchIncident(type, (Team)team, quantity));
+        }
     }
 
     public MatchResponse GetMatchById(int matchId)
