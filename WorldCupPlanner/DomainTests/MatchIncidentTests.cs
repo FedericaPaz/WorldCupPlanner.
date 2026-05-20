@@ -40,4 +40,10 @@ public class MatchIncidentTests
         var team = new Team("Uruguay", confederation, 1500);
         Assert.ThrowsException<ArgumentException>(() => new MatchIncident(IncidentType.YellowCard, team, -1));
     }
+    
+    [TestMethod]
+    public void CreateMatchIncident_WithNullTeam_ShouldThrowArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => new MatchIncident(IncidentType.YellowCard, null!, 1));
+    }
 }
