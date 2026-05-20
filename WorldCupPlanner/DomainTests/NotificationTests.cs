@@ -18,4 +18,17 @@ public class NotificationTests
         Assert.AreEqual(new DateTime(2026, 6, 1, 14, 30, 0), notification.CreatedAt);
         Assert.IsFalse(notification.IsRead);
     }
+    
+    [TestMethod]
+    public void MarkAsRead_WhenNotificationIsUnread_ShouldSetIsReadToTrue()
+    {
+        var notification = new Notification(
+            "periodista@test.com",
+            "Se cargó un nuevo resultado",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+
+        notification.MarkAsRead();
+
+        Assert.IsTrue(notification.IsRead);
+    }
 }

@@ -14,4 +14,9 @@ public class Notification
         CreatedAt = createdAt;
         IsRead = false;
     }
+    
+    public void MarkAsRead()
+    {
+        IsRead = true;
+    }
 }
