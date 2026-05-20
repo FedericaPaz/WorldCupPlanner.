@@ -23,6 +23,7 @@ public class Match
     private ITeam? _loserMatch;
     private IDateTimeMatch _clock = null!;
     private bool _isLocked;
+    private readonly List<MatchIncident> _incidents = new List<MatchIncident>();
 
     public int IdMatch
     {
@@ -104,6 +105,8 @@ public class Match
     {
         get { return _loserMatch; }
     }
+    
+    public IReadOnlyList<MatchIncident> Incidents => _incidents;
 
     public Match(DateTime dateMatch, IStadium stadium, ITeam homeTeam, ITeam awayTeam, char group, IDateTimeMatch clock)
     {
@@ -326,5 +329,10 @@ public class Match
             throw new InvalidOperationException(
                 "No se puede editar un partido de fase de grupos una vez generados los cruces.");
         }
+    }
+    
+    public void AddIncident(MatchIncident incident)
+    {
+        _incidents.Add(incident);
     }
 }

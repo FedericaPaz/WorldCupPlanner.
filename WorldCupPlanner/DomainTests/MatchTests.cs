@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using DomainTests.Stubs;
 
 namespace DomainTests;
@@ -230,5 +231,20 @@ public class MatchTests
       var awayTeam = new TeamStub("Uruguay");
 
       Assert.ThrowsException<ArgumentException>(() => new Match(clock.Now, new StadiumStub("Centenario"), homeTeam, awayTeam, 'A', clock));
+   }
+   
+   [TestMethod]
+   public void AddIncident_WithValidIncident_ShouldAddIncidentToMatch()
+   {
+      var now = new DateTime(2026, 6, 1, 10, 0, 0);
+      var clock = new DateTimeMatchStub(now);
+      var confederation = new Confederation("UEFA");
+      var homeTeam = new Team("Uruguay", confederation, 1500);
+      var awayTeam = new Team("España", confederation, 1600);
+      var stadium = new Stadium("Centenario", "Montevideo", "", 60000);
+      var match = new Match(now.AddDays(1), stadium, homeTeam, awayTeam, 'A', clock);
+      var incident = new MatchIncident(IncidentType.YellowCard, homeTeam, 1);
+      match.AddIncident(incident);
+      Assert.AreEqual(1, match.Incidents.Count);
    }
 }
