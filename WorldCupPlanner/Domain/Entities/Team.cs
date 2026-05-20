@@ -11,12 +11,15 @@ public class Team : ITeam
     private string _name;
     private Confederation _confederation;
     private int _fifaRanking;
+    private int _currentRanking;
     
     public string Name => _name;
 
     public Confederation Confederation => _confederation;
 
     public int FifaRanking => _fifaRanking;
+    
+    public int CurrentRanking => _currentRanking;
 
     public Team(string name, Confederation confederation, int fifaRanking)
     {
@@ -27,6 +30,7 @@ public class Team : ITeam
         _name = name;
         _confederation = confederation;
         _fifaRanking = fifaRanking;
+        _currentRanking = fifaRanking;
     }
 
     private void ValidateName(string name)
@@ -51,6 +55,12 @@ public class Team : ITeam
     {
         if (ranking < MinRanking || ranking > MaxRanking)
             throw new ArgumentException($"El ranking FIFA debe estar entre {MinRanking} y {MaxRanking}.");
+    }
+
+    public void UpdateCurrentRanking(int newRanking)
+    {
+        ValidateRanking(newRanking);
+        _currentRanking = newRanking;
     }
     
 }
