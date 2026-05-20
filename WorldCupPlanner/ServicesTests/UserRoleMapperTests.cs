@@ -13,4 +13,11 @@ public class UserRoleMapperTests
         var result = UserRoleMapper.ToDto(UserRole.Journalist);
         Assert.AreEqual(UserRoleDto.Journalist, result);
     }
+    
+    [TestMethod]
+    public void JournalistDtoRole_MappingToDomain_ShouldReturnJournalistDomainRole()
+    {
+        var result = UserRoleMapper.ToDomain(UserRoleDto.Journalist);
+        Assert.AreEqual(UserRole.Journalist, result);
+    }
 }
