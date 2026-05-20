@@ -1,5 +1,4 @@
 ﻿using Blazored.LocalStorage;
-using DTOs;
 using DTOs.Auth;
 using DTOs.User;
 using IServices;
@@ -64,5 +63,10 @@ public class SessionService
     public bool IsEditor()
     {
         return HasRole(UserRoleDto.Editor);
+    }
+    
+    public bool IsJournalist()
+    {
+        return IsUserActive() && GetCurrentUser()!.Roles.Contains(UserRoleDto.Journalist);
     }
 }
