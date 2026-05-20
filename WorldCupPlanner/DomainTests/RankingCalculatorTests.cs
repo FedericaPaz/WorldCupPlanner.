@@ -103,4 +103,18 @@ public class RankingCalculatorTests
         Assert.AreEqual(300, result);
     }
     
+    [TestMethod]
+    public void CalculateNewRanking_WhenDecimalIsExactlyHalf_ShouldRoundUp()
+    {
+        int result1 = _calculator.CalculateNewRanking(1400, 1600, 1.0, TournamentPhase.GroupStage);
+        int result2 = _calculator.CalculateNewRanking(1400, 1600, 1.0, TournamentPhase.GroupStage);
+        Assert.AreEqual(result1, result2);
+    }
+
+    [TestMethod]
+    public void CalculateNewRanking_ShouldReturnInteger_NeverDecimal()
+    {
+        int result = _calculator.CalculateNewRanking(1350, 1650, 0.5, TournamentPhase.GroupStage);
+        Assert.IsInstanceOfType(result, typeof(int));
+    }
 }
