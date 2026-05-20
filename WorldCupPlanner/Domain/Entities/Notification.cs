@@ -7,6 +7,7 @@ public class Notification
     public string Message { get; }
     public DateTime CreatedAt { get; }
     public bool IsRead { get; private set; }
+    public DateTime? ReadAt { get; private set; }
 
     public Notification(string userEmail, string message, DateTime createdAt)
     {
@@ -15,10 +16,17 @@ public class Notification
         Message = message;
         CreatedAt = createdAt;
         IsRead = false;
+        ReadAt = null;
     }
 
-    public void MarkAsRead()
+    public void MarkAsRead(DateTime readAt)
     {
         IsRead = true;
+        ReadAt = readAt;
+    }
+    
+    public void MarkAsRead()
+    {
+        MarkAsRead(DateTime.UtcNow);
     }
 }
