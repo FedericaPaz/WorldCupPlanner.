@@ -13,4 +13,8 @@ public class MatchResponse
     public string? winnerName { get; set; }
     public bool isLocked { get; set; }
     public string phase { get; set; } = string.Empty;
+    public int homeYellowCards { get; set; }
+    public int awayYellowCards { get; set; }
+    public int homeRedCards { get; set; }
+    public int awayRedCards { get; set; }
 }
