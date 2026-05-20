@@ -32,4 +32,12 @@ public class MatchIncidentTests
         var incident = new MatchIncident(IncidentType.YellowCard, team, 2);
         Assert.AreEqual(2, incident.Quantity);
     }
+    
+    [TestMethod]
+    public void CreateMatchIncident_WithNegativeQuantity_ShouldThrowArgumentException()
+    {
+        var confederation = new Confederation("UEFA");
+        var team = new Team("Uruguay", confederation, 1500);
+        Assert.ThrowsException<ArgumentException>(() => new MatchIncident(IncidentType.YellowCard, team, -1));
+    }
 }

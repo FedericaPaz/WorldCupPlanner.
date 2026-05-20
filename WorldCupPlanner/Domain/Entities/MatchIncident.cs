@@ -25,6 +25,8 @@ public class MatchIncident
     
     public MatchIncident(IncidentType type, Team team, int quantity)
     {
+        if (quantity < 0)
+            throw new ArgumentException("La cantidad de incidencias no puede ser negativa.");
         _type = type;
         _team = team;
         _quantity = quantity;
