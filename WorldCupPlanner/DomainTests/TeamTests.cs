@@ -149,4 +149,14 @@ public class TeamTests
         Assert.AreEqual(_defaultConfederation, team.Confederation);
         Assert.AreEqual(expectedRanking, team.FifaRanking);
     }
+    
+    [TestMethod]
+    public void UpdateFifaRanking_WithValidRanking_ShouldUpdateRanking()
+    {
+        var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking);
+
+        team.UpdateFifaRanking(MaxFifaRanking);
+
+        Assert.AreEqual(MaxFifaRanking, team.FifaRanking);
+    }
 }

@@ -29,6 +29,12 @@ public class Team : ITeam
         _fifaRanking = fifaRanking;
     }
 
+    public void UpdateFifaRanking(int newRanking)
+    {
+        ValidateRanking(newRanking);
+        _fifaRanking = newRanking;
+    }
+    
     private void ValidateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
