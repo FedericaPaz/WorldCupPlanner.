@@ -35,4 +35,9 @@ public class Notification
         _recipientEmail = recipientEmail;
         _isRead = false;
     }
+
+    public void MarkAsRead()
+    {
+        _isRead = true;
+    }
 }

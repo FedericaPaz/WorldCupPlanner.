@@ -36,4 +36,12 @@ public class NotificationTests
         var notification = new Notification("journalist@test.com", "Resultado cargado.", clock);
         Assert.AreEqual(now, notification.Timestamp);
     }
+    
+    [TestMethod]
+    public void UnreadNotification_MarkingAsRead_SetsIsReadToTrue()
+    {
+        var notification = new Notification("journalist@test.com", "Resultado cargado.");
+        notification.MarkAsRead();
+        Assert.IsTrue(notification.IsRead);
+    }
 }
