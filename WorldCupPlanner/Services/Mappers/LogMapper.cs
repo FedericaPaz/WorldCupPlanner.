@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-using DTOs.Logs;
+using DTOs.Log;
 
 namespace Services.Mappers;
 

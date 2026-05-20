@@ -1,4 +1,4 @@
-﻿using DTOs.Logs;
+﻿using DTOs.Log;
 
 namespace IServices;
 

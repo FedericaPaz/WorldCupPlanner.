@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-using DTOs.Logs;
+using DTOs.Log;
 using IRepository;
 using IServices;
 using Services.Mappers;
