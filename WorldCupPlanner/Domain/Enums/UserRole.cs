@@ -3,6 +3,7 @@
 public enum UserRole
 {
     SystemAdministrator,
-    Editor
+    Editor,
+    Journalist
 }
 
