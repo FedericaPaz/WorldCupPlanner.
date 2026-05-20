@@ -5,6 +5,7 @@ namespace Domain.Calculators;
 
 public class RankingCalculator
 {
+    private const int K = 30;
     private const double GroupPhaseMultiplier = 1.0;
     private const double EliminatoryPhaseMultiplier = 1.5; 
     
@@ -12,7 +13,7 @@ public class RankingCalculator
     {
         double probability = CalculateProbability(currentRanking, opponentRanking);
         double multiplier = GetPhaseMultiplier(tournamentPhase);
-        double newRanking = currentRanking + (30 * (result - probability)) * multiplier;
+        double newRanking = currentRanking + (K * (result - probability)) * multiplier;
         return Clamp((int)Math.Round(newRanking, MidpointRounding.AwayFromZero));
     }
     
