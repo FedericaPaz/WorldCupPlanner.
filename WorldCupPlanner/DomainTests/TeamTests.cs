@@ -149,4 +149,15 @@ public class TeamTests
         Assert.AreEqual(_defaultConfederation, team.Confederation);
         Assert.AreEqual(expectedRanking, team.FifaRanking);
     }
+    
+    [TestMethod]
+    public void TeamWithValidFlagBase64_CreatingTeam_StoresFlagBase64()
+    {
+        var confederation = new Confederation("UEFA");
+        string flagBase64 = "data:image/png;base64,abc123";
+
+        var team = new Team("Uruguay", _defaultConfederation, 1500, flagBase64);
+
+        Assert.AreEqual(flagBase64, team.FlagBase64);
+    }
 }

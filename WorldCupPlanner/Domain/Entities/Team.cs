@@ -11,14 +11,21 @@ public class Team : ITeam
     private string _name;
     private Confederation _confederation;
     private int _fifaRanking;
+    private string _flagBase64;
     
     public string Name => _name;
 
     public Confederation Confederation => _confederation;
 
     public int FifaRanking => _fifaRanking;
+    
+    public string FlagBase64
+    {
+        get => _flagBase64;
+        private set => _flagBase64 = value;
+    }
 
-    public Team(string name, Confederation confederation, int fifaRanking)
+    public Team(string name, Confederation confederation, int fifaRanking, string flagBase64 = "")
     {
         ValidateName(name);
         ValidateConfederation(confederation);
@@ -27,6 +34,7 @@ public class Team : ITeam
         _name = name;
         _confederation = confederation;
         _fifaRanking = fifaRanking;
+        _flagBase64 = flagBase64;
     }
 
     private void ValidateName(string name)
