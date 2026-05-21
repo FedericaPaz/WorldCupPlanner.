@@ -16,6 +16,7 @@ public class MatchService : IMatchService
     private readonly ISimulationService _simulationService;
     private readonly IFixtureRepository _fixtureRepository;
     private readonly TournamentConfig _config;
+    private readonly INotificationService _notificationService;
 
     public MatchService(
         IMatchRepository matchRepository,
@@ -24,17 +25,19 @@ public class MatchService : IMatchService
         IDateTimeMatch clock,
         ISimulationService simulationService,
         IFixtureRepository fixtureRepository,
-        TournamentConfig config)
+        TournamentConfig config,
+        INotificationService notificationService)
     {
-        _matchRepository   = matchRepository;
-        _teamRepository    = teamRepository;
+        _matchRepository = matchRepository;
+        _teamRepository = teamRepository;
         _stadiumRepository = stadiumRepository;
-        _clock             = clock;
+        _clock = clock;
         _simulationService = simulationService;
         _fixtureRepository = fixtureRepository;
-        _config            = config;
+        _config = config;
+        _notificationService = notificationService;
     }
-
+    
     public MatchResponse CreateMatch(MatchRequest request)
     {
         EnsureValidRequest(request);
@@ -88,6 +91,9 @@ public class MatchService : IMatchService
     {
         var match = _matchRepository.GetMatchById(matchId);
         match.SetMatchResult(homeGoals, awayGoals);
+        
+        _notificationService.NotifyJournalists(
+            $"Se cargó el resultado de {match.HomeTeam.Name} vs {match.AwayTeam.Name}: {homeGoals}-{awayGoals}");
     }
 
     public MatchResponse GetMatchById(int matchId)

@@ -1,0 +1,54 @@
+﻿using Domain.Entities;
+
+namespace DomainTests;
+
+[TestClass]
+public class NotificationTests
+{
+    [TestMethod]
+    public void CreateNotification_WithValidData_ShouldCreateUnreadNotification()
+    {
+        var notification = new Notification(
+            "periodista@test.com",
+            "Se cargó un nuevo resultado",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+
+        Assert.AreEqual("periodista@test.com", notification.UserEmail);
+        Assert.AreEqual("Se cargó un nuevo resultado", notification.Message);
+        Assert.AreEqual(new DateTime(2026, 6, 1, 14, 30, 0), notification.CreatedAt);
+        Assert.IsFalse(notification.IsRead);
+    }
+    
+    [TestMethod]
+    public void MarkAsRead_WhenNotificationIsUnread_ShouldSetIsReadToTrue()
+    {
+        var notification = new Notification(
+            "periodista@test.com",
+            "Se cargó un nuevo resultado",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+
+        notification.MarkAsRead();
+
+        Assert.IsTrue(notification.IsRead);
+    }
+    
+    [TestMethod]
+    public void CreateNotification_WithValidData_ShouldAssignId()
+    {
+        var notification = new Notification(
+            "periodista@test.com",
+            "Se cargó un nuevo resultado",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+
+        Assert.AreNotEqual(Guid.Empty, notification.Id);
+    }
+    
+    [TestMethod]
+    public void MarkAsRead_WhenNotificationIsUnread_ShouldSetReadAt()
+    {
+        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
+        var readAt = new DateTime(2026, 6, 1, 15, 0, 0);
+        notification.MarkAsRead(readAt);
+        Assert.AreEqual(readAt, notification.ReadAt);
+    }
+}
