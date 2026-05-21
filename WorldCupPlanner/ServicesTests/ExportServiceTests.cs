@@ -53,4 +53,20 @@ public class ExportServiceTests
         Assert.ThrowsException<UnauthorizedAccessException>(() =>
             service.ExportFixtureToCsv("editor@test.com"));
     }
+    
+    [TestMethod]
+    public void ExportFixtureToXlsx_WhenUserIsAdministrator_ShouldReturnBytes()
+    {
+        var userRepository = new UserRepository();
+
+        var administrator = new User("Admin", "Sistema", "admin@test.com", new DateTime(1990, 1, 1), "Aa123456!", new List<UserRole> { UserRole.SystemAdministrator });
+
+        userRepository.AddUser(administrator);
+
+        var service = new ExportService(userRepository);
+
+        var result = service.ExportFixtureToXlsx("admin@test.com");
+
+        Assert.IsNotNull(result);
+    }
 }

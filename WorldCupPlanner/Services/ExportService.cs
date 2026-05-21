@@ -38,4 +38,11 @@ public class ExportService : IExportService
             throw new UnauthorizedAccessException("El usuario no tiene permisos para exportar.");
         }
     }
+    
+    public byte[] ExportFixtureToXlsx(string userEmail)
+    {
+        ValidateCanExport(userEmail);
+
+        return Array.Empty<byte>();
+    }
 }
