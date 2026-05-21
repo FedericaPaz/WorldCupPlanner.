@@ -26,12 +26,7 @@ public class NotificationService : INotificationService
         {
             if (user.Roles.Contains(UserRole.Journalist))
             {
-                var notification = new Notification(
-                    user.Email,
-                    message,
-                    DateTime.UtcNow);
-
-                _notificationRepository.Add(notification);
+                Send(user.Email, message);
             }
         }
     }
@@ -57,5 +52,15 @@ public class NotificationService : INotificationService
 
         notification.MarkAsRead(DateTime.UtcNow);
         _notificationRepository.Update(notification);
+    }
+    
+    public void Send(string recipientEmail, string message)
+    {
+        var notification = new Notification(
+            recipientEmail,
+            message,
+            DateTime.UtcNow);
+
+        _notificationRepository.Add(notification);
     }
 }

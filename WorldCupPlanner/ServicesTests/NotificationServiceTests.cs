@@ -93,4 +93,21 @@ public class NotificationServiceTests
         Assert.ThrowsException<InvalidOperationException>(() =>
             service.MarkAsRead(notification.Id, "otro@test.com"));
     }
+    
+    [TestMethod]
+    public void Send_WithValidRecipientAndMessage_ShouldCreateUnreadNotification()
+    {
+        var userRepository = new UserRepository();
+        var notificationRepository = new InMemoryNotificationRepository();
+        var service = new NotificationService(userRepository, notificationRepository);
+
+        service.Send("periodista@test.com", "Nueva notificación");
+
+        var notifications = notificationRepository
+            .GetUnreadByUserEmail("periodista@test.com")
+            .ToList();
+
+        Assert.AreEqual(1, notifications.Count);
+        Assert.AreEqual("Nueva notificación", notifications[0].Message);
+    }
 }
