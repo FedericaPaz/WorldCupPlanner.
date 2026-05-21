@@ -95,7 +95,19 @@ public class MatchService : IMatchService
         var match = _matchRepository.GetMatchById(matchId);
         var (home, away) = _simulationService.SimulateMatch(match, seed);
 
-        match.SetMatchResult(home, away);
+        var random = new Random(seed);
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = home,
+            awayGoals = away,
+            homeYellowCards = random.Next(0, 5),
+            awayYellowCards = random.Next(0, 5),
+            homeRedCards = random.Next(0, 2),
+            awayRedCards = random.Next(0, 2)
+        };
+
+        SetMatchResult(matchId, request);
     }
 
     public void SimulateGroupStage()

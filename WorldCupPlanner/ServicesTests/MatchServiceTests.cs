@@ -512,4 +512,18 @@ public class MatchServiceTests
         Assert.AreEqual(match.HomeTeam, match.Incidents[0].Team);
         Assert.AreEqual(4, match.Incidents[0].Quantity);
     }
+    
+    [TestMethod]
+    public void SimulateMatch_WithExistingMatch_ShouldSetCardIncidents()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        _service.SimulateMatch(created.idMatch, 1);
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+
+        Assert.IsTrue(match.Incidents.Count > 0);
+    }
 }
