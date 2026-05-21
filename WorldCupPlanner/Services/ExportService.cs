@@ -52,4 +52,11 @@ public class ExportService : IExportService
 
         return Array.Empty<byte>();
     }
+    
+    public byte[] ExportLogsToXlsx(string userEmail, DateTime from, DateTime to)
+    {
+        ValidateCanExport(userEmail);
+
+        return Array.Empty<byte>();
+    }
 }

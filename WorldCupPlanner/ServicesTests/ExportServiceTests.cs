@@ -88,4 +88,23 @@ public class ExportServiceTests
 
         Assert.IsNotNull(result);
     }
+    
+    [TestMethod]
+    public void ExportLogsToXlsx_WhenUserIsAdministrator_ShouldReturnBytes()
+    {
+        var userRepository = new UserRepository();
+
+        var administrator = new User("Admin", "Sistema", "admin@test.com", new DateTime(1990, 1, 1), "Aa123456!", new List<UserRole> { UserRole.SystemAdministrator });
+
+        userRepository.AddUser(administrator);
+
+        var service = new ExportService(userRepository);
+
+        var from = new DateTime(2026, 6, 1);
+        var to = new DateTime(2026, 6, 10);
+
+        var result = service.ExportLogsToXlsx("admin@test.com", from, to);
+
+        Assert.IsNotNull(result);
+    }
 }
