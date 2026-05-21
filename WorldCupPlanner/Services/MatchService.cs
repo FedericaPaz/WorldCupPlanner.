@@ -57,8 +57,8 @@ public class MatchService : IMatchService
 
         var match = _matchRepository.GetMatchById(matchId);
 
+        match.ClearCardIncidents();
         AddCardIncidents(match, request);
-
         match.SetMatchResult(request.homeGoals, request.awayGoals);
     }
 

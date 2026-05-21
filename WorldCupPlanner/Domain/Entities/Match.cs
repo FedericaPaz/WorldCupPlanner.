@@ -1,3 +1,4 @@
+using Domain.Enums;
 using Domain.Interfaces;
 
 namespace Domain.Entities;
@@ -342,5 +343,12 @@ public class Match
         {
             throw new ArgumentNullException(nameof(incident));
         }
+    }
+    
+    public void ClearCardIncidents()
+    {
+        _incidents.RemoveAll(incident =>
+            incident.Type == IncidentType.YellowCard ||
+            incident.Type == IncidentType.RedCard);
     }
 }
