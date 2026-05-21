@@ -174,13 +174,28 @@ public class MatchServiceTests
     }
 
     [TestMethod]
-    public void SetResult_WhenResultAlreadySet_ShouldThrowInvalidOperationException()
+    public void SetResult_WithExistingResult_ShouldUpdateMatchResult()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-        _service.SetMatchResult(created.idMatch, new MatchResultRequest { homeGoals = 1, awayGoals = 0 });
-        var request = new MatchResultRequest { homeGoals = 2, awayGoals = 0 };
-        Assert.ThrowsException<InvalidOperationException>(() => _service.SetMatchResult(created.idMatch, request));
+
+        _service.SetMatchResult(created.idMatch, new MatchResultRequest
+        {
+            homeGoals = 1,
+            awayGoals = 0
+        });
+
+        _service.SetMatchResult(created.idMatch, new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1
+        });
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+
+        Assert.AreEqual(2, match.HomeGoals);
+        Assert.AreEqual(1, match.AwayGoals);
     }
 
     [TestMethod]

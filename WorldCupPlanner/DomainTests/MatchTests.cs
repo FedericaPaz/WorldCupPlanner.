@@ -260,4 +260,6 @@ public class MatchTests
       var match = new Match(now.AddDays(1), stadium, homeTeam, awayTeam, 'A', clock);
       Assert.ThrowsException<ArgumentNullException>(() => match.AddIncident(null!));
    }
+   
+   
 }

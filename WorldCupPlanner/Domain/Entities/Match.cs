@@ -167,7 +167,6 @@ public class Match
 
     private void ApplyResult(int homeGoals, int awayGoals)
     {
-        EnsureResultWasNotSet();
         EnsureValidGoals(homeGoals, awayGoals);
 
         _homeGoals = homeGoals;
