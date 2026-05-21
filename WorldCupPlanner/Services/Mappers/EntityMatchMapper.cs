@@ -32,7 +32,9 @@ public static class EntityMatchMapper
     private static int GetIncidentQuantity(Match match, ITeam team, IncidentType type)
     {
         return match.Incidents
-            .Where(incident => incident.Team == team && incident.Type == type)
+            .Where(incident =>
+                incident.Team.Name == team.Name &&
+                incident.Type == type)
             .Sum(incident => incident.Quantity);
     }
 }
