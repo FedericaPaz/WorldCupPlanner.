@@ -8,6 +8,8 @@ public class LogEntry
     private string _action = string.Empty;
     private string _detail = string.Empty;
 
+    public int Id { get; private set; }
+    
     public DateTime Timestamp
     {
         get { return _timestamp; }
@@ -52,6 +54,11 @@ public class LogEntry
             EnsureRequiredText(value, "El detalle del log es requerido.", nameof(Detail));
             _detail = value.Trim();
         }
+    }
+
+    private LogEntry()
+    {
+        
     }
 
     public LogEntry(string userEmail, string category, string action, string detail)

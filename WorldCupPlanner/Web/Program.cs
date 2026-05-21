@@ -10,8 +10,11 @@ using Domain.Enums;
 using Domain.Import;
 using Domain.Import.Interfaces;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<WorldCupPlannerContext>(opcions => opcions.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
@@ -52,6 +55,9 @@ builder.Services.AddSingleton<ISimulationService, CrucesSimulationService>();
 builder.Services.AddSingleton<ICrucesRepository, CrucesRepository>();
 builder.Services.AddSingleton<ICrucesGeneratorService, CrucesGeneratorService>();
 builder.Services.AddSingleton<ICruceService, CruceService>();
+
+builder.Services.AddSingleton<INotificationRepository, InMemoryNotificationRepository>();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 
 var app = builder.Build();
 

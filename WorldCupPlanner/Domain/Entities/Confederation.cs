@@ -12,6 +12,7 @@ public class Confederation
         ["OFC"] = 1
     };
 
+    public int Id { get; private set; }
     private string _name = string.Empty;
     private int _maxTeams;
 
@@ -30,7 +31,12 @@ public class Confederation
         get { return _maxTeams; }
         private set { _maxTeams = value; }
     }
-
+    
+    private Confederation()
+    {
+        
+    }
+    
     public Confederation(string name)
     {
         Name = name;

@@ -9,6 +9,11 @@ public class Notification
     public bool IsRead { get; private set; }
     public DateTime? ReadAt { get; private set; }
 
+    private Notification()
+    {
+        
+    }
+
     public Notification(string userEmail, string message, DateTime createdAt)
     {
         Id = Guid.NewGuid();

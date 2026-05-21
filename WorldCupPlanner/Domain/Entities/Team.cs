@@ -21,6 +21,11 @@ public class Team : ITeam
     
     public int CurrentRanking => _currentRanking;
 
+    private Team()
+    {
+        
+    }
+    
     public Team(string name, Confederation confederation, int fifaRanking)
     {
         ValidateName(name);

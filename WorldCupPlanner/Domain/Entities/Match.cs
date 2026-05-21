@@ -105,6 +105,11 @@ public class Match
         get { return _loserMatch; }
     }
 
+    private Match()
+    {
+        
+    }
+    
     public Match(DateTime dateMatch, IStadium stadium, ITeam homeTeam, ITeam awayTeam, char group, IDateTimeMatch clock)
     {
         SetClock(clock);

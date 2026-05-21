@@ -68,6 +68,11 @@ public class User
         get { return _roles; }
     }
 
+    private User()
+    {
+        
+    }
+    
     public User(
         string firstName,
         string lastName,

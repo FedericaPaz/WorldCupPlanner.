@@ -11,6 +11,8 @@ public class Group
     private readonly List<Team> _teamsInGroup = new List<Team>();
     private readonly List<Match> _matchesInGroup = new List<Match>();
 
+    public int Id { get; private set; }
+    
     public char GroupLetter
     {
         get => _groupLetter;
@@ -25,7 +27,12 @@ public class Group
     {
         get => _matchesInGroup;
     }
-
+    
+    private Group()
+    {
+        
+    }
+    
     public Group(char groupLetter)
     {
         EnsureValidGroupLetter(groupLetter);

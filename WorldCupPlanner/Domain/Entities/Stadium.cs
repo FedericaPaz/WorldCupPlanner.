@@ -57,6 +57,11 @@ public class Stadium : IStadium
         }
     }
 
+    private Stadium()
+    {
+        
+    }
+    
     public Stadium(string name, string cityName, string? stadiumDescription, int locativeCapacity)
     {
         StadiumName = name;

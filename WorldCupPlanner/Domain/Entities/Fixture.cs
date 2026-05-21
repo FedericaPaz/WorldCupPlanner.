@@ -21,7 +21,13 @@ public class Fixture
     }
 
     public IReadOnlyList<Group> Groups => _groups;
-
+    public int Id { get; private set; }
+    
+    private Fixture()
+    {
+        
+    }
+    
     public Fixture(TournamentConfig config)
     {
         _config = config;
