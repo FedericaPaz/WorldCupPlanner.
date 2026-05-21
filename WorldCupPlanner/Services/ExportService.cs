@@ -6,6 +6,11 @@ namespace Services;
 
 public class ExportService : IExportService
 {
+    private const string FixtureExportName = "Fixture";
+    private const string LogsExportName = "Logs";
+    private const string CsvFormat = "CSV";
+    private const string XlsxFormat = "XLSX";
+
     private readonly IUserRepository _userRepository;
 
     public ExportService(IUserRepository userRepository)
@@ -17,7 +22,30 @@ public class ExportService : IExportService
     {
         ValidateCanExport(userEmail);
 
-        return Array.Empty<byte>();
+        return BuildEmptyExport(FixtureExportName, CsvFormat);
+    }
+
+    public byte[] ExportFixtureToXlsx(string userEmail)
+    {
+        ValidateCanExport(userEmail);
+
+        return BuildEmptyExport(FixtureExportName, XlsxFormat);
+    }
+
+    public byte[] ExportLogsToCsv(string userEmail, DateTime from, DateTime to)
+    {
+        ValidateDateRange(from, to);
+        ValidateCanExport(userEmail);
+
+        return BuildEmptyExport(LogsExportName, CsvFormat);
+    }
+
+    public byte[] ExportLogsToXlsx(string userEmail, DateTime from, DateTime to)
+    {
+        ValidateDateRange(from, to);
+        ValidateCanExport(userEmail);
+
+        return BuildEmptyExport(LogsExportName, XlsxFormat);
     }
 
     private void ValidateCanExport(string userEmail)
@@ -38,25 +66,17 @@ public class ExportService : IExportService
             throw new UnauthorizedAccessException("El usuario no tiene permisos para exportar.");
         }
     }
-    
-    public byte[] ExportFixtureToXlsx(string userEmail)
-    {
-        ValidateCanExport(userEmail);
 
-        return Array.Empty<byte>();
+    private static void ValidateDateRange(DateTime from, DateTime to)
+    {
+        if (from > to)
+        {
+            throw new ArgumentException("La fecha desde no puede ser posterior a la fecha hasta.");
+        }
     }
-    
-    public byte[] ExportLogsToCsv(string userEmail, DateTime from, DateTime to)
-    {
-        ValidateCanExport(userEmail);
 
-        return Array.Empty<byte>();
-    }
-    
-    public byte[] ExportLogsToXlsx(string userEmail, DateTime from, DateTime to)
+    private static byte[] BuildEmptyExport(string exportName, string format)
     {
-        ValidateCanExport(userEmail);
-
         return Array.Empty<byte>();
     }
 }
