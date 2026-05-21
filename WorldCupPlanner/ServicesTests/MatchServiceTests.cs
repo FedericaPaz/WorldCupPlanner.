@@ -165,12 +165,24 @@ public class MatchServiceTests
     }
 
     [TestMethod]
-    public void SetResult_WhenMatchNotPlayedYet_ShouldThrowInvalidOperationException()
+    public void SetResult_WithFutureMatch_ShouldUpdateMatchResult()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(new DateTime(2027, 6, 10)));
-        var request = new MatchResultRequest { homeGoals = 2, awayGoals = 1 };
-        Assert.ThrowsException<InvalidOperationException>(() => _service.SetMatchResult(created.idMatch, request));
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1
+        };
+
+        _service.SetMatchResult(created.idMatch, request);
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+
+        Assert.AreEqual(2, match.HomeGoals);
+        Assert.AreEqual(1, match.AwayGoals);
     }
 
     [TestMethod]
@@ -360,13 +372,18 @@ public class MatchServiceTests
     }
 
     [TestMethod]
-    public void SimulateMatch_WithFutureMatch_ShouldThrowInvalidOperationException()
+    public void SimulateMatch_WithFutureMatch_ShouldSetMatchResult()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(new DateTime(2028, 1, 1)));
 
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            _service.SimulateMatch(created.idMatch, 1));
+        _service.SimulateMatch(created.idMatch, 1);
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+
+        Assert.AreEqual(2, match.HomeGoals);
+        Assert.AreEqual(1, match.AwayGoals);
     }
 
     [TestMethod]

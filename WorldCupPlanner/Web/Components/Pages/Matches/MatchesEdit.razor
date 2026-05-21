@@ -180,33 +180,36 @@
             int currentHomeGoals = _match.homeGoals ?? 0;
             int currentAwayGoals = _match.awayGoals ?? 0;
 
-            bool resultChanged =
-                _homeGoals != currentHomeGoals ||
-                _awayGoals != currentAwayGoals ||
-                _homeYellowCards != _match.homeYellowCards ||
-                _awayYellowCards != _match.awayYellowCards ||
-                _homeRedCards != _match.homeRedCards ||
-                _awayRedCards != _match.awayRedCards;
+            bool goalsChanged =
+            _homeGoals != currentHomeGoals ||
+            _awayGoals != currentAwayGoals;
+
+            bool cardsChanged =
+            _homeYellowCards != _match.homeYellowCards ||
+            _awayYellowCards != _match.awayYellowCards ||
+            _homeRedCards != _match.homeRedCards ||
+            _awayRedCards != _match.awayRedCards;
+
+            bool resultChanged = goalsChanged || cardsChanged;
+                
 
             if (resultChanged)
             {
-                if (!_match.homeGoals.HasValue && !_match.awayGoals.HasValue)
+                var request = new MatchResultRequest
                 {
-                    var request = new MatchResultRequest
-                    {
-                        homeGoals = _homeGoals,
-                        awayGoals = _awayGoals,
-                        homeYellowCards = _homeYellowCards,
-                        awayYellowCards = _awayYellowCards,
-                        homeRedCards = _homeRedCards,
-                        awayRedCards = _awayRedCards
-                    };
+                    homeGoals = _homeGoals,
+                    awayGoals = _awayGoals,
+                    homeYellowCards = _homeYellowCards,
+                    awayYellowCards = _awayYellowCards,
+                    homeRedCards = _homeRedCards,
+                    awayRedCards = _awayRedCards
+                };
 
-                    MatchService.SetMatchResult(_match.idMatch, request);
-                }
+                MatchService.SetMatchResult(_match.idMatch, request);
 
                 wasModified = true;
             }
+            
 
             if (wasModified)
             {

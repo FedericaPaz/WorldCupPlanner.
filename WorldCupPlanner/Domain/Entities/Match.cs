@@ -139,7 +139,6 @@ public class Match
 
     public void SetMatchResult(int homeGoals, int awayGoals)
     {
-        EnsureMatchWasPlayed();
         ApplyResult(homeGoals, awayGoals);
     }
 
