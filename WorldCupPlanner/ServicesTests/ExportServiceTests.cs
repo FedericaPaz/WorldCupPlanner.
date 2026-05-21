@@ -23,4 +23,19 @@ public class ExportServiceTests
 
         Assert.IsNotNull(result);
     }
+    
+    [TestMethod]
+    public void ExportFixtureToCsv_WhenUserIsJournalist_ShouldReturnBytes()
+    {
+        var userRepository = new UserRepository();
+
+        var journalist = new User("Juan", "Periodista", "periodista@test.com", new DateTime(1995, 1, 1), "Aa123456!", new List<UserRole> { UserRole.Journalist });
+
+        userRepository.AddUser(journalist);
+
+        var service = new ExportService(userRepository);
+        var result = service.ExportFixtureToCsv("periodista@test.com");
+
+        Assert.IsNotNull(result);
+    }
 }
