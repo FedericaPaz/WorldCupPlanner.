@@ -38,4 +38,19 @@ public class ExportServiceTests
 
         Assert.IsNotNull(result);
     }
+    
+    [TestMethod]
+    public void ExportFixtureToCsv_WhenUserIsEditor_ShouldThrowUnauthorizedAccessException()
+    {
+        var userRepository = new UserRepository();
+
+        var editor = new User("Pedro", "Editor", "editor@test.com", new DateTime(1995, 1, 1), "Aa123456!", new List<UserRole> { UserRole.Editor });
+
+        userRepository.AddUser(editor);
+
+        var service = new ExportService(userRepository);
+
+        Assert.ThrowsException<UnauthorizedAccessException>(() =>
+            service.ExportFixtureToCsv("editor@test.com"));
+    }
 }
