@@ -1,11 +1,15 @@
 ﻿using IServices;
 using Domain.Entities;
+using Domain.Interfaces;
+using Domain.Enums;
 
 namespace Services;
 
 public class CrucesSimulationService : ISimulationService
 {
     private const int MaxGoals = 7;
+    private const int MaxYellowCards = 4;
+    private const int MaxRedCards = 1;
     public (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed)
     {
         var home = (Team)match.HomeTeam;
@@ -41,6 +45,51 @@ public class CrucesSimulationService : ISimulationService
             else
                 awayGoals++;
         }
+        match.ClearCardIncidents();
+
+        AddSimulatedCardIncidents(match, seed);
+
         match.SimulateResult(homeGoals, awayGoals);
+    }
+    
+    private static void AddSimulatedCardIncidents(Match match, int seed)
+    {
+        var random = new Random(seed + match.IdMatch * 17);
+
+        AddIncidentIfNeeded(
+            match,
+            IncidentType.YellowCard,
+            match.HomeTeam,
+            random.Next(0, MaxYellowCards + 1));
+
+        AddIncidentIfNeeded(
+            match,
+            IncidentType.YellowCard,
+            match.AwayTeam,
+            random.Next(0, MaxYellowCards + 1));
+
+        AddIncidentIfNeeded(
+            match,
+            IncidentType.RedCard,
+            match.HomeTeam,
+            random.Next(0, MaxRedCards + 1));
+
+        AddIncidentIfNeeded(
+            match,
+            IncidentType.RedCard,
+            match.AwayTeam,
+            random.Next(0, MaxRedCards + 1));
+    }
+    
+    private static void AddIncidentIfNeeded(
+        Match match,
+        IncidentType type,
+        ITeam team,
+        int quantity)
+    {
+        if (quantity > 0)
+        {
+            match.AddIncident(new MatchIncident(type, (Team)team, quantity));
+        }
     }
 }

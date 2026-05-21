@@ -154,4 +154,19 @@ public class CruceSimulatorServiceTests
         Assert.AreEqual(2, cruce.Match.HomeGoals);
         Assert.AreEqual(1, cruce.Match.AwayGoals);
     }
+    
+    [TestMethod]
+    public void SimulateGroupStage_ShouldAddCardIncidentsToMatches()
+    {
+        Match.ResetIdCounter();
+
+        var group = BuildGroupWithMatches();
+
+        _service.SimulateGroupStage(new List<Group> { group }, Seed);
+
+        foreach (var match in group.MatchesInGroup)
+        {
+            Assert.IsTrue(match.Incidents.Count > 0);
+        }
+    }
 }
