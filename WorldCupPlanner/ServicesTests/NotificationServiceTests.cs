@@ -51,7 +51,7 @@ public class NotificationServiceTests
         var service = new NotificationService(userRepository, notificationRepository);
 
         var unreadNotifications = service
-            .GetUnreadNotifications("periodista@test.com")
+            .GetUnread("periodista@test.com")
             .ToList();
 
         Assert.AreEqual(1, unreadNotifications.Count);
@@ -109,5 +109,26 @@ public class NotificationServiceTests
 
         Assert.AreEqual(1, notifications.Count);
         Assert.AreEqual("Nueva notificación", notifications[0].Message);
+    }
+    
+    [TestMethod]
+    public void GetUnread_WhenUserHasUnreadNotifications_ShouldReturnUnreadNotifications()
+    {
+        var userRepository = new UserRepository();
+        var notificationRepository = new InMemoryNotificationRepository();
+
+        var notification = new Notification(
+            "periodista@test.com",
+            "Nueva notificación",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+
+        notificationRepository.Add(notification);
+
+        var service = new NotificationService(userRepository, notificationRepository);
+
+        var notifications = service.GetUnread("periodista@test.com").ToList();
+
+        Assert.AreEqual(1, notifications.Count);
+        Assert.AreSame(notification, notifications[0]);
     }
 }

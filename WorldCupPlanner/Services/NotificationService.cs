@@ -31,9 +31,9 @@ public class NotificationService : INotificationService
         }
     }
     
-    public IEnumerable<Notification> GetUnreadNotifications(string userEmail)
+    public IEnumerable<Notification> GetUnread(string email)
     {
-        return _notificationRepository.GetUnreadByUserEmail(userEmail);
+        return _notificationRepository.GetUnreadByUserEmail(email);
     }
     
     public void MarkAsRead(Guid notificationId, string userEmail)
