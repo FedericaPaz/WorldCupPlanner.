@@ -1,3 +1,4 @@
+using Domain.Enums;
 using Domain.Interfaces;
 
 namespace Domain.Entities;
@@ -23,6 +24,7 @@ public class Match
     private ITeam? _loserMatch;
     private IDateTimeMatch _clock = null!;
     private bool _isLocked;
+    private readonly List<MatchIncident> _incidents = new List<MatchIncident>();
 
     public int IdMatch
     {
@@ -105,6 +107,11 @@ public class Match
         get { return _loserMatch; }
     }
 
+    public IReadOnlyList<MatchIncident> Incidents
+    {
+        get { return _incidents; }
+    }
+
     public Match(DateTime dateMatch, IStadium stadium, ITeam homeTeam, ITeam awayTeam, char group, IDateTimeMatch clock)
     {
         SetClock(clock);
@@ -154,6 +161,19 @@ public class Match
     {
         EnsureGroupPhaseIsEditable();
         Stadium = newStadium;
+    }
+
+    public void AddIncident(MatchIncident incident)
+    {
+        EnsureIncidentIsNotNull(incident);
+        _incidents.Add(incident);
+    }
+
+    public void ClearCardIncidents()
+    {
+        _incidents.RemoveAll(incident =>
+            incident.Type == IncidentType.YellowCard ||
+            incident.Type == IncidentType.RedCard);
     }
 
     private static int GenerateNextId()
@@ -325,6 +345,14 @@ public class Match
         {
             throw new InvalidOperationException(
                 "No se puede editar un partido de fase de grupos una vez generados los cruces.");
+        }
+    }
+
+    private static void EnsureIncidentIsNotNull(MatchIncident incident)
+    {
+        if (incident == null)
+        {
+            throw new ArgumentNullException(nameof(incident));
         }
     }
 }

@@ -32,7 +32,7 @@ builder.Services.AddSingleton<IMatchRepository, MatchRepository>();
 builder.Services.AddSingleton<IMatchService, MatchService>();
 builder.Services.AddSingleton<IDateTimeMatch, SystemDateTimeMatch>();
 
-builder.Services.AddSingleton<IFixtureRepository, FixtureRepository >();
+builder.Services.AddSingleton<IFixtureRepository, FixtureRepository>();
 builder.Services.AddSingleton<IFixtureService, FixtureService>();
 builder.Services.AddSingleton<FixtureGenerator>();
 
@@ -60,8 +60,6 @@ using (var scope = app.Services.CreateScope())
     var userRepo = scope.ServiceProvider.GetRequiredService<IUserRepository>();
     var teamRepo = scope.ServiceProvider.GetRequiredService<ITeamRepository>();
     var stadiumRepo = scope.ServiceProvider.GetRequiredService<IStadiumRepository>();
-    var matchRepo = scope.ServiceProvider.GetRequiredService<IMatchRepository>();
-    var clock = scope.ServiceProvider.GetRequiredService<IDateTimeMatch>();
 
     var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 300);
     var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 301);
@@ -71,23 +69,19 @@ using (var scope = app.Services.CreateScope())
     teamRepo.Add(argentina);
     teamRepo.Add(brasil);
 
-    var centenario = new Stadium("Centenario", "Montevideo", null, 60000);
-    var maracana = new Stadium("Maracaná", "Rio", null, 70000);
-    var campeonDelSiglo = new Stadium("Campeón del Siglo", "Montevideo", "Estadio de Peñarol.", 40000);
-    var belvedere = new Stadium("Belvedere", "Montevideo", "Estadio de Liverpool Fútbol Club.", 20000);
-    
-    stadiumRepo.AddStadium(centenario);
-    stadiumRepo.AddStadium(maracana);
-    stadiumRepo.AddStadium(campeonDelSiglo);
-    stadiumRepo.AddStadium(belvedere);
-    
-    var match1 = new Match(clock.Now.AddDays(1), centenario, uruguay, argentina, 'A', clock);
-    var match2 = new Match(clock.Now.AddDays(2), maracana, brasil, uruguay, 'B', clock);
+    stadiumRepo.AddStadium(new Stadium("Centenario", "Montevideo", null, 60000));
+    stadiumRepo.AddStadium(new Stadium("Maracaná", "Rio", null, 70000));
+    stadiumRepo.AddStadium(new Stadium("Campeón del Siglo", "Montevideo", "Estadio de Peñarol.", 40000));
+    stadiumRepo.AddStadium(new Stadium("Belvedere", "Montevideo", "Estadio de Liverpool Fútbol Club.", 20000));
 
-    //matchRepo.AddMatch(match1);
-    //matchRepo.AddMatch(match2);
-    
-    var user = new User("Federica)", "Paz", "fede@gmail.com", new DateTime(1990, 5, 20), "Password123!", [UserRole.SystemAdministrator, UserRole.Editor]);
+    var user = new User(
+        "Federica",
+        "Paz",
+        "fede@gmail.com",
+        new DateTime(1990, 5, 20),
+        "Password123!",
+        [UserRole.SystemAdministrator, UserRole.Editor]);
+
     userRepo.AddUser(user);
 }
 

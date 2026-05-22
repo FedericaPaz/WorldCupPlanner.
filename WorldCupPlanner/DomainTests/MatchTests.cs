@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using DomainTests.Stubs;
 
 namespace DomainTests;
@@ -48,14 +49,15 @@ public class MatchTests
       Assert.ThrowsException<ArgumentException>(() => new Match(clock.Now, new StadiumStub("Centenario"), team, team, 'A', clock));
    }
 
-
    [TestMethod]
    public void CreateMatch_WithNullStadium_ShouldThrowArgumentNullException()
    {
       var homeTeam = new TeamStub("Uruguay");
       var awayTeam = new TeamStub("Argentina");
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
-      Assert.ThrowsException<ArgumentNullException>(() => new Match(clock.Now, null, homeTeam, awayTeam, 'A', clock));
+
+      Assert.ThrowsException<ArgumentNullException>(() =>
+         new Match(clock.Now, null, homeTeam, awayTeam, 'A', clock));
    }
 
    [TestMethod]
@@ -64,9 +66,10 @@ public class MatchTests
       var awayTeam = new TeamStub("Argentina");
       var stadium = new StadiumStub("Estadio Centenario");
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
-      Assert.ThrowsException<ArgumentNullException>(() => new Match(clock.Now, stadium, null, awayTeam, 'A', clock));
-   }
 
+      Assert.ThrowsException<ArgumentNullException>(() =>
+         new Match(clock.Now, stadium, null, awayTeam, 'A', clock));
+   }
 
    [TestMethod]
    public void CreateMatch_WithNullAwayTeam_ShouldThrowArgumentNullException()
@@ -74,7 +77,9 @@ public class MatchTests
       var homeTeam = new TeamStub("Uruguay");
       var stadium = new StadiumStub("Estadio Centenario");
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
-      Assert.ThrowsException<ArgumentNullException>(() => new Match(clock.Now, stadium, homeTeam, null, 'A', clock));
+
+      Assert.ThrowsException<ArgumentNullException>(() =>
+         new Match(clock.Now, stadium, homeTeam, null, 'A', clock));
    }
 
    [TestMethod]
@@ -84,7 +89,9 @@ public class MatchTests
       var awayTeam = new TeamStub("Argentina");
       var stadium = new StadiumStub("Estadio Centenario");
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1, 14, 0, 0));
-      Assert.ThrowsException<ArgumentException>(() => new Match(clock.Now, stadium, homeTeam, awayTeam, '\0', clock));
+
+      Assert.ThrowsException<ArgumentException>(() =>
+         new Match(clock.Now, stadium, homeTeam, awayTeam, '\0', clock));
    }
 
    [TestMethod]
@@ -93,8 +100,11 @@ public class MatchTests
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
       var home = new TeamStub("Uruguay");
       var away = new TeamStub("Argentina");
+
       var match = new Match(clock.Now, new StadiumStub("Centenario"), home, away, 'A', clock);
+
       match.SetMatchResult(2, 1);
+
       Assert.AreEqual(2, match.HomeGoals);
       Assert.AreEqual(1, match.AwayGoals);
       Assert.AreEqual(home, match.WinnerMatch);
@@ -104,7 +114,15 @@ public class MatchTests
    public void SetResult_WithNegativeGoals_ShouldThrowException()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-      var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+      var match = new Match(
+         clock.Now,
+         new StadiumStub("Centenario"),
+         new TeamStub("Uruguay"),
+         new TeamStub("Argentina"),
+         'A',
+         clock);
+
       Assert.ThrowsException<ArgumentException>(() => match.SetMatchResult(-1, 1));
    }
 
@@ -112,8 +130,17 @@ public class MatchTests
    public void SetResult_WhenAlreadySet_ShouldThrowArgumentException()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-      var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+      var match = new Match(
+         clock.Now,
+         new StadiumStub("Centenario"),
+         new TeamStub("Uruguay"),
+         new TeamStub("Argentina"),
+         'A',
+         clock);
+
       match.SetMatchResult(1, 0);
+
       Assert.ThrowsException<InvalidOperationException>(() => match.SetMatchResult(2, 0));
    }
 
@@ -122,7 +149,15 @@ public class MatchTests
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
       var matchDate = new DateTime(2026, 6, 10);
-      var match = new Match(matchDate, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+      var match = new Match(
+         matchDate,
+         new StadiumStub("Centenario"),
+         new TeamStub("Uruguay"),
+         new TeamStub("Argentina"),
+         'A',
+         clock);
+
       Assert.ThrowsException<InvalidOperationException>(() => match.SetMatchResult(1, 0));
    }
 
@@ -131,16 +166,21 @@ public class MatchTests
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 10));
       var pastDate = new DateTime(2026, 6, 1);
-      Assert.ThrowsException<ArgumentException>(() => new Match(pastDate, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock));
+
+      Assert.ThrowsException<ArgumentException>(() =>
+         new Match(pastDate, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock));
    }
 
    [TestMethod]
    public void CreateMatch_AfterResetIdCounter_ShouldStartFromOne()
    {
       Match.ResetIdCounter();
+
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+
       var match1 = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
       var match2 = new Match(clock.Now, new StadiumStub("Maracana"), new TeamStub("Brasil"), new TeamStub("Peru"), 'A', clock);
+
       Assert.AreEqual(1, match1.IdMatch);
       Assert.AreEqual(2, match2.IdMatch);
    }
@@ -149,14 +189,28 @@ public class MatchTests
    public void CreateMatch_WithNullClock_ShouldThrowArgumentNullException()
    {
       Assert.ThrowsException<ArgumentNullException>(() =>
-         new Match(new DateTime(2026, 6, 1), new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', null));
+         new Match(
+            new DateTime(2026, 6, 1),
+            new StadiumStub("Centenario"),
+            new TeamStub("Uruguay"),
+            new TeamStub("Argentina"),
+            'A',
+            null));
    }
 
    [TestMethod]
    public void CreateMatch_WithLowercaseGroup_ShouldSaveGroupAsUppercase()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-      var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'a', clock);
+
+      var match = new Match(
+         clock.Now,
+         new StadiumStub("Centenario"),
+         new TeamStub("Uruguay"),
+         new TeamStub("Argentina"),
+         'a',
+         clock);
+
       Assert.AreEqual('A', match.Group);
    }
 
@@ -165,9 +219,17 @@ public class MatchTests
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
       var awayTeam = new TeamStub("Argentina");
-      var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), awayTeam, 'A', clock);
+
+      var match = new Match(
+         clock.Now,
+         new StadiumStub("Centenario"),
+         new TeamStub("Uruguay"),
+         awayTeam,
+         'A',
+         clock);
 
       match.SetMatchResult(0, 2);
+
       Assert.AreEqual(awayTeam, match.WinnerMatch);
    }
 
@@ -175,9 +237,17 @@ public class MatchTests
    public void SetMatchResult_WithDraw_ShouldLeaveWinnerNull()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-      var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+      var match = new Match(
+         clock.Now,
+         new StadiumStub("Centenario"),
+         new TeamStub("Uruguay"),
+         new TeamStub("Argentina"),
+         'A',
+         clock);
 
       match.SetMatchResult(1, 1);
+
       Assert.IsNull(match.WinnerMatch);
    }
 
@@ -185,10 +255,19 @@ public class MatchTests
    public void UpdateDate_WithValidDate_ShouldUpdateDate()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-      var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+      var match = new Match(
+         clock.Now,
+         new StadiumStub("Centenario"),
+         new TeamStub("Uruguay"),
+         new TeamStub("Argentina"),
+         'A',
+         clock);
+
       var newDate = new DateTime(2026, 6, 5);
 
       match.UpdateDate(newDate);
+
       Assert.AreEqual(newDate, match.DateMatch);
    }
 
@@ -196,7 +275,15 @@ public class MatchTests
    public void UpdateDate_WithPastDate_ShouldThrowArgumentException()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 10));
-      var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+      var match = new Match(
+         clock.Now,
+         new StadiumStub("Centenario"),
+         new TeamStub("Uruguay"),
+         new TeamStub("Argentina"),
+         'A',
+         clock);
+
       var pastDate = new DateTime(2026, 6, 1);
 
       Assert.ThrowsException<ArgumentException>(() => match.UpdateDate(pastDate));
@@ -206,10 +293,19 @@ public class MatchTests
    public void UpdateStadium_WithValidStadium_ShouldUpdateStadium()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-      var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+      var match = new Match(
+         clock.Now,
+         new StadiumStub("Centenario"),
+         new TeamStub("Uruguay"),
+         new TeamStub("Argentina"),
+         'A',
+         clock);
+
       var newStadium = new StadiumStub("Maracana");
 
       match.UpdateStadium(newStadium);
+
       Assert.AreEqual(newStadium, match.Stadium);
    }
 
@@ -217,7 +313,14 @@ public class MatchTests
    public void UpdateStadium_WithNullStadium_ShouldThrowArgumentNullException()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-      var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
+
+      var match = new Match(
+         clock.Now,
+         new StadiumStub("Centenario"),
+         new TeamStub("Uruguay"),
+         new TeamStub("Argentina"),
+         'A',
+         clock);
 
       Assert.ThrowsException<ArgumentNullException>(() => match.UpdateStadium(null));
    }
@@ -226,9 +329,59 @@ public class MatchTests
    public void CreateMatch_WithDifferentTeamObjectsButSameName_ShouldThrowArgumentException()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+
       var homeTeam = new TeamStub("Uruguay");
       var awayTeam = new TeamStub("Uruguay");
 
-      Assert.ThrowsException<ArgumentException>(() => new Match(clock.Now, new StadiumStub("Centenario"), homeTeam, awayTeam, 'A', clock));
+      Assert.ThrowsException<ArgumentException>(() =>
+         new Match(clock.Now, new StadiumStub("Centenario"), homeTeam, awayTeam, 'A', clock));
+   }
+
+   [TestMethod]
+   public void AddIncident_WithValidIncident_ShouldAddIncidentToMatch()
+   {
+      var now = new DateTime(2026, 6, 1, 10, 0, 0);
+      var clock = new DateTimeMatchStub(now);
+      var confederation = new Confederation("UEFA");
+
+      var homeTeam = new Team("Uruguay", confederation, 1500);
+      var awayTeam = new Team("España", confederation, 1600);
+      var stadium = new Stadium("Centenario", "Montevideo", "", 60000);
+
+      var match = new Match(
+         now.AddDays(1),
+         stadium,
+         homeTeam,
+         awayTeam,
+         'A',
+         clock);
+
+      var incident = new MatchIncident(IncidentType.YellowCard, homeTeam, 1);
+
+      match.AddIncident(incident);
+
+      Assert.AreEqual(1, match.Incidents.Count);
+   }
+
+   [TestMethod]
+   public void AddIncident_WithNullIncident_ShouldThrowArgumentNullException()
+   {
+      var now = new DateTime(2026, 6, 1, 10, 0, 0);
+      var clock = new DateTimeMatchStub(now);
+      var confederation = new Confederation("UEFA");
+
+      var homeTeam = new Team("Uruguay", confederation, 1500);
+      var awayTeam = new Team("España", confederation, 1600);
+      var stadium = new Stadium("Centenario", "Montevideo", "", 60000);
+
+      var match = new Match(
+         now.AddDays(1),
+         stadium,
+         homeTeam,
+         awayTeam,
+         'A',
+         clock);
+
+      Assert.ThrowsException<ArgumentNullException>(() => match.AddIncident(null!));
    }
 }
