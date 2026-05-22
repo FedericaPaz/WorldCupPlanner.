@@ -39,6 +39,7 @@ else
         <thead>
         <tr>
             <th>Ranking FIFA</th>
+            <th>Bandera</th>
             <th>Nombre</th>
             <th>Confederación</th>
             <th>Acciones</th>
@@ -49,6 +50,18 @@ else
         {
             <tr>
                 <td>@team.FifaRanking</td>
+                <td>
+                    @if (!string.IsNullOrWhiteSpace(team.FlagBase64))
+                    {
+                        <img src="@team.FlagBase64"
+                             alt="Bandera de @team.Name"
+                             style="width: 40px; height: 28px; object-fit: cover; border-radius: 4px;" />
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+                </td>
                 <td>@team.Name</td>
                 <td class="confederation">@team.ConfederationName</td>
                 <td>
