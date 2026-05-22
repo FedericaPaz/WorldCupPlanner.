@@ -14,4 +14,5 @@ public class TeamDTO
     [Required(ErrorMessage = "El ranking FIFA es obligatorio.")]
     [Range(300, 2500, ErrorMessage = "El ranking FIFA debe estar entre 300 y 2500.")]
     public int FifaRanking { get; set; }
+    public string? FlagBase64 { get; set; }
 }
