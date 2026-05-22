@@ -127,7 +127,7 @@ public class MatchTests
    }
 
    [TestMethod]
-   public void SetResult_WhenAlreadySet_ShouldThrowArgumentException()
+   public void SetResult_WithExistingResult_ShouldUpdateResult()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
 
@@ -141,11 +141,14 @@ public class MatchTests
 
       match.SetMatchResult(1, 0);
 
-      Assert.ThrowsException<InvalidOperationException>(() => match.SetMatchResult(2, 0));
+      match.SetMatchResult(2, 0);
+
+      Assert.AreEqual(2, match.HomeGoals);
+      Assert.AreEqual(0, match.AwayGoals);
    }
 
    [TestMethod]
-   public void SetResult_BeforeMatchDate_ShouldThrowArgumentException()
+   public void SetResult_WithFutureMatch_ShouldSetResult()
    {
       var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
       var matchDate = new DateTime(2026, 6, 10);
@@ -158,7 +161,10 @@ public class MatchTests
          'A',
          clock);
 
-      Assert.ThrowsException<InvalidOperationException>(() => match.SetMatchResult(1, 0));
+      match.SetMatchResult(1, 0);
+
+      Assert.AreEqual(1, match.HomeGoals);
+      Assert.AreEqual(0, match.AwayGoals);
    }
 
    [TestMethod]

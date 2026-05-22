@@ -142,7 +142,6 @@ public class Match
 
     public void SetMatchResult(int homeGoals, int awayGoals)
     {
-        EnsureMatchWasPlayed();
         ApplyResult(homeGoals, awayGoals);
     }
 
@@ -184,7 +183,6 @@ public class Match
 
     private void ApplyResult(int homeGoals, int awayGoals)
     {
-        EnsureResultWasNotSet();
         EnsureValidGoals(homeGoals, awayGoals);
 
         _homeGoals = homeGoals;
@@ -214,22 +212,6 @@ public class Match
         {
             throw new ArgumentException(
                 "No se puede crear un partido con dos equipos con el mismo nombre.");
-        }
-    }
-
-    private void EnsureMatchWasPlayed()
-    {
-        if (_clock.Now.ToUniversalTime() < DateMatch.ToUniversalTime())
-        {
-            throw new InvalidOperationException("El partido todavía no se jugó.");
-        }
-    }
-
-    private void EnsureResultWasNotSet()
-    {
-        if (HomeGoals.HasValue || AwayGoals.HasValue)
-        {
-            throw new InvalidOperationException("El resultado ya fue seteado.");
         }
     }
 
