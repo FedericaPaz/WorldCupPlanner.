@@ -1,80 +1,254 @@
 @page "/matches"
-@rendermode InteractiveServer
-@using DTOs
+@using DTOs.Match
 @using IServices
+@using Web.Services
 @inject IMatchService MatchService
+@inject ICruceService CruceService
+@inject SessionService SessionService
+@inject NavigationManager Navigation
 
 <div class="matches-page">
     <div class="page-header">
         <div>
             <h3>Listado de Partidos</h3>
-            <p>@_matches.Count de @_matches.Count partidos</p>
+            <p>@_pendientes pendientes · @_jugados jugados · @_matchesFiltrados.Count mostrados</p>
         </div>
+        @if (_pendientes > 0)
+        {
+            <button class="btn-generar-cruces" @onclick="SimularPendientes" disabled="@_cargando">
+                @if (_cargando)
+                {
+                    <span>⏳ Simulando...</span>
+                }
+                else
+                {
+                    <span>
+                        <i class="bi bi-dice-5-fill"></i>
+                        Simular pendientes (@_pendientes)
+                    </span>
+                }
+            </button>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(_mensajeError))
+    {
+        <div class="message error">⚠️ @_mensajeError</div>
+    }
+    @if (!string.IsNullOrEmpty(_mensajeExito))
+    {
+        <div class="message success">✅ @_mensajeExito</div>
+    }
+
+    <div class="filtros-container">
+        <div class="filtro-group">
+            <label>Fecha</label>
+            <input type="date" class="form-control"
+                   @bind="_filtroFecha"
+                   @bind:after="AplicarFiltros" />
+        </div>
+        <div class="filtro-group">
+            <label>Estadio</label>
+            <select class="form-control" @bind="_filtroEstadio" @bind:after="AplicarFiltros">
+                <option value="">Todos</option>
+                @foreach (var estadio in _estadios)
+                {
+                    <option value="@estadio">@estadio</option>
+                }
+            </select>
+        </div>
+        <div class="filtro-group">
+            <label>Grupo</label>
+            <select class="form-control" @bind="_filtroGrupo" @bind:after="AplicarFiltros">
+                <option value="">Todos</option>
+                @foreach (var grupo in _grupos)
+                {
+                    <option value="@grupo">@grupo</option>
+                }
+            </select>
+        </div>
+        <div class="filtro-group">
+            <label>Fase</label>
+            <select class="form-control" @bind="_filtroFase" @bind:after="AplicarFiltros">
+                <option value="">Todas</option>
+                <option value="Grupos">Fase de Grupos</option>
+                <option value="Eliminatoria">Eliminatoria</option>
+            </select>
+        </div>
+        @if (HayFiltrosActivos)
+        {
+            <button class="btn-limpiar" @onclick="LimpiarFiltros">✖ Limpiar</button>
+        }
     </div>
 
     <div class="matches-card">
-        <table class="matches-table">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Equipos</th>
-                    <th>Resultado</th>
-                    <th>Estadio</th>
-                    <th>Fase</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var match in _matches)
-                {
+        @if (!_matchesFiltrados.Any())
+        {
+            <p class="text-center text-muted py-4">No hay partidos que coincidan con los filtros.</p>
+        }
+        else
+        {
+            <table class="matches-table">
+                <thead>
                     <tr>
-                        <td class="date-cell">
-                            @match.dateMatch.ToString("dd/MM/yyyy,")
-                            <br />
-                            @match.dateMatch.ToString("HH:mm")
-                        </td>
-
-                        <td class="teams-cell">
-                            @match.homeTeamName vs @match.awayTeamName
-                        </td>
-
-                        <td>
-                            @if (match.homeGoals.HasValue && match.awayGoals.HasValue)
-                            {
-                                <span class="result-pill">
-                                    @match.homeGoals - @match.awayGoals
-                                </span>
-                            }
-                            else
-                            {
-                                <span class="no-result">-</span>
-                            }
-                        </td>
-
-                        <td class="stadium-cell">
-                            @match.stadiumName
-                        </td>
-
-                        <td>
-                            <span class="phase-pill">Grupo @match.group</span>
-                        </td>
-
-                        <td>
-                            <a class="edit-button" href="/matches/edit/@match.idMatch">✎</a>
-                        </td>
+                        <th>Fecha</th>
+                        <th>Equipos</th>
+                        <th>Resultado</th>
+                        <th>Estadio</th>
+                        <th>Grupo</th>
+                        <th>Fase</th>
+                        <th>Acciones</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var match in _matchesFiltrados)
+                    {
+                        <tr>
+                            <td class="date-cell">
+                                @match.dateMatch.ToString("dd/MM/yyyy")
+                                <br />
+                                @match.dateMatch.ToString("HH:mm")
+                            </td>
+                            <td class="teams-cell">
+                                @match.homeTeamName vs @match.awayTeamName
+                            </td>
+                            <td>
+                                @if (match.homeGoals.HasValue && match.awayGoals.HasValue)
+                                {
+                                    <span class="result-pill">
+                                        @match.homeGoals - @match.awayGoals
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="no-result">-</span>
+                                }
+                            </td>
+                            <td class="stadium-cell">@match.stadiumName</td>
+                            <td>
+                                <span class="phase-pill">
+                                    @(match.group == 'N' ? "-" : match.group.ToString())
+                                </span>
+                            </td>
+                            <td>
+                                <span class="phase-pill">@match.phase</span>
+                            </td>
+                            <td>
+                                <a class="edit-button" href="/matches/edit/@match.idMatch">✎</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
 </div>
 
 @code {
     private List<MatchResponse> _matches = new();
+    private List<MatchResponse> _matchesFiltrados = new();
+    private bool _cargando = false;
+    private string? _mensajeError;
+    private string? _mensajeExito;
+
+    private DateTime? _filtroFecha = null;
+    private string _filtroEstadio = string.Empty;
+    private string _filtroGrupo   = string.Empty;
+    private string _filtroFase    = string.Empty;
+
+    private List<string> _estadios =>
+        _matches.Select(m => m.stadiumName).Distinct().OrderBy(s => s).ToList();
+    private List<string> _grupos =>
+        _matches.Where(m => m.group != 'N')
+                .Select(m => m.group.ToString())
+                .Distinct().OrderBy(g => g).ToList();
+
+    private int _pendientes => _matches.Count(m => !m.homeGoals.HasValue);
+    private int _jugados    => _matches.Count(m =>  m.homeGoals.HasValue);
+
+    private bool HayFiltrosActivos =>
+        _filtroFecha.HasValue ||
+        !string.IsNullOrEmpty(_filtroEstadio) ||
+        !string.IsNullOrEmpty(_filtroGrupo) ||
+        !string.IsNullOrEmpty(_filtroFase);
 
     protected override void OnInitialized()
     {
-        _matches = MatchService.GetAllMatches().ToList();
+        if (!SessionService.IsEditor() )
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+        LoadData();
+    }
+
+    private void LoadData()
+    {
+        try
+        {
+            _matches = MatchService.GetAllMatches()
+                .OrderBy(m => m.dateMatch)
+                .ToList();
+            AplicarFiltros();
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = ex.Message;
+        }
+    }
+
+    private void AplicarFiltros()
+    {
+        var resultado = _matches.AsEnumerable();
+
+        if (_filtroFecha.HasValue)
+            resultado = resultado.Where(m => m.dateMatch.Date == _filtroFecha.Value.Date);
+
+        if (!string.IsNullOrEmpty(_filtroEstadio))
+            resultado = resultado.Where(m => m.stadiumName == _filtroEstadio);
+
+        if (!string.IsNullOrEmpty(_filtroGrupo))
+            resultado = resultado.Where(m => m.group.ToString() == _filtroGrupo);
+
+        if (!string.IsNullOrEmpty(_filtroFase))
+            resultado = resultado.Where(m => m.phase == _filtroFase);
+
+        _matchesFiltrados = resultado.ToList();
+        StateHasChanged();
+    }
+
+    private void LimpiarFiltros()
+    {
+        _filtroFecha   = null;
+        _filtroEstadio = string.Empty;
+        _filtroGrupo   = string.Empty;
+        _filtroFase    = string.Empty;
+        AplicarFiltros();
+    }
+
+    private void SimularPendientes()
+    {
+        try
+        {
+            _cargando = true;
+            _mensajeError = null;
+            _mensajeExito = null;
+            StateHasChanged();
+
+            MatchService.SimulateGroupStage();
+            CruceService.SimulateCruces();
+
+            _mensajeExito = "Partidos simulados correctamente.";
+            LoadData();
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = ex.Message;
+        }
+        finally
+        {
+            _cargando = false;
+            StateHasChanged();
+        }
     }
 }

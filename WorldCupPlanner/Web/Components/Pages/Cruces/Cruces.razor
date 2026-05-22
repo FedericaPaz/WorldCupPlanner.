@@ -1,0 +1,432 @@
+﻿@page "/cruces"
+@using DTOs.Cruces
+@using IServices
+@using Web.Services
+@inject ICruceService CruceService
+@inject IFixtureService FixtureService
+@inject IMatchService MatchService
+@inject ILogService LogService
+@inject SessionService SessionService
+@inject NavigationManager Navigation
+@inject IConfigService ConfigService
+
+<div class="cruces-wrapper">
+
+    <div class="cruces-header">
+        <div>
+            <h3 class="cruces-title">Cruces - Fase Eliminatoria</h3>
+            <p class="crces-subtitle">Desde 32avos hasta la final</p>
+        </div>
+        @if (_hayCruces && !_tieneFinal && !_tercerPuesto.Any())
+        {
+            var ultimaFase = _todosLosCruces.Max(x => x.Phase);
+            var crucesUltimaRonda = _todosLosCruces.Where(x => x.Phase == ultimaFase).ToList();
+            var crucesPendientes = crucesUltimaRonda.Count(x => !x.HomeGoals.HasValue);
+            @if (crucesPendientes > 0)
+            {
+                <p class="text-warning">
+                    Faltan <strong>@crucesPendientes</strong> resultado@(crucesPendientes == 1 ? "" : "s") en la ronda actual.
+                </p>
+            }
+            else
+            {
+                <button class="btn-siguiente-ronda" @onclick="GenerarSiguienteRonda" disabled="@_cargando">
+                    <span class="btn-icon">@(_cargando ? "⏳" : "➕")</span>
+                    @(_cargando ? "Generando..." : "Siguiente ronda")
+                </button>
+            }
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(_mensajeError))
+    {
+        <div class="error-mensaje">
+            <span>⚠@_mensajeError</span>
+            <button class="error-cerrar" @onclick="() => _mensajeError = null">✖</button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(_mensajeExito))
+    {
+        <div class="success-mensaje">
+            <span>@_mensajeExito</span>
+            <button class="success-cerrar" @onclick="() => _mensajeExito = null">✖</button>
+        </div>
+    }
+
+    @if (!FixtureService.HasFixture())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🏆</div>
+            <h3>No hay fixture generado</h3>
+            <p>Primero generá el fixture con 48 equipos y al menos 4 estadios.</p>
+        </div>
+    }
+    else if (!_hayCruces)
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🏆</div>
+            <h3>No hay cruces generados</h3>
+            @if (!_todosLosPartidosJugados)
+            {
+                <p> Faltan <strong>@_partidosPendientes</strong> partido@(_partidosPendientes == 1 ? "" : "s") por jugarse en la fase de grupos.</p>
+                <p>Podés cargar los resultados manualmente o ir a la pestaña de partidos para simularlos.</p>
+            }
+            else
+            {
+                <p>La fase de grupos está completa. Podés generar los cruces.</p>
+                <button class="btn-generar-cruces" @onclick="Generar32avos" disabled="@_cargando">
+                    <span class="btn-icon">@(_cargando ? "⏳" : "✨")</span>
+                    @(_cargando ? "Generando..." : "Generar cruces")
+                </button>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="bracket-container">
+            <div class="bracket-scroll">
+                @if (_ronda32avos.Any())
+                {
+                    <div class="bracket-round">
+                        <h3 class="round-title">32avos de Final (@_ronda32avos.Count cruces)</h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _ronda32avos)
+                            {
+                                <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">
+                                    <div class="match-header">
+                                        <span class="match-name">@partido.Name</span>
+                                    </div>
+                                    <div class="match-body">
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.HomeTeam</span>
+                                            <span class="team-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                        <div class="match-vs">vs</div>
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.AwayTeam</span>
+                                            <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                    </div>
+                                    <div class="match-status @(partido.HomeGoals.HasValue ? "completed-status" : "pending-status")">
+                                        @(partido.HomeGoals.HasValue ? "Completado" : "Pendiente")
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                @if (_octavos.Any())
+                {
+                    <div class="bracket-round">
+                        <h3 class="round-title">Octavos de Final (@_octavos.Count cruces)</h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _octavos)
+                            {
+                                <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">
+                                    <div class="match-header">
+                                        <span class="match-name">@partido.Name</span>
+                                    </div>
+                                    <div class="match-body">
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.HomeTeam</span>
+                                            <span class="team-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                        <div class="match-vs">vs</div>
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.AwayTeam</span>
+                                            <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                    </div>
+                                    <div class="match-status @(partido.HomeGoals.HasValue ? "completed-status" : "pending-status")">
+                                        @(partido.HomeGoals.HasValue ? "Completado" : "Pendiente")
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                @if (_cuartos.Any())
+                {
+                    <div class="bracket-round">
+                        <h3 class="round-title">Cuartos de Final (@_cuartos.Count cruces)</h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _cuartos)
+                            {
+                                <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">
+                                    <div class="match-header">
+                                        <span class="match-name">@partido.Name</span>
+                                    </div>
+                                    <div class="match-body">
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.HomeTeam</span>
+                                            <span class="team-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                        <div class="match-vs">vs</div>
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.AwayTeam</span>
+                                            <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                    </div>
+                                    <div class="match-status @(partido.HomeGoals.HasValue ? "completed-status" : "pending-status")">
+                                        @(partido.HomeGoals.HasValue ? "Completado" : "Pendiente")
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                @if (_semis.Any())
+                {
+                    <div class="bracket-round">
+                        <h3 class="round-title">Semifinales (@_semis.Count cruces)</h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _semis)
+                            {
+                                <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">
+                                    <div class="match-header">
+                                        <span class="match-name">@partido.Name</span>
+                                    </div>
+                                    <div class="match-body">
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.HomeTeam</span>
+                                            <span class="team-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                        <div class="match-vs">vs</div>
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.AwayTeam</span>
+                                            <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                    </div>
+                                    <div class="match-status @(partido.HomeGoals.HasValue ? "completed-status" : "pending-status")">
+                                        @(partido.HomeGoals.HasValue ? "Completado" : "Pendiente")
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                @if (_tercerPuesto.Any())
+                {
+                    <div class="bracket-round">
+                        <h3 class="round-title">🥉 Tercer Puesto</h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _tercerPuesto)
+                            {
+                                <div class="match-card @(partido.HomeGoals.HasValue ? "completed" : "pending")">
+                                    <div class="match-header">
+                                        <span class="match-name">@partido.Name</span>
+                                    </div>
+                                    <div class="match-body">
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.HomeTeam</span>
+                                            <span class="team-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                        <div class="match-vs">vs</div>
+                                        <div class="match-team">
+                                            <span class="team-name">@partido.AwayTeam</span>
+                                            <span class="team-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                    </div>
+                                    <div class="match-status @(partido.HomeGoals.HasValue ? "completed-status" : "pending-status")">
+                                        @if (partido.HomeGoals.HasValue)
+                                        {
+                                            var ganador = partido.HomeGoals > partido.AwayGoals
+                                                ? partido.HomeTeam
+                                                : partido.AwayTeam;
+                                            <span>🥉 Tercer puesto: @ganador</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Pendiente</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                @if (_final.Any())
+                {
+                    <div class="bracket-round final-round">
+                        <h3 class="round-title final-title">
+                            <span>🏆</span> Final <span>🏆</span>
+                        </h3>
+                        <div class="round-matches">
+                            @foreach (var partido in _final)
+                            {
+                                <div class="match-card match-final @(partido.HomeGoals.HasValue ? "completed" : "pending")">
+                                    <div class="match-header">
+                                        <span class="match-name">@partido.Name</span>
+                                    </div>
+                                    <div class="match-body">
+                                        <div class="match-team">
+                                            <span class="team-name final-team">@partido.HomeTeam</span>
+                                            <span class="team-score final-score">@(partido.HomeGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                        <div class="match-vs">vs</div>
+                                        <div class="match-team">
+                                            <span class="team-name final-team">@partido.AwayTeam</span>
+                                            <span class="team-score final-score">@(partido.AwayGoals?.ToString() ?? "-")</span>
+                                        </div>
+                                    </div>
+                                    <div class="match-status @(partido.HomeGoals.HasValue ? "completed-status" : "pending-status")">
+                                        @if (partido.HomeGoals.HasValue)
+                                        {
+                                            var ganador = partido.HomeGoals > partido.AwayGoals
+                                                ? partido.HomeTeam
+                                                : partido.AwayTeam;
+                                            <span> 🥇 Campeon: @ganador</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Pendiente</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="info-footer">
+        <p class="info-text">
+            <strong>ℹ️ Información:</strong> Los cruces se generan automáticamente una vez finalizada la fase de grupos.
+            Los primeros, segundos y mejores terceros avanzan a 32avos de final.
+        </p>
+    </div>
+
+</div>
+
+@code {
+    private List<CruceResponse> _todosLosCruces = new();
+    private bool _hayCruces = false;
+    private bool _cargando = false;
+    private bool _todosLosPartidosJugados = false;
+    private int _partidosPendientes = 0;
+    private string? _mensajeError;
+    private string? _mensajeExito;
+
+    private List<CruceResponse> _ronda32avos =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.RoundOf32).ToList();
+    private List<CruceResponse> _octavos =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.RoundOf16).ToList();
+    private List<CruceResponse> _cuartos =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.QuarterFinals).ToList();
+    private List<CruceResponse> _semis =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.SemiFinals).ToList();
+    private List<CruceResponse> _tercerPuesto =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.ThirdPlace).ToList();
+    private List<CruceResponse> _final =>
+        _todosLosCruces.Where(x => x.Phase == TournamentPhaseDTOs.Final).ToList();
+    private bool _tieneFinal => _final.Any();
+
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsEditor())
+        {
+            Navigation.NavigateTo("/");
+        }
+        CargarCruces();
+        CalcularEstadoFaseGrupos();
+    }
+
+    private void CargarCruces()
+    {
+        try
+        {
+            _todosLosCruces = CruceService.GetAllCruces();
+            _hayCruces = _todosLosCruces.Any();
+            _mensajeError = null;
+            _mensajeExito = null;
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = $"Error al cargar cruces: {ex.Message}";
+        }
+    }
+
+    private void CalcularEstadoFaseGrupos()
+    {
+        var partidos = MatchService.GetAllMatches();
+        _partidosPendientes = partidos.Count(m => !m.homeGoals.HasValue);
+        _todosLosPartidosJugados = _partidosPendientes == 0 && partidos.Any();
+    }
+
+    private void Generar32avos()
+    {
+        try
+        {
+            _cargando = true;
+            _mensajeError = null;
+            _mensajeExito = null;
+            StateHasChanged();
+
+            CruceService.GenerateRoundOf32();
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Cruces",
+                "Sorteo",
+                $"Se realizó el sorteo de cruces de 32avos de final con semilla {ConfigService.GetConfig().SemillaCrucesFase}"
+            );
+
+            _mensajeExito = "32avos de final generados correctamente.";
+            CargarCruces();
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = ex.Message;
+        }
+        finally
+        {
+            _cargando = false;
+            StateHasChanged();
+        }
+    }
+
+    private void GenerarSiguienteRonda()
+    {
+        try
+        {
+            _cargando = true;
+            _mensajeError = null;
+            _mensajeExito = null;
+            StateHasChanged();
+
+            CruceService.GenerateNextRound();
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Cruces",
+                "Sorteo",
+                $"Se realizó el sorteo de la siguiente ronda de cruces con semilla {ConfigService.GetConfig().SemillaCrucesFase}"
+            );
+
+            _mensajeExito = "Siguiente ronda generada correctamente.";
+            CargarCruces();
+        }
+        catch (Exception ex)
+        {
+            _mensajeError = ex.Message;
+        }
+        finally
+        {
+            _cargando = false;
+            StateHasChanged();
+        }
+    }
+    
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
+    }
+}

@@ -1,4 +1,4 @@
-using DTOs;
+using DTOs.Stadium;
 using Repository;
 using Services;
 

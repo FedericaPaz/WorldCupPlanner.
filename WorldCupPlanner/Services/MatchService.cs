@@ -1,5 +1,6 @@
-using DTOs;
-using Domain;
+using Domain.Entities;
+using Domain.Interfaces;
+using DTOs.Match;
 using IRepository;
 using IServices;
 using Services.Mappers;
@@ -12,13 +13,26 @@ public class MatchService : IMatchService
     private readonly ITeamRepository _teamRepository;
     private readonly IStadiumRepository _stadiumRepository;
     private readonly IDateTimeMatch _clock;
+    private readonly ISimulationService _simulationService;
+    private readonly IFixtureRepository _fixtureRepository;
+    private readonly TournamentConfig _config;
 
-    public MatchService(IMatchRepository matchRepository, ITeamRepository teamRepository, IStadiumRepository stadiumRepository, IDateTimeMatch clock)
+    public MatchService(
+        IMatchRepository matchRepository,
+        ITeamRepository teamRepository,
+        IStadiumRepository stadiumRepository,
+        IDateTimeMatch clock,
+        ISimulationService simulationService,
+        IFixtureRepository fixtureRepository,
+        TournamentConfig config)
     {
-        _matchRepository = matchRepository;
-        _teamRepository = teamRepository;
+        _matchRepository   = matchRepository;
+        _teamRepository    = teamRepository;
         _stadiumRepository = stadiumRepository;
-        _clock = clock;
+        _clock             = clock;
+        _simulationService = simulationService;
+        _fixtureRepository = fixtureRepository;
+        _config            = config;
     }
 
     public MatchResponse CreateMatch(MatchRequest request)
@@ -102,5 +116,21 @@ public class MatchService : IMatchService
         var stadium = GetStadiumOrThrow(stadiumName);
 
         match.UpdateStadium(stadium);
+    }
+
+    public void SimulateMatch(int matchId, int seed)
+    {
+        var match = _matchRepository.GetMatchById(matchId);
+        var (home, away) = _simulationService.SimulateMatch(match, seed);
+        match.SetMatchResult(home,away);
+    }
+
+    public void SimulateGroupStage()
+    {
+        var fixture = _fixtureRepository.GetFixture();
+        if (fixture == null)
+            throw new InvalidOperationException("No hay fixture generado.");
+        var grupos = fixture.Groups.ToList();
+        _simulationService.SimulateGroupStage(grupos, _config.SemillaSimulation);
     }
 }

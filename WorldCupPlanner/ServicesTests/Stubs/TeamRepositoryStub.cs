@@ -1,4 +1,5 @@
 using Domain;
+using Domain.Entities;
 using IRepository;
 
 namespace ServicesTests.Stubs;
@@ -17,6 +18,17 @@ public class TeamRepositoryStub : ITeamRepository
         return _teams.FirstOrDefault(t => t.Name == name);
     }
 
+    public void Update(Team team)
+    {
+        var existingTeam = _teams.FirstOrDefault(t => t.Name == team.Name);
+
+        if (existingTeam is null)
+            throw new InvalidOperationException($"Team {team.Name} does not exist.");
+
+        _teams.Remove(existingTeam);
+        _teams.Add(team);
+    }
+
     public void Delete(Team team)
     {
         _teams.Remove(team);
@@ -25,5 +37,10 @@ public class TeamRepositoryStub : ITeamRepository
     public List<Team> GetAll()
     {
         return new List<Team>(_teams);
+    }
+
+    public void Clear()
+    {
+        _teams.Clear();
     }
 }

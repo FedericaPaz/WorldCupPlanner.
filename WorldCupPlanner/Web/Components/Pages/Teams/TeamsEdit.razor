@@ -1,0 +1,153 @@
+﻿@page "/teams/edit/{Name}"
+@using DTOs.Team
+@using IServices
+@using Web.Services
+
+@inject ITeamService TeamService
+@inject ILogService LogService
+@inject SessionService SessionService
+@inject NavigationManager Navigation
+
+<div class="teams-edit">
+
+    <div class="back-link">
+        <button class="btn-cancel" @onclick="GoBack">
+            ← Volver a equipos
+        </button>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <h3 class="card-title">Editar Equipo</h3>
+                <p class="card-sub">Modifique la información del equipo</p>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(_errorMessage))
+        {
+            <div class="message error">@_errorMessage</div>
+        }
+
+        @if (_request is null)
+        {
+            <p>Cargando equipo...</p>
+        }
+        else
+        {
+            <EditForm Model="_request" OnSubmit="HandleSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-section">
+                    <label>Nombre</label>
+                    <InputText class="form-control" @bind-Value="_request.Name" />
+                </div>
+
+                <div class="form-section">
+                    <label>Confederación</label>
+                    <InputSelect class="form-control" @bind-Value="_request.ConfederationName">
+                        <option value="">Seleccione una confederación...</option>
+                        @foreach (var conf in _confederations)
+                        {
+                            <option value="@conf.Name">@conf.Name (@conf.MaxTeams cupos máximos)</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="form-section">
+                    <label>Ranking FIFA</label>
+                    <InputNumber class="form-control" @bind-Value="_request.FifaRanking" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" @onclick="GoBack">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="btn-submit">
+                        Guardar cambios
+                    </button>
+                </div>
+            </EditForm>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Name { get; set; }
+
+    private TeamDTO? _request;
+    private List<ConfederationDTO> _confederations = new();
+    private string? _errorMessage;
+
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsSystemAdministrator() && !SessionService.IsEditor())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
+        _confederations = TeamService.GetAllConfederations();
+
+        var currentName = Uri.UnescapeDataString(Name ?? string.Empty);
+        var team = TeamService.Get(currentName);
+
+        if (team is null)
+        {
+            Navigation.NavigateTo("/teams");
+            return;
+        }
+
+        _request = new TeamDTO
+        {
+            Name = team.Name,
+            ConfederationName = team.ConfederationName,
+            FifaRanking = team.FifaRanking
+        };
+    }
+
+    private void HandleSubmit()
+    {
+        try
+        {
+            _errorMessage = null;
+
+            var currentName = Uri.UnescapeDataString(Name ?? string.Empty);
+
+            TeamService.Update(currentName, _request!);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Equipos",
+                "Edición",
+                $"Se editó el equipo {currentName}"
+            );
+
+            Navigation.NavigateTo("/teams");
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/teams");
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser().Email;
+    }
+}

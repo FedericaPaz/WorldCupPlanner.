@@ -1,0 +1,209 @@
+﻿@page "/users"
+@using global::Services
+@using IServices
+@using Web.Services
+@using DTOs.User
+
+@inject UserService UserService
+@inject ILogService LogService
+@inject NavigationManager Navigation
+@inject SessionService SessionService
+
+<div class="users-shell">
+    <div class="users-header">
+        <div>
+            <h3>Gestión de Usuarios</h3>
+            <p>Administre los usuarios del sistema</p>
+        </div>
+
+        <button class="primary-button" @onclick="GoToCreate">
+            <span class="plus-icon">+</span>
+            Crear usuario
+        </button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(_pageErrorMessage))
+    {
+        <div class="error-message">
+            @_pageErrorMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_pageSuccessMessage))
+    {
+        <div class="success-message">
+            @_pageSuccessMessage
+        </div>
+    }
+
+    <div class="users-table-card">
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Email</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Roles</th>
+                    <th class="actions-column">Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (_users.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            No hay usuarios registrados.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var user in _users)
+                    {
+                        <tr>
+                            <td>@user.FirstName</td>
+                            <td>@user.LastName</td>
+                            <td class="muted">@user.Email</td>
+                            <td class="muted">@user.BirthDate.ToString("yyyy-MM-dd")</td>
+                            <td class="muted">@FormatRoles(user.Roles.ToList())</td>
+                            <td class="actions-cell">
+                                <button class="icon-button"
+                                        @onclick="() => GoToEdit(user.Email)">
+                                    Editar
+                                </button>
+
+                                <button class="icon-button danger"
+                                        @onclick="() => DeleteUser(user.Email)">
+                                    Eliminar
+                                </button>
+
+                                <button class="icon-button"
+                                        @onclick="() => ResetPassword(user.Email)">
+                                    Reiniciar contraseña
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    private List<UserResponseDto> _users = new();
+    private string _pageErrorMessage = string.Empty;
+    private string _pageSuccessMessage = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsSystemAdministrator())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
+        LoadUsers();
+    }
+
+    private void LoadUsers()
+    {
+        _users = UserService.GetAllUsers();
+    }
+
+    private void GoToCreate()
+    {
+        _pageErrorMessage = string.Empty;
+        _pageSuccessMessage = string.Empty;
+        Navigation.NavigateTo("/users/create");
+    }
+
+    private void GoToEdit(string email)
+    {
+        _pageErrorMessage = string.Empty;
+        _pageSuccessMessage = string.Empty;
+        Navigation.NavigateTo($"/users/edit/{Uri.EscapeDataString(email)}");
+    }
+
+    private void DeleteUser(string email)
+    {
+        try
+        {
+            _pageErrorMessage = string.Empty;
+            _pageSuccessMessage = string.Empty;
+
+            UserService.DeleteUser(email);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Usuarios",
+                "Eliminación",
+                $"Se eliminó el usuario {email}"
+            );
+
+            _pageErrorMessage = string.Empty;
+            _pageSuccessMessage = "Usuario eliminado correctamente.";
+
+            LoadUsers();
+        }
+        catch (Exception exception)
+        {
+            _pageSuccessMessage = string.Empty;
+            _pageErrorMessage = exception.Message;
+        }
+    }
+
+    private void ResetPassword(string email)
+    {
+        try
+        {
+            _pageErrorMessage = string.Empty;
+            _pageSuccessMessage = string.Empty;
+
+            var newPassword = UserService.GenerateDefaultPassword();
+
+            UserService.ResetPassword(email, newPassword);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Usuarios",
+                "Reinicio de contraseña",
+                $"Se reinició la contraseña del usuario {email}"
+            );
+
+            _pageSuccessMessage = $"Nueva contraseña para {email}: {newPassword}";
+
+            LoadUsers();
+        }
+        catch (Exception exception)
+        {
+            _pageSuccessMessage = string.Empty;
+            _pageErrorMessage = exception.Message;
+        }
+    }
+
+    private string FormatRoles(List<UserRoleDto> roles)
+    {
+        if (roles.Count == 0)
+            return "Sin rol";
+
+        var roleNames = roles.Select(role =>
+            role == UserRoleDto.SystemAdministrator
+                ? "Administrador"
+                : "Editor"
+        );
+        return string.Join(", ", roleNames);
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser()!.Email;
+    }
+}

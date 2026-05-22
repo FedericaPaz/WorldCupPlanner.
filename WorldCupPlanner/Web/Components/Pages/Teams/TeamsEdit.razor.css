@@ -1,0 +1,100 @@
+/* ─── Teams edit ─────────────────────────────── */
+.teams-edit .card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: white;
+    margin-top: 1rem;
+}
+
+.teams-edit .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.teams-edit .card-header .icon {
+    background: #e8f5e9;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 24px;
+}
+
+.teams-edit .card-title {
+    margin: 0;
+}
+
+.teams-edit .card-sub {
+    color: gray;
+    font-size: 14px;
+    margin: 0;
+}
+
+.teams-edit .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-top: 4px;
+    box-sizing: border-box;
+}
+
+.teams-edit .form-section {
+    margin-bottom: 1rem;
+}
+
+.teams-edit .btn-submit {
+    flex: 1;
+    padding: 12px;
+    background: green;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.teams-edit .btn-cancel {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    color: black;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+}
+
+.teams-edit .message {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+}
+
+.teams-edit .message.error {
+    color: red;
+}
+
+.teams-edit .validation-summary {
+    color: #e50000;
+    margin-bottom: 1rem;
+}
+
+.teams-edit .validation-message,
+.teams-edit .validation-message * {
+    color: #e50000;
+    font-size: 13px;
+    margin-top: 4px;
+    display: block;
+}
+
+.teams-edit .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.teams-edit .back-link {
+    margin-bottom: 0.5rem;
+}

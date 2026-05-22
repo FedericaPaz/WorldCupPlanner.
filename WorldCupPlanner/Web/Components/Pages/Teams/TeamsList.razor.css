@@ -1,0 +1,188 @@
+﻿.teams-page {
+    padding: 1.5rem;
+}
+
+.teams-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.teams-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.teams-header p {
+    margin: 0;
+    color: gray;
+    font-size: 14px;
+}
+
+.teams-header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.primary-action-button {
+    background: green;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.primary-action-button:focus {
+    outline: 2px solid #00000033;
+}
+
+.teams-message {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 14px;
+}
+
+.teams-message.error {
+    color: red;
+}
+
+.teams-message.success {
+    color: green;
+}
+
+.teams-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: gray;
+}
+
+.teams-empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.teams-empty h3 {
+    margin: 0 0 0.5rem;
+    color: #333;
+}
+
+.teams-empty p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.teams-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+    margin-top: 1.5rem;
+}
+
+.teams-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.teams-table thead {
+    background: #f5f5f5;
+}
+
+.teams-table th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.teams-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+
+.teams-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.teams-table tbody tr:hover {
+    background: #fafafa;
+}
+
+/* ── Badges ── */
+.ranking-badge {
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.confederation-badge {
+    background: #f3e5f5;
+    color: #6a1b9a;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.team-name {
+    font-weight: 500;
+    color: #222;
+}
+
+.teams-actions-column {
+    width: 140px;
+    text-align: center;
+}
+
+.teams-actions-cell {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.table-action-button {
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.table-action-button.edit:hover {
+    background: #bbdefb;
+}
+
+.table-action-button.danger {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.table-action-button.danger:hover {
+    background: #ffcdd2;
+}
+
+.btn-bg-green {
+    background: green;
+    border-color: green;
+}
+
+.edit-button {
+    border-color: green;
+    color: green;
+}
+
+.edit-button:hover {
+    color: #fff;
+    background: green;
+}

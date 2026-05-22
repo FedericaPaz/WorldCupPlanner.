@@ -1,23 +1,86 @@
-﻿@inherits LayoutComponentBase
+﻿@using Web.Services
+@inherits LayoutComponentBase
+@implements IDisposable
+@inject SessionService SessionService
+@inject NavigationManager Navigation
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu/>
+@if (!SessionService.IsInitialized)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <div class="page">
+        @if (SessionService.IsUserActive())
+        {
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+        }
+
+        <main>
+            @if (SessionService.IsUserActive())
+            {
+                <div class="top-row px-4">
+                    <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+                </div>
+            }
+
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+}
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+        await SessionService.InitializeAsync();
+
+        Navigation.LocationChanged += OnLocationChanged;
+
+        RedirectIfNeeded();
+
+        StateHasChanged();
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        RedirectIfNeeded();
+        StateHasChanged();
+    }
+
+    private void RedirectIfNeeded()
+    {
+        var path = new Uri(Navigation.Uri).AbsolutePath.ToLowerInvariant();
+        var isAuthPage = path == "/login" || path == "/register";
+
+        if (!SessionService.IsUserActive() && !isAuthPage)
+        {
+            Navigation.NavigateTo("/login", replace: true);
+            return;
+        }
+
+        if (SessionService.IsUserActive() && isAuthPage)
+        {
+            Navigation.NavigateTo("/", replace: true);
+        }
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+}

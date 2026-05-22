@@ -1,8 +1,4 @@
-﻿// TODO: Implementar tests de unicidad de nombre en la capa de Servicio (TeamService).
-// Esta validación requiere acceso al repositorio/colección completa, por lo que corresponde a un Servicio de Dominio y no a la validación intrínseca de la entidad.
-
-using Domain;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Domain.Entities;
 namespace DomainTests;
 
 [TestClass]
@@ -98,6 +94,112 @@ public class TeamTests
     {
         var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking);
         VerifyTeam(team, "Uruguay", MinFifaRanking);
+    }
+    
+    [TestMethod]
+    public void CreateTeam_WithNullName_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentException>(() =>
+            new Team(null!, _defaultConfederation, MinFifaRanking));
+    }
+    
+    [TestMethod]
+    public void CreateTeam_WithLowerBoundaryRanking_ShouldStoreRanking()
+    {
+        var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking);
+
+        Assert.AreEqual(MinFifaRanking, team.FifaRanking);
+    }
+    
+    [TestMethod]
+    public void CreateTeam_WithUpperBoundaryRanking_ShouldStoreRanking()
+    {
+        var team = new Team("Uruguay", _defaultConfederation, MaxFifaRanking);
+
+        Assert.AreEqual(MaxFifaRanking, team.FifaRanking);
+    }
+    
+    [TestMethod]
+    public void CreateTeam_WithConfederationWithEmptyName_ShouldThrowArgumentException()
+    {
+        var confederation = new Confederation("AFC");
+
+        var field = typeof(Confederation).GetField(
+                        "_name",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    ?? typeof(Confederation).GetField(
+                        "<Name>k__BackingField",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        Assert.IsNotNull(field);
+
+        field.SetValue(confederation, "");
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            new Team("Uruguay", confederation, MinFifaRanking));
+    }
+    
+    [TestMethod]
+    public void Constructor_ShouldSetCurrentRankingEqualToFifaRanking()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        Assert.AreEqual(1800, team.CurrentRanking);
+    }
+    
+    [TestMethod]
+    public void UpdateCurrentRanking_WithValidRanking_ShouldUpdateCurrentRanking()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        team.UpdateCurrentRanking(2000);
+        Assert.AreEqual(2000, team.CurrentRanking);
+    }
+
+    [TestMethod]
+    public void UpdateCurrentRanking_ShouldNotModifyFifaRanking()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        team.UpdateCurrentRanking(2000);
+        Assert.AreEqual(1800, team.FifaRanking);
+    }
+    
+    [TestMethod]
+    public void UpdateCurrentRanking_WithMinRanking_ShouldUpdateCurrentRanking()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        team.UpdateCurrentRanking(Team.MinRanking);
+        Assert.AreEqual(Team.MinRanking, team.CurrentRanking);
+    }
+
+    [TestMethod]
+    public void UpdateCurrentRanking_WithMaxRanking_ShouldUpdateCurrentRanking()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        team.UpdateCurrentRanking(Team.MaxRanking);
+        Assert.AreEqual(Team.MaxRanking, team.CurrentRanking);
+    }
+    
+    [TestMethod]
+    public void UpdateCurrentRanking_WithRankingBelowMin_ShouldThrowException()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        Assert.ThrowsException<ArgumentException>(() =>
+            team.UpdateCurrentRanking(Team.MinRanking - 1));
+    }
+
+    [TestMethod]
+    public void UpdateCurrentRanking_WithRankingAboveMax_ShouldThrowException()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        Assert.ThrowsException<ArgumentException>(() =>
+            team.UpdateCurrentRanking(Team.MaxRanking + 1));
+    }
+    
+    [TestMethod]
+    public void UpdateCurrentRanking_WithInvalidRanking_ShouldNotModifyCurrentRanking()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        try { team.UpdateCurrentRanking(9999); } catch { }
+        Assert.AreEqual(1800, team.CurrentRanking);
     }
     
     private void VerifyTeam(Team team, string expectedName, int expectedRanking)

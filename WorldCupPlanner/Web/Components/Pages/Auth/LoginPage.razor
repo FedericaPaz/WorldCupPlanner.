@@ -1,0 +1,62 @@
+﻿@page "/login"
+@using Web.Services
+@using DTOs.Auth
+@inject SessionService SessionService
+@inject NavigationManager Navigation
+
+<div class="auth-page">
+    <div class="auth-card">
+        <span class="bi bi-trophy auth-icon"></span>
+        <h1>WorldCup 2026</h1>
+        <div class="auth-line"></div>
+
+        <h3>Iniciar sesión</h3>
+
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="auth-error">@_errorMessage</div>
+        }
+
+        <EditForm Model="_request" OnValidSubmit="HandleLogin">
+            <div class="auth-field">
+                <label>Email</label>
+                <InputText class="auth-input" @bind-Value="_request.Email" />
+            </div>
+
+            <div class="auth-field">
+                <label>Contraseña</label>
+                <InputText class="auth-input" type="password" @bind-Value="_request.Password" />
+            </div>
+
+            <button type="submit" class="auth-button">ACCEDER</button>
+
+            <a href="/register" class="auth-link">Crear una cuenta</a>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private LoginRequest _request = new();
+    private string _errorMessage = "";
+
+    protected override void OnInitialized()
+    {
+        if (SessionService.IsUserActive())
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+    
+    private async Task HandleLogin()
+    {
+        try
+        {
+            await SessionService.Login(_request);
+            Navigation.NavigateTo("/", replace: true);
+        }
+        catch (Exception)
+        {
+            _errorMessage = "Credenciales Inválidas.";
+        }
+    }
+}

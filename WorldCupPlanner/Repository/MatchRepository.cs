@@ -1,4 +1,4 @@
-﻿using Domain;
+﻿using Domain.Entities;
 using IRepository;
 
 namespace Repository;
@@ -34,6 +34,11 @@ public class MatchRepository : IMatchRepository
             throw new KeyNotFoundException("No existe un partido con ese id.");
 
         return match;
+    }
+
+    public void ClearMatches()
+    {
+        _matches.Clear();
     }
 
     private void EnsureValidId(int matchId)

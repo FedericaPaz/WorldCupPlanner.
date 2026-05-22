@@ -1,0 +1,121 @@
+﻿.team-form-page {
+    padding: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.team-form-back {
+    margin-bottom: 1rem;
+}
+
+.link-back-button {
+    background: none;
+    border: none;
+    color: #2e7d32;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.link-back-button:hover {
+    text-decoration: underline;
+    color: #2e7d32;
+}
+
+.team-form-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    padding: 2rem;
+}
+
+.team-form-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.team-form-icon {
+    font-size: 2rem;
+    background: #e8f5e9;
+    padding: 0.75rem;
+    border-radius: 10px;
+}
+
+.team-form-header h1 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.team-form-header p {
+    margin: 0;
+    color: gray;
+    font-size: 13px;
+}
+
+.team-form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1.25rem;
+}
+
+.team-form-section label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.team-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.primary-action-button {
+    background: #2e7d32;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.primary-action-button:hover {
+    background: #1b5e20;
+}
+
+.secondary-action-button {
+    background: #f5f5f5;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.secondary-action-button:hover {
+    background: #eeeeee;
+}
+
+.teams-message {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 14px;
+}
+
+.teams-message.error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.btn-bg-green {
+    background: green;
+    border-color: green;
+}

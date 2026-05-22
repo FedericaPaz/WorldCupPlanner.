@@ -1,0 +1,312 @@
+@page "/users/edit/{Email}"
+@using DTOs.User
+@using global::Services
+@using IServices
+@using Web.Services
+@using global::Services.Mappers
+
+@inject UserService UserService
+@inject ILogService LogService
+@inject NavigationManager Navigation
+@inject SessionService SessionService
+
+<div class="users-shell">
+    <div class="users-header">
+        <div>
+            <h1>Editar usuario</h1>
+            <p>Modifique los datos del usuario seleccionado</p>
+        </div>
+
+        <button type="button" class="secondary-button normal-button" @onclick="GoBack">
+            Volver
+        </button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <div class="error-message">
+            @_errorMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_successMessage))
+    {
+        <div class="success-message">
+            @_successMessage
+        </div>
+    }
+
+    @if (_userRequest is not null)
+    {
+            <EditForm Model="_userRequest" OnValidSubmit="SubmitUser">
+                <DataAnnotationsValidator />
+
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <InputText class="form-control" @bind-Value="_userRequest.FirstName" />
+                    <ValidationMessage For="@(() => _userRequest.FirstName)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Apellido</label>
+                    <InputText class="form-control" @bind-Value="_userRequest.LastName" />
+                    <ValidationMessage For="@(() => _userRequest.LastName)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input class="form-control" value="@_editingEmail" disabled />
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de Nacimiento</label>
+                    <InputDate class="form-control" @bind-Value="_userRequest.BirthDate" />
+                    <ValidationMessage For="@(() => _userRequest.BirthDate)" />
+                </div>
+
+                <div class="form-group">
+                    <label>Roles</label>
+
+                    <div class="roles-options">
+                        <label class="role-option">
+                            <input type="checkbox"
+                                   checked="@_userRequest.Roles.Contains(UserRoleDto.SystemAdministrator)"
+                                   @onchange="ToggleSystemAdministratorRole" />
+                            Administrador
+                        </label>
+
+                        <label class="role-option">
+                            <input type="checkbox"
+                                   checked="@_userRequest.Roles.Contains(UserRoleDto.Editor)"
+                                   @onchange="ToggleEditorRole" />
+                            Editor
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Acciones de contraseña</label>
+
+                    <div class="password-actions">
+                        <button type="button" class="secondary-button normal-button" @onclick="GenerateAndSetPassword">
+                            Generar contraseña por defecto
+                        </button>
+
+                        <button type="button" class="secondary-button normal-button" @onclick="ToggleCustomPassword">
+                            Definir contraseña personalizada
+                        </button>
+                    </div>
+
+                    @if (_showCustomPasswordInput)
+                    {
+                        <div class="form-group">
+                            <label>Nueva contraseña</label>
+                            <InputText type="password" class="form-control" @bind-Value="_customPassword" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Confirmar contraseña</label>
+                            <InputText type="password" class="form-control" @bind-Value="_customPasswordConfirm" />
+                        </div>
+
+                        <div class="password-actions">
+                            <button type="button" class="primary-button normal-button" @onclick="SetCustomPassword">
+                                Aplicar contraseña
+                            </button>
+                        </div>
+                    }
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="secondary-button" @onclick="GoBack">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="primary-button full">
+                        Actualizar
+                    </button>
+                </div>
+            </EditForm>
+    }
+</div>
+
+@code {
+    [Parameter] public string? Email { get; set; }
+
+    private UserEditRequestDto? _userRequest;
+    private string _errorMessage = string.Empty;
+    private string _successMessage = string.Empty;
+    private string _editingEmail = string.Empty;
+
+    private bool _showCustomPasswordInput;
+    private string _customPassword = string.Empty;
+    private string _customPasswordConfirm = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsSystemAdministrator())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
+        LoadUser();
+    }
+
+    private void LoadUser()
+    {
+        _editingEmail = Uri.UnescapeDataString(Email ?? string.Empty);
+
+        var user = UserService.GetUser(_editingEmail);
+
+        if (user is null)
+        {
+            Navigation.NavigateTo("/users");
+            return;
+        }
+
+        _userRequest = new UserEditRequestDto
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            BirthDate = user.BirthDate,
+            Roles = UserRoleMapper.ToDto(user.Roles.ToList())
+        };
+    }
+
+    private void SubmitUser()
+    {
+        try
+        {
+            _errorMessage = string.Empty;
+
+            UserService.UpdateUserWithoutPassword(
+                _userRequest!.FirstName,
+                _userRequest.LastName,
+                _editingEmail,
+                _userRequest.BirthDate,
+                UserRoleMapper.ToDomain(_userRequest.Roles)
+            );
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Usuarios",
+                "Edición",
+                $"Se editó el usuario {_editingEmail}"
+            );
+
+            _successMessage = "Usuario actualizado correctamente.";
+            _errorMessage = string.Empty;
+        }
+        catch (Exception exception)
+        {
+            _errorMessage = exception.Message;
+            _successMessage = string.Empty;
+        }
+    }
+
+    private void GenerateAndSetPassword()
+    {
+        try
+        {
+            string currentUserEmail = GetCurrentUserEmail();
+            string newPassword = UserService.GenerateDefaultPassword();
+            UserService.ChangeOwnPassword(currentUserEmail, newPassword);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Usuarios",
+                "Reinicio de contraseña",
+                $"Se reinició la contraseña del usuario {_editingEmail}"
+            );
+
+            _successMessage = $"Nueva contraseña para {_editingEmail}: {newPassword}";
+            _errorMessage = string.Empty;
+        }
+        catch (Exception exception)
+        {
+            _errorMessage = exception.Message;
+            _successMessage = string.Empty;
+        }
+    }
+
+    private void ToggleCustomPassword()
+    {
+        _showCustomPasswordInput = !_showCustomPasswordInput;
+        _errorMessage = string.Empty;
+        _successMessage = string.Empty;
+    }
+
+    private void SetCustomPassword()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(_customPassword) || _customPassword != _customPasswordConfirm)
+            {
+                _errorMessage = "Las contraseñas no coinciden o están vacías.";
+                _successMessage = string.Empty;
+                return;
+            }
+
+            UserService.ChangeOwnPassword(GetCurrentUserEmail(), _customPassword);
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Usuarios",
+                "Reinicio de contraseña",
+                $"Se reinició la contraseña del usuario {_editingEmail}"
+            );
+
+            _successMessage = "Contraseña actualizada correctamente.";
+            _errorMessage = string.Empty;
+            _showCustomPasswordInput = false;
+            _customPassword = string.Empty;
+            _customPasswordConfirm = string.Empty;
+        }
+        catch (Exception exception)
+        {
+            _errorMessage = exception.Message;
+            _successMessage = string.Empty;
+        }
+    }
+
+    private void ToggleSystemAdministratorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.SystemAdministrator, args);
+    }
+
+    private void ToggleEditorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.Editor, args);
+    }
+
+    private void ToggleRole(UserRoleDto role, ChangeEventArgs args)
+    {
+        bool isChecked = args.Value is bool value && value;
+
+        if (isChecked && !_userRequest!.Roles.Contains(role))
+        {
+            _userRequest.Roles.Add(role);
+        }
+
+        if (!isChecked && _userRequest!.Roles.Contains(role))
+        {
+            _userRequest.Roles.Remove(role);
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/users");
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser()!.Email;
+    }
+}

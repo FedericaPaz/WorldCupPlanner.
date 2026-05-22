@@ -1,0 +1,124 @@
+﻿@using DTOs.Fixture
+@using IServices
+@using Web.Services
+@inject IFixtureService FixtureService
+@inject NavigationManager Navigation
+@inject SessionService SessionService
+
+<div class="group-detail">
+    @if (_standingsError != null)
+    {
+        <p class="text-muted text-center">@_standingsError</p>
+    }
+    else if (_standings != null && _standings.Any())
+    {
+        <h5 class="mb-3">Tabla de Posiciones</h5>
+        <div class="table-responsive mb-4">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Pos</th>
+                        <th>Equipo</th>
+                        <th class="text-center">PJ</th>
+                        <th class="text-center">G</th>
+                        <th class="text-center">E</th>
+                        <th class="text-center">P</th>
+                        <th class="text-center">GF</th>
+                        <th class="text-center">GC</th>
+                        <th class="text-center">DG</th>
+                        <th class="text-center">Pts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < _standings.Count; i++)
+                    {
+                        var standing = _standings[i];
+                        <tr>
+                            <td>
+                                <span class="badge @(i < 2 ? "bg-success" : "bg-secondary") rounded-pill">
+                                    @(i + 1)
+                                </span>
+                            </td>
+                            <td class="fw-bold">@standing.TeamName</td>
+                            <td class="text-center">@standing.MatchesPlayed</td>
+                            <td class="text-center">@standing.Wins</td>
+                            <td class="text-center">@standing.Draws</td>
+                            <td class="text-center">@standing.Losses</td>
+                            <td class="text-center">@standing.GoalsFor</td>
+                            <td class="text-center">@standing.GoalsAgainst</td>
+                            <td class="text-center">
+                                @(standing.GoalDifference > 0 ? $"+{standing.GoalDifference}" : standing.GoalDifference.ToString())
+                            </td>
+                            <td class="text-center fw-bold">@standing.Points</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <h5 class="mb-3">Partidos</h5>
+    @if (Group.Matches.Any())
+    {
+        <div class="matches-list">
+            @foreach (var match in Group.Matches)
+            {
+                <div class="match-card mb-3 p-3 rounded border bg-light">
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="text-muted">@match.dateMatch.ToString("dd/MM/yyyy HH:mm")</small>
+                        <small class="text-muted">@match.stadiumName</small>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">@match.homeTeamName</span>
+                        <span class="match-score">
+                            @if (match.homeGoals.HasValue && match.awayGoals.HasValue)
+                            {
+                                <span class="badge bg-white text-dark fs-6 px-3 py-2 border">
+                                    @match.homeGoals - @match.awayGoals
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted fw-bold">vs</span>
+                            }
+                        </span>
+                        <span class="fw-bold">@match.awayTeamName</span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted text-center">No hay partidos disponibles.</p>
+    }
+</div>
+
+@code {
+    [Parameter] public GroupResponse Group { get; set; } = null!;
+
+    private List<StandingResponse>? _standings;
+    private string? _standingsError;
+
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsEditor())
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+    
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            _standings = FixtureService.GetStandingsForGroup(Group.GroupLetter);
+            _standingsError = null;
+        }
+        catch
+        {
+            _standings = null;
+            _standingsError = "No hay posiciones disponibles todavía.";
+        }
+    }
+}

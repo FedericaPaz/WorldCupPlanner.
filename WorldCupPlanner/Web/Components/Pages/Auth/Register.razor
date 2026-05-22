@@ -1,0 +1,125 @@
+﻿@page "/register"
+@using DTOs.Auth
+@using DTOs.User
+@using IServices
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+@using Web.Services
+@inject SessionService SessionService
+
+<div class="auth-page">
+    <div class="auth-card auth-card-large">
+        <span class="bi bi-trophy auth-icon"></span>
+        <h1>WorldCup 2026</h1>
+        <div class="auth-line"></div>
+
+        <h3>Crear cuenta</h3>
+
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="auth-error">@_errorMessage</div>
+        }
+
+        <EditForm Model="_request" OnValidSubmit="HandleRegister">
+            <div class="auth-field">
+                <label>Nombre</label>
+                <InputText class="auth-input" @bind-Value="_request.FirstName" />
+            </div>
+
+            <div class="auth-field">
+                <label>Apellido</label>
+                <InputText class="auth-input" @bind-Value="_request.LastName" />
+            </div>
+
+            <div class="auth-field">
+                <label>Email</label>
+                <InputText class="auth-input" @bind-Value="_request.Email" />
+            </div>
+
+            <div class="auth-field">
+                <label>Contraseña</label>
+                <InputText class="auth-input" type="password" @bind-Value="_request.Password" />
+            </div>
+
+            <div class="auth-field">
+                <label>Fecha nacimiento</label>
+                <InputDate class="auth-input" @bind-Value="_request.BirthDate" />
+            </div>
+
+            <div class="auth-field">
+                <label>Seleccione rol</label>
+
+                <div class="role-options">
+                    <label class="role-option">
+                        <input type="checkbox"
+                               checked="@_request.Roles.Contains(UserRoleDto.SystemAdministrator)"
+                               @onchange="ToggleSystemAdministratorRole" />
+                        Administrador
+                    </label>
+
+                    <label class="role-option">
+                        <input type="checkbox"
+                               checked="@_request.Roles.Contains(UserRoleDto.Editor)"
+                               @onchange="ToggleEditorRole" />
+                        Editor
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="auth-button">CREAR CUENTA</button>
+
+            <a href="/login" class="auth-link">Ya tengo cuenta</a>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private RegisterRequest _request = new();
+    private string _errorMessage = "";
+
+    protected override void OnInitialized()
+    {
+        if (SessionService.IsUserActive())
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+    
+    private void HandleRegister()
+    {
+        try
+        {
+            AuthService.Register(_request);
+            Navigation.NavigateTo("/login");
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+    }
+
+    private void ToggleSystemAdministratorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.SystemAdministrator, args);
+    }
+
+    private void ToggleEditorRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.Editor, args);
+    }
+
+    private void ToggleRole(UserRoleDto role, ChangeEventArgs args)
+    {
+        var isChecked = args.Value is bool value && value;
+
+        if (isChecked && !_request.Roles.Contains(role))
+        {
+            _request.Roles.Add(role);
+        }
+
+        if (!isChecked && _request.Roles.Contains(role))
+        {
+            _request.Roles.Remove(role);
+        }
+    }
+}

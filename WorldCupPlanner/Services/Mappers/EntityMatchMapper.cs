@@ -1,6 +1,5 @@
-
-using Domain;
-using DTOs;
+using Domain.Entities;
+using DTOs.Match;
 
 namespace Services.Mappers;
 
@@ -18,7 +17,9 @@ public static class EntityMatchMapper
             group = match.Group,
             homeGoals = match.HomeGoals,
             awayGoals = match.AwayGoals,
-            winnerName = match.WinnerMatch?.Name
+            winnerName = match.WinnerMatch?.Name,
+            isLocked     = match.IsLocked,
+            phase        = match.Group == 'N' ? "Eliminatoria" : "Grupos" 
         };
     }
 }
