@@ -1,34 +1,39 @@
 using Domain.Entities;
+using Domain.Enums;
 using DomainTests.Stubs;
 using DTOs.Match;
 using IServices;
 using Repository;
 using Services;
 using ServicesTests.Stubs;
-using Domain.Enums;
+using ServicesTests.TestHelpers;
 
 namespace ServicesTests;
 
 [TestClass]
 public class MatchServiceTests
 {
-    private UserRepository _userRepository;
-    private InMemoryNotificationRepository _notificationRepository;
-    private NotificationService _notificationService;
-    private MatchService _service;
-    private MatchRepository _matchRepository;
-    private TeamRepositoryStub _teamRepository;
-    private StadiumRepositoryStub _stadiumRepository;
-    private DateTimeMatchStub _clock;
-    private ISimulationService _simulationService;
-    private FixtureRepository _fixtureRepository;
-    private TournamentConfig _config;
+    private WorldCupPlannerContext _context = null!;
+    private UserRepository _userRepository = null!;
+    private InMemoryNotificationRepository _notificationRepository = null!;
+    private NotificationService _notificationService = null!;
+    private MatchService _service = null!;
+    private MatchRepository _matchRepository = null!;
+    private TeamRepositoryStub _teamRepository = null!;
+    private StadiumRepositoryStub _stadiumRepository = null!;
+    private DateTimeMatchStub _clock = null!;
+    private ISimulationService _simulationService = null!;
+    private FixtureRepository _fixtureRepository = null!;
+    private TournamentConfig _config = null!;
 
     [TestInitialize]
     public void Setup()
     {
-        Match.ResetIdCounter();
-        
+        _context = DbContextFactory.CreateInMemoryContext();
+        _userRepository = new UserRepository(_context);
+        _notificationRepository = new InMemoryNotificationRepository();
+        _notificationService = new NotificationService(_userRepository, _notificationRepository);
+
         _matchRepository = new MatchRepository();
         _teamRepository = new TeamRepositoryStub();
         _stadiumRepository = new StadiumRepositoryStub();
@@ -36,10 +41,7 @@ public class MatchServiceTests
         _simulationService = new SimulationServiceStub();
         _fixtureRepository = new FixtureRepository();
         _config = new TournamentConfig();
-        _userRepository = new UserRepository();
-        _notificationRepository = new InMemoryNotificationRepository();
-        _notificationService = new NotificationService(_userRepository, _notificationRepository);
-        
+
         _service = new MatchService(
             _matchRepository,
             _teamRepository,
@@ -52,27 +54,26 @@ public class MatchServiceTests
         );
     }
 
-    private Team CreateTeam(string name)
+    [TestCleanup]
+    public void Cleanup()
     {
-        return new Team(name, new Confederation("CONMEBOL"), 1900);
+        _context.Dispose();
     }
 
-    private Stadium CreateStadium(string name)
-    {
-        return new Stadium(name, "Montevideo", null, 60000);
-    }
+    private Team CreateTeam(string name) =>
+        new Team(name, new Confederation("CONMEBOL"), 1900);
 
-    private MatchRequest CreateValidRequest(DateTime date)
+    private Stadium CreateStadium(string name) =>
+        new Stadium(name, "Montevideo", null, 60000);
+
+    private MatchRequest CreateValidRequest(DateTime date) => new MatchRequest
     {
-        return new MatchRequest
-        {
-            dateMatch = date,
-            stadiumName = "Centenario",
-            homeTeamName = "Uruguay",
-            awayTeamName = "Argentina",
-            group = "A"
-        };
-    }
+        dateMatch = date,
+        stadiumName = "Centenario",
+        homeTeamName = "Uruguay",
+        awayTeamName = "Argentina",
+        group = "A"
+    };
 
     private void AddDefaultTeamsAndStadium()
     {
@@ -120,8 +121,7 @@ public class MatchServiceTests
     {
         _teamRepository.Add(CreateTeam("Uruguay"));
         _stadiumRepository.AddStadium(CreateStadium("Centenario"));
-        var request = CreateValidRequest(_clock.Now);
-        Assert.ThrowsException<KeyNotFoundException>(() => _service.CreateMatch(request));
+        Assert.ThrowsException<KeyNotFoundException>(() => _service.CreateMatch(CreateValidRequest(_clock.Now)));
     }
 
     [TestMethod]
@@ -129,8 +129,7 @@ public class MatchServiceTests
     {
         _teamRepository.Add(CreateTeam("Uruguay"));
         _teamRepository.Add(CreateTeam("Argentina"));
-        var request = CreateValidRequest(_clock.Now);
-        Assert.ThrowsException<KeyNotFoundException>(() => _service.CreateMatch(request));
+        Assert.ThrowsException<KeyNotFoundException>(() => _service.CreateMatch(CreateValidRequest(_clock.Now)));
     }
 
     [TestMethod]
@@ -146,8 +145,8 @@ public class MatchServiceTests
     public void Create_WithPastDate_ShouldThrowArgumentException()
     {
         AddDefaultTeamsAndStadium();
-        var request = CreateValidRequest(new DateTime(2026, 6, 1));
-        Assert.ThrowsException<ArgumentException>(() => _service.CreateMatch(request));
+        Assert.ThrowsException<ArgumentException>(() =>
+            _service.CreateMatch(CreateValidRequest(new DateTime(2026, 6, 1))));
     }
 
     [TestMethod]
@@ -207,8 +206,7 @@ public class MatchServiceTests
     [TestMethod]
     public void GetAll_WhenThereAreNoMatches_ShouldReturnEmptyList()
     {
-        var result = _service.GetAllMatches();
-        Assert.AreEqual(0, result.Count);
+        Assert.AreEqual(0, _service.GetAllMatches().Count);
     }
 
     [TestMethod]
@@ -248,8 +246,8 @@ public class MatchServiceTests
     {
         AddDefaultTeamsAndStadium();
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-        var pastDate = new DateTime(2026, 6, 1);
-        Assert.ThrowsException<ArgumentException>(() => _service.UpdateMatchDate(created.idMatch, pastDate));
+        Assert.ThrowsException<ArgumentException>(() =>
+            _service.UpdateMatchDate(created.idMatch, new DateTime(2026, 6, 1)));
     }
 
     [TestMethod]
@@ -268,77 +266,66 @@ public class MatchServiceTests
     {
         AddDefaultTeamsAndStadium();
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-        Assert.ThrowsException<KeyNotFoundException>(() => _service.UpdateMatchStadium(created.idMatch, "Maracana"));
+        Assert.ThrowsException<KeyNotFoundException>(() =>
+            _service.UpdateMatchStadium(created.idMatch, "Maracana"));
     }
-    
+
     [TestMethod]
     public void UpdateMatchDate_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
     {
         Assert.ThrowsException<KeyNotFoundException>(() =>
             _service.UpdateMatchDate(99, _clock.Now));
     }
-    
+
     [TestMethod]
     public void UpdateMatchStadium_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
     {
         _stadiumRepository.AddStadium(CreateStadium("Maracana"));
-
         Assert.ThrowsException<KeyNotFoundException>(() =>
             _service.UpdateMatchStadium(99, "Maracana"));
     }
-    
+
     [TestMethod]
     public void SetMatchResult_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
     {
         Assert.ThrowsException<KeyNotFoundException>(() =>
             _service.SetMatchResult(99, 1, 0));
     }
-    
+
     [TestMethod]
     public void Create_WithInvalidGroup_ShouldThrowArgumentException()
     {
         AddDefaultTeamsAndStadium();
-
         var request = CreateValidRequest(_clock.Now);
         request.group = "M";
-
-        Assert.ThrowsException<ArgumentException>(() =>
-            _service.CreateMatch(request));
+        Assert.ThrowsException<ArgumentException>(() => _service.CreateMatch(request));
     }
-    
+
     [TestMethod]
     public void Create_WithLowercaseGroup_ShouldCreateMatchWithUppercaseGroup()
     {
         AddDefaultTeamsAndStadium();
-
         var request = CreateValidRequest(_clock.Now);
         request.group = "a";
-
         var response = _service.CreateMatch(request);
-
         Assert.AreEqual('A', response.group);
     }
-    
+
     [TestMethod]
     public void Create_WithNullGroup_ShouldThrowArgumentException()
     {
         AddDefaultTeamsAndStadium();
-
         var request = CreateValidRequest(_clock.Now);
         request.group = null!;
-
-        Assert.ThrowsException<ArgumentException>(() =>
-            _service.CreateMatch(request));
+        Assert.ThrowsException<ArgumentException>(() => _service.CreateMatch(request));
     }
-    
+
     [TestMethod]
     public void SimulateMatch_WithExistingMatch_ShouldSetMatchResult()
     {
         AddDefaultTeamsAndStadium();
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-
         _service.SimulateMatch(created.idMatch, 1);
-
         var match = _matchRepository.GetMatchById(created.idMatch);
         Assert.AreEqual(2, match.HomeGoals);
         Assert.AreEqual(1, match.AwayGoals);
@@ -355,7 +342,6 @@ public class MatchServiceTests
     {
         AddDefaultTeamsAndStadium();
         var created = _service.CreateMatch(CreateValidRequest(new DateTime(2028, 1, 1)));
-
         Assert.ThrowsException<InvalidOperationException>(() =>
             _service.SimulateMatch(created.idMatch, 1));
     }
@@ -366,18 +352,18 @@ public class MatchServiceTests
         Assert.ThrowsException<InvalidOperationException>(() =>
             _service.SimulateGroupStage());
     }
-    
+
     [TestMethod]
     public void SetMatchResult_WithValidData_ShouldNotifyJournalists()
     {
         AddDefaultTeamsAndStadium();
 
-        var journalist = new User("Juan", "Periodista", "periodista@test.com", new DateTime(1995, 1, 1), "Aa123456!", new List<UserRole> { UserRole.Journalist });
-
+        var journalist = new User("Juan", "Periodista", "periodista@test.com",
+            new DateTime(1995, 1, 1), "Aa123456!",
+            new List<UserRole> { UserRole.Journalist });
         _userRepository.AddUser(journalist);
 
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-
         _service.SetMatchResult(created.idMatch, 2, 1);
 
         var notifications = _notificationRepository

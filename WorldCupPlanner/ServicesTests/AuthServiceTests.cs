@@ -2,6 +2,7 @@ using Domain.Entities;
 using Domain.Enums;
 using DTOs.Auth;
 using DTOs.User;
+using Microsoft.EntityFrameworkCore;
 using Repository;
 using Services;
 using ServicesTests.TestHelpers;
@@ -11,18 +12,31 @@ namespace ServicesTests;
 [TestClass]
 public class AuthServiceTests
 {
+    private WorldCupPlannerContext _context = null!;
+    private UserRepository _userRepository = null!;
+    private AuthService _authService = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _context = DbContextFactory.CreateInMemoryContext();
+        _userRepository = new UserRepository(_context);
+        _authService = new AuthService(_userRepository);
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _context.Dispose();
+    }
+
     [TestMethod]
     public void Register_WithValidRequest_ShouldCreateUser()
     {
-        var repo = new UserRepository();
-        var auth = new AuthService(repo);
-
         var request = CreateValidRegisterRequest();
+        _authService.Register(request);
 
-        auth.Register(request);
-
-        var users = repo.GetAllUsers();
-
+        var users = _userRepository.GetAllUsers();
         Assert.AreEqual(1, users.Count);
         Assert.AreEqual(request.FirstName, users[0].FirstName);
         Assert.AreEqual(request.LastName, users[0].LastName);
@@ -32,65 +46,47 @@ public class AuthServiceTests
     [TestMethod]
     public void Register_WithExistingEmail_ShouldThrowException()
     {
-        var repo = new UserRepository();
-        var auth = new AuthService(repo);
-
         var request = CreateValidRegisterRequest();
-
-        auth.Register(request);
+        _authService.Register(request);
 
         Assert.ThrowsException<InvalidOperationException>(() =>
-            auth.Register(request));
+            _authService.Register(request));
     }
 
     [TestMethod]
     public void Register_WithNullRequest_ShouldThrowArgumentNullException()
     {
-        var repo = new UserRepository();
-        var auth = new AuthService(repo);
-
         Assert.ThrowsException<ArgumentNullException>(() =>
-            auth.Register(null!));
+            _authService.Register(null!));
     }
 
     [TestMethod]
     public void Register_WithInvalidPassword_ShouldThrowArgumentException()
     {
-        var repo = new UserRepository();
-        var auth = new AuthService(repo);
-
         var request = CreateValidRegisterRequest();
         request.Password = "abc";
 
         Assert.ThrowsException<ArgumentException>(() =>
-            auth.Register(request));
+            _authService.Register(request));
     }
 
     [TestMethod]
     public void Register_WithFutureBirthDate_ShouldThrowArgumentException()
     {
-        var repo = new UserRepository();
-        var auth = new AuthService(repo);
-
         var request = CreateValidRegisterRequest();
         request.BirthDate = DateTime.Today.AddDays(1);
 
         Assert.ThrowsException<ArgumentException>(() =>
-            auth.Register(request));
+            _authService.Register(request));
     }
 
     [TestMethod]
     public void Register_WithValidRequest_ShouldStoreRoles()
     {
-        var repo = new UserRepository();
-        var auth = new AuthService(repo);
-
         var request = CreateValidRegisterRequest();
+        _authService.Register(request);
 
-        auth.Register(request);
-
-        var user = repo.GetUser(request.Email);
-
+        var user = _userRepository.GetUser(request.Email);
         Assert.IsNotNull(user);
         Assert.AreEqual(1, user.Roles.Count);
         Assert.IsTrue(user.Roles.Contains(UserRole.SystemAdministrator));
@@ -99,15 +95,10 @@ public class AuthServiceTests
     [TestMethod]
     public void Login_WithValidCredentials_ShouldReturnLoginResponse()
     {
-        var (_, authService, user) = Setup();
+        AddUserToRepo();
 
-        var request = new LoginRequest
-        {
-            Email = user.Email,
-            Password = "Password1!"
-        };
-
-        var response = authService.Login(request);
+        var request = new LoginRequest { Email = "juan.perez@gmail.com", Password = "Password1!" };
+        var response = _authService.Login(request);
 
         Assert.IsNotNull(response);
         Assert.AreEqual("Juan Perez", response.Name);
@@ -117,15 +108,10 @@ public class AuthServiceTests
     [TestMethod]
     public void Login_WithValidCredentials_ShouldReturnRoles()
     {
-        var (_, authService, user) = Setup();
+        AddUserToRepo();
 
-        var request = new LoginRequest
-        {
-            Email = user.Email,
-            Password = "Password1!"
-        };
-
-        var response = authService.Login(request);
+        var request = new LoginRequest { Email = "juan.perez@gmail.com", Password = "Password1!" };
+        var response = _authService.Login(request);
 
         CollectionAssert.Contains(response.Roles, UserRoleDto.SystemAdministrator);
     }
@@ -133,45 +119,32 @@ public class AuthServiceTests
     [TestMethod]
     public void Login_WithInvalidPassword_ShouldThrowException()
     {
-        var (_, authService, user) = Setup();
+        AddUserToRepo();
 
-        var request = new LoginRequest
-        {
-            Email = user.Email,
-            Password = "WrongPassword1!"
-        };
+        var request = new LoginRequest { Email = "juan.perez@gmail.com", Password = "WrongPassword1!" };
 
         Assert.ThrowsException<InvalidOperationException>(() =>
-            authService.Login(request));
+            _authService.Login(request));
     }
 
     [TestMethod]
     public void Login_WithNonExistingEmail_ShouldThrowException()
     {
-        var (_, authService, _) = Setup();
+        AddUserToRepo();
 
-        var request = new LoginRequest
-        {
-            Email = "noexiste@gmail.com",
-            Password = "Password1!"
-        };
+        var request = new LoginRequest { Email = "noexiste@gmail.com", Password = "Password1!" };
 
         Assert.ThrowsException<InvalidOperationException>(() =>
-            authService.Login(request));
+            _authService.Login(request));
     }
 
     [TestMethod]
     public void Login_WithValidCredentials_ShouldReturnFullName()
     {
-        var (_, authService, _) = Setup("Pedro", "Gomez", "pedro.gomez@gmail.com");
+        AddUserToRepo("Pedro", "Gomez", "pedro.gomez@gmail.com");
 
-        var request = new LoginRequest
-        {
-            Email = "pedro.gomez@gmail.com",
-            Password = "Password1!"
-        };
-
-        var response = authService.Login(request);
+        var request = new LoginRequest { Email = "pedro.gomez@gmail.com", Password = "Password1!" };
+        var response = _authService.Login(request);
 
         Assert.AreEqual("Pedro Gomez", response.Name);
     }
@@ -179,40 +152,30 @@ public class AuthServiceTests
     [TestMethod]
     public void Login_WithEmptyEmail_ShouldThrowException()
     {
-        var (_, authService, _) = Setup();
+        AddUserToRepo();
 
-        var request = new LoginRequest
-        {
-            Email = "",
-            Password = "Password1!"
-        };
+        var request = new LoginRequest { Email = "", Password = "Password1!" };
 
         Assert.ThrowsException<InvalidOperationException>(() =>
-            authService.Login(request));
+            _authService.Login(request));
     }
 
     [TestMethod]
     public void Login_WithEmptyPassword_ShouldThrowException()
     {
-        var (_, authService, _) = Setup();
+        AddUserToRepo();
 
-        var request = new LoginRequest
-        {
-            Email = "juan.perez@gmail.com",
-            Password = ""
-        };
+        var request = new LoginRequest { Email = "juan.perez@gmail.com", Password = "" };
 
         Assert.ThrowsException<InvalidOperationException>(() =>
-            authService.Login(request));
+            _authService.Login(request));
     }
 
     [TestMethod]
     public void Login_WithNullRequest_ShouldThrowArgumentNullException()
     {
-        var (_, authService, _) = Setup();
-
         Assert.ThrowsException<ArgumentNullException>(() =>
-            authService.Login(null!));
+            _authService.Login(null!));
     }
 
     [TestMethod]
@@ -225,19 +188,29 @@ public class AuthServiceTests
     [TestMethod]
     public void Login_WithDifferentEmailCasing_ShouldReturnLoginResponse()
     {
-        var (_, authService, _) = Setup();
+        AddUserToRepo();
 
-        var request = new LoginRequest
-        {
-            Email = "JUAN.PEREZ@gmail.com",
-            Password = "Password1!"
-        };
-
-        var response = authService.Login(request);
+        var request = new LoginRequest { Email = "JUAN.PEREZ@gmail.com", Password = "Password1!" };
+        var response = _authService.Login(request);
 
         Assert.IsNotNull(response);
         Assert.AreEqual("Juan Perez", response.Name);
         Assert.AreEqual("juan.perez@gmail.com", response.Email);
+    }
+
+    private void AddUserToRepo(
+        string firstName = "Juan",
+        string lastName = "Perez",
+        string email = "juan.perez@gmail.com",
+        string password = "Password1!")
+    {
+        var user = new User(
+            firstName, lastName, email,
+            new DateTime(2000, 1, 1),
+            password,
+            new List<UserRole> { UserRole.SystemAdministrator }
+        );
+        _userRepository.AddUser(user);
     }
 
     private static RegisterRequest CreateValidRegisterRequest()
@@ -251,28 +224,5 @@ public class AuthServiceTests
             Password = "Password1!",
             Roles = UserTestHelper.GetValidRolesDto()
         };
-    }
-
-    private static (UserRepository Repo, AuthService Service, User User) Setup(
-        string firstName = "Juan",
-        string lastName = "Perez",
-        string email = "juan.perez@gmail.com",
-        string password = "Password1!")
-    {
-        var repo = new UserRepository();
-        var service = new AuthService(repo);
-
-        var user = new User(
-            firstName,
-            lastName,
-            email,
-            new DateTime(2000, 1, 1),
-            password,
-            new List<UserRole> { UserRole.SystemAdministrator }
-        );
-
-        repo.AddUser(user);
-
-        return (repo, service, user);
     }
 }

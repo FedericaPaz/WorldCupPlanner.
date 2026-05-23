@@ -6,44 +6,55 @@ namespace RepositoryTests;
 [TestClass]
 public class UserRepositoryTests
 {
+    private WorldCupPlannerContext _context = null!;
+    private UserRepository _userRepository = null!;
+    
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _context = DbContextFactory.CreateInMemoryContext();
+        _userRepository = new UserRepository(_context);
+    }
+    
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _context.Dispose();
+    }
+    
     [TestMethod]
     public void Add_OneUser_ShouldNotThrowException()
     {
-        var userRepository = new UserRepository();
         var user = UserTestHelper.CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
-
-        userRepository.AddUser(user);
+        
+        _userRepository.AddUser(user);
     }
     
     [TestMethod]
     public void GivenNullUser_AddUser_ShouldThrowException()
     {
-        var userRepository = new UserRepository();
-
-        Assert.ThrowsException<ArgumentNullException>(() => userRepository.AddUser(null));
+        Assert.ThrowsException<ArgumentNullException>(() => _userRepository.AddUser(null));
     }
     
     [TestMethod]
     public void GivenExistingUser_AddDuplicate_ShouldThrowException()
     {
-        var userRepository = new UserRepository();
         var user1 = UserTestHelper.CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
         var user2 = UserTestHelper.CreateValidUser("Pedro", "Gomez", "juan.perez@gmail.com", new DateTime(1999, 5, 10));
-
-        userRepository.AddUser(user1);
-
-        Assert.ThrowsException<ArgumentException>(() => userRepository.AddUser(user2));
+        
+        _userRepository.AddUser(user1);
+        
+        Assert.ThrowsException<ArgumentException>(() => _userRepository.AddUser(user2));
     }
     
     [TestMethod]
     public void Get_ExistingUser_ShouldReturnUser()
     {
-        var userRepository = new UserRepository();
         var user = UserTestHelper.CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
+        _userRepository.AddUser(user);
 
-        userRepository.AddUser(user);
-
-        var result = userRepository.GetUser("juan.perez@gmail.com");
+        var result = _userRepository.GetUser("juan.perez@gmail.com");
 
         Assert.IsNotNull(result);
         Assert.AreEqual("Juan", result.FirstName);
@@ -54,23 +65,20 @@ public class UserRepositoryTests
     [TestMethod]
     public void Get_NonExistingUser_ShouldReturnNull()
     {
-        var userRepository = new UserRepository();
-
-        var result = userRepository.GetUser("juan.perez@gmail.com");
-
+        var result = _userRepository.GetUser("juan.perez@gmail.com");
+        
         Assert.IsNull(result);
     }
     
     [TestMethod]
     public void GivenExistingUser_DeleteUser_ShouldDeleteUser()
     {
-        var userRepository = new UserRepository();
         var user = UserTestHelper.CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
 
-        userRepository.AddUser(user);
-        userRepository.DeleteUser(user);
+        _userRepository.AddUser(user);
+        _userRepository.DeleteUser(user);
 
-        var result = userRepository.GetUser("juan.perez@gmail.com");
+        var result = _userRepository.GetUser("juan.perez@gmail.com");
 
         Assert.IsNull(result);
     }
@@ -78,23 +86,21 @@ public class UserRepositoryTests
     [TestMethod]
     public void GivenNonExistingUser_DeleteUser_ShouldThrowException()
     {
-        var userRepository = new UserRepository();
         var user = UserTestHelper.CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
 
-        Assert.ThrowsException<InvalidOperationException>(() => userRepository.DeleteUser(user));
+        Assert.ThrowsException<InvalidOperationException>(() => _userRepository.DeleteUser(user));
     }
     
     [TestMethod]
     public void GivenMultipleUsers_GetAllUsers_ShouldReturnUsers()
     {
-        var userRepository = new UserRepository();
         var user1 = UserTestHelper.CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
         var user2 = UserTestHelper.CreateValidUser("Pedro", "Gomez", "pedro.gomez@gmail.com", new DateTime(1999, 5, 10));
 
-        userRepository.AddUser(user1);
-        userRepository.AddUser(user2);
+        _userRepository.AddUser(user1);
+        _userRepository.AddUser(user2);
 
-        var result = userRepository.GetAllUsers();
+        var result = _userRepository.GetAllUsers();
 
         Assert.AreEqual(2, result.Count);
     }
@@ -102,16 +108,15 @@ public class UserRepositoryTests
     [TestMethod]
     public void GivenExistingUser_UpdateUser_ShouldUpdateUser()
     {
-        var userRepository = new UserRepository();
         var originalUser = UserTestHelper.CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
 
-        userRepository.AddUser(originalUser);
+        _userRepository.AddUser(originalUser);
 
         var updatedUser = UserTestHelper.CreateValidUser("Juan", "Gomez", "juan.perez@gmail.com");
 
-        userRepository.UpdateUser(updatedUser);
+        _userRepository.UpdateUser(updatedUser);
 
-        var result = userRepository.GetUser("juan.perez@gmail.com");
+        var result = _userRepository.GetUser("juan.perez@gmail.com");
 
         Assert.IsNotNull(result);
         Assert.AreEqual("Gomez", result.LastName);
@@ -120,17 +125,14 @@ public class UserRepositoryTests
     [TestMethod]
     public void GivenNonExistingUser_UpdateUser_ShouldThrowException()
     {
-        var userRepository = new UserRepository();
         var user = UserTestHelper.CreateValidUser("Juan", "Perez", "juan.perez@gmail.com");
 
-        Assert.ThrowsException<InvalidOperationException>(() => userRepository.UpdateUser(user));
+        Assert.ThrowsException<InvalidOperationException>(() => _userRepository.UpdateUser(user));
     }
     
     [TestMethod]
     public void GivenNullUser_UpdateUser_ShouldThrowException()
     {
-        var userRepository = new UserRepository();
-
-        Assert.ThrowsException<ArgumentNullException>(() => userRepository.UpdateUser(null));
+        Assert.ThrowsException<ArgumentNullException>(() => _userRepository.UpdateUser(null));
     }
 }
