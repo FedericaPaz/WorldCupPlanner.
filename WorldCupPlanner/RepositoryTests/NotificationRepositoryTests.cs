@@ -34,4 +34,14 @@ public class NotificationRepositoryTests
 
         Assert.AreEqual(1, result.Count);
     }
+    
+    [TestMethod]
+    public void GetByRecipient_WithNoNotifications_ShouldReturnEmptyList()
+    {
+        var repository = new NotificationRepository();
+
+        var result = repository.GetByRecipient("periodista@test.com");
+
+        Assert.AreEqual(0, result.Count);
+    }
 }
