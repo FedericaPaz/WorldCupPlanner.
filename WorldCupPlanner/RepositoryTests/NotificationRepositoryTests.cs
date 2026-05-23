@@ -44,4 +44,21 @@ public class NotificationRepositoryTests
 
         Assert.AreEqual(0, result.Count);
     }
+    
+    [TestMethod]
+    public void GetUnreadNotification_WithUnreadNotification_ShouldReturnNotification()
+    {
+        var repository = new NotificationRepository();
+
+        var notification = new Notification(
+            "periodista@test.com",
+            "Nuevo resultado disponible"
+        );
+
+        repository.Add(notification);
+
+        var result = repository.GetUnread("periodista@test.com");
+
+        Assert.AreEqual(1, result.Count);
+    }
 }

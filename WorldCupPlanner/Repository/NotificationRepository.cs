@@ -17,4 +17,13 @@ public class NotificationRepository : INotificationRepository
             .Where(notification => notification.RecipientEmail == email)
             .ToList();
     }
+
+    public List<Notification> GetUnread(string email)
+    {
+        return _notifications
+            .Where(notification =>
+                notification.RecipientEmail == email &&
+                !notification.IsRead)
+            .ToList();
+    }
 }
