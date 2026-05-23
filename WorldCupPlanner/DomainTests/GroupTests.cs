@@ -6,6 +6,21 @@ namespace DomainTests;
 [TestClass]
 public class GroupTests
 {
+    private static readonly DateTimeMatchStub DefaultClock = new DateTimeMatchStub(DateTime.Now);
+    private static readonly Stadium DefaultStadium = new Stadium("Estadio", "Ciudad", "Desc", 30000);
+    private int _nextId = 1;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _nextId = 1;
+    }
+
+    private Match CreateMatch(Team home, Team away, char group = 'A', Stadium? stadium = null)
+    {
+        return new Match(_nextId++, DefaultClock.Now, stadium ?? DefaultStadium, home, away, group, DefaultClock);
+    }
+
     [TestMethod]
     public void CreateGroup_WithValidLetter_ShouldCreateGroup()
     {
@@ -28,7 +43,7 @@ public class GroupTests
         Assert.AreEqual(1, group.TeamsInGroup.Count);
         Assert.AreEqual(team, group.TeamsInGroup[0]);
     }
-    
+
     [TestMethod]
     public void AddTeam_WithNullTeam_ShouldThrowException()
     {
@@ -41,10 +56,11 @@ public class GroupTests
     {
         var group = new Group('A');
         group.AddTeamToGroup(new Team("Team1", new Confederation("UEFA"), 500));
-        group.AddTeamToGroup(new Team("Team2", new Confederation("UEFA"),500));
-        group.AddTeamToGroup(new Team("Team3", new Confederation("UEFA"),500));
+        group.AddTeamToGroup(new Team("Team2", new Confederation("UEFA"), 500));
+        group.AddTeamToGroup(new Team("Team3", new Confederation("UEFA"), 500));
         group.AddTeamToGroup(new Team("Team4", new Confederation("UEFA"), 500));
-        Assert.ThrowsException<InvalidOperationException>(() => group.AddTeamToGroup(new Team("Team5", new Confederation("UEFA"), 500)));
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            group.AddTeamToGroup(new Team("Team5", new Confederation("UEFA"), 500)));
     }
 
     [TestMethod]
@@ -60,17 +76,14 @@ public class GroupTests
     public void AddMatch_WithValidMatch_ShouldAddMatch()
     {
         var group = new Group('A');
-
         var homeTeam = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
         var awayTeam = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
         var stadium = new Stadium("Estadio Centenario", "Montevideo", "Desc", 60000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
 
         group.AddTeamToGroup(homeTeam);
         group.AddTeamToGroup(awayTeam);
 
-        var match = new Match(clock.Now, stadium, homeTeam, awayTeam, 'A', clock);
-
+        var match = CreateMatch(homeTeam, awayTeam, 'A', stadium);
         group.AddMatchToGroup(match);
 
         Assert.AreEqual(1, group.MatchesInGroup.Count);
@@ -90,9 +103,7 @@ public class GroupTests
         var group = new Group('A');
         var team1 = new Team("A", new Confederation("UEFA"), 1000);
         var team2 = new Team("B", new Confederation("UEFA"), 1000);
-        var stadium = new Stadium("Estadio", "Ciudad", "Descripcion", 30000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
-        var match = new Match(clock.Now, stadium, team1, team2, 'B', clock);
+        var match = CreateMatch(team1, team2, 'B');
         Assert.ThrowsException<ArgumentException>(() => group.AddMatchToGroup(match));
     }
 
@@ -100,26 +111,16 @@ public class GroupTests
     public void AddMatch_WhenGroupHasSixMatches_ShouldThrowException()
     {
         var group = new Group('A');
-
         var team1 = new Team("A", new Confederation("UEFA"), 1000);
         var team2 = new Team("B", new Confederation("UEFA"), 1000);
-
         group.AddTeamToGroup(team1);
         group.AddTeamToGroup(team2);
 
-        var stadium = new Stadium("Estadio", "Ciudad", "Des", 30000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
-
         for (int i = 0; i < 6; i++)
-        {
-            var match = new Match(clock.Now, stadium, team1, team2, 'A', clock);
-            group.AddMatchToGroup(match);
-        }
-
-        var extraMatch = new Match(clock.Now, stadium, team1, team2, 'A', clock);
+            group.AddMatchToGroup(CreateMatch(team1, team2));
 
         Assert.ThrowsException<InvalidOperationException>(() =>
-            group.AddMatchToGroup(extraMatch));
+            group.AddMatchToGroup(CreateMatch(team1, team2)));
     }
 
     [TestMethod]
@@ -129,9 +130,7 @@ public class GroupTests
         var teamInGroup = new Team("A", new Confederation("UEFA"), 1000);
         var teamOutsideGroup = new Team("B", new Confederation("UEFA"), 1000);
         group.AddTeamToGroup(teamInGroup);
-        var stadium = new Stadium("Estadio", "Ciudad", "Descripcion", 30000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
-        var match = new Match(clock.Now, stadium, teamOutsideGroup, teamInGroup, 'A', clock);
+        var match = CreateMatch(teamOutsideGroup, teamInGroup);
         Assert.ThrowsException<InvalidOperationException>(() => group.AddMatchToGroup(match));
     }
 
@@ -142,24 +141,23 @@ public class GroupTests
         var teamInGroup = new Team("A", new Confederation("UEFA"), 1000);
         var teamOutside = new Team("B", new Confederation("UEFA"), 1000);
         group.AddTeamToGroup(teamInGroup);
-        var stadium = new Stadium("Estadio", "Ciudad", "Descripcion", 30000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
-        var match = new Match(clock.Now, stadium, teamInGroup, teamOutside, 'A', clock);
+        var match = CreateMatch(teamInGroup, teamOutside);
         Assert.ThrowsException<InvalidOperationException>(() => group.AddMatchToGroup(match));
     }
-    
+
     [TestMethod]
     public void AddMatch_WithDuplicateMatch_ShouldThrowException()
     {
         var group = new Group('A');
         var homeTeam = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
         var awayTeam = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
-        var stadium = new Stadium("Estadio Centenario", "Montevideo", "Descripcion",60000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
+        var stadium = new Stadium("Estadio Centenario", "Montevideo", "Desc", 60000);
         group.AddTeamToGroup(homeTeam);
         group.AddTeamToGroup(awayTeam);
-        var match = new Match(clock.Now, stadium, homeTeam, awayTeam, 'A', clock);
+
+        var match = CreateMatch(homeTeam, awayTeam, 'A', stadium);
         group.AddMatchToGroup(match);
+
         Assert.ThrowsException<InvalidOperationException>(() => group.AddMatchToGroup(match));
     }
 }

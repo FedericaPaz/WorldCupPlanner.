@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using DomainTests.Stubs;
 using Services;
 
@@ -7,39 +8,84 @@ namespace ServicesTests;
 [TestClass]
 public class RankingServiceTests
 {
-    [TestMethod]
-    public void UpdateRankingsAfterMatch_WhenWeakAwayTeamWins_ShouldIncreaseAwayTeamRanking()
+    private RankingService _service = null!;
+    private Team _strongTeam = null!;
+    private Team _weakTeam = null!;
+    private Match _match = null!;
+
+    [TestInitialize]
+    public void Setup()
     {
-        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+        var clock        = new DateTimeMatchStub(new DateTime(2026, 6, 1));
         var confederation = new Confederation("CONMEBOL");
-        var strongTeam = new Team("Equipo Fuerte", confederation, 1500);
-        var weakTeam = new Team("Equipo Debil", confederation, 1200);
-        var stadium = new Stadium("Centenario", "Montevideo", null, 60000);
-        var match = new Match(clock.Now, stadium, strongTeam, weakTeam, 'A', clock);
-        var service = new RankingService();
-
-        match.SetMatchResult(0, 1);
-
-        service.UpdateRankingsAfterMatch(match);
-
-        Assert.AreEqual(1220, weakTeam.FifaRanking);
+        _strongTeam      = new Team("Equipo Fuerte", confederation, 1500);
+        _weakTeam        = new Team("Equipo Debil",  confederation, 1200);
+        var stadium      = new Stadium("Centenario", "Montevideo", null, 60000);
+        _match           = new Match(1, clock.Now, stadium, _strongTeam, _weakTeam, 'A', clock);
+        _service         = new RankingService();
     }
-    
+
     [TestMethod]
-    public void UpdateRankingsAfterMatch_WhenWeakAwayTeamWins_ShouldDecreaseHomeTeamRanking()
+    public void UpdateRankingsAfterMatch_WhenWeakAwayTeamWins_ShouldIncreaseAwayTeamCurrentRanking()
     {
-        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-        var confederation = new Confederation("CONMEBOL");
-        var strongTeam = new Team("Equipo Fuerte", confederation, 1500);
-        var weakTeam = new Team("Equipo Debil", confederation, 1200);
-        var stadium = new Stadium("Centenario", "Montevideo", null, 60000);
-        var match = new Match(clock.Now, stadium, strongTeam, weakTeam, 'A', clock);
-        var service = new RankingService();
+        _match.SetMatchResult(0, 1);
+        _service.UpdateRankingsAfterMatch(_match);
+        Assert.AreEqual(1220, _weakTeam.CurrentRanking);
+    }
 
-        match.SetMatchResult(0, 1);
+    [TestMethod]
+    public void UpdateRankingsAfterMatch_WhenWeakAwayTeamWins_ShouldDecreaseHomeTeamCurrentRanking()
+    {
+        _match.SetMatchResult(0, 1);
+        _service.UpdateRankingsAfterMatch(_match);
+        Assert.AreEqual(1480, _strongTeam.CurrentRanking);
+    }
 
-        service.UpdateRankingsAfterMatch(match);
+    [TestMethod]
+    public void UpdateRankingsAfterMatch_WhenMatchIsADraw_ShouldNotChangeRankingsOfEqualTeams()
+    {
+        var clock        = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+        var home         = new Team("TeamA", new Confederation("UEFA"), 1500);
+        var away         = new Team("TeamB", new Confederation("UEFA"), 1500);
+        var stadium      = new Stadium("Estadio", "Ciudad", null, 50000);
+        var match        = new Match(2, clock.Now, stadium, home, away, 'A', clock);
 
-        Assert.AreEqual(1480, strongTeam.FifaRanking);
+        match.SetMatchResult(1, 1);
+        _service.UpdateRankingsAfterMatch(match);
+
+        Assert.AreEqual(1500, home.CurrentRanking);
+        Assert.AreEqual(1500, away.CurrentRanking);
+    }
+
+    [TestMethod]
+    public void UpdateRankingsAfterMatch_WhenStrongTeamWins_ShouldChangeRankingsSlightly()
+    {
+        _match.SetMatchResult(1, 0);
+        _service.UpdateRankingsAfterMatch(_match);
+
+        Assert.IsTrue(_strongTeam.CurrentRanking > 1500, "El equipo fuerte que gana debería subir ligeramente");
+        Assert.IsTrue(_weakTeam.CurrentRanking < 1200, "El equipo débil que pierde debería bajar ligeramente");
+    }
+
+    [TestMethod]
+    public void UpdateRankingsAfterMatch_ShouldNotModifyFifaRanking()
+    {
+        _match.SetMatchResult(0, 1);
+        _service.UpdateRankingsAfterMatch(_match);
+
+        Assert.AreEqual(1500, _strongTeam.FifaRanking);
+        Assert.AreEqual(1200, _weakTeam.FifaRanking);
+    }
+
+    [TestMethod]
+    public void UpdateRankingsAfterMatch_WithNullMatch_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => _service.UpdateRankingsAfterMatch(null));
+    }
+
+    [TestMethod]
+    public void UpdateRankingsAfterMatch_WhenMatchHasNoResult_ShouldThrowException()
+    {
+        Assert.ThrowsException<InvalidOperationException>(() => _service.UpdateRankingsAfterMatch(_match));
     }
 }

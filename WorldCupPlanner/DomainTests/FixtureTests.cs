@@ -318,6 +318,7 @@ public class FixtureTests
         var config = new TournamentConfig();
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
+        int matchId = 1;
 
         foreach (var group in fixture.Groups)
         {
@@ -333,7 +334,7 @@ public class FixtureTests
 
             for (int i = 0; i < 6; i++)
             {
-                var match = new Match(clock.Now, stadium, teams[0], teams[1], group.GroupLetter, clock);
+                var match = new Match(matchId++, clock.Now, stadium, teams[0], teams[1], group.GroupLetter, clock);
                 group.AddMatchToGroup(match);
             }
         }

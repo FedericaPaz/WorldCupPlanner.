@@ -21,14 +21,17 @@ public class CruceServiceTests
     private CruceService _service;
     private IMatchRepository _matchRepository;
 
+    private int _nextId;
+
     [TestInitialize]
     public void Setup()
     {
-        _stubCrucesRepository = new CrucesRepositoryStub();
+        _nextId = 1;
+        _stubCrucesRepository  = new CrucesRepositoryStub();
         _stubFixtureRepository = new FixtureRepositoryStub();
         _stubStadiumRepository = new StadiumRepositoryStub();
-        _stubCrucesGenerator = new CrucesGeneratorServiceStub();
-        _matchRepository = new MatchRepository();
+        _stubCrucesGenerator   = new CrucesGeneratorServiceStub();
+        _matchRepository       = new MatchRepository();
 
         _service = new CruceService(_stubCrucesRepository, _stubFixtureRepository, _stubStadiumRepository, _stubCrucesGenerator, new CrucesSimulationService(), new TournamentConfig(), _matchRepository);
     }
@@ -99,10 +102,10 @@ public class CruceServiceTests
     private Match CreateMatch(Team homeTeam, Team awayTeam, int homeGoals, int awayGoals, char groupLetter)
     {
         var match = new Match(
-            FechaPartido,
+            _nextId++, FechaPartido,
             new Stadium("Centenario", "Montevideo", "Desc", 50000),
             homeTeam, awayTeam, groupLetter,
-            new ClockStub(FechaCreacionClock));  
+            new ClockStub(FechaCreacionClock));
 
         match.SetClock(new ClockStub(FechaResultadoClock));
         match.SetMatchResult(homeGoals, awayGoals);
@@ -115,18 +118,21 @@ public class CruceServiceTests
         var cruces = new List<Cruce>();
         for (int i = 0; i < cantidad; i++)
         {
-            var local     = new Team($"Local{i}",     new Confederation("UEFA"),    500);
+            var local     = new Team($"Local{i}",     new Confederation("UEFA"),     500);
             var visitante = new Team($"Visitante{i}", new Confederation("CONMEBOL"), 501);
-            var partido = new Match(FechaPartido,
+            var partido   = new Match(
+                _nextId++, FechaPartido,
                 new Stadium("Estadio", "Ciudad", "Desc", 50000),
                 local, visitante, 'A',
                 new ClockStub(FechaCreacionClock));
+
             partido.SetClock(new ClockStub(FechaResultadoClock));
             partido.SetMatchResult(2, 0);
             cruces.Add(new Cruce($"C{i}", partido, fase));
         }
         return cruces;
     }
+
 
     [TestMethod]
     public void GenerateRoundOf32_WhenCalled_GeneratesAndAddCruces()
