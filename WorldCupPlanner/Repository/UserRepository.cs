@@ -32,12 +32,15 @@ public class UserRepository : IUserRepository
     {
         if (user is null) throw new ArgumentNullException(nameof(user));
 
-        var existingUser = _context.Users.FirstOrDefault(u => u.Email == user.Email);
+        var existingUser = _context.Users.FirstOrDefault(u => u.Email == user.Email)
+                           ?? throw new InvalidOperationException($"No se encontró un usuario con el email {user.Email}.");
 
-        if (existingUser is null)
-            throw new InvalidOperationException($"No se encontró un usuario con el email {user.Email}.");
+        existingUser.UpdateData(
+            user.FirstName,
+            user.LastName,
+            user.BirthDate,
+            user.Roles.ToList());
 
-        _context.Entry(existingUser).CurrentValues.SetValues(user);
         _context.SaveChanges();
     }
 
