@@ -6,12 +6,16 @@ using IServices;
 using Repository;
 using Services;
 using ServicesTests.Stubs;
+using Domain.Enums;
 
 namespace ServicesTests;
 
 [TestClass]
 public class MatchServiceTests
 {
+    private UserRepository _userRepository;
+    private InMemoryNotificationRepository _notificationRepository;
+    private NotificationService _notificationService;
     private MatchService _service;
     private MatchRepository _matchRepository;
     private TeamRepositoryStub _teamRepository;
@@ -33,7 +37,10 @@ public class MatchServiceTests
         _simulationService = new SimulationServiceStub();
         _fixtureRepository = new FixtureRepository();
         _config = new TournamentConfig();
-
+        _userRepository = new UserRepository();
+        _notificationRepository = new InMemoryNotificationRepository();
+        _notificationService = new NotificationService(_userRepository, _notificationRepository);
+        
         _service = new MatchService(
             _matchRepository,
             _teamRepository,
@@ -41,7 +48,8 @@ public class MatchServiceTests
             _clock,
             _simulationService,
             _fixtureRepository,
-            _config
+            _config,
+            _notificationService
         );
     }
 
@@ -460,7 +468,6 @@ public class MatchServiceTests
         Assert.ThrowsException<InvalidOperationException>(() =>
             _service.SimulateGroupStage());
     }
-
     [TestMethod]
     public void SetResult_WithHomeYellowCards_ShouldAddHomeYellowCardIncident()
     {
@@ -598,5 +605,37 @@ public class MatchServiceTests
         var match = _matchRepository.GetMatchById(created.idMatch);
 
         Assert.IsTrue(match.Incidents.Count > 0);
+    }
+
+    [TestMethod]
+    public void SetMatchResult_WithValidData_ShouldNotifyJournalists()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var journalist = new User(
+            "Juan",
+            "Periodista",
+            "periodista@test.com",
+            new DateTime(1995, 1, 1),
+            "Aa123456!",
+            new List<UserRole> { UserRole.Journalist });
+
+        _userRepository.AddUser(journalist);
+
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1
+        };
+
+        _service.SetMatchResult(created.idMatch, request);
+
+        var notifications = _notificationRepository
+            .GetUnreadByUserEmail("periodista@test.com")
+            .ToList();
+
+        Assert.AreEqual(1, notifications.Count);
     }
 }

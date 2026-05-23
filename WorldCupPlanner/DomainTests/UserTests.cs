@@ -328,4 +328,12 @@ public class UserTests
         var user = new User("Juan", "Perez", "juan.perez@gmail.com", new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
         Assert.ThrowsException<ArgumentException>(() => user.UpdateData("Pedro", "Gomez", new DateTime(1995, 5, 5), new List<UserRole>()));
     }
+    
+    [TestMethod]
+    public void CreateUser_WithJournalistRole_ShouldContainJournalistRole()
+    {
+        var user = new User(
+            "Juan", "Perez", "juan.perez@test.com", new  DateTime(1995, 1, 1), "Aa123456!", new List<UserRole> { UserRole.Journalist });
+        CollectionAssert.Contains(user.Roles.ToList(), UserRole.Journalist);
+    }
 }

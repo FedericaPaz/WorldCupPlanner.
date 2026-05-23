@@ -251,6 +251,16 @@ public class TeamTests
         Assert.AreEqual(string.Empty, team.FlagBase64);
     }
 
+    [TestMethod]
+    public void UpdateFifaRanking_WithValidRanking_ShouldUpdateRanking()
+    {
+        var team = new Team("Uruguay", _defaultConfederation, MinFifaRanking);
+
+        team.UpdateFifaRanking(MaxFifaRanking);
+
+        Assert.AreEqual(MaxFifaRanking, team.FifaRanking);
+    }
+
     private void VerifyTeam(Team team, string expectedName, int expectedRanking)
     {
         Assert.IsNotNull(team);
