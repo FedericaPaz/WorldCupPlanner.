@@ -13,16 +13,20 @@
         <h3 class="mb-0">Gestión de equipos</h3>
         <span>@_teams.Count equipos registrados (se requieren 48)</span>
     </div>
-    <div class="col-auto">
-        <button class="btn btn-primary btn-bg-green" @onclick="GoToGenerate">
-            ✨ Generar equipos
-        </button>
-    </div>
-    <div class="col-auto">
-        <button class="btn btn-primary btn-bg-green" @onclick="GoToCreate">
-            + Crear equipo
-        </button>
-    </div>
+    @if (SessionService.IsSystemAdministrator() || SessionService.IsEditor())
+    {
+        <div class="col-auto">
+            <button class="btn btn-primary btn-bg-green" @onclick="GoToGenerate">
+                Generar equipos
+            </button>
+        </div>
+
+        <div class="col-auto">
+            <button class="btn btn-primary btn-bg-green" @onclick="GoToCreate">
+                + Crear equipo
+            </button>
+        </div>
+    }
 </div>
 
 @if (!string.IsNullOrWhiteSpace(_errorMessage))
@@ -51,14 +55,21 @@ else
                 <td>@team.FifaRanking</td>
                 <td>@team.Name</td>
                 <td class="confederation">@team.ConfederationName</td>
-                <td>
-                    <button class="btn btn-sm btn-outline-primary me-2 edit-button" type="button" @onclick="() => GoToEdit(team.Name)">
-                        ✏️ Editar
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" type="button" @onclick="() => DeleteTeam(team.Name)">
-                        🗑️ Eliminar
-                    </button>
-                </td>
+                @if (SessionService.IsSystemAdministrator() || SessionService.IsEditor())
+                {
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-2 edit-button" type="button" @onclick="() => GoToEdit(team.Name)">
+                            ✏️ Editar
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" type="button" @onclick="() => DeleteTeam(team.Name)">
+                            🗑️ Eliminar
+                        </button>
+                    </td>
+                }
+                else
+                {
+                    <td>-</td>
+                }
             </tr>
         }
         </tbody>
@@ -71,7 +82,9 @@ else
 
     protected override void OnInitialized()
     {
-        if (!SessionService.IsSystemAdministrator() && !SessionService.IsEditor() )
+        if (!SessionService.IsSystemAdministrator() &&
+            !SessionService.IsEditor() &&
+            !SessionService.IsJournalist())
         {
             Navigation.NavigateTo("/");
             return;

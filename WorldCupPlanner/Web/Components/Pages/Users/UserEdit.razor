@@ -81,6 +81,13 @@
                                    @onchange="ToggleEditorRole" />
                             Editor
                         </label>
+                        
+                        <label class="role-option">
+                            <input type="checkbox"
+                                   checked="@_userRequest.Roles.Contains(UserRoleDto.Journalist)"
+                                   @onchange="ToggleJournalistRole" />
+                            Periodista
+                        </label>
                     </div>
                 </div>
 
@@ -308,5 +315,10 @@
         }
 
         return SessionService.GetCurrentUser()!.Email;
+    }
+    
+    private void ToggleJournalistRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.Journalist, args);
     }
 }
