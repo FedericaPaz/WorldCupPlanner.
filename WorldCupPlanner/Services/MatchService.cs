@@ -84,7 +84,8 @@ public class MatchService : IMatchService
 
     private Match CreateMatchEntity(MatchRequest request, IStadium stadium, ITeam homeTeam, ITeam awayTeam)
     {
-        return new Match(request.dateMatch, stadium, homeTeam, awayTeam, request.group[0], _clock);
+        int id = _matchRepository.GetNextId();
+        return new Match(id, request.dateMatch, stadium, homeTeam, awayTeam, request.group[0], _clock);
     }
 
     public void SetMatchResult(int matchId, int homeGoals, int awayGoals)
