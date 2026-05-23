@@ -1,10 +1,9 @@
 using Domain.Entities;
 
-namespace Repository;
+namespace IRepository;
 
 public interface INotificationRepository
 {
     void Add(Notification notification);
     List<Notification> GetByRecipient(string email);
-    List<Notification> GetUnread(string email);
 }

@@ -11,4 +11,10 @@ public class NotificationRepository : INotificationRepository
     {
         _notifications.Add(notification);
     }
+    public List<Notification> GetByRecipient(string email)
+    {
+        return _notifications
+            .Where(notification => notification.RecipientEmail == email)
+            .ToList();
+    }
 }

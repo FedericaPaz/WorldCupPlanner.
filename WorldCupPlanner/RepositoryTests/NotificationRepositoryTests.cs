@@ -17,4 +17,21 @@ public class NotificationRepositoryTests
 
         repository.Add(notification);
     }
+    
+    [TestMethod]
+    public void GetByRecipient_WithStoredNotification_ShouldReturnNotification()
+    {
+        var repository = new NotificationRepository();
+
+        var notification = new Notification(
+            "periodista@test.com",
+            "Nuevo resultado disponible"
+        );
+
+        repository.Add(notification);
+
+        var result = repository.GetByRecipient("periodista@test.com");
+
+        Assert.AreEqual(1, result.Count);
+    }
 }
