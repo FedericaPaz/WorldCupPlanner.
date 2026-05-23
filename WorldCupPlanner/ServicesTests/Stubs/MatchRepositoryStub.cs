@@ -7,6 +7,11 @@ public class MatchRepositoryStub : IMatchRepository
 {
     private List<Match> _matches = new();
 
+    public int GetNextId()
+    {
+        throw new NotImplementedException();
+    }
+
     List<Match> IMatchRepository.GetAllMatches()
     {
         return GetAllMatches();

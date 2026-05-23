@@ -7,84 +7,84 @@ namespace RepositoryTests;
 [TestClass]
 public class MatchRepositoryTests
 {
+    private MatchRepository _repository = null!;
+    private DateTimeMatchStub _clock = null!;
+    private int _nextId;
+
     [TestInitialize]
     public void Setup()
     {
-        Match.ResetIdCounter();
+        _repository = new MatchRepository();
+        _clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+        _nextId = 1;
+    }
+
+    private Match CreateMatch(string home = "Uruguay", string away = "Argentina",
+        string stadium = "Centenario", char group = 'A')
+    {
+        return new Match(_nextId++, _clock.Now,
+            new StadiumStub(stadium), new TeamStub(home), new TeamStub(away),
+            group, _clock);
     }
 
     [TestMethod]
     public void AddMatch_WithValidMatch_ShouldStoreMatch()
     {
-        var repository = new MatchRepository();
-        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-        var result = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
-
-        repository.AddMatch(result);
-        Assert.AreEqual(1, repository.GetAllMatches().Count);
-        Assert.AreEqual(result, repository.GetAllMatches()[0]);
+        var match = CreateMatch();
+        _repository.AddMatch(match);
+        Assert.AreEqual(1, _repository.GetAllMatches().Count);
+        Assert.AreEqual(match, _repository.GetAllMatches()[0]);
     }
-    
+
     [TestMethod]
     public void GetById_WithExistingMatch_ShouldReturnMatch()
     {
-        var repository = new MatchRepository();
-        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-        var match = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
-
-        repository.AddMatch(match);
-        var result = repository.GetMatchById(match.IdMatch);
+        var match = CreateMatch();
+        _repository.AddMatch(match);
+        var result = _repository.GetMatchById(match.IdMatch);
         Assert.AreEqual(match, result);
     }
-    
+
     [TestMethod]
     public void GetById_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
     {
-        var repository = new MatchRepository();
-        Assert.ThrowsException<KeyNotFoundException>(() => repository.GetMatchById(99));
+        Assert.ThrowsException<KeyNotFoundException>(() => _repository.GetMatchById(99));
     }
-    
+
     [TestMethod]
     public void GetById_WithInvalidId_ShouldThrowArgumentException()
     {
-        var repository = new MatchRepository();
-        Assert.ThrowsException<ArgumentException>(() => repository.GetMatchById(0));
+        Assert.ThrowsException<ArgumentException>(() => _repository.GetMatchById(0));
     }
-    
+
     [TestMethod]
     public void GetById_WithNegativeId_ShouldThrowArgumentException()
     {
-        var repository = new MatchRepository();
-        Assert.ThrowsException<ArgumentException>(() => repository.GetMatchById(-1));
+        Assert.ThrowsException<ArgumentException>(() => _repository.GetMatchById(-1));
     }
-    
+
     [TestMethod]
     public void GetAll_WhenRepositoryIsEmpty_ShouldReturnEmptyList()
     {
-        var repository = new MatchRepository();
-        var matches = repository.GetAllMatches();
-        Assert.AreEqual(0, matches.Count);
+        Assert.AreEqual(0, _repository.GetAllMatches().Count);
     }
-    
+
     [TestMethod]
     public void GetAll_WithMatches_ShouldReturnAllMatches()
     {
-        var repository = new MatchRepository();
-        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
-        var match1 = new Match(clock.Now, new StadiumStub("Centenario"), new TeamStub("Uruguay"), new TeamStub("Argentina"), 'A', clock);
-        var match2 = new Match(clock.Now, new StadiumStub("Maracana"), new TeamStub("Brasil"), new TeamStub("Peru"), 'B', clock);
-        repository.AddMatch(match1);
-        repository.AddMatch(match2);
-        var matches = repository.GetAllMatches();
+        var match1 = CreateMatch("Uruguay", "Argentina", "Centenario", 'A');
+        var match2 = CreateMatch("Brasil", "Peru", "Maracana", 'B');
+        _repository.AddMatch(match1);
+        _repository.AddMatch(match2);
+        var matches = _repository.GetAllMatches();
         Assert.AreEqual(2, matches.Count);
         Assert.AreEqual(match1, matches[0]);
         Assert.AreEqual(match2, matches[1]);
     }
-    
+
     [TestMethod]
     public void Add_WithNullMatch_ShouldThrowArgumentNullException()
     {
-        var repository = new MatchRepository();
-        Assert.ThrowsException<ArgumentNullException>(() => repository.AddMatch(null));
+        Assert.ThrowsException<ArgumentNullException>(() => _repository.AddMatch(null));
     }
 }

@@ -20,6 +20,8 @@ public class FixtureGenerator
     private const int GroupsPerBatch = 6;
     private const string ConfederationUefa = "UEFA";
     private const int MaxUefaTeamsPerGroup = 2;
+    
+    private int _nextMatchId = 1;
 
     public FixtureGenerator(
         ITeamRepository teamRepository,
@@ -33,6 +35,7 @@ public class FixtureGenerator
         _fixtureRepository = fixtureRepository;
         _config = config;
         _clock = clock;
+        _nextMatchId = 1;
     }
 
     public Fixture GenerateGroupsStageFixture()
@@ -145,14 +148,15 @@ public class FixtureGenerator
 
     private int GenerateGroupMatches(Group group, List<Stadium> orderedStadiums, int groupIndex, int matchCounter)
     {
-        var teams = group.TeamsInGroup.ToList();
+        var teams     = group.TeamsInGroup.ToList();
         var matchDates = CalculateMatchDatesForGroup(groupIndex);
-        var matchups = GetGroupRoundRobinMatchups();
+        var matchups  = GetGroupRoundRobinMatchups();
 
         for (int i = 0; i < matchups.Length; i++)
         {
             var stadium = orderedStadiums[matchCounter % orderedStadiums.Count];
-            var match = new Match(
+            var match   = new Match(
+                _nextMatchId++,
                 matchDates[i],
                 stadium,
                 teams[matchups[i].home],
@@ -163,7 +167,6 @@ public class FixtureGenerator
             group.AddMatchToGroup(match);
             matchCounter++;
         }
-
         return matchCounter;
     }
 

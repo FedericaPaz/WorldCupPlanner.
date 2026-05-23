@@ -12,6 +12,11 @@ public class MatchRepository : IMatchRepository
         EnsureNotNull(match);
         _matches.Add(match);
     }
+    
+    public int GetNextId()
+    {
+        return _matches.Count == 0 ? 1 : _matches.Max(m => m.IdMatch) + 1;
+    }
 
     private void EnsureNotNull(Match match)
     {

@@ -12,23 +12,29 @@ public class RankingService : IRankingService
 
     public void UpdateRankingsAfterMatch(Match match)
     {
+        if (match == null)
+            throw new ArgumentNullException(nameof(match));
+
+        if (!match.HomeGoals.HasValue || !match.AwayGoals.HasValue)
+            throw new InvalidOperationException("El partido no tiene resultado.");
+
         var homeTeam = (Team)match.HomeTeam;
         var awayTeam = (Team)match.AwayTeam;
 
         int newHomeRanking = CalculateNewRanking(
-            homeTeam.FifaRanking,
-            awayTeam.FifaRanking,
+            homeTeam.CurrentRanking,
+            awayTeam.CurrentRanking,
             GetResultForHomeTeam(match),
             GetPhaseMultiplier(match));
 
         int newAwayRanking = CalculateNewRanking(
-            awayTeam.FifaRanking,
-            homeTeam.FifaRanking,
+            awayTeam.CurrentRanking,
+            homeTeam.CurrentRanking,
             GetResultForAwayTeam(match),
             GetPhaseMultiplier(match));
 
-        homeTeam.UpdateFifaRanking(newHomeRanking);
-        awayTeam.UpdateFifaRanking(newAwayRanking);
+        homeTeam.UpdateCurrentRanking(newHomeRanking);
+        awayTeam.UpdateCurrentRanking(newAwayRanking);
     }
 
     private static int CalculateNewRanking(

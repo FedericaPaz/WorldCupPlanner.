@@ -19,12 +19,13 @@ public class CrucesGeneratorServiceTests
 
     private CrucesGeneratorService _service;
     private List<Stadium> _estadios;
+    private int _nextId;
 
     [TestInitialize]
     public void TestInitialize()
     {
-        var clock = new ClockStub(FechaCreacionClock);
-        _service = new CrucesGeneratorService(ConfigTest, clock);
+        _nextId  = 1;
+        _service = new CrucesGeneratorService(ConfigTest, new ClockStub(FechaCreacionClock));
         _estadios = CreateStadiums();
     }
 
@@ -35,8 +36,7 @@ public class CrucesGeneratorServiceTests
         return fixture;
     }
 
-    private Fixture CreateDefaultFixture() =>
-        CreateFixtureWithGroups(Create12GroupsWithTeams());
+    private Fixture CreateDefaultFixture() => CreateFixtureWithGroups(Create12GroupsWithTeams());
 
     private List<Group> Create12GroupsWithTeams()
     {
@@ -71,12 +71,15 @@ public class CrucesGeneratorServiceTests
         grupo.AddMatchToGroup(CreateMatch(teams[2], teams[3], 1, 0, grupo.GroupLetter));
     }
 
-    private Match CreateMatch(Team homeTeam, Team awayTeam, int homeGoals, int awayGoals, char groupLetter)
+    private Match CreateMatch(Team homeTeam, Team awayTeam,
+        int homeGoals, int awayGoals, char groupLetter)
     {
-        var match = new Match(FechaPartido,
+        var match = new Match(
+            _nextId++, FechaPartido,
             new Stadium("Centenario", "Montevideo", "Desc", 50000),
             homeTeam, awayTeam, groupLetter,
             new ClockStub(FechaCreacionClock));
+
         match.SetClock(new ClockStub(FechaResultadoClock));
         match.SetMatchResult(homeGoals, awayGoals);
         return match;

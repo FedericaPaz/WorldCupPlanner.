@@ -14,11 +14,14 @@ public class CrucesGeneratorService : ICrucesGeneratorService
 
     private const int StartHour = 14;
     private const int HoursBetweenMatches = 4;
+    
+    private int _nextMatchId = 1;
     public CrucesGeneratorService(TournamentConfig config, IDateTimeMatch clock)
     {
         _calculator = new StandingCalculator();
         _config = config;
         _clock = clock;
+        _nextMatchId  = 1;
     }
 
     public List<Cruce> GenerateRoundOf32(Fixture fixture, List<Stadium> estadios, int semilla)
@@ -255,7 +258,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
             : _config.FechaInicioTorneo.AddDays(21).Date;
 
         var matchDate = startDate.AddDays(diaOffset).AddHours(hour);
-        return new Match(matchDate, estadio, local, visitante, 'N', _clock);
+        return new Match(_nextMatchId++, matchDate, estadio, local, visitante, 'N', _clock);
     }
 
     private static List<Team> ObtainWinners(List<Cruce> cruces)

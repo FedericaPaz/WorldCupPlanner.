@@ -12,16 +12,22 @@ public class CrucesTests
     private ITeam _homeTeam;
     private ITeam _awayTeam;
     private IDateTimeMatch _clock;
+    private int _nextId;
     
+    [TestInitialize]
+    public void Setup()
+    {
+        _nextId = 1;
+    }
+
     private Match CreateBasicMatch()
     {
         DateTime now = DateTime.Now;
-        _stadium = new Stadium("Test Stadium", "Ciudad","Desc",50000);
+        _stadium = new Stadium("Test Stadium", "Ciudad", "Desc", 50000);
         _homeTeam = new Team("Test homeTeam", new Confederation("UEFA"), 301);
         _awayTeam = new Team("Test awayTeam", new Confederation("UEFA"), 302);
         _clock = new ClockStub(now);
-        var basicMatch = new Match(now, _stadium, _homeTeam, _awayTeam,'A', _clock);
-        return basicMatch;
+        return new Match(_nextId++, now, _stadium, _homeTeam, _awayTeam, 'A', _clock);
     }
     
     [TestMethod]

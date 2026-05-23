@@ -7,87 +7,87 @@ namespace DomainTests;
 [TestClass]
 public class StandingCalculatorTests
 {
+    private int _nextId;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _nextId = 1;
+    }
+
+    private Match CreateMatch(DateTimeMatchStub clock, Stadium stadium,
+        Team home, Team away, char group = 'A')
+    {
+        return new Match(_nextId++, clock.Now, stadium, home, away, group, clock);
+    }
+
+    private static (Group group, Team uruguay, Team argentina, Stadium stadium, DateTimeMatchStub clock) CreateBasicGroup()
+    {
+        var group = new Group('A');
+        var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
+        group.AddTeamToGroup(uruguay);
+        group.AddTeamToGroup(argentina);
+        var stadium = new Stadium("Centenario", "Montevideo", "Desc", 60000);
+        var clock = new DateTimeMatchStub(DateTime.Now);
+        return (group, uruguay, argentina, stadium, clock);
+    }
+
     [TestMethod]
     public void CalculateStandings_WithOneMatch_ShouldGenerateStandings()
     {
-        var group = new Group('A');
-        var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
-        var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
-        group.AddTeamToGroup(uruguay);
-        group.AddTeamToGroup(argentina);
-        var stadium = new Stadium("Centenario", "Montevideo", "Desc", 60000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
-        var match = new Match(clock.Now, stadium, uruguay, argentina, 'A', clock);
+        var (group, uruguay, argentina, stadium, clock) = CreateBasicGroup();
+        var match = CreateMatch(clock, stadium, uruguay, argentina);
         match.SetMatchResult(2, 1);
         group.AddMatchToGroup(match);
-        var calculator = new StandingCalculator();
-        var standings = calculator.CalculateStandings(group);
+
+        var standings = new StandingCalculator().CalculateStandings(group);
+
         Assert.AreEqual(2, standings.Count);
     }
-    
+
     [TestMethod]
     public void CalculateStandings_WithHomeTeamWin_ShouldUpdatePoints()
     {
-        var group = new Group('A');
-        var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
-        var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
-        group.AddTeamToGroup(uruguay);
-        group.AddTeamToGroup(argentina);
-        var stadium = new Stadium("Centenario", "Montevideo", "Desc",60000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
-        var match = new Match(clock.Now, stadium, uruguay, argentina, 'A', clock);
+        var (group, uruguay, argentina, stadium, clock) = CreateBasicGroup();
+        var match = CreateMatch(clock, stadium, uruguay, argentina);
         match.SetMatchResult(2, 1);
         group.AddMatchToGroup(match);
-        var calculator = new StandingCalculator();
-        var standings = calculator.CalculateStandings(group);
-        Standing uruguayStanding = standings.First(s => s.TeamInGroup == uruguay);
-        Standing argentinaStanding = standings.First(s => s.TeamInGroup == argentina);
-        Assert.AreEqual(3, uruguayStanding.PointsInGroup);
-        Assert.AreEqual(0, argentinaStanding.PointsInGroup);
+
+        var standings = new StandingCalculator().CalculateStandings(group);
+
+        Assert.AreEqual(3, standings.First(s => s.TeamInGroup == uruguay).PointsInGroup);
+        Assert.AreEqual(0, standings.First(s => s.TeamInGroup == argentina).PointsInGroup);
     }
-    
+
     [TestMethod]
     public void CalculateStandings_WithDraw_ShouldUpdateBothTeamsWithOnePoint()
     {
-        var group = new Group('A');
-        var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
-        var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
-        group.AddTeamToGroup(uruguay);
-        group.AddTeamToGroup(argentina);
-        var stadium = new Stadium("Centenario", "Montevideo", "Desc", 60000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
-        var match = new Match(clock.Now, stadium, uruguay, argentina, 'A', clock);
+        var (group, uruguay, argentina, stadium, clock) = CreateBasicGroup();
+        var match = CreateMatch(clock, stadium, uruguay, argentina);
         match.SetMatchResult(1, 1);
         group.AddMatchToGroup(match);
-        var calculator = new StandingCalculator();
-        var standings = calculator.CalculateStandings(group);
-        Standing uruguayStanding = standings.First(s => s.TeamInGroup == uruguay);
-        Standing argentinaStanding = standings.First(s => s.TeamInGroup == argentina);
-        Assert.AreEqual(1, uruguayStanding.PointsInGroup);
-        Assert.AreEqual(1, argentinaStanding.PointsInGroup);
+
+        var standings = new StandingCalculator().CalculateStandings(group);
+
+        Assert.AreEqual(1, standings.First(s => s.TeamInGroup == uruguay).PointsInGroup);
+        Assert.AreEqual(1, standings.First(s => s.TeamInGroup == argentina).PointsInGroup);
     }
-    
+
     [TestMethod]
     public void CalculateStandings_WithAwayTeamWin_ShouldUpdatePoints()
     {
-        var group = new Group('A');
-        var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
-        var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
-        group.AddTeamToGroup(uruguay);
-        group.AddTeamToGroup(argentina);
-        var stadium = new Stadium("Centenario", "Montevideo", "Desc", 60000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
-        var match = new Match(clock.Now, stadium, uruguay, argentina, 'A', clock);
+        var (group, uruguay, argentina, stadium, clock) = CreateBasicGroup();
+        var match = CreateMatch(clock, stadium, uruguay, argentina);
         match.SetMatchResult(0, 2);
         group.AddMatchToGroup(match);
-        var calculator = new StandingCalculator();
-        var standings = calculator.CalculateStandings(group);
-        Standing uruguayStanding = standings.First(s => s.TeamInGroup == uruguay);
-        Standing argentinaStanding = standings.First(s => s.TeamInGroup == argentina);
-        Assert.AreEqual(0, uruguayStanding.PointsInGroup);
-        Assert.AreEqual(3, argentinaStanding.PointsInGroup);
+
+        var standings = new StandingCalculator().CalculateStandings(group);
+
+        Assert.AreEqual(0, standings.First(s => s.TeamInGroup == uruguay).PointsInGroup);
+        Assert.AreEqual(3, standings.First(s => s.TeamInGroup == argentina).PointsInGroup);
     }
-    
+
     [TestMethod]
     public void CalculateStandings_ShouldOrderByPointsDescending()
     {
@@ -95,7 +95,6 @@ public class StandingCalculatorTests
         var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
         var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
         var brasil = new Team("France", new Confederation("CONMEBOL"), 1900);
-        
         group.AddTeamToGroup(uruguay);
         group.AddTeamToGroup(argentina);
         group.AddTeamToGroup(brasil);
@@ -103,36 +102,30 @@ public class StandingCalculatorTests
         var stadium = new Stadium("Centenario", "Montevideo", "Desc", 60000);
         var clock = new DateTimeMatchStub(DateTime.Now);
 
-        var match1 = new Match(clock.Now, stadium, uruguay, argentina, 'A', clock);
+        var match1 = CreateMatch(clock, stadium, uruguay, argentina);
         match1.SetMatchResult(2, 1);
-
-        var match2 = new Match(clock.Now, stadium, brasil, argentina, 'A', clock);
+        var match2 = CreateMatch(clock, stadium, brasil, argentina);
         match2.SetMatchResult(3, 0);
-
-        var match3 = new Match(clock.Now, stadium, uruguay, brasil, 'A', clock);
+        var match3 = CreateMatch(clock, stadium, uruguay, brasil);
         match3.SetMatchResult(0, 1);
 
         group.AddMatchToGroup(match1);
         group.AddMatchToGroup(match2);
         group.AddMatchToGroup(match3);
 
-        var calculator = new StandingCalculator();
-
-        var standings = calculator.CalculateStandings(group);
+        var standings = new StandingCalculator().CalculateStandings(group);
 
         Assert.AreEqual(brasil, standings[0].TeamInGroup);
         Assert.AreEqual(6, standings[0].PointsInGroup);
     }
-    
+
     [TestMethod]
     public void CalculateStandings_WhenTeamsHaveSamePoints_ShouldOrderByGoalDifference()
     {
         var group = new Group('A');
-
         var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
         var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
         var france = new Team("France", new Confederation("UEFA"), 1900);
-
         group.AddTeamToGroup(uruguay);
         group.AddTeamToGroup(argentina);
         group.AddTeamToGroup(france);
@@ -140,91 +133,70 @@ public class StandingCalculatorTests
         var stadium = new Stadium("Centenario", "Montevideo", "Desc", 60000);
         var clock = new DateTimeMatchStub(DateTime.Now);
 
-        var match1 = new Match(clock.Now, stadium, uruguay, argentina, 'A', clock);
-        match1.SetMatchResult(3, 0); // DG +3
-
-        var match2 = new Match(clock.Now, stadium, france, argentina, 'A', clock);
-        match2.SetMatchResult(1, 0); // DG +1
+        var match1 = CreateMatch(clock, stadium, uruguay, argentina);
+        match1.SetMatchResult(3, 0);
+        var match2 = CreateMatch(clock, stadium, france, argentina);
+        match2.SetMatchResult(1, 0);
 
         group.AddMatchToGroup(match1);
         group.AddMatchToGroup(match2);
 
-        var calculator = new StandingCalculator();
-
-        var standings = calculator.CalculateStandings(group);
+        var standings = new StandingCalculator().CalculateStandings(group);
 
         Assert.AreEqual(uruguay, standings[0].TeamInGroup);
         Assert.AreEqual(france, standings[1].TeamInGroup);
     }
-    
+
     [TestMethod]
     public void CalculateStandings_WhenTeamsHaveSamePointsAndGoalDifference_ShouldOrderByGoalsFor()
     {
         var group = new Group('A');
-
         var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
         var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
         var brasil = new Team("France", new Confederation("UEFA"), 1900);
-
         group.AddTeamToGroup(uruguay);
         group.AddTeamToGroup(argentina);
         group.AddTeamToGroup(brasil);
 
-        var stadium = new Stadium("Centenario", "Montevideo", "Desc",60000);
+        var stadium = new Stadium("Centenario", "Montevideo", "Desc", 60000);
         var clock = new DateTimeMatchStub(DateTime.Now);
 
-        var match1 = new Match(clock.Now, stadium, uruguay, argentina, 'A', clock);
+        var match1 = CreateMatch(clock, stadium, uruguay, argentina);
         match1.SetMatchResult(4, 2);
-
-        var match2 = new Match(clock.Now, stadium, brasil, argentina, 'A', clock);
-        match2.SetMatchResult(3, 1); // France: 3 pts, DG +2, GF 3
+        var match2 = CreateMatch(clock, stadium, brasil, argentina);
+        match2.SetMatchResult(3, 1);
 
         group.AddMatchToGroup(match1);
         group.AddMatchToGroup(match2);
 
-        var calculator = new StandingCalculator();
-
-        var standings = calculator.CalculateStandings(group);
+        var standings = new StandingCalculator().CalculateStandings(group);
 
         Assert.AreEqual(uruguay, standings[0].TeamInGroup);
         Assert.AreEqual(brasil, standings[1].TeamInGroup);
     }
-    
+
     [TestMethod]
     public void CalculateStandings_WithMatchWithoutResult_ShouldNotUpdateStandings()
     {
-        var group = new Group('A');
-
-        var uruguay = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
-        var argentina = new Team("Argentina", new Confederation("CONMEBOL"), 1850);
-
-        group.AddTeamToGroup(uruguay);
-        group.AddTeamToGroup(argentina);
-
-        var stadium = new Stadium("Centenario", "Montevideo", "Desc", 60000);
-        var clock = new DateTimeMatchStub(DateTime.Now);
-
-        var match = new Match(clock.Now, stadium, uruguay, argentina, 'A', clock);
-
+        var (group, uruguay, argentina, stadium, clock) = CreateBasicGroup();
+        var match = CreateMatch(clock, stadium, uruguay, argentina);
         group.AddMatchToGroup(match);
 
-        var calculator = new StandingCalculator();
+        var standings = new StandingCalculator().CalculateStandings(group);
 
-        var standings = calculator.CalculateStandings(group);
-
-        Standing uruguayStanding = standings.First(s => s.TeamInGroup == uruguay);
-        Standing argentinaStanding = standings.First(s => s.TeamInGroup == argentina);
+        var uruguayStanding = standings.First(s => s.TeamInGroup == uruguay);
+        var argentinaStanding = standings.First(s => s.TeamInGroup == argentina);
 
         Assert.AreEqual(0, uruguayStanding.PointsInGroup);
         Assert.AreEqual(0, argentinaStanding.PointsInGroup);
         Assert.AreEqual(0, uruguayStanding.MatchesPlayed);
         Assert.AreEqual(0, argentinaStanding.MatchesPlayed);
     }
-    
+
     [TestMethod]
     public void CalculateStandings_WithNullGroup_ShouldThrowException()
     {
-        var calculator = new StandingCalculator();
-        Assert.ThrowsException<ArgumentNullException>(() => calculator.CalculateStandings(null));
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            new StandingCalculator().CalculateStandings(null));
     }
 }
