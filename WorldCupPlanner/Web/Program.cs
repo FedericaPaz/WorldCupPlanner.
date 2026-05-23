@@ -39,6 +39,8 @@ builder.Services.AddScoped<IFixtureRepository, FixtureRepository >();
 builder.Services.AddScoped<IFixtureService, FixtureService>();
 builder.Services.AddScoped<FixtureGenerator>();
 
+builder.Services.AddScoped<IGroupRepository, EfGroupRepository>();
+
 builder.Services.AddScoped<ILogRepository, EfLogRepository>();
 builder.Services.AddScoped<ILogService, LogService>();
 

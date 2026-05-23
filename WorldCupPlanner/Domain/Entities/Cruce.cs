@@ -9,6 +9,7 @@ public class Cruce
     private Match _match;
     private TournamentPhase _phase;
     private Cruce? _nextCruce;
+    public int Id { get; private set; }
 
     public string Name
     {
@@ -32,6 +33,10 @@ public class Cruce
     {
         get { return _nextCruce; }
         private set { _nextCruce = value; }
+    }
+    
+    private Cruce()
+    {
     }
     
     public Cruce(string name, Match match, TournamentPhase phase)
