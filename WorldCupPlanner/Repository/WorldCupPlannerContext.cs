@@ -11,6 +11,7 @@ public class WorldCupPlannerContext : DbContext
     public DbSet<Stadium> Stadiums { get; set; }
     public DbSet<LogEntry> LogEntries { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<Group> Groups { get; set; }
 
     public WorldCupPlannerContext(DbContextOptions<WorldCupPlannerContext> options)
         : base(options)
@@ -45,5 +46,18 @@ public class WorldCupPlannerContext : DbContext
 
         modelBuilder.Entity<Notification>()
             .HasKey(notification => notification.Id);
+        
+        modelBuilder.Entity<Group>()
+            .HasKey(group => group.Id);
+
+        modelBuilder.Entity<Group>()
+            .Property(group => group.GroupLetter)
+            .IsRequired();
+
+        modelBuilder.Entity<Group>()
+            .Ignore(group => group.TeamsInGroup);
+
+        modelBuilder.Entity<Group>()
+            .Ignore(group => group.MatchesInGroup);
     }
 }
