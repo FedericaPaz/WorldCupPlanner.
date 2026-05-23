@@ -12,7 +12,7 @@ using Repository;
 namespace Repository.Migrations
 {
     [DbContext(typeof(WorldCupPlannerContext))]
-    [Migration("20260521200341_Initial")]
+    [Migration("20260523044019_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -122,6 +122,10 @@ namespace Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Roles")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

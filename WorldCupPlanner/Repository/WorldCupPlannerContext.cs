@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repository;
@@ -19,9 +20,19 @@ public class WorldCupPlannerContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<User>()
-            .HasKey(user => user.Email);
+        
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(u => u.Email);
+            entity.Property(u => u.Roles)
+                .HasConversion(
+                    roles => string.Join(",", roles.Select(r => r.ToString())),
+                    value => value
+                        .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                        .Select(r => Enum.Parse<UserRole>(r))
+                        .ToList()
+                );
+        });
 
         modelBuilder.Entity<Team>()
             .HasKey(team => team.Name);
