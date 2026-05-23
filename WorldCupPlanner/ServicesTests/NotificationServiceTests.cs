@@ -2,133 +2,123 @@
 using Domain.Enums;
 using Repository;
 using Services;
+using ServicesTests.TestHelpers;
 
 namespace ServicesTests;
 
 [TestClass]
 public class NotificationServiceTests
 {
+    private WorldCupPlannerContext _context = null!;
+    private UserRepository _userRepository = null!;
+    private InMemoryNotificationRepository _notificationRepository = null!;
+    private NotificationService _service = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        _context = DbContextFactory.CreateInMemoryContext();
+        _userRepository = new UserRepository(_context);
+        _notificationRepository = new InMemoryNotificationRepository();
+        _service = new NotificationService(_userRepository, _notificationRepository);
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _context.Dispose();
+    }
+
     [TestMethod]
     public void NotifyJournalists_WhenUsersExist_ShouldCreateNotificationOnlyForJournalists()
     {
-        var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
+        _userRepository.AddUser(CreateUser("periodista@test.com", UserRole.Journalist));
+        _userRepository.AddUser(CreateUser("editor@test.com", UserRole.Editor));
 
-        var journalist = new User("Juan", "Periodista", "periodista@test.com", new DateTime(1995, 1, 1), "Aa123456!", new List<UserRole> { UserRole.Journalist });
+        _service.NotifyJournalists("Se cargó un nuevo resultado");
 
-        var editor = new User("Pedro", "Editor", "editor@test.com", new DateTime(1995, 1, 1), "Aa123456!", new List<UserRole> { UserRole.Editor });
-
-        userRepository.AddUser(journalist);
-        userRepository.AddUser(editor);
-
-        var service = new NotificationService(userRepository, notificationRepository);
-
-        service.NotifyJournalists("Se cargó un nuevo resultado");
-
-        var journalistNotifications = notificationRepository
-            .GetUnreadByUserEmail("periodista@test.com")
-            .ToList();
-
-        var editorNotifications = notificationRepository
-            .GetUnreadByUserEmail("editor@test.com")
-            .ToList();
+        var journalistNotifications = _notificationRepository
+            .GetUnreadByUserEmail("periodista@test.com").ToList();
+        var editorNotifications = _notificationRepository
+            .GetUnreadByUserEmail("editor@test.com").ToList();
 
         Assert.AreEqual(1, journalistNotifications.Count);
         Assert.AreEqual("Se cargó un nuevo resultado", journalistNotifications[0].Message);
         Assert.AreEqual(0, editorNotifications.Count);
     }
-    
+
     [TestMethod]
     public void GetUnreadNotifications_WhenUserHasUnreadNotifications_ShouldReturnUnreadNotifications()
     {
-        var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
+        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+        _notificationRepository.Add(notification);
 
-        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
-
-        notificationRepository.Add(notification);
-
-        var service = new NotificationService(userRepository, notificationRepository);
-
-        var unreadNotifications = service
-            .GetUnread("periodista@test.com")
-            .ToList();
+        var unreadNotifications = _service.GetUnread("periodista@test.com").ToList();
 
         Assert.AreEqual(1, unreadNotifications.Count);
         Assert.AreSame(notification, unreadNotifications[0]);
     }
-    
+
     [TestMethod]
     public void MarkAsRead_WithExistingNotification_ShouldMarkNotificationAsRead()
     {
-        var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
+        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+        _notificationRepository.Add(notification);
 
-        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
+        _service.MarkAsRead(notification.Id, "periodista@test.com");
 
-        notificationRepository.Add(notification);
-
-        var service = new NotificationService(userRepository, notificationRepository);
-
-        service.MarkAsRead(notification.Id, "periodista@test.com");
-
-        var storedNotification = notificationRepository.GetById(notification.Id);
-
-        Assert.IsNotNull(storedNotification);
-        Assert.IsTrue(storedNotification.IsRead);
+        var stored = _notificationRepository.GetById(notification.Id);
+        Assert.IsNotNull(stored);
+        Assert.IsTrue(stored.IsRead);
     }
-    
+
     [TestMethod]
     public void MarkAsRead_WhenNotificationBelongsToAnotherUser_ShouldThrowException()
     {
-        var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
-
-        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
-
-        notificationRepository.Add(notification);
-
-        var service = new NotificationService(userRepository, notificationRepository);
+        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+        _notificationRepository.Add(notification);
 
         Assert.ThrowsException<InvalidOperationException>(() =>
-            service.MarkAsRead(notification.Id, "otro@test.com"));
+            _service.MarkAsRead(notification.Id, "otro@test.com"));
     }
-    
+
     [TestMethod]
     public void Send_WithValidRecipientAndMessage_ShouldCreateUnreadNotification()
     {
-        var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
-        var service = new NotificationService(userRepository, notificationRepository);
+        _service.Send("periodista@test.com", "Nueva notificación");
 
-        service.Send("periodista@test.com", "Nueva notificación");
-
-        var notifications = notificationRepository
-            .GetUnreadByUserEmail("periodista@test.com")
-            .ToList();
+        var notifications = _notificationRepository
+            .GetUnreadByUserEmail("periodista@test.com").ToList();
 
         Assert.AreEqual(1, notifications.Count);
         Assert.AreEqual("Nueva notificación", notifications[0].Message);
     }
-    
+
     [TestMethod]
     public void GetUnread_WhenUserHasUnreadNotifications_ShouldReturnUnreadNotifications()
     {
-        var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
-
-        var notification = new Notification(
-            "periodista@test.com",
-            "Nueva notificación",
+        var notification = new Notification("periodista@test.com", "Nueva notificación",
             new DateTime(2026, 6, 1, 14, 30, 0));
+        _notificationRepository.Add(notification);
 
-        notificationRepository.Add(notification);
-
-        var service = new NotificationService(userRepository, notificationRepository);
-
-        var notifications = service.GetUnread("periodista@test.com").ToList();
+        var notifications = _service.GetUnread("periodista@test.com").ToList();
 
         Assert.AreEqual(1, notifications.Count);
         Assert.AreSame(notification, notifications[0]);
+    }
+
+    private static User CreateUser(string email, UserRole role)
+    {
+        string firstName = "Juan";
+        string lastName = "Apellido";
+        DateTime birthDate = new DateTime(1995, 1, 1);
+        string password = "Aa123456!";
+        var roles = new List<UserRole>();
+        roles.Add(role);
+
+        return new User(firstName, lastName, email, birthDate, password, roles);
     }
 }
