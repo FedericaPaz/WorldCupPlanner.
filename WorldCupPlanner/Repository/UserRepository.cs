@@ -5,65 +5,56 @@ namespace Repository;
 
 public class UserRepository : IUserRepository
 {
-    private readonly List<User> _users = new();
+    private readonly WorldCupPlannerContext _context;
+    //private readonly List<User> _users = new();
+    
+    public UserRepository(WorldCupPlannerContext context)
+    {
+        _context = context;
+    }
 
     public void AddUser(User user)
     {
-        if (user is null)
-        {
-            throw new ArgumentNullException(nameof(user));
-        }
+        if (user is null) throw new ArgumentNullException(nameof(user));
 
-        if (_users.Any(u => u.Email == user.Email))
-        {
+        if (_context.Users.Any(u => u.Email == user.Email))
             throw new ArgumentException($"Ya existe un usuario con el email {user.Email}.");
-        }
-
-        _users.Add(user);
+        _context.Users.Add(user);
+        _context.SaveChanges();
     }
 
     public User? GetUser(string email)
     {
-        return _users.FirstOrDefault(user => user.Email == email);
+        return _context.Users.FirstOrDefault(user => user.Email == email);
     }
 
     public void UpdateUser(User user)
     {
-        if (user is null)
-        {
-            throw new ArgumentNullException(nameof(user));
-        }
+        if (user is null) throw new ArgumentNullException(nameof(user));
 
-        var existingUser = _users.FirstOrDefault(u => u.Email == user.Email);
+        var existingUser = _context.Users.FirstOrDefault(u => u.Email == user.Email);
 
         if (existingUser is null)
-        {
             throw new InvalidOperationException($"No se encontró un usuario con el email {user.Email}.");
-        }
 
-        _users.Remove(existingUser);
-        _users.Add(user);
+        _context.Entry(existingUser).CurrentValues.SetValues(user);
+        _context.SaveChanges();
     }
 
     public void DeleteUser(User user)
     {
-        if (user is null)
-        {
-            throw new ArgumentNullException(nameof(user));
-        }
+        if (user is null) throw new ArgumentNullException(nameof(user));
 
-        var existingUser = _users.FirstOrDefault(u => u.Email == user.Email);
+        var existingUser = _context.Users.FirstOrDefault(u => u.Email == user.Email);
 
-        if (existingUser is null)
-        {
-            throw new InvalidOperationException($"No se encontró un usuario con el email {user.Email}.");
-        }
+        if (existingUser is null) throw new InvalidOperationException($"No se encontró un usuario con el email {user.Email}.");
 
-        _users.Remove(existingUser);
+        _context.Users.Remove(existingUser);
+        _context.SaveChanges();
     }
 
     public List<User> GetAllUsers()
     {
-        return new List<User>(_users);
+        return _context.Users.ToList();
     }
 }
