@@ -39,8 +39,8 @@ builder.Services.AddSingleton<IFixtureRepository, FixtureRepository >();
 builder.Services.AddSingleton<IFixtureService, FixtureService>();
 builder.Services.AddSingleton<FixtureGenerator>();
 
-builder.Services.AddSingleton<ILogRepository, LogRepository>();
-builder.Services.AddSingleton<ILogService, LogService>();
+builder.Services.AddScoped<ILogRepository, EfLogRepository>();
+builder.Services.AddScoped<ILogService, LogService>();
 
 builder.Services.AddScoped<ICsvParser, CsvParser>();
 builder.Services.AddScoped<ITeamImportValidator, TeamImportValidator>();
