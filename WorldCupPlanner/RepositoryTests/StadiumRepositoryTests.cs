@@ -1,19 +1,33 @@
 using Domain.Entities;
 using Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryTests;
 
 [TestClass]
 public class StadiumRepositoryTests
 {
+    private WorldCupPlannerContext _context;
     private StadiumRepository _stadiumRepository;
     private Stadium _stadium;
 
     [TestInitialize]
     public void Setup()
     {
-        _stadiumRepository = new StadiumRepository();
-        _stadium = new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+
+        _context = new WorldCupPlannerContext(options);
+
+        _stadiumRepository = new StadiumRepository(_context);
+
+        _stadium = new Stadium(
+            "Campeon del Siglo",
+            "Montevideo",
+            "Estadio de Peniarol",
+            40700
+        );
     }
     
     [TestMethod]
