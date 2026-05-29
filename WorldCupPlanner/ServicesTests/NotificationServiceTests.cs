@@ -143,4 +143,6 @@ public class NotificationServiceTests
         Assert.AreEqual("Notification", logs[0].Category);
         Assert.AreEqual("NotificationRead", logs[0].Action);
     }
+    
+    
 }

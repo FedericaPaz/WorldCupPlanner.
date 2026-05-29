@@ -12,15 +12,18 @@ public class ExportService : IExportService
     private const string XlsxFormat = "XLSX";
 
     private readonly IUserRepository _userRepository;
+    private readonly ILogService _logService;
 
-    public ExportService(IUserRepository userRepository)
+    public ExportService(IUserRepository userRepository, ILogService logService)
     {
         _userRepository = userRepository;
+        _logService = logService;
     }
 
     public byte[] ExportFixtureToCsv(string userEmail)
     {
         ValidateCanExport(userEmail);
+        RegisterExport(userEmail, FixtureExportName, CsvFormat);
 
         return BuildEmptyExport(FixtureExportName, CsvFormat);
     }
@@ -28,6 +31,7 @@ public class ExportService : IExportService
     public byte[] ExportFixtureToXlsx(string userEmail)
     {
         ValidateCanExport(userEmail);
+        RegisterExport(userEmail, FixtureExportName, XlsxFormat);
 
         return BuildEmptyExport(FixtureExportName, XlsxFormat);
     }
@@ -36,6 +40,7 @@ public class ExportService : IExportService
     {
         ValidateDateRange(from, to);
         ValidateCanExport(userEmail);
+        RegisterExport(userEmail, LogsExportName, CsvFormat);
 
         return BuildEmptyExport(LogsExportName, CsvFormat);
     }
@@ -44,6 +49,7 @@ public class ExportService : IExportService
     {
         ValidateDateRange(from, to);
         ValidateCanExport(userEmail);
+        RegisterExport(userEmail, LogsExportName, XlsxFormat);
 
         return BuildEmptyExport(LogsExportName, XlsxFormat);
     }
@@ -73,6 +79,11 @@ public class ExportService : IExportService
         {
             throw new ArgumentException("La fecha desde no puede ser posterior a la fecha hasta.");
         }
+    }
+
+    private void RegisterExport(string userEmail, string exportName, string format)
+    {
+        _logService.Register(userEmail, "Export", "FileExported", $"El usuario {userEmail} exportó {exportName} en formato {format}.");
     }
 
     private static byte[] BuildEmptyExport(string exportName, string format)
