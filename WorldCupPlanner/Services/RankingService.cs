@@ -10,16 +10,30 @@ public class RankingService : IRankingService
     private const double KnockoutPhaseMultiplier = 1.5;
     private const char KnockoutGroup = 'N';
 
+    private readonly ILogService _logService;
+
+    public RankingService(ILogService logService)
+    {
+        _logService = logService;
+    }
+
     public void UpdateRankingsAfterMatch(Match match)
     {
         if (match == null)
+        {
             throw new ArgumentNullException(nameof(match));
+        }
 
         if (!match.HomeGoals.HasValue || !match.AwayGoals.HasValue)
+        {
             throw new InvalidOperationException("El partido no tiene resultado.");
+        }
 
         var homeTeam = (Team)match.HomeTeam;
         var awayTeam = (Team)match.AwayTeam;
+
+        int previousHomeRanking = homeTeam.CurrentRanking;
+        int previousAwayRanking = awayTeam.CurrentRanking;
 
         int newHomeRanking = CalculateNewRanking(
             homeTeam.CurrentRanking,
@@ -35,6 +49,29 @@ public class RankingService : IRankingService
 
         homeTeam.UpdateCurrentRanking(newHomeRanking);
         awayTeam.UpdateCurrentRanking(newAwayRanking);
+
+        RegisterRankingUpdate(
+            homeTeam,
+            previousHomeRanking,
+            newHomeRanking,
+            awayTeam,
+            previousAwayRanking,
+            newAwayRanking);
+    }
+
+    private void RegisterRankingUpdate(
+        Team homeTeam,
+        int previousHomeRanking,
+        int newHomeRanking,
+        Team awayTeam,
+        int previousAwayRanking,
+        int newAwayRanking)
+    {
+        _logService.Register(
+            "system",
+            "Ranking",
+            "RankingUpdated",
+            $"{homeTeam.Name}: {previousHomeRanking} -> {newHomeRanking}. {awayTeam.Name}: {previousAwayRanking} -> {newAwayRanking}.");
     }
 
     private static int CalculateNewRanking(
