@@ -9,13 +9,16 @@ public class NotificationService : INotificationService
 {
     private readonly IUserRepository _userRepository;
     private readonly INotificationRepository _notificationRepository;
+    private readonly ILogService _logService;
 
     public NotificationService(
         IUserRepository userRepository,
-        INotificationRepository notificationRepository)
+        INotificationRepository notificationRepository,
+        ILogService logService)
     {
         _userRepository = userRepository;
         _notificationRepository = notificationRepository;
+        _logService = logService;
     }
 
     public void NotifyJournalists(string message)
@@ -52,6 +55,8 @@ public class NotificationService : INotificationService
 
         notification.MarkAsRead(DateTime.UtcNow);
         _notificationRepository.Update(notification);
+        
+        _logService.Register(userEmail, "Notification", "NotificationRead", $"El usuario {userEmail} marcó como leída la notificación {notification.Id}.");
     }
     
     public void Send(string recipientEmail, string message)

@@ -13,14 +13,19 @@ public class NotificationServiceTests
     private UserRepository _userRepository = null!;
     private InMemoryNotificationRepository _notificationRepository = null!;
     private NotificationService _service = null!;
-
+    private LogRepository _logRepository = null!;
+    private LogService _logService = null!;
+    
     [TestInitialize]
     public void Setup()
     {
         _context = DbContextFactory.CreateInMemoryContext();
         _userRepository = new UserRepository(_context);
         _notificationRepository = new InMemoryNotificationRepository();
-        _service = new NotificationService(_userRepository, _notificationRepository);
+        _logRepository = new LogRepository();
+        _logService = new LogService(_logRepository);
+
+        _service = new NotificationService(_userRepository, _notificationRepository, _logService);
     }
 
     [TestCleanup]
@@ -120,5 +125,22 @@ public class NotificationServiceTests
         roles.Add(role);
 
         return new User(firstName, lastName, email, birthDate, password, roles);
+    }
+    
+    [TestMethod]
+    public void MarkAsRead_WithExistingNotification_ShouldRegisterNotificationReadLog()
+    {
+        var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
+
+        _notificationRepository.Add(notification);
+
+        _service.MarkAsRead(notification.Id, "periodista@test.com");
+
+        var logs = _logRepository.GetAll();
+
+        Assert.AreEqual(1, logs.Count);
+        Assert.AreEqual("periodista@test.com", logs[0].UserEmail);
+        Assert.AreEqual("Notification", logs[0].Category);
+        Assert.AreEqual("NotificationRead", logs[0].Action);
     }
 }

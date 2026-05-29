@@ -25,14 +25,23 @@ public class MatchServiceTests
     private ISimulationService _simulationService = null!;
     private FixtureRepository _fixtureRepository = null!;
     private TournamentConfig _config = null!;
+    private LogRepository _logRepository = null!;
+    private LogService _logService = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _context = DbContextFactory.CreateInMemoryContext();
+
         _userRepository = new UserRepository(_context);
         _notificationRepository = new InMemoryNotificationRepository();
-        _notificationService = new NotificationService(_userRepository, _notificationRepository);
+        _logRepository = new LogRepository();
+        _logService = new LogService(_logRepository);
+
+        _notificationService = new NotificationService(
+            _userRepository,
+            _notificationRepository,
+            _logService);
 
         _matchRepository = new MatchRepository();
         _teamRepository = new TeamRepositoryStub();
