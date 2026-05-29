@@ -7,10 +7,10 @@ namespace RepositoryTests;
 [TestClass]
 public class StadiumRepositoryTests
 {
-    private WorldCupPlannerContext _context;
-    private StadiumRepository _stadiumRepository;
-    private Stadium _stadium;
-
+    private WorldCupPlannerContext _context = null!;
+    private StadiumRepository _stadiumRepository = null!;
+    private Stadium _stadium = null!;
+    
     [TestInitialize]
     public void Setup()
     {
@@ -102,5 +102,11 @@ public class StadiumRepositoryTests
         Assert.ThrowsException<ArgumentNullException>(() =>
             _stadiumRepository.DeleteStadium(null!)
         );
+    }
+    
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _context.Dispose();
     }
 }
