@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Enums;
 using ServicesTests.Stubs;
+using Repository;
 
 namespace ServicesTests;
 
@@ -11,7 +12,8 @@ public class CruceSimulatorServiceTests
     private static readonly DateTime FechaCreacionClock  = new DateTime(2027, 6, 10);
     private static readonly DateTime FechaPartido        = new DateTime(2027, 6, 12);
     private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
-
+    private LogRepository _logRepository = null!;
+    private LogService _logService = null!;
     private CrucesSimulationService _service = null!;
     private const int Seed = 42;
     private int _nextId;
@@ -19,8 +21,10 @@ public class CruceSimulatorServiceTests
     [TestInitialize]
     public void Setup()
     {
-        _nextId  = 1;
-        _service = new CrucesSimulationService();
+        _nextId = 1;
+        _logRepository = new LogRepository();
+        _logService = new LogService(_logRepository);
+        _service = new CrucesSimulationService(_logService);
     }
 
     // ── Helpers ───────────────────────────────────────────────────
@@ -163,5 +167,22 @@ public class CruceSimulatorServiceTests
         _service.SimulateCruces(new List<Cruce> { cruce }, Seed);
         Assert.AreEqual(2, cruce.Match.HomeGoals);
         Assert.AreEqual(1, cruce.Match.AwayGoals);
+    }
+    
+    [TestMethod]
+    public void SimulateMatch_WithValidMatch_ShouldRegisterSimulationExecutedLog()
+    {
+        var match = BuildMatch("Uruguay", 1500, "Argentina", 1500);
+
+        _service.SimulateMatch(match, Seed);
+
+        var logs = _logRepository.GetAll();
+
+        Assert.AreEqual(1, logs.Count);
+        Assert.AreEqual("system", logs[0].UserEmail);
+        Assert.AreEqual("Simulation", logs[0].Category);
+        Assert.AreEqual("SimulationExecuted", logs[0].Action);
+        StringAssert.Contains(logs[0].Detail, Seed.ToString());
+        StringAssert.Contains(logs[0].Detail, "CrucesSimulationService");
     }
 }

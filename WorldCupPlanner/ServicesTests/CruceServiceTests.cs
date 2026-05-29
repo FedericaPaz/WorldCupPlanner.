@@ -20,9 +20,10 @@ public class CruceServiceTests
     private CrucesGeneratorServiceStub _stubCrucesGenerator;
     private CruceService _service;
     private IMatchRepository _matchRepository;
-
+    private LogRepository _logRepository;
+    private LogService _logService;
     private int _nextId;
-
+    
     [TestInitialize]
     public void Setup()
     {
@@ -33,7 +34,17 @@ public class CruceServiceTests
         _stubCrucesGenerator   = new CrucesGeneratorServiceStub();
         _matchRepository       = new MatchRepository();
 
-        _service = new CruceService(_stubCrucesRepository, _stubFixtureRepository, _stubStadiumRepository, _stubCrucesGenerator, new CrucesSimulationService(), new TournamentConfig(), _matchRepository);
+        _logRepository = new LogRepository();
+        _logService = new LogService(_logRepository);
+
+        _service = new CruceService(
+            _stubCrucesRepository,
+            _stubFixtureRepository,
+            _stubStadiumRepository,
+            _stubCrucesGenerator,
+            new CrucesSimulationService(_logService),
+            new TournamentConfig(),
+            _matchRepository);
     }
 
     private Fixture CreateFixture()
