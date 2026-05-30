@@ -1,0 +1,143 @@
+﻿@page "/export"
+@using IServices
+@using Web.Services
+@inject IExportService ExportService
+@inject SessionService SessionService
+@inject NavigationManager Navigation
+
+<PageTitle>Exportaciones</PageTitle>
+
+<h3>Exportaciones</h3>
+
+@if (!SessionService.IsUserActive())
+{
+    <div class="alert alert-warning">
+        No hay un usuario activo.
+    </div>
+}
+else if (!CanAccess())
+{
+    <div class="alert alert-danger">
+        No tenés permisos para acceder a exportaciones.
+    </div>
+}
+else
+{
+    <div class="card p-4 mb-4">
+        <h5>Exportar fixture</h5>
+        <p>Disponible para Administrador y Periodista.</p>
+
+        <button class="btn btn-primary me-2" @onclick="ExportFixtureCsv">
+            Exportar fixture CSV
+        </button>
+
+        <button class="btn btn-secondary" @onclick="ExportFixtureXlsx">
+            Exportar fixture XLSX
+        </button>
+    </div>
+
+    <div class="card p-4 mb-4">
+        <h5>Exportar logs</h5>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Desde</label>
+                <InputDate class="form-control" @bind-Value="FromDate" />
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Hasta</label>
+                <InputDate class="form-control" @bind-Value="ToDate" />
+            </div>
+        </div>
+
+        <button class="btn btn-primary me-2" @onclick="ExportLogsCsv">
+            Exportar logs CSV
+        </button>
+
+        <button class="btn btn-secondary" @onclick="ExportLogsXlsx">
+            Exportar logs XLSX
+        </button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Message))
+    {
+        <div class="@MessageCssClass">
+            @Message
+        </div>
+    }
+}
+
+@code {
+    private DateTime FromDate { get; set; } = DateTime.Today.AddDays(-7);
+    private DateTime ToDate { get; set; } = DateTime.Today;
+    private string Message { get; set; } = string.Empty;
+    private string MessageCssClass { get; set; } = "alert alert-info";
+
+    private bool CanAccess()
+    {
+        return SessionService.IsSystemAdministrator() || SessionService.IsJournalist();
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        var currentUser = SessionService.GetCurrentUser();
+
+        if (currentUser is null)
+        {
+            throw new InvalidOperationException("No hay usuario activo.");
+        }
+
+        return currentUser.Email;
+    }
+
+    private void ExportFixtureCsv()
+    {
+        ExecuteExport(() =>
+        {
+            ExportService.ExportFixtureToCsv(GetCurrentUserEmail());
+            Message = "Fixture CSV generado correctamente.";
+        });
+    }
+
+    private void ExportFixtureXlsx()
+    {
+        ExecuteExport(() =>
+        {
+            ExportService.ExportFixtureToXlsx(GetCurrentUserEmail());
+            Message = "Fixture XLSX generado correctamente.";
+        });
+    }
+
+    private void ExportLogsCsv()
+    {
+        ExecuteExport(() =>
+        {
+            ExportService.ExportLogsToCsv(GetCurrentUserEmail(), FromDate, ToDate);
+            Message = "Logs CSV generados correctamente.";
+        });
+    }
+
+    private void ExportLogsXlsx()
+    {
+        ExecuteExport(() =>
+        {
+            ExportService.ExportLogsToXlsx(GetCurrentUserEmail(), FromDate, ToDate);
+            Message = "Logs XLSX generados correctamente.";
+        });
+    }
+
+    private void ExecuteExport(Action exportAction)
+    {
+        try
+        {
+            exportAction();
+            MessageCssClass = "alert alert-success";
+        }
+        catch (Exception exception)
+        {
+            Message = exception.Message;
+            MessageCssClass = "alert alert-danger";
+        }
+    }
+}

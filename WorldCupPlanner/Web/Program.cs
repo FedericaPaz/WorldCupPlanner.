@@ -61,6 +61,8 @@ builder.Services.AddScoped<ICruceService, CruceService>();
 builder.Services.AddScoped<INotificationRepository, InMemoryNotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
+builder.Services.AddScoped<IExportService, ExportService>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
