@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using ServicesTests.Stubs;
+using IRepository;
 
 namespace ServicesTests;
 
@@ -11,7 +12,7 @@ namespace ServicesTests;
 public class FixtureGeneratorTests
 {
     private TeamRepository _teamRepository = null!;
-    private StadiumRepository _stadiumRepository = null!;
+    private IStadiumRepository _stadiumRepository = null!;
     private FixtureRepository _fixtureRepository = null!;
     private FixtureGenerator _generator = null!;
     private TournamentConfig _config = null!;
@@ -21,7 +22,7 @@ public class FixtureGeneratorTests
     public void Setup()
     {
         _teamRepository    = new TeamRepository();
-        _stadiumRepository = new StadiumRepository();
+        _stadiumRepository = new StadiumRepositoryStub();
         _fixtureRepository = new FixtureRepository();
         _config            = new TournamentConfig();
         _clock             = new ClockStub(new DateTime(2026, 1, 1));
@@ -199,7 +200,7 @@ public class FixtureGeneratorTests
         var fixture1 = _generator.GenerateGroupsStageFixture();
 
         _teamRepository    = new TeamRepository();
-        _stadiumRepository = new StadiumRepository();
+        _stadiumRepository = new StadiumRepositoryStub();
         _fixtureRepository = new FixtureRepository();
         AddTeams(48);
         AddStadiums(4);
@@ -233,7 +234,7 @@ public class FixtureGeneratorTests
         var fixture1 = _generator.GenerateGroupsStageFixture();
 
         _teamRepository    = new TeamRepository();
-        _stadiumRepository = new StadiumRepository();
+        _stadiumRepository = new StadiumRepositoryStub();
         _fixtureRepository = new FixtureRepository();
         AddTeamsWithSameRanking();
         AddStadiums(4);

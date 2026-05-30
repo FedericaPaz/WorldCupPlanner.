@@ -26,7 +26,7 @@ public class FixtureServiceTests
     {
         _fixtureRepository = new FixtureRepository();
         _teamRepository    = new TeamRepository();
-        _stadiumRepository = new StadiumRepository();
+        _stadiumRepository = new StadiumRepositoryStub();
         _matchRepository   = new MatchRepository();
         _crucesRepository  = new CrucesRepository();
         _config            = new TournamentConfig();
