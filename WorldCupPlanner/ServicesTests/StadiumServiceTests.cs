@@ -1,6 +1,8 @@
 using DTOs.Stadium;
+using IRepository;
 using Repository;
 using Services;
+using ServicesTests.Stubs;
 
 namespace ServicesTests;
 
@@ -8,7 +10,7 @@ namespace ServicesTests;
 public class StadiumServiceTests
 {
     private StadiumService _service;
-    private StadiumRepository  _repository;
+    private IStadiumRepository _repository = null!;
 
     private StadiumRequest CreateRequest(string stadiumName, string stadiumCity, string? stadiumDescription, int locativeCapacity)
     {
@@ -24,7 +26,7 @@ public class StadiumServiceTests
     [TestInitialize]
     public void Setup()
     {
-        _repository = new StadiumRepository();
+        _repository = new StadiumRepositoryStub();
         _service = new StadiumService(_repository);
     }
     
