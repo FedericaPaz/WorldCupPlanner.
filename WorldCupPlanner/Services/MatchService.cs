@@ -159,7 +159,7 @@ public class MatchService : IMatchService
             throw new ArgumentNullException(nameof(request));
     }
 
-    private IStadium GetStadiumOrThrow(string stadiumName)
+    private Stadium GetStadiumOrThrow(string stadiumName)
     {
         var stadium = _stadiumRepository.GetStadium(stadiumName);
 
@@ -169,7 +169,7 @@ public class MatchService : IMatchService
         return stadium;
     }
 
-    private ITeam GetTeamOrThrow(string teamName, string teamType)
+    private Team GetTeamOrThrow(string teamName, string teamType)
     {
         var team = _teamRepository.Get(teamName);
 
@@ -181,9 +181,9 @@ public class MatchService : IMatchService
 
     private Match CreateMatchEntity(
         MatchRequest request,
-        IStadium stadium,
-        ITeam homeTeam,
-        ITeam awayTeam)
+        Stadium stadium,
+        Team homeTeam,
+        Team awayTeam)
     {
         int id = _matchRepository.GetNextId();
 
@@ -208,10 +208,10 @@ public class MatchService : IMatchService
     private static void AddIncidentIfNeeded(
         Match match,
         IncidentType type,
-        ITeam team,
+        Team team,
         int quantity)
     {
         if (quantity > 0)
-            match.AddIncident(new MatchIncident(type, (Team)team, quantity));
+            match.AddIncident(new MatchIncident(type, team, quantity));
     }
 }
