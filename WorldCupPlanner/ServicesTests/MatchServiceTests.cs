@@ -2,6 +2,7 @@ using Domain.Entities;
 using Domain.Enums;
 using DomainTests.Stubs;
 using DTOs.Match;
+using IRepository;
 using IServices;
 using Repository;
 using Services;
@@ -18,7 +19,7 @@ public class MatchServiceTests
     private InMemoryNotificationRepository _notificationRepository = null!;
     private NotificationService _notificationService = null!;
     private MatchService _service = null!;
-    private MatchRepository _matchRepository = null!;
+    private IMatchRepository _matchRepository = null!;
     private TeamRepositoryStub _teamRepository = null!;
     private StadiumRepositoryStub _stadiumRepository = null!;
     private DateTimeMatchStub _clock = null!;
@@ -34,7 +35,7 @@ public class MatchServiceTests
         _notificationRepository = new InMemoryNotificationRepository();
         _notificationService = new NotificationService(_userRepository, _notificationRepository);
 
-        _matchRepository = new MatchRepository();
+        _matchRepository = new MatchRepositoryStub();
         _teamRepository = new TeamRepositoryStub();
         _stadiumRepository = new StadiumRepositoryStub();
         _clock = new DateTimeMatchStub(new DateTime(2027, 1, 1));

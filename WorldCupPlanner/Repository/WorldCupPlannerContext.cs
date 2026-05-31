@@ -12,6 +12,7 @@ public class WorldCupPlannerContext : DbContext
     public DbSet<LogEntry> LogEntries { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Group> Groups { get; set; }
+    public DbSet<Match> Matches { get; set; }
 
     public WorldCupPlannerContext(DbContextOptions<WorldCupPlannerContext> options)
         : base(options)
@@ -59,5 +60,17 @@ public class WorldCupPlannerContext : DbContext
 
         modelBuilder.Entity<Group>()
             .Ignore(group => group.MatchesInGroup);
+        
+        modelBuilder.Entity<Match>(entity =>
+        {
+            entity.HasKey(match => match.IdMatch);
+
+            entity.Ignore(match => match.Stadium);
+            entity.Ignore(match => match.HomeTeam);
+            entity.Ignore(match => match.AwayTeam);
+            entity.Ignore(match => match.WinnerMatch);
+            entity.Ignore(match => match.LoserMatch);
+            entity.Ignore(match => match.Incidents);
+        });
     }
 }

@@ -71,6 +71,29 @@ namespace Repository.Migrations
                     b.ToTable("LogEntries");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Match", b =>
+                {
+                    b.Property<int>("IdMatch")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMatch"));
+
+                    b.Property<DateTime>("DateMatch")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Group")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
+                    b.HasKey("IdMatch");
+
+                    b.ToTable("Matches");
+                });
+
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -113,6 +136,10 @@ namespace Repository.Migrations
                 {
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FlagBase64")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Name");
 

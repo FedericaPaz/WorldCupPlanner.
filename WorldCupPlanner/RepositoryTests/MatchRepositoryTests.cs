@@ -1,12 +1,14 @@
 using Domain.Entities;
 using DomainTests.Stubs;
 using Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryTests;
 
 [TestClass]
 public class MatchRepositoryTests
 {
+    private WorldCupPlannerContext _context = null!;
     private MatchRepository _repository = null!;
     private DateTimeMatchStub _clock = null!;
     private int _nextId;
@@ -14,7 +16,13 @@ public class MatchRepositoryTests
     [TestInitialize]
     public void Setup()
     {
-        _repository = new MatchRepository();
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+
+        _context = new WorldCupPlannerContext(options);
+
+        _repository = new MatchRepository(_context);
         _clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
         _nextId = 1;
     }
@@ -86,5 +94,11 @@ public class MatchRepositoryTests
     public void Add_WithNullMatch_ShouldThrowArgumentNullException()
     {
         Assert.ThrowsException<ArgumentNullException>(() => _repository.AddMatch(null));
+    }
+    
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _context.Dispose();
     }
 }

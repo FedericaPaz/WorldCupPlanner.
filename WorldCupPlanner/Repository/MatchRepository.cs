@@ -5,35 +5,38 @@ namespace Repository;
 
 public class MatchRepository : IMatchRepository
 {
-    private readonly List<Match> _matches = new();
+    private readonly WorldCupPlannerContext _context;
+
+    public MatchRepository(WorldCupPlannerContext context)
+    {
+        _context = context;
+    }
 
     public void AddMatch(Match match)
     {
         EnsureNotNull(match);
-        _matches.Add(match);
-    }
-    
-    public int GetNextId()
-    {
-        return _matches.Count == 0 ? 1 : _matches.Max(m => m.IdMatch) + 1;
+
+        _context.Matches.Add(match);
+        _context.SaveChanges();
     }
 
-    private void EnsureNotNull(Match match)
+    public int GetNextId()
     {
-        if (match == null)
-            throw new ArgumentNullException(nameof(match));
+        return _context.Matches.Any()
+            ? _context.Matches.Max(match => match.IdMatch) + 1
+            : 1;
     }
 
     public List<Match> GetAllMatches()
     {
-        return _matches.ToList();
+        return _context.Matches.ToList();
     }
 
     public Match GetMatchById(int matchId)
     {
         EnsureValidId(matchId);
 
-        Match? match = _matches.FirstOrDefault(m => m.IdMatch == matchId);
+        var match = _context.Matches.FirstOrDefault(match => match.IdMatch == matchId);
 
         if (match == null)
             throw new KeyNotFoundException("No existe un partido con ese id.");
@@ -43,7 +46,14 @@ public class MatchRepository : IMatchRepository
 
     public void ClearMatches()
     {
-        _matches.Clear();
+        _context.Matches.RemoveRange(_context.Matches);
+        _context.SaveChanges();
+    }
+
+    private void EnsureNotNull(Match match)
+    {
+        if (match == null)
+            throw new ArgumentNullException(nameof(match));
     }
 
     private void EnsureValidId(int matchId)
