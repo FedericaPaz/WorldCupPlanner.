@@ -5,7 +5,7 @@ namespace IServices;
 public interface IMatchService
 {
     MatchResponse CreateMatch(MatchRequest request);
-    void SetMatchResult(int matchId, int homeGoals, int awayGoals);
+    void SetMatchResult(int matchId, MatchResultRequest request);
     MatchResponse GetMatchById(int matchId);
     List<MatchResponse> GetAllMatches();
     void UpdateMatchDate(int matchId, DateTime date);

@@ -1,3 +1,4 @@
+using Domain.Enums;
 using Domain.Interfaces;
 
 namespace Domain.Entities;
@@ -11,56 +12,104 @@ public class Match
 
     private int _idMatch;
     private DateTime _dateMatch;
-    private IStadium _stadium = null!;
-    private ITeam _homeTeam = null!;
-    private ITeam _awayTeam = null!;
+    private Stadium _stadium = null!;
+    private Team _homeTeam = null!;
+    private Team _awayTeam = null!;
     private char _group;
     private int? _homeGoals;
     private int? _awayGoals;
-    private ITeam? _winnerMatch;
-    private ITeam? _loserMatch;
+    private Team? _winnerMatch;
+    private Team? _loserMatch;
     private IDateTimeMatch _clock = null!;
     private bool _isLocked;
+    private readonly List<MatchIncident> _incidents = [];
 
     public int IdMatch => _idMatch;
+
     public DateTime DateMatch
     {
         get => _dateMatch;
-        set { EnsureValidDate(value); _dateMatch = value; }
+        set
+        {
+            EnsureValidDate(value);
+            _dateMatch = value;
+        }
     }
-    public IStadium Stadium
+
+    public Stadium Stadium
     {
         get => _stadium;
-        set { EnsureValidStadium(value); _stadium = value; }
+        private set
+        {
+            EnsureValidStadium(value);
+            _stadium = value;
+        }
     }
-    public ITeam HomeTeam
+
+    public Team HomeTeam
     {
         get => _homeTeam;
-        private set { EnsureValidHomeTeam(value); _homeTeam = value; }
+        private set
+        {
+            EnsureValidHomeTeam(value);
+            _homeTeam = value;
+        }
     }
-    public ITeam AwayTeam
+
+    public Team AwayTeam
     {
         get => _awayTeam;
-        private set { EnsureValidAwayTeam(value); _awayTeam = value; }
+        private set
+        {
+            EnsureValidAwayTeam(value);
+            _awayTeam = value;
+        }
     }
+
     public char Group
     {
         get => _group;
-        private set { EnsureValidGroup(value); _group = char.ToUpper(value); }
+        private set
+        {
+            EnsureValidGroup(value);
+            _group = char.ToUpper(value);
+        }
     }
+
     public bool IsLocked
     {
         get => _isLocked;
         private set => _isLocked = value;
     }
-    public int? HomeGoals => _homeGoals;
-    public int? AwayGoals => _awayGoals;
-    public ITeam? WinnerMatch => _winnerMatch;
-    public ITeam? LoserMatch => _loserMatch;
 
-    private Match() { }
+    public int? HomeGoals
+    {
+        get => _homeGoals;
+        private set => _homeGoals = value;
+    }
 
-    public Match(int id, DateTime dateMatch, IStadium stadium, ITeam homeTeam, ITeam awayTeam, char group, IDateTimeMatch clock)
+    public int? AwayGoals
+    {
+        get => _awayGoals;
+        private set => _awayGoals = value;
+    }
+
+    public Team? WinnerMatch => _winnerMatch;
+    public Team? LoserMatch => _loserMatch;
+    public IReadOnlyList<MatchIncident> Incidents => _incidents;
+
+    private Match()
+    {
+    }
+
+    public Match(
+        int id,
+        DateTime dateMatch,
+        Stadium stadium,
+        Team homeTeam,
+        Team awayTeam,
+        char group,
+        IDateTimeMatch clock)
     {
         SetClock(clock);
         Stadium = stadium;
@@ -78,11 +127,15 @@ public class Match
         _clock = clock;
     }
 
-    public void Lock() => IsLocked = true;
+    public void Lock()
+    {
+        IsLocked = true;
+    }
 
     public void SetMatchResult(int homeGoals, int awayGoals)
     {
         EnsureMatchWasPlayed();
+        EnsureResultWasNotSet();
         ApplyResult(homeGoals, awayGoals);
     }
 
@@ -97,18 +150,30 @@ public class Match
         DateMatch = newDate;
     }
 
-    public void UpdateStadium(IStadium newStadium)
+    public void UpdateStadium(Stadium newStadium)
     {
         EnsureGroupPhaseIsEditable();
         Stadium = newStadium;
     }
 
+    public void AddIncident(MatchIncident incident)
+    {
+        EnsureIncidentIsNotNull(incident);
+        _incidents.Add(incident);
+    }
+
+    public void ClearCardIncidents()
+    {
+        _incidents.RemoveAll(incident =>
+            incident.Type == IncidentType.YellowCard ||
+            incident.Type == IncidentType.RedCard);
+    }
+
     private void ApplyResult(int homeGoals, int awayGoals)
     {
-        EnsureResultWasNotSet();
         EnsureValidGoals(homeGoals, awayGoals);
-        _homeGoals = homeGoals;
-        _awayGoals = awayGoals;
+        HomeGoals = homeGoals;
+        AwayGoals = awayGoals;
         SetWinnerFromResult(homeGoals, awayGoals);
         SetLoserFromResult(homeGoals, awayGoals);
     }
@@ -145,39 +210,46 @@ public class Match
 
     private void SetWinnerFromResult(int homeGoals, int awayGoals)
     {
-        if (homeGoals > awayGoals) _winnerMatch = HomeTeam;
-        else if (homeGoals < awayGoals) _winnerMatch = AwayTeam;
-        else _winnerMatch = null;
+        if (homeGoals > awayGoals)
+            _winnerMatch = HomeTeam;
+        else if (homeGoals < awayGoals)
+            _winnerMatch = AwayTeam;
+        else
+            _winnerMatch = null;
     }
 
     private void SetLoserFromResult(int homeGoals, int awayGoals)
     {
-        if (homeGoals > awayGoals) _loserMatch = AwayTeam;
-        else if (homeGoals < awayGoals) _loserMatch = HomeTeam;
-        else _loserMatch = null;
+        if (homeGoals > awayGoals)
+            _loserMatch = AwayTeam;
+        else if (homeGoals < awayGoals)
+            _loserMatch = HomeTeam;
+        else
+            _loserMatch = null;
     }
 
     private void EnsureValidDate(DateTime dateMatch)
     {
         if (_clock == null)
             throw new InvalidOperationException("El reloj no fue configurado.");
+
         if (dateMatch.ToUniversalTime() < _clock.Now.ToUniversalTime())
             throw new ArgumentException("La fecha no puede ser pasada.");
     }
 
-    private void EnsureValidStadium(IStadium stadium)
+    private void EnsureValidStadium(Stadium stadium)
     {
         if (stadium == null)
             throw new ArgumentNullException(nameof(stadium), "El estadio no puede ser vacío.");
     }
 
-    private void EnsureValidHomeTeam(ITeam homeTeam)
+    private void EnsureValidHomeTeam(Team homeTeam)
     {
         if (homeTeam == null)
             throw new ArgumentNullException(nameof(homeTeam), "El equipo local no puede ser vacío.");
     }
 
-    private void EnsureValidAwayTeam(ITeam awayTeam)
+    private void EnsureValidAwayTeam(Team awayTeam)
     {
         if (awayTeam == null)
             throw new ArgumentNullException(nameof(awayTeam), "El equipo visitante no puede ser vacío.");
@@ -202,5 +274,11 @@ public class Match
         if (IsLocked)
             throw new InvalidOperationException(
                 "No se puede editar un partido de fase de grupos una vez generados los cruces.");
+    }
+
+    private static void EnsureIncidentIsNotNull(MatchIncident incident)
+    {
+        if (incident == null)
+            throw new ArgumentNullException(nameof(incident));
     }
 }

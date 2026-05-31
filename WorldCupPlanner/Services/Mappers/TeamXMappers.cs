@@ -8,7 +8,12 @@ namespace Services.Mappers;
      public static Team ToEntity(this TeamDTO request)
      {
          var confederation = new Confederation(request.ConfederationName);
-         return new Team(request.Name, confederation, request.FifaRanking);
+         return new Team(
+             request.Name,
+             confederation,
+             request.FifaRanking,
+             request.FlagBase64
+         );
      }
  
      public static TeamDTO FromEntity(this Team team)
@@ -17,7 +22,8 @@ namespace Services.Mappers;
          {
              Name = team.Name,
              ConfederationName = team.Confederation.Name,
-             FifaRanking = team.FifaRanking
+             FifaRanking = team.FifaRanking,
+             FlagBase64 = team.FlagBase64
          };
      }
  }

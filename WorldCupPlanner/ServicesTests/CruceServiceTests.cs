@@ -32,7 +32,7 @@ public class CruceServiceTests
         _stubFixtureRepository = new FixtureRepositoryStub();
         _stubStadiumRepository = new StadiumRepositoryStub();
         _stubCrucesGenerator   = new CrucesGeneratorServiceStub();
-        _matchRepository       = new MatchRepository();
+        _matchRepository       = new MatchRepositoryStub();
 
         _logRepository = new LogRepository();
         _logService = new LogService(_logRepository);

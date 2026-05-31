@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Repository;
 
@@ -13,6 +14,8 @@ public class WorldCupPlannerContext : DbContext
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<Cruce> Cruces { get; set; }
+    public DbSet<Match> Matches { get; set; }
+    public DbSet<MatchIncident> MatchIncidents { get; set; }
 
     public WorldCupPlannerContext(DbContextOptions<WorldCupPlannerContext> options)
         : base(options)
@@ -22,18 +25,26 @@ public class WorldCupPlannerContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
+
+        var rolesComparer = new ValueComparer<IReadOnlyList<UserRole>>(
+            (roles1, roles2) => roles1 != null && roles2 != null && roles1.SequenceEqual(roles2),
+            roles => roles.Aggregate(0, (hash, role) => HashCode.Combine(hash, role.GetHashCode())),
+            roles => roles.ToList()
+        );
+
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(u => u.Email);
-            entity.Property(u => u.Roles)
+            entity.HasKey(user => user.Email);
+
+            entity.Property(user => user.Roles)
                 .HasConversion(
-                    roles => string.Join(",", roles.Select(r => r.ToString())),
+                    roles => string.Join(",", roles.Select(role => role.ToString())),
                     value => value
                         .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                        .Select(r => Enum.Parse<UserRole>(r))
+                        .Select(role => Enum.Parse<UserRole>(role))
                         .ToList()
-                );
+                )
+                .Metadata.SetValueComparer(rolesComparer);
         });
 
         modelBuilder.Entity<Team>()
@@ -47,35 +58,75 @@ public class WorldCupPlannerContext : DbContext
 
         modelBuilder.Entity<Notification>()
             .HasKey(notification => notification.Id);
-        
-        modelBuilder.Entity<Group>()
-            .HasKey(group => group.Id);
 
-        modelBuilder.Entity<Group>()
-            .Property(group => group.GroupLetter)
-            .IsRequired();
+        modelBuilder.Entity<Group>(entity =>
+        {
+            entity.HasKey(group => group.Id);
 
-        modelBuilder.Entity<Group>()
-            .Ignore(group => group.TeamsInGroup);
+            entity.Property(group => group.GroupLetter)
+                .IsRequired();
 
-        modelBuilder.Entity<Group>()
-            .Ignore(group => group.MatchesInGroup);
-        
-        modelBuilder.Entity<Cruce>()
-            .HasKey(cruce => cruce.Id);
+            entity.Ignore(group => group.TeamsInGroup);
+            entity.Ignore(group => group.MatchesInGroup);
+        });
 
-        modelBuilder.Entity<Cruce>()
-            .Property(cruce => cruce.Name)
-            .IsRequired();
+        modelBuilder.Entity<Cruce>(entity =>
+        {
+            entity.HasKey(cruce => cruce.Id);
 
-        modelBuilder.Entity<Cruce>()
-            .Property(cruce => cruce.Phase)
-            .IsRequired();
+            entity.Property(cruce => cruce.Name)
+                .IsRequired();
 
-        modelBuilder.Entity<Cruce>()
-            .Ignore(cruce => cruce.Match);
+            entity.Property(cruce => cruce.Phase)
+                .IsRequired();
 
-        modelBuilder.Entity<Cruce>()
-            .Ignore(cruce => cruce.NextCruce);
+            entity.Ignore(cruce => cruce.Match);
+            entity.Ignore(cruce => cruce.NextCruce);
+        });
+
+        modelBuilder.Entity<Match>(entity =>
+        {
+            entity.HasKey(match => match.IdMatch);
+
+            entity.HasOne(match => match.Stadium)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(match => match.HomeTeam)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(match => match.AwayTeam)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(match => match.WinnerMatch)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(match => match.LoserMatch)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasMany(match => match.Incidents)
+                .WithOne(incident => incident.Match)
+                .HasForeignKey(incident => incident.MatchId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<MatchIncident>(entity =>
+        {
+            entity.HasKey(incident => incident.Id);
+
+            entity.Property(incident => incident.Type)
+                .HasConversion<string>();
+
+            entity.Property(incident => incident.Quantity);
+
+            entity.HasOne(incident => incident.Team)
+                .WithMany()
+                .HasForeignKey(incident => incident.TeamName)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
 }

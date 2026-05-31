@@ -5,31 +5,38 @@ namespace Repository;
 
 public class StadiumRepository : IStadiumRepository
 {
-    private readonly List<Stadium> _stadiums = new();
+    private readonly WorldCupPlannerContext _context;
+
+    public StadiumRepository(WorldCupPlannerContext context)
+    {
+        _context = context;
+    }
 
     public void AddStadium(Stadium stadium)
     {
         EnsureNotNull(stadium);
-        _stadiums.Add(stadium);
+        _context.Stadiums.Add(stadium);
+        _context.SaveChanges();
     }
 
     public Stadium? GetStadium(string stadiumName)
     {
         EnsureValidName(stadiumName);
 
-        return _stadiums.FirstOrDefault(s =>
+        return _context.Stadiums.FirstOrDefault(s =>
             s.StadiumName.Equals(stadiumName, StringComparison.OrdinalIgnoreCase));
     }
 
     public void DeleteStadium(Stadium stadium)
     {
         EnsureNotNull(stadium);
-        _stadiums.Remove(stadium);
+        _context.Stadiums.Remove(stadium);
+        _context.SaveChanges();
     }
 
     public List<Stadium> GetAllStadiums()
     {
-        return _stadiums.ToList();
+        return _context.Stadiums.ToList();
     }
 
     private void EnsureNotNull(Stadium stadium)

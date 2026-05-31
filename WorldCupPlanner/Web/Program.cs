@@ -1,12 +1,11 @@
 using Blazored.LocalStorage;
+using Domain.Entities;
 using Web.Components;
 using IRepository;
 using IServices;
 using Repository;
 using Services;
 using Web.Services;
-using Domain.Entities;
-using Domain.Enums;
 using Domain.Import;
 using Domain.Import.Interfaces;
 using Domain.Interfaces;
@@ -14,7 +13,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<WorldCupPlannerContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<WorldCupPlannerContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
@@ -35,7 +35,7 @@ builder.Services.AddScoped<IMatchRepository, MatchRepository>();
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddSingleton<IDateTimeMatch, SystemDateTimeMatch>();
 
-builder.Services.AddScoped<IFixtureRepository, FixtureRepository >();
+builder.Services.AddScoped<IFixtureRepository, FixtureRepository>();
 builder.Services.AddScoped<IFixtureService, FixtureService>();
 builder.Services.AddScoped<FixtureGenerator>();
 

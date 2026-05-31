@@ -4,3 +4,9 @@
 # Docker local database data
 .data/
 **/.data/
+
+bin/
+obj/
+.idea/
+.vs/
+.DS_Store

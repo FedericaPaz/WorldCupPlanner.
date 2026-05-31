@@ -8,25 +8,31 @@ public class Team : ITeam
     public const int MinRanking = 300;
     public const int MaxRanking = 2500;
 
-    private string _name;
-    private Confederation _confederation;
+    private string _name = string.Empty;
+    private Confederation _confederation = null!;
     private int _fifaRanking;
     private int _currentRanking;
-    
+    private string _flagBase64 = string.Empty;
+
     public string Name => _name;
 
     public Confederation Confederation => _confederation;
 
     public int FifaRanking => _fifaRanking;
-    
+
     public int CurrentRanking => _currentRanking;
+
+    public string FlagBase64
+    {
+        get => _flagBase64;
+        private set => _flagBase64 = value;
+    }
 
     private Team()
     {
-        
     }
-    
-    public Team(string name, Confederation confederation, int fifaRanking)
+
+    public Team(string name, Confederation confederation, int fifaRanking, string flagBase64 = "")
     {
         ValidateName(name);
         ValidateConfederation(confederation);
@@ -36,6 +42,7 @@ public class Team : ITeam
         _confederation = confederation;
         _fifaRanking = fifaRanking;
         _currentRanking = fifaRanking;
+        _flagBase64 = flagBase64;
     }
 
     public void UpdateFifaRanking(int newRanking)
@@ -43,7 +50,13 @@ public class Team : ITeam
         ValidateRanking(newRanking);
         _fifaRanking = newRanking;
     }
-    
+
+    public void UpdateCurrentRanking(int newRanking)
+    {
+        ValidateRanking(newRanking);
+        _currentRanking = newRanking;
+    }
+
     private void ValidateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -57,7 +70,7 @@ public class Team : ITeam
     {
         if (confederation is null)
             throw new ArgumentNullException(nameof(confederation), "La confederación del equipo no puede estar vacía.");
-        
+
         if (string.IsNullOrWhiteSpace(confederation.Name))
             throw new ArgumentException("El nombre de la confederación no puede estar vacío.");
     }
@@ -67,11 +80,4 @@ public class Team : ITeam
         if (ranking < MinRanking || ranking > MaxRanking)
             throw new ArgumentException($"El ranking FIFA debe estar entre {MinRanking} y {MaxRanking}.");
     }
-
-    public void UpdateCurrentRanking(int newRanking)
-    {
-        ValidateRanking(newRanking);
-        _currentRanking = newRanking;
-    }
-    
 }

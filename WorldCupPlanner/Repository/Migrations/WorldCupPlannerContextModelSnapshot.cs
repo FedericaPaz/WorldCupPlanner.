@@ -91,6 +91,94 @@ namespace Repository.Migrations
                     b.ToTable("LogEntries");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Match", b =>
+                {
+                    b.Property<int>("IdMatch")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdMatch"));
+
+                    b.Property<int?>("AwayGoals")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AwayTeamName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateMatch")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Group")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<int?>("HomeGoals")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HomeTeamName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LoserMatchName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("StadiumName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("WinnerMatchName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("IdMatch");
+
+                    b.HasIndex("AwayTeamName");
+
+                    b.HasIndex("HomeTeamName");
+
+                    b.HasIndex("LoserMatchName");
+
+                    b.HasIndex("StadiumName");
+
+                    b.HasIndex("WinnerMatchName");
+
+                    b.ToTable("Matches");
+                });
+
+            modelBuilder.Entity("Domain.Entities.MatchIncident", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MatchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TeamName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MatchId");
+
+                    b.HasIndex("TeamName");
+
+                    b.ToTable("MatchIncidents");
+                });
+
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -134,6 +222,10 @@ namespace Repository.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("FlagBase64")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Name");
 
                     b.ToTable("Teams");
@@ -166,6 +258,71 @@ namespace Repository.Migrations
                     b.HasKey("Email");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Match", b =>
+                {
+                    b.HasOne("Domain.Entities.Team", "AwayTeam")
+                        .WithMany()
+                        .HasForeignKey("AwayTeamName")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Team", "HomeTeam")
+                        .WithMany()
+                        .HasForeignKey("HomeTeamName")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Team", "LoserMatch")
+                        .WithMany()
+                        .HasForeignKey("LoserMatchName")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.Stadium", "Stadium")
+                        .WithMany()
+                        .HasForeignKey("StadiumName")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Team", "WinnerMatch")
+                        .WithMany()
+                        .HasForeignKey("WinnerMatchName")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AwayTeam");
+
+                    b.Navigation("HomeTeam");
+
+                    b.Navigation("LoserMatch");
+
+                    b.Navigation("Stadium");
+
+                    b.Navigation("WinnerMatch");
+                });
+
+            modelBuilder.Entity("Domain.Entities.MatchIncident", b =>
+                {
+                    b.HasOne("Domain.Entities.Match", "Match")
+                        .WithMany("Incidents")
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamName")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Match");
+
+                    b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Match", b =>
+                {
+                    b.Navigation("Incidents");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,7 @@ using Domain.Entities;
 using Domain.Enums;
 using DomainTests.Stubs;
 using DTOs.Match;
+using IRepository;
 using IServices;
 using Repository;
 using Services;
@@ -18,7 +19,7 @@ public class MatchServiceTests
     private InMemoryNotificationRepository _notificationRepository = null!;
     private NotificationService _notificationService = null!;
     private MatchService _service = null!;
-    private MatchRepository _matchRepository = null!;
+    private IMatchRepository _matchRepository = null!;
     private TeamRepositoryStub _teamRepository = null!;
     private StadiumRepositoryStub _stadiumRepository = null!;
     private DateTimeMatchStub _clock = null!;
@@ -43,7 +44,7 @@ public class MatchServiceTests
             _notificationRepository,
             _logService);
 
-        _matchRepository = new MatchRepository();
+        _matchRepository = new MatchRepositoryStub();
         _teamRepository = new TeamRepositoryStub();
         _stadiumRepository = new StadiumRepositoryStub();
         _clock = new DateTimeMatchStub(new DateTime(2027, 1, 1));
@@ -95,7 +96,9 @@ public class MatchServiceTests
     public void Create_WithValidRequest_ShouldCreateMatch()
     {
         AddDefaultTeamsAndStadium();
+
         var response = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
         Assert.AreEqual(1, response.idMatch);
         Assert.AreEqual("Centenario", response.stadiumName);
         Assert.AreEqual("Uruguay", response.homeTeamName);
@@ -113,7 +116,9 @@ public class MatchServiceTests
     public void Create_WithValidRequest_ShouldStoreMatchInRepository()
     {
         AddDefaultTeamsAndStadium();
+
         _service.CreateMatch(CreateValidRequest(_clock.Now));
+
         Assert.AreEqual(1, _matchRepository.GetAllMatches().Count);
     }
 
@@ -122,6 +127,7 @@ public class MatchServiceTests
     {
         var request = CreateValidRequest(_clock.Now);
         request.group = "";
+
         Assert.ThrowsException<ArgumentException>(() => _service.CreateMatch(request));
     }
 
@@ -130,7 +136,10 @@ public class MatchServiceTests
     {
         _teamRepository.Add(CreateTeam("Uruguay"));
         _stadiumRepository.AddStadium(CreateStadium("Centenario"));
-        Assert.ThrowsException<KeyNotFoundException>(() => _service.CreateMatch(CreateValidRequest(_clock.Now)));
+
+        var request = CreateValidRequest(_clock.Now);
+
+        Assert.ThrowsException<KeyNotFoundException>(() => _service.CreateMatch(request));
     }
 
     [TestMethod]
@@ -138,15 +147,20 @@ public class MatchServiceTests
     {
         _teamRepository.Add(CreateTeam("Uruguay"));
         _teamRepository.Add(CreateTeam("Argentina"));
-        Assert.ThrowsException<KeyNotFoundException>(() => _service.CreateMatch(CreateValidRequest(_clock.Now)));
+
+        var request = CreateValidRequest(_clock.Now);
+
+        Assert.ThrowsException<KeyNotFoundException>(() => _service.CreateMatch(request));
     }
 
     [TestMethod]
     public void Create_WithSameHomeAndAwayTeam_ShouldThrowArgumentException()
     {
         AddDefaultTeamsAndStadium();
+
         var request = CreateValidRequest(_clock.Now);
         request.awayTeamName = "Uruguay";
+
         Assert.ThrowsException<ArgumentException>(() => _service.CreateMatch(request));
     }
 
@@ -154,17 +168,29 @@ public class MatchServiceTests
     public void Create_WithPastDate_ShouldThrowArgumentException()
     {
         AddDefaultTeamsAndStadium();
-        Assert.ThrowsException<ArgumentException>(() =>
-            _service.CreateMatch(CreateValidRequest(new DateTime(2026, 6, 1))));
+
+        var request = CreateValidRequest(new DateTime(2026, 6, 1));
+
+        Assert.ThrowsException<ArgumentException>(() => _service.CreateMatch(request));
     }
 
     [TestMethod]
     public void SetResult_WithValidData_ShouldUpdateMatchResult()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-        _service.SetMatchResult(created.idMatch, 2, 1);
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1
+        };
+
+        _service.SetMatchResult(created.idMatch, request);
+
         var match = _matchRepository.GetMatchById(created.idMatch);
+
         Assert.AreEqual(2, match.HomeGoals);
         Assert.AreEqual(1, match.AwayGoals);
     }
@@ -173,33 +199,66 @@ public class MatchServiceTests
     public void SetResult_WithNegativeGoals_ShouldThrowArgumentException()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-        Assert.ThrowsException<ArgumentException>(() => _service.SetMatchResult(created.idMatch, -1, 0));
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = -1,
+            awayGoals = 0
+        };
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            _service.SetMatchResult(created.idMatch, request));
     }
 
     [TestMethod]
-    public void SetResult_WhenMatchNotPlayedYet_ShouldThrowInvalidOperationException()
+    public void SetResult_WithFutureMatch_ShouldThrowInvalidOperationException()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(new DateTime(2027, 6, 10)));
-        Assert.ThrowsException<InvalidOperationException>(() => _service.SetMatchResult(created.idMatch, 2, 1));
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1
+        };
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            _service.SetMatchResult(created.idMatch, request));
     }
 
     [TestMethod]
-    public void SetResult_WhenResultAlreadySet_ShouldThrowInvalidOperationException()
+    public void SetResult_WithExistingResult_ShouldThrowInvalidOperationException()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-        _service.SetMatchResult(created.idMatch, 1, 0);
-        Assert.ThrowsException<InvalidOperationException>(() => _service.SetMatchResult(created.idMatch, 2, 0));
+
+        _service.SetMatchResult(created.idMatch, new MatchResultRequest
+        {
+            homeGoals = 1,
+            awayGoals = 0
+        });
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            _service.SetMatchResult(created.idMatch, new MatchResultRequest
+            {
+                homeGoals = 2,
+                awayGoals = 1
+            }));
     }
 
     [TestMethod]
     public void GetById_WithExistingMatch_ShouldReturnMatchResponse()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
         var result = _service.GetMatchById(created.idMatch);
+
         Assert.AreEqual(created.idMatch, result.idMatch);
         Assert.AreEqual("Centenario", result.stadiumName);
         Assert.AreEqual("Uruguay", result.homeTeamName);
@@ -215,16 +274,21 @@ public class MatchServiceTests
     [TestMethod]
     public void GetAll_WhenThereAreNoMatches_ShouldReturnEmptyList()
     {
-        Assert.AreEqual(0, _service.GetAllMatches().Count);
+        var result = _service.GetAllMatches();
+
+        Assert.AreEqual(0, result.Count);
     }
 
     [TestMethod]
     public void GetAll_WithMatches_ShouldReturnAllMatchResponses()
     {
         AddDefaultTeamsAndStadium();
+
         _teamRepository.Add(CreateTeam("Brasil"));
         _teamRepository.Add(CreateTeam("Peru"));
+
         _service.CreateMatch(CreateValidRequest(_clock.Now));
+
         _service.CreateMatch(new MatchRequest
         {
             dateMatch = _clock.Now,
@@ -233,7 +297,9 @@ public class MatchServiceTests
             awayTeamName = "Peru",
             group = "B"
         });
+
         var result = _service.GetAllMatches();
+
         Assert.AreEqual(2, result.Count);
         Assert.AreEqual("Uruguay", result[0].homeTeamName);
         Assert.AreEqual("Brasil", result[1].homeTeamName);
@@ -243,10 +309,15 @@ public class MatchServiceTests
     public void UpdateDate_WithValidDate_ShouldUpdateMatchDate()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
         var newDate = new DateTime(2027, 6, 5);
+
         _service.UpdateMatchDate(created.idMatch, newDate);
+
         var updated = _service.GetMatchById(created.idMatch);
+
         Assert.AreEqual(newDate, updated.dateMatch);
     }
 
@@ -254,19 +325,27 @@ public class MatchServiceTests
     public void UpdateDate_WithPastDate_ShouldThrowArgumentException()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+        var pastDate = new DateTime(2026, 6, 1);
+
         Assert.ThrowsException<ArgumentException>(() =>
-            _service.UpdateMatchDate(created.idMatch, new DateTime(2026, 6, 1)));
+            _service.UpdateMatchDate(created.idMatch, pastDate));
     }
 
     [TestMethod]
     public void UpdateStadium_WithValidData_ShouldUpdateStadium()
     {
         AddDefaultTeamsAndStadium();
+
         _stadiumRepository.AddStadium(CreateStadium("Maracana"));
+
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
         _service.UpdateMatchStadium(created.idMatch, "Maracana");
+
         var updated = _service.GetMatchById(created.idMatch);
+
         Assert.AreEqual("Maracana", updated.stadiumName);
     }
 
@@ -274,7 +353,9 @@ public class MatchServiceTests
     public void UpdateStadium_WithNonExistingStadium_ShouldThrowKeyNotFoundException()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
         Assert.ThrowsException<KeyNotFoundException>(() =>
             _service.UpdateMatchStadium(created.idMatch, "Maracana"));
     }
@@ -290,6 +371,7 @@ public class MatchServiceTests
     public void UpdateMatchStadium_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
     {
         _stadiumRepository.AddStadium(CreateStadium("Maracana"));
+
         Assert.ThrowsException<KeyNotFoundException>(() =>
             _service.UpdateMatchStadium(99, "Maracana"));
     }
@@ -297,16 +379,24 @@ public class MatchServiceTests
     [TestMethod]
     public void SetMatchResult_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
     {
+        var request = new MatchResultRequest
+        {
+            homeGoals = 1,
+            awayGoals = 0
+        };
+
         Assert.ThrowsException<KeyNotFoundException>(() =>
-            _service.SetMatchResult(99, 1, 0));
+            _service.SetMatchResult(99, request));
     }
 
     [TestMethod]
     public void Create_WithInvalidGroup_ShouldThrowArgumentException()
     {
         AddDefaultTeamsAndStadium();
+
         var request = CreateValidRequest(_clock.Now);
         request.group = "M";
+
         Assert.ThrowsException<ArgumentException>(() => _service.CreateMatch(request));
     }
 
@@ -314,9 +404,12 @@ public class MatchServiceTests
     public void Create_WithLowercaseGroup_ShouldCreateMatchWithUppercaseGroup()
     {
         AddDefaultTeamsAndStadium();
+
         var request = CreateValidRequest(_clock.Now);
         request.group = "a";
+
         var response = _service.CreateMatch(request);
+
         Assert.AreEqual('A', response.group);
     }
 
@@ -324,8 +417,10 @@ public class MatchServiceTests
     public void Create_WithNullGroup_ShouldThrowArgumentException()
     {
         AddDefaultTeamsAndStadium();
+
         var request = CreateValidRequest(_clock.Now);
         request.group = null!;
+
         Assert.ThrowsException<ArgumentException>(() => _service.CreateMatch(request));
     }
 
@@ -333,9 +428,13 @@ public class MatchServiceTests
     public void SimulateMatch_WithExistingMatch_ShouldSetMatchResult()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
         _service.SimulateMatch(created.idMatch, 1);
+
         var match = _matchRepository.GetMatchById(created.idMatch);
+
         Assert.AreEqual(2, match.HomeGoals);
         Assert.AreEqual(1, match.AwayGoals);
     }
@@ -343,14 +442,17 @@ public class MatchServiceTests
     [TestMethod]
     public void SimulateMatch_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
     {
-        Assert.ThrowsException<KeyNotFoundException>(() => _service.SimulateMatch(99, 1));
+        Assert.ThrowsException<KeyNotFoundException>(() =>
+            _service.SimulateMatch(99, 1));
     }
 
     [TestMethod]
     public void SimulateMatch_WithFutureMatch_ShouldThrowInvalidOperationException()
     {
         AddDefaultTeamsAndStadium();
+
         var created = _service.CreateMatch(CreateValidRequest(new DateTime(2028, 1, 1)));
+
         Assert.ThrowsException<InvalidOperationException>(() =>
             _service.SimulateMatch(created.idMatch, 1));
     }
@@ -380,5 +482,138 @@ public class MatchServiceTests
             .ToList();
 
         Assert.AreEqual(1, notifications.Count);
+    }
+
+    [TestMethod]
+    public void SetResult_WithHomeYellowCards_ShouldAddHomeYellowCardIncident()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1,
+            homeYellowCards = 1
+        };
+
+        _service.SetMatchResult(created.idMatch, request);
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+
+        Assert.AreEqual(1, match.Incidents.Count);
+        Assert.AreEqual(IncidentType.YellowCard, match.Incidents[0].Type);
+        Assert.AreEqual(match.HomeTeam, match.Incidents[0].Team);
+        Assert.AreEqual(1, match.Incidents[0].Quantity);
+    }
+
+    [TestMethod]
+    public void SetResult_WithAwayYellowCards_ShouldAddAwayYellowCardIncident()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1,
+            awayYellowCards = 2
+        };
+
+        _service.SetMatchResult(created.idMatch, request);
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+
+        Assert.AreEqual(1, match.Incidents.Count);
+        Assert.AreEqual(IncidentType.YellowCard, match.Incidents[0].Type);
+        Assert.AreEqual(match.AwayTeam, match.Incidents[0].Team);
+        Assert.AreEqual(2, match.Incidents[0].Quantity);
+    }
+
+    [TestMethod]
+    public void SetResult_WithHomeRedCards_ShouldAddHomeRedCardIncident()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1,
+            homeRedCards = 1
+        };
+
+        _service.SetMatchResult(created.idMatch, request);
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+
+        Assert.AreEqual(1, match.Incidents.Count);
+        Assert.AreEqual(IncidentType.RedCard, match.Incidents[0].Type);
+        Assert.AreEqual(match.HomeTeam, match.Incidents[0].Team);
+        Assert.AreEqual(1, match.Incidents[0].Quantity);
+    }
+
+    [TestMethod]
+    public void SetResult_WithAwayRedCards_ShouldAddAwayRedCardIncident()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1,
+            awayRedCards = 1
+        };
+
+        _service.SetMatchResult(created.idMatch, request);
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+
+        Assert.AreEqual(1, match.Incidents.Count);
+        Assert.AreEqual(IncidentType.RedCard, match.Incidents[0].Type);
+        Assert.AreEqual(match.AwayTeam, match.Incidents[0].Team);
+        Assert.AreEqual(1, match.Incidents[0].Quantity);
+    }
+
+    [TestMethod]
+    public void SetResult_WithExistingCardIncidents_ShouldThrowInvalidOperationException()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        _service.SetMatchResult(created.idMatch, new MatchResultRequest
+        {
+            homeGoals = 1,
+            awayGoals = 0,
+            homeYellowCards = 2
+        });
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            _service.SetMatchResult(created.idMatch, new MatchResultRequest
+            {
+                homeGoals = 2,
+                awayGoals = 1,
+                homeYellowCards = 4
+            }));
+    }
+
+    [TestMethod]
+    public void SimulateMatch_WithExistingMatch_ShouldSetCardIncidents()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        _service.SimulateMatch(created.idMatch, 1);
+
+        var match = _matchRepository.GetMatchById(created.idMatch);
+
+        Assert.IsTrue(match.Incidents.Count > 0);
     }
 }
