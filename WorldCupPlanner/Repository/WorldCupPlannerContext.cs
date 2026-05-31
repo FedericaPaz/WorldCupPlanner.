@@ -13,6 +13,7 @@ public class WorldCupPlannerContext : DbContext
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<Match> Matches { get; set; }
+    public DbSet<MatchIncident> MatchIncidents { get; set; }
 
     public WorldCupPlannerContext(DbContextOptions<WorldCupPlannerContext> options)
         : base(options)
@@ -85,7 +86,25 @@ public class WorldCupPlannerContext : DbContext
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.Ignore(match => match.Incidents);
+            entity.HasMany(match => match.Incidents)
+                .WithOne(incident => incident.Match)
+                .HasForeignKey(incident => incident.MatchId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<MatchIncident>(entity =>
+            {
+                entity.HasKey(incident => incident.Id);
+
+                entity.Property(incident => incident.Type)
+                    .HasConversion<string>();
+
+                entity.Property(incident => incident.Quantity);
+
+                entity.HasOne(incident => incident.Team)
+                    .WithMany()
+                    .HasForeignKey(incident => incident.TeamName)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
         });
     }
 }

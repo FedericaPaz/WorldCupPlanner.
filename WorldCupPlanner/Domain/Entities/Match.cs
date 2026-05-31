@@ -22,7 +22,7 @@ public class Match
     private Team? _loserMatch;
     private IDateTimeMatch _clock = null!;
     private bool _isLocked;
-    private readonly List<MatchIncident> _incidents = new();
+    private readonly List<MatchIncident> _incidents = [];
 
     public int IdMatch => _idMatch;
 

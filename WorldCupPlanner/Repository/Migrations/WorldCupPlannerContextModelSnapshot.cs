@@ -128,6 +128,37 @@ namespace Repository.Migrations
                     b.ToTable("Matches");
                 });
 
+            modelBuilder.Entity("Domain.Entities.MatchIncident", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MatchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TeamName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MatchId");
+
+                    b.HasIndex("TeamName");
+
+                    b.ToTable("MatchIncidents");
+                });
+
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -248,6 +279,30 @@ namespace Repository.Migrations
                     b.Navigation("Stadium");
 
                     b.Navigation("WinnerMatch");
+                });
+
+            modelBuilder.Entity("Domain.Entities.MatchIncident", b =>
+                {
+                    b.HasOne("Domain.Entities.Match", "Match")
+                        .WithMany("Incidents")
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamName")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Match");
+
+                    b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Match", b =>
+                {
+                    b.Navigation("Incidents");
                 });
 #pragma warning restore 612, 618
         }
