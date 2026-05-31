@@ -10,6 +10,16 @@ public class MatchTests
     private static readonly DateTime DefaultDate = new DateTime(2026, 6, 1);
     private static readonly DateTime FutureDate = new DateTime(2026, 6, 10);
 
+    private Team CreateTeam(string name)
+    {
+        return new Team(name, new Confederation("CONMEBOL"), 1500);
+    }
+
+    private Stadium CreateStadium(string name)
+    {
+        return new Stadium(name, "Montevideo", "", 60000);
+    }
+
     private Match CreateMatch(
         DateTimeMatchStub? clock = null,
         string home = "Uruguay",
@@ -24,9 +34,9 @@ public class MatchTests
         return new Match(
             id,
             date ?? clock.Now,
-            new StadiumStub(stadium),
-            new TeamStub(home),
-            new TeamStub(away),
+            CreateStadium(stadium),
+            CreateTeam(home),
+            CreateTeam(away),
             group,
             clock);
     }
@@ -35,9 +45,9 @@ public class MatchTests
     public void CreateMatch_WithValidData_ShouldCreateMatch()
     {
         var clock = new DateTimeMatchStub(DefaultDate);
-        var stadium = new StadiumStub("Centenario");
-        var homeTeam = new TeamStub("Uruguay");
-        var awayTeam = new TeamStub("Argentina");
+        var stadium = CreateStadium("Centenario");
+        var homeTeam = CreateTeam("Uruguay");
+        var awayTeam = CreateTeam("Argentina");
 
         var match = new Match(1, clock.Now, stadium, homeTeam, awayTeam, 'A', clock);
 
@@ -60,18 +70,18 @@ public class MatchTests
         var match1 = new Match(
             1,
             clock.Now,
-            new StadiumStub("Centenario"),
-            new TeamStub("Uruguay"),
-            new TeamStub("Argentina"),
+            CreateStadium("Centenario"),
+            CreateTeam("Uruguay"),
+            CreateTeam("Argentina"),
             'A',
             clock);
 
         var match2 = new Match(
             2,
             clock.Now,
-            new StadiumStub("Maracana"),
-            new TeamStub("Brasil"),
-            new TeamStub("Peru"),
+            CreateStadium("Maracana"),
+            CreateTeam("Brasil"),
+            CreateTeam("Peru"),
             'A',
             clock);
 
@@ -88,9 +98,9 @@ public class MatchTests
             new Match(
                 1,
                 clock.Now,
-                new StadiumStub("Centenario"),
-                new TeamStub("Uruguay"),
-                new TeamStub("Argentina"),
+                CreateStadium("Centenario"),
+                CreateTeam("Uruguay"),
+                CreateTeam("Argentina"),
                 'M',
                 clock));
     }
@@ -99,13 +109,13 @@ public class MatchTests
     public void CreateMatch_WithSameTeams_ShouldThrowArgumentException()
     {
         var clock = new DateTimeMatchStub(DefaultDate);
-        var team = new TeamStub("Uruguay");
+        var team = CreateTeam("Uruguay");
 
         Assert.ThrowsException<ArgumentException>(() =>
             new Match(
                 1,
                 clock.Now,
-                new StadiumStub("Centenario"),
+                CreateStadium("Centenario"),
                 team,
                 team,
                 'A',
@@ -121,9 +131,9 @@ public class MatchTests
             new Match(
                 1,
                 clock.Now,
-                null,
-                new TeamStub("Uruguay"),
-                new TeamStub("Argentina"),
+                null!,
+                CreateTeam("Uruguay"),
+                CreateTeam("Argentina"),
                 'A',
                 clock));
     }
@@ -137,9 +147,9 @@ public class MatchTests
             new Match(
                 1,
                 clock.Now,
-                new StadiumStub("Centenario"),
-                null,
-                new TeamStub("Argentina"),
+                CreateStadium("Centenario"),
+                null!,
+                CreateTeam("Argentina"),
                 'A',
                 clock));
     }
@@ -153,9 +163,9 @@ public class MatchTests
             new Match(
                 1,
                 clock.Now,
-                new StadiumStub("Centenario"),
-                new TeamStub("Uruguay"),
-                null,
+                CreateStadium("Centenario"),
+                CreateTeam("Uruguay"),
+                null!,
                 'A',
                 clock));
     }
@@ -169,9 +179,9 @@ public class MatchTests
             new Match(
                 1,
                 clock.Now,
-                new StadiumStub("Centenario"),
-                new TeamStub("Uruguay"),
-                new TeamStub("Argentina"),
+                CreateStadium("Centenario"),
+                CreateTeam("Uruguay"),
+                CreateTeam("Argentina"),
                 '\0',
                 clock));
     }
@@ -183,11 +193,11 @@ public class MatchTests
             new Match(
                 1,
                 DefaultDate,
-                new StadiumStub("Centenario"),
-                new TeamStub("Uruguay"),
-                new TeamStub("Argentina"),
+                CreateStadium("Centenario"),
+                CreateTeam("Uruguay"),
+                CreateTeam("Argentina"),
                 'A',
-                null));
+                null!));
     }
 
     [TestMethod]
@@ -199,9 +209,9 @@ public class MatchTests
             new Match(
                 1,
                 DefaultDate,
-                new StadiumStub("Centenario"),
-                new TeamStub("Uruguay"),
-                new TeamStub("Argentina"),
+                CreateStadium("Centenario"),
+                CreateTeam("Uruguay"),
+                CreateTeam("Argentina"),
                 'A',
                 clock));
     }
@@ -223,9 +233,9 @@ public class MatchTests
             new Match(
                 1,
                 clock.Now,
-                new StadiumStub("Centenario"),
-                new TeamStub("Uruguay"),
-                new TeamStub("Uruguay"),
+                CreateStadium("Centenario"),
+                CreateTeam("Uruguay"),
+                CreateTeam("Uruguay"),
                 'A',
                 clock));
     }
@@ -234,14 +244,14 @@ public class MatchTests
     public void SetResult_WithValidGoals_ShouldAssignGoalsAndWinner()
     {
         var clock = new DateTimeMatchStub(DefaultDate);
-        var home = new TeamStub("Uruguay");
+        var home = CreateTeam("Uruguay");
 
         var match = new Match(
             1,
             clock.Now,
-            new StadiumStub("Centenario"),
+            CreateStadium("Centenario"),
             home,
-            new TeamStub("Argentina"),
+            CreateTeam("Argentina"),
             'A',
             clock);
 
@@ -280,9 +290,9 @@ public class MatchTests
         var match = new Match(
             1,
             FutureDate,
-            new StadiumStub("Centenario"),
-            new TeamStub("Uruguay"),
-            new TeamStub("Argentina"),
+            CreateStadium("Centenario"),
+            CreateTeam("Uruguay"),
+            CreateTeam("Argentina"),
             'A',
             clock);
 
@@ -294,13 +304,13 @@ public class MatchTests
     public void SetMatchResult_WithAwayTeamWinner_ShouldAssignAwayTeamAsWinner()
     {
         var clock = new DateTimeMatchStub(DefaultDate);
-        var awayTeam = new TeamStub("Argentina");
+        var awayTeam = CreateTeam("Argentina");
 
         var match = new Match(
             1,
             clock.Now,
-            new StadiumStub("Centenario"),
-            new TeamStub("Uruguay"),
+            CreateStadium("Centenario"),
+            CreateTeam("Uruguay"),
             awayTeam,
             'A',
             clock);
@@ -339,9 +349,9 @@ public class MatchTests
         var match = new Match(
             1,
             clock.Now,
-            new StadiumStub("Centenario"),
-            new TeamStub("Uruguay"),
-            new TeamStub("Argentina"),
+            CreateStadium("Centenario"),
+            CreateTeam("Uruguay"),
+            CreateTeam("Argentina"),
             'A',
             clock);
 
@@ -353,7 +363,7 @@ public class MatchTests
     public void UpdateStadium_WithValidStadium_ShouldUpdateStadium()
     {
         var match = CreateMatch();
-        var newStadium = new StadiumStub("Maracana");
+        var newStadium = CreateStadium("Maracana");
 
         match.UpdateStadium(newStadium);
 
@@ -366,7 +376,7 @@ public class MatchTests
         var match = CreateMatch();
 
         Assert.ThrowsException<ArgumentNullException>(() =>
-            match.UpdateStadium(null));
+            match.UpdateStadium(null!));
     }
 
     [TestMethod]
@@ -374,11 +384,10 @@ public class MatchTests
     {
         var now = new DateTime(2026, 6, 1, 10, 0, 0);
         var clock = new DateTimeMatchStub(now);
-        var confederation = new Confederation("UEFA");
 
-        var homeTeam = new Team("Uruguay", confederation, 1500);
-        var awayTeam = new Team("España", confederation, 1600);
-        var stadium = new Stadium("Centenario", "Montevideo", "", 60000);
+        var homeTeam = CreateTeam("Uruguay");
+        var awayTeam = CreateTeam("España");
+        var stadium = CreateStadium("Centenario");
 
         var match = new Match(
             1,
@@ -404,11 +413,10 @@ public class MatchTests
     {
         var now = new DateTime(2026, 6, 1, 10, 0, 0);
         var clock = new DateTimeMatchStub(now);
-        var confederation = new Confederation("UEFA");
 
-        var homeTeam = new Team("Uruguay", confederation, 1500);
-        var awayTeam = new Team("España", confederation, 1600);
-        var stadium = new Stadium("Centenario", "Montevideo", "", 60000);
+        var homeTeam = CreateTeam("Uruguay");
+        var awayTeam = CreateTeam("España");
+        var stadium = CreateStadium("Centenario");
 
         var match = new Match(
             1,

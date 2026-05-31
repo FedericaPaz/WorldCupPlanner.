@@ -8,9 +8,9 @@ namespace DomainTests;
 [TestClass]
 public class CrucesTests
 {
-    private IStadium _stadium;
-    private ITeam _homeTeam;
-    private ITeam _awayTeam;
+    private Stadium _stadium = null!;
+    private Team _homeTeam = null!;
+    private Team _awayTeam = null!;
     private IDateTimeMatch _clock;
     private int _nextId;
     
@@ -23,11 +23,21 @@ public class CrucesTests
     private Match CreateBasicMatch()
     {
         DateTime now = DateTime.Now;
+
         _stadium = new Stadium("Test Stadium", "Ciudad", "Desc", 50000);
         _homeTeam = new Team("Test homeTeam", new Confederation("UEFA"), 301);
         _awayTeam = new Team("Test awayTeam", new Confederation("UEFA"), 302);
+
         _clock = new ClockStub(now);
-        return new Match(_nextId++, now, _stadium, _homeTeam, _awayTeam, 'A', _clock);
+
+        return new Match(
+            _nextId++,
+            now,
+            _stadium,
+            _homeTeam,
+            _awayTeam,
+            'A',
+            _clock);
     }
     
     [TestMethod]
@@ -87,27 +97,27 @@ public class CrucesTests
     [TestMethod]
     public void GetWinner_WhenMatchHasResult_ReturnsWinner()
     {
-        _homeTeam = new Team("Test homeTeam", new Confederation("UEFA"), 301);
-        _awayTeam = new Team("Test awayTeam", new Confederation("UEFA"), 302);
-        _stadium = new Stadium("Test Stadium", "Ciudad","Desc",50000);
         var match = CreateBasicMatch();
+
         match.SetMatchResult(2, 1);
+
         var cruce = new Cruce("A1", match, TournamentPhase.RoundOf16);
+
         var winner = cruce.GetWinner();
-        Assert.AreEqual(_homeTeam, winner);
+
+        Assert.AreEqual(match.HomeTeam, winner);
     }
     
     [TestMethod]
     public void GetWinner_WhenMatchResultDraw_ReturnsNull()
     {
-        _homeTeam = new Team("Test homeTeam", new Confederation("UEFA"), 301);
-        _awayTeam = new Team("Test awayTeam", new Confederation("UEFA"), 302);
-        _stadium = new Stadium("Test Stadium", "Ciudad","Desc",50000);
         var match = CreateBasicMatch();
+
         match.SetMatchResult(1, 1);
+
         var cruce = new Cruce("A1", match, TournamentPhase.RoundOf16);
-        var winner = cruce.GetWinner();
-        Assert.IsNull(winner);
+
+        Assert.IsNull(cruce.GetWinner());
     }
     
     [TestMethod]
