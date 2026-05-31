@@ -65,11 +65,26 @@ public class WorldCupPlannerContext : DbContext
         {
             entity.HasKey(match => match.IdMatch);
 
-            entity.Ignore(match => match.Stadium);
-            entity.Ignore(match => match.HomeTeam);
-            entity.Ignore(match => match.AwayTeam);
-            entity.Ignore(match => match.WinnerMatch);
-            entity.Ignore(match => match.LoserMatch);
+            entity.HasOne(match => match.Stadium)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(match => match.HomeTeam)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(match => match.AwayTeam)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(match => match.WinnerMatch)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(match => match.LoserMatch)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
+
             entity.Ignore(match => match.Incidents);
         });
     }
