@@ -1,3 +1,4 @@
+using Domain.Enums;
 using Domain.Interfaces;
 
 namespace Domain.Entities;
@@ -21,46 +22,84 @@ public class Match
     private ITeam? _loserMatch;
     private IDateTimeMatch _clock = null!;
     private bool _isLocked;
+    private readonly List<MatchIncident> _incidents = new();
 
     public int IdMatch => _idMatch;
+
     public DateTime DateMatch
     {
         get => _dateMatch;
-        set { EnsureValidDate(value); _dateMatch = value; }
+        set
+        {
+            EnsureValidDate(value);
+            _dateMatch = value;
+        }
     }
+
     public IStadium Stadium
     {
         get => _stadium;
-        set { EnsureValidStadium(value); _stadium = value; }
+        set
+        {
+            EnsureValidStadium(value);
+            _stadium = value;
+        }
     }
+
     public ITeam HomeTeam
     {
         get => _homeTeam;
-        private set { EnsureValidHomeTeam(value); _homeTeam = value; }
+        private set
+        {
+            EnsureValidHomeTeam(value);
+            _homeTeam = value;
+        }
     }
+
     public ITeam AwayTeam
     {
         get => _awayTeam;
-        private set { EnsureValidAwayTeam(value); _awayTeam = value; }
+        private set
+        {
+            EnsureValidAwayTeam(value);
+            _awayTeam = value;
+        }
     }
+
     public char Group
     {
         get => _group;
-        private set { EnsureValidGroup(value); _group = char.ToUpper(value); }
+        private set
+        {
+            EnsureValidGroup(value);
+            _group = char.ToUpper(value);
+        }
     }
+
     public bool IsLocked
     {
         get => _isLocked;
         private set => _isLocked = value;
     }
+
     public int? HomeGoals => _homeGoals;
     public int? AwayGoals => _awayGoals;
     public ITeam? WinnerMatch => _winnerMatch;
     public ITeam? LoserMatch => _loserMatch;
+    public IReadOnlyList<MatchIncident> Incidents => _incidents;
 
-    private Match() { }
+    private Match()
+    {
+    }
 
-    public Match(int id, DateTime dateMatch, IStadium stadium, ITeam homeTeam, ITeam awayTeam, char group, IDateTimeMatch clock)
+    public Match(
+        int id,
+        DateTime dateMatch,
+        IStadium stadium,
+        ITeam homeTeam,
+        ITeam awayTeam,
+        char group,
+        IDateTimeMatch clock)
     {
         SetClock(clock);
         Stadium = stadium;
@@ -78,11 +117,15 @@ public class Match
         _clock = clock;
     }
 
-    public void Lock() => IsLocked = true;
+    public void Lock()
+    {
+        IsLocked = true;
+    }
 
     public void SetMatchResult(int homeGoals, int awayGoals)
     {
         EnsureMatchWasPlayed();
+        EnsureResultWasNotSet();
         ApplyResult(homeGoals, awayGoals);
     }
 
@@ -103,9 +146,21 @@ public class Match
         Stadium = newStadium;
     }
 
+    public void AddIncident(MatchIncident incident)
+    {
+        EnsureIncidentIsNotNull(incident);
+        _incidents.Add(incident);
+    }
+
+    public void ClearCardIncidents()
+    {
+        _incidents.RemoveAll(incident =>
+            incident.Type == IncidentType.YellowCard ||
+            incident.Type == IncidentType.RedCard);
+    }
+
     private void ApplyResult(int homeGoals, int awayGoals)
     {
-        EnsureResultWasNotSet();
         EnsureValidGoals(homeGoals, awayGoals);
         _homeGoals = homeGoals;
         _awayGoals = awayGoals;
@@ -145,22 +200,29 @@ public class Match
 
     private void SetWinnerFromResult(int homeGoals, int awayGoals)
     {
-        if (homeGoals > awayGoals) _winnerMatch = HomeTeam;
-        else if (homeGoals < awayGoals) _winnerMatch = AwayTeam;
-        else _winnerMatch = null;
+        if (homeGoals > awayGoals)
+            _winnerMatch = HomeTeam;
+        else if (homeGoals < awayGoals)
+            _winnerMatch = AwayTeam;
+        else
+            _winnerMatch = null;
     }
 
     private void SetLoserFromResult(int homeGoals, int awayGoals)
     {
-        if (homeGoals > awayGoals) _loserMatch = AwayTeam;
-        else if (homeGoals < awayGoals) _loserMatch = HomeTeam;
-        else _loserMatch = null;
+        if (homeGoals > awayGoals)
+            _loserMatch = AwayTeam;
+        else if (homeGoals < awayGoals)
+            _loserMatch = HomeTeam;
+        else
+            _loserMatch = null;
     }
 
     private void EnsureValidDate(DateTime dateMatch)
     {
         if (_clock == null)
             throw new InvalidOperationException("El reloj no fue configurado.");
+
         if (dateMatch.ToUniversalTime() < _clock.Now.ToUniversalTime())
             throw new ArgumentException("La fecha no puede ser pasada.");
     }
@@ -202,5 +264,13 @@ public class Match
         if (IsLocked)
             throw new InvalidOperationException(
                 "No se puede editar un partido de fase de grupos una vez generados los cruces.");
+    }
+
+    private static void EnsureIncidentIsNotNull(MatchIncident incident)
+    {
+        if (incident == null)
+        {
+            throw new ArgumentNullException(nameof(incident));
+        }
     }
 }

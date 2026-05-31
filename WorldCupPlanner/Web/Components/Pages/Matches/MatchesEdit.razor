@@ -12,7 +12,6 @@
 @inject SessionService SessionService
 @inject ILogService LogService
 
-
 <div class="edit-match-page">
     <button class="back-link" @onclick="GoBack">← Volver a partidos</button>
 
@@ -24,7 +23,7 @@
     @if (_match is null)
     {
         <p>Cargando partido...</p>
-    } 
+    }
     else if (_match.isLocked)
     {
         <div class="alert alert-warning">
@@ -63,6 +62,7 @@
 
             <div class="result-header">
                 <h4>Resultado</h4>
+
                 <button class="simulate-btn" type="button" @onclick="SimulateResult">
                     <i class="bi bi-dice-5-fill"></i>
                     Simular resultado
@@ -76,6 +76,12 @@
 
                     <label>Goles</label>
                     <input class="form-control goals-input" type="number" min="0" @bind="_homeGoals" />
+
+                    <label>Amarillas</label>
+                    <input class="form-control" type="number" min="0" @bind="_homeYellowCards" />
+
+                    <label>Rojas</label>
+                    <input class="form-control" type="number" min="0" @bind="_homeRedCards" />
                 </div>
 
                 <div class="team-result-card">
@@ -84,12 +90,21 @@
 
                     <label>Goles</label>
                     <input class="form-control goals-input" type="number" min="0" @bind="_awayGoals" />
+
+                    <label>Amarillas</label>
+                    <input class="form-control" type="number" min="0" @bind="_awayYellowCards" />
+
+                    <label>Rojas</label>
+                    <input class="form-control" type="number" min="0" @bind="_awayRedCards" />
                 </div>
             </div>
 
             <div class="form-actions">
                 <button class="btn-cancel" type="button" @onclick="GoBack">Cancelar</button>
-                <button class="btn-submit" type="button" @onclick="SaveChanges">Guardar cambios</button>
+
+                <button class="btn-submit" type="button" @onclick="SaveChanges">
+                    Guardar cambios
+                </button>
             </div>
         </div>
     }
@@ -104,12 +119,19 @@
 
     private DateTime _dateTime;
     private string _stadiumName = string.Empty;
+
     private int _homeGoals;
     private int _awayGoals;
 
+    private int _homeYellowCards;
+    private int _awayYellowCards;
+
+    private int _homeRedCards;
+    private int _awayRedCards;
+
     protected override void OnInitialized()
     {
-        if (!SessionService.IsEditor() )
+        if (!SessionService.IsEditor())
         {
             Navigation.NavigateTo("/");
             return;
@@ -123,12 +145,20 @@
         try
         {
             _match = MatchService.GetMatchById(Id);
+
             _stadiums = StadiumService.GetAllStadiums();
 
             _dateTime = _match.dateMatch;
             _stadiumName = _match.stadiumName;
+
             _homeGoals = _match.homeGoals ?? 0;
             _awayGoals = _match.awayGoals ?? 0;
+
+            _homeYellowCards = _match.homeYellowCards;
+            _awayYellowCards = _match.awayYellowCards;
+
+            _homeRedCards = _match.homeRedCards;
+            _awayRedCards = _match.awayRedCards;
         }
         catch (Exception ex)
         {
@@ -141,33 +171,54 @@
         try
         {
             if (_match is null)
+            {
                 return;
+            }
 
             bool wasModified = false;
 
             if (_dateTime != _match.dateMatch)
             {
                 MatchService.UpdateMatchDate(_match.idMatch, _dateTime);
+
                 wasModified = true;
             }
 
             if (_stadiumName != _match.stadiumName)
             {
                 MatchService.UpdateMatchStadium(_match.idMatch, _stadiumName);
+
                 wasModified = true;
             }
 
             int currentHomeGoals = _match.homeGoals ?? 0;
             int currentAwayGoals = _match.awayGoals ?? 0;
 
-            bool resultChanged = _homeGoals != currentHomeGoals || _awayGoals != currentAwayGoals;
+            bool goalsChanged =
+                _homeGoals != currentHomeGoals ||
+                _awayGoals != currentAwayGoals;
+
+            bool cardsChanged =
+                _homeYellowCards != _match.homeYellowCards ||
+                _awayYellowCards != _match.awayYellowCards ||
+                _homeRedCards != _match.homeRedCards ||
+                _awayRedCards != _match.awayRedCards;
+
+            bool resultChanged = goalsChanged || cardsChanged;
 
             if (resultChanged)
             {
-                if (!_match.homeGoals.HasValue && !_match.awayGoals.HasValue)
+                var request = new MatchResultRequest
                 {
-                    MatchService.SetMatchResult(_match.idMatch, _homeGoals, _awayGoals);
-                }
+                    homeGoals = _homeGoals,
+                    awayGoals = _awayGoals,
+                    homeYellowCards = _homeYellowCards,
+                    awayYellowCards = _awayYellowCards,
+                    homeRedCards = _homeRedCards,
+                    awayRedCards = _awayRedCards
+                };
+
+                MatchService.SetMatchResult(_match.idMatch, request);
 
                 wasModified = true;
             }
@@ -195,7 +246,9 @@
         try
         {
             if (_match is null)
+            {
                 return;
+            }
 
             MatchService.SimulateMatch(_match.idMatch, Config.SemillaSimulation);
 
