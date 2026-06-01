@@ -13,7 +13,7 @@
             <h3>Listado de Partidos</h3>
             <p>@_pendientes pendientes · @_jugados jugados · @_matchesFiltrados.Count mostrados</p>
         </div>
-        @if (_pendientes > 0)
+        @if (_pendientes > 0 && SessionService.IsEditor())
         {
             <button class="btn-generar-cruces" @onclick="SimularPendientes" disabled="@_cargando">
                 @if (_cargando)
@@ -134,7 +134,14 @@
                                 <span class="phase-pill">@match.phase</span>
                             </td>
                             <td>
-                                <a class="edit-button" href="/matches/edit/@match.idMatch">✎</a>
+                                @if (SessionService.IsEditor())
+                                {
+                                    <a class="edit-button" href="/matches/edit/@match.idMatch">✎</a>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
                             </td>
                         </tr>
                     }
@@ -174,7 +181,7 @@
 
     protected override void OnInitialized()
     {
-        if (!SessionService.IsEditor() )
+        if (!SessionService.IsEditor() && !SessionService.IsJournalist())
         {
             Navigation.NavigateTo("/");
             return;

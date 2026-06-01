@@ -12,7 +12,7 @@ public class NotificationServiceTests
     public void NotifyJournalists_WhenUsersExist_ShouldCreateNotificationOnlyForJournalists()
     {
         var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
+        var notificationRepository = new NotificationRepository();
 
         var journalist = new User("Juan", "Periodista", "periodista@test.com", new DateTime(1995, 1, 1), "Aa123456!", new List<UserRole> { UserRole.Journalist });
 
@@ -42,7 +42,7 @@ public class NotificationServiceTests
     public void GetUnreadNotifications_WhenUserHasUnreadNotifications_ShouldReturnUnreadNotifications()
     {
         var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
+        var notificationRepository = new NotificationRepository();
 
         var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
 
@@ -62,7 +62,7 @@ public class NotificationServiceTests
     public void MarkAsRead_WithExistingNotification_ShouldMarkNotificationAsRead()
     {
         var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
+        var notificationRepository = new NotificationRepository();
 
         var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
 
@@ -82,7 +82,7 @@ public class NotificationServiceTests
     public void MarkAsRead_WhenNotificationBelongsToAnotherUser_ShouldThrowException()
     {
         var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
+        var notificationRepository = new NotificationRepository();
 
         var notification = new Notification("periodista@test.com", "Se cargó un nuevo resultado", new DateTime(2026, 6, 1, 14, 30, 0));
 
@@ -98,7 +98,7 @@ public class NotificationServiceTests
     public void Send_WithValidRecipientAndMessage_ShouldCreateUnreadNotification()
     {
         var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
+        var notificationRepository = new NotificationRepository();
         var service = new NotificationService(userRepository, notificationRepository);
 
         service.Send("periodista@test.com", "Nueva notificación");
@@ -115,7 +115,7 @@ public class NotificationServiceTests
     public void GetUnread_WhenUserHasUnreadNotifications_ShouldReturnUnreadNotifications()
     {
         var userRepository = new UserRepository();
-        var notificationRepository = new InMemoryNotificationRepository();
+        var notificationRepository = new NotificationRepository();
 
         var notification = new Notification(
             "periodista@test.com",

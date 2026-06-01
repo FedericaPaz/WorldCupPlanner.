@@ -91,6 +91,16 @@
                                 <small>Gestión operativa del torneo</small>
                             </span>
                         </label>
+                        
+                        <label class="user-role-card">
+                            <input type="checkbox"
+                                   checked="@_request.Roles.Contains(UserRoleDto.Journalist)"
+                                   @onchange="ToggleJournalistRole" />
+                            <span>
+                                <strong>Periodista</strong>
+                                <small>Consulta información pública del torneo</small>
+                            </span>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -186,5 +196,10 @@
         }
 
         return SessionService.GetCurrentUser()!.Email;
+    }
+    
+    private void ToggleJournalistRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.Journalist, args);
     }
 }

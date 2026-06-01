@@ -14,7 +14,7 @@ namespace ServicesTests;
 public class MatchServiceTests
 {
     private UserRepository _userRepository;
-    private InMemoryNotificationRepository _notificationRepository;
+    private NotificationRepository _notificationRepository;
     private NotificationService _notificationService;
     private MatchService _service;
     private MatchRepository _matchRepository;
@@ -38,7 +38,7 @@ public class MatchServiceTests
         _fixtureRepository = new FixtureRepository();
         _config = new TournamentConfig();
         _userRepository = new UserRepository();
-        _notificationRepository = new InMemoryNotificationRepository();
+        _notificationRepository = new NotificationRepository();
         _notificationService = new NotificationService(_userRepository, _notificationRepository);
         
         _service = new MatchService(

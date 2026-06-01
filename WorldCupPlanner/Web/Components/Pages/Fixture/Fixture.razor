@@ -43,7 +43,7 @@ else if (!FixtureService.HasFixture())
                 </div>
             </div>
             
-            @if (_canGenerate)
+            @if (_canGenerate && SessionService.IsEditor())
             {
                 <button class="btn btn-success btn-lg mt-3" @onclick="GenerateInitialFixture">
                     ⚽ Generar Fixture
@@ -70,17 +70,20 @@ else
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div></div>
-            <button class="btn btn-success btn-md" @onclick="RegenerateFixture" disabled="@isReloading">
-                @if (isReloading)
-                {
-                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-                    <span>Regenerando fixture...</span>
-                }
-                else
-                {
-                    <span>⚽ ReGenerar Fixture</span>
-                }
-            </button>
+            @if (SessionService.IsEditor())
+            {
+                <button class="btn btn-success btn-md" @onclick="RegenerateFixture" disabled="@isReloading">
+                    @if (isReloading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        <span>Regenerando fixture...</span>
+                    }
+                    else
+                    {
+                        <span>⚽ ReGenerar Fixture</span>
+                    }
+                </button>
+            }
             <div></div>
         </div>
         
@@ -152,7 +155,7 @@ else
 
     protected override void OnInitialized()
     {
-        if (!SessionService.IsEditor())
+        if (!SessionService.IsEditor() && !SessionService.IsJournalist())
         {
             Navigation.NavigateTo("/");
             return;
