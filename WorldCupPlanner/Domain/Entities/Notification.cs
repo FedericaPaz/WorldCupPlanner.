@@ -1,37 +1,117 @@
-﻿namespace Domain.Entities;
+namespace Domain.Entities;
+
+using Domain.Interfaces;
 
 public class Notification
 {
-    public Guid Id { get; private set; }
-    public string UserEmail { get; }
-    public string Message { get; }
-    public DateTime CreatedAt { get; }
-    public bool IsRead { get; private set; }
-    public DateTime? ReadAt { get; private set; }
+    private Guid _id;
+    private DateTime _timestamp;
+    private string _message;
+    private string _recipientEmail;
+    private bool _isRead;
+    private DateTime? _readAt;
+
+    public Guid Id
+    {
+        get => _id;
+    }
+
+    public DateTime Timestamp
+    {
+        get => _timestamp;
+    }
+
+    public DateTime CreatedAt
+    {
+        get => _timestamp;
+    }
+
+    public string Message
+    {
+        get => _message;
+    }
+
+    public string RecipientEmail
+    {
+        get => _recipientEmail;
+    }
+
+    public string UserEmail
+    {
+        get => _recipientEmail;
+    }
+
+    public bool IsRead
+    {
+        get => _isRead;
+    }
+
+    public DateTime? ReadAt
+    {
+        get => _readAt;
+    }
 
     private Notification()
     {
-        
     }
 
-    public Notification(string userEmail, string message, DateTime createdAt)
+    public Notification(
+        string recipientEmail,
+        string message,
+        IDateTimeMatch? clock = null)
     {
-        Id = Guid.NewGuid();
-        UserEmail = userEmail;
-        Message = message;
-        CreatedAt = createdAt;
-        IsRead = false;
-        ReadAt = null;
+        EnsureRecipientEmailIsValid(recipientEmail);
+        EnsureMessageIsValid(message);
+
+        _id = Guid.NewGuid();
+        _recipientEmail = recipientEmail;
+        _message = message;
+        _timestamp = clock?.Now ?? DateTime.UtcNow;
+        _isRead = false;
+        _readAt = null;
+    }
+
+    public Notification(
+        string userEmail,
+        string message,
+        DateTime createdAt)
+    {
+        EnsureRecipientEmailIsValid(userEmail);
+        EnsureMessageIsValid(message);
+
+        _id = Guid.NewGuid();
+        _recipientEmail = userEmail;
+        _message = message;
+        _timestamp = createdAt;
+        _isRead = false;
+        _readAt = null;
+    }
+
+    public void MarkAsRead(IDateTimeMatch? clock = null)
+    {
+        _isRead = true;
+        _readAt = clock?.Now ?? DateTime.UtcNow;
     }
 
     public void MarkAsRead(DateTime readAt)
     {
-        IsRead = true;
-        ReadAt = readAt;
+        _isRead = true;
+        _readAt = readAt;
     }
-    
-    public void MarkAsRead()
+
+    private static void EnsureRecipientEmailIsValid(string recipientEmail)
     {
-        MarkAsRead(DateTime.UtcNow);
+        if (string.IsNullOrWhiteSpace(recipientEmail))
+        {
+            throw new ArgumentException("El destinatario es requerido.");
+        }
+    }
+
+    private static void EnsureMessageIsValid(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            throw new ArgumentException("El mensaje es requerido.");
+        }
     }
 }

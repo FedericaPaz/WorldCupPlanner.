@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using System.Text.RegularExpressions;
+using Domain.Enums;
 using Domain.Interfaces;
 
 namespace Domain.Entities;

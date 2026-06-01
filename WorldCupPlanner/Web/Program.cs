@@ -58,7 +58,7 @@ builder.Services.AddScoped<ICrucesRepository, EfCrucesRepository>();
 builder.Services.AddScoped<ICrucesGeneratorService, CrucesGeneratorService>();
 builder.Services.AddScoped<ICruceService, CruceService>();
 
-builder.Services.AddScoped<INotificationRepository, InMemoryNotificationRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<IExportService, ExportService>();

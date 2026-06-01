@@ -31,12 +31,6 @@
             </div>
 
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="teams">
-                    <span class="bi bi-trophy-fill-nav-menu" aria-hidden="true"></span> Equipos
-                </NavLink>
-            </div>
-
-            <div class="nav-item px-3">
                 <NavLink class="nav-link" href="stadiums">
                     <span class="bi bi-geo-alt-fill-nav-menu" aria-hidden="true"></span> Estadios
                 </NavLink>
@@ -49,7 +43,16 @@
             </div>
         }
 
-        @if (SessionService.IsEditor())
+        @if (SessionService.IsSystemAdministrator() || SessionService.IsEditor() || SessionService.IsJournalist())
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="teams">
+                    <span class="bi bi-trophy-fill-nav-menu" aria-hidden="true"></span> Equipos
+                </NavLink>
+            </div>
+        }
+
+        @if (SessionService.IsEditor() || SessionService.IsJournalist())
         {
             <div class="nav-item px-3">
                 <NavLink class="nav-link" href="fixture">
@@ -58,14 +61,17 @@
             </div>
 
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="cruces">
-                    <span class="bi bi-calendar-event-fill-nav-menu" aria-hidden="true"></span> Cruces
-                </NavLink>
-            </div>
-
-            <div class="nav-item px-3">
                 <NavLink class="nav-link" href="matches">
                     <span class="bi bi-list-ul-nav-menu" aria-hidden="true"></span> Partidos
+                </NavLink>
+            </div>
+        }
+
+        @if (SessionService.IsEditor())
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="cruces">
+                    <span class="bi bi-calendar-event-fill-nav-menu" aria-hidden="true"></span> Cruces
                 </NavLink>
             </div>
 

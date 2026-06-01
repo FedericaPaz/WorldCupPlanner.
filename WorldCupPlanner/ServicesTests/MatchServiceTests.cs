@@ -16,7 +16,7 @@ public class MatchServiceTests
 {
     private WorldCupPlannerContext _context = null!;
     private UserRepository _userRepository = null!;
-    private InMemoryNotificationRepository _notificationRepository = null!;
+    private NotificationRepository _notificationRepository = null!;
     private NotificationService _notificationService = null!;
     private MatchService _service = null!;
     private IMatchRepository _matchRepository = null!;
@@ -35,7 +35,7 @@ public class MatchServiceTests
         _context = DbContextFactory.CreateInMemoryContext();
 
         _userRepository = new UserRepository(_context);
-        _notificationRepository = new InMemoryNotificationRepository();
+        _notificationRepository = new NotificationRepository();
         _logRepository = new LogRepository();
         _logService = new LogService(_logRepository);
 
@@ -60,8 +60,7 @@ public class MatchServiceTests
             _simulationService,
             _fixtureRepository,
             _config,
-            _notificationService
-        );
+            _notificationService);
     }
 
     [TestCleanup]
@@ -465,26 +464,6 @@ public class MatchServiceTests
     }
 
     [TestMethod]
-    public void SetMatchResult_WithValidData_ShouldNotifyJournalists()
-    {
-        AddDefaultTeamsAndStadium();
-
-        var journalist = new User("Juan", "Periodista", "periodista@test.com",
-            new DateTime(1995, 1, 1), "Aa123456!",
-            new List<UserRole> { UserRole.Journalist });
-        _userRepository.AddUser(journalist);
-
-        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
-        _service.SetMatchResult(created.idMatch, 2, 1);
-
-        var notifications = _notificationRepository
-            .GetUnreadByUserEmail("periodista@test.com")
-            .ToList();
-
-        Assert.AreEqual(1, notifications.Count);
-    }
-
-    [TestMethod]
     public void SetResult_WithHomeYellowCards_ShouldAddHomeYellowCardIncident()
     {
         AddDefaultTeamsAndStadium();
@@ -615,5 +594,37 @@ public class MatchServiceTests
         var match = _matchRepository.GetMatchById(created.idMatch);
 
         Assert.IsTrue(match.Incidents.Count > 0);
+    }
+
+    [TestMethod]
+    public void SetMatchResult_WithValidData_ShouldNotifyJournalists()
+    {
+        AddDefaultTeamsAndStadium();
+
+        var journalist = new User(
+            "Juan",
+            "Periodista",
+            "periodista@test.com",
+            new DateTime(1995, 1, 1),
+            "Aa123456!",
+            new List<UserRole> { UserRole.Journalist });
+
+        _userRepository.AddUser(journalist);
+
+        var created = _service.CreateMatch(CreateValidRequest(_clock.Now));
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = 2,
+            awayGoals = 1
+        };
+
+        _service.SetMatchResult(created.idMatch, request);
+
+        var notifications = _notificationRepository
+            .GetUnreadByUserEmail("periodista@test.com")
+            .ToList();
+
+        Assert.AreEqual(1, notifications.Count);
     }
 }

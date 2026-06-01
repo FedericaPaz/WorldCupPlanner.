@@ -70,16 +70,6 @@ public class MatchService : IMatchService
             $"Se cargó el resultado de {match.HomeTeam.Name} vs {match.AwayTeam.Name}: {request.homeGoals}-{request.awayGoals}");
     }
 
-    public void SetMatchResult(int matchId, int homeGoals, int awayGoals)
-    {
-        var match = _matchRepository.GetMatchById(matchId);
-
-        match.SetMatchResult(homeGoals, awayGoals);
-
-        _notificationService.NotifyJournalists(
-            $"Se cargó el resultado de {match.HomeTeam.Name} vs {match.AwayTeam.Name}: {homeGoals}-{awayGoals}");
-    }
-
     public MatchResponse GetMatchById(int matchId)
     {
         var match = _matchRepository.GetMatchById(matchId);

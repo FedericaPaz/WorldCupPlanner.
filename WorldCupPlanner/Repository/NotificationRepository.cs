@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using IRepository;
 
 namespace Repository;
 
-public class InMemoryNotificationRepository : INotificationRepository
+public class NotificationRepository : INotificationRepository
 {
     private readonly List<Notification> _notifications = new();
 
@@ -14,18 +14,31 @@ public class InMemoryNotificationRepository : INotificationRepository
 
     public Notification? GetById(Guid id)
     {
-        return _notifications.FirstOrDefault(notification => notification.Id == id);
+        return _notifications
+            .FirstOrDefault(notification => notification.Id == id);
     }
-    
-    public IEnumerable<Notification> GetUnreadByUserEmail(string userEmail)
+
+    public List<Notification> GetByRecipient(string email)
+    {
+        return _notifications
+            .Where(notification => notification.RecipientEmail == email)
+            .ToList();
+    }
+
+    public List<Notification> GetUnread(string email)
     {
         return _notifications
             .Where(notification =>
-                notification.UserEmail == userEmail &&
+                notification.RecipientEmail == email &&
                 !notification.IsRead)
             .ToList();
     }
-    
+
+    public IEnumerable<Notification> GetUnreadByUserEmail(string userEmail)
+    {
+        return GetUnread(userEmail);
+    }
+
     public void Update(Notification notification)
     {
         var existingNotification = GetById(notification.Id);

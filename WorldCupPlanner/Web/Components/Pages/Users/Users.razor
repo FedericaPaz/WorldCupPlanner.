@@ -189,11 +189,14 @@
         if (roles.Count == 0)
             return "Sin rol";
 
-        var roleNames = roles.Select(role =>
-            role == UserRoleDto.SystemAdministrator
-                ? "Administrador"
-                : "Editor"
-        );
+        var roleNames = roles.Select(role => role switch
+        {
+            UserRoleDto.SystemAdministrator => "Administrador",
+            UserRoleDto.Editor => "Editor",
+            UserRoleDto.Journalist => "Periodista",
+            _ => role.ToString()
+        });
+
         return string.Join(", ", roleNames);
     }
 

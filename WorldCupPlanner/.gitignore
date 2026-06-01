@@ -1,5 +1,6 @@
 .DS_Store
 .DS_Store
+<<<<<<< HEAD
 
 # Docker local database data
 .data/
@@ -10,3 +11,8 @@ obj/
 .idea/
 .vs/
 .DS_Store
+=======
+bin/
+obj/
+.idea/
+>>>>>>> dev

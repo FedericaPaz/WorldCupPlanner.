@@ -15,11 +15,8 @@ public class Team : ITeam
     private string _flagBase64 = string.Empty;
 
     public string Name => _name;
-
     public Confederation Confederation => _confederation;
-
     public int FifaRanking => _fifaRanking;
-
     public int CurrentRanking => _currentRanking;
 
     public string FlagBase64

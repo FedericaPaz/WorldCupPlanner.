@@ -250,15 +250,7 @@ public class TeamTests
 
         Assert.AreEqual(string.Empty, team.FlagBase64);
     }
-
-    private void VerifyTeam(Team team, string expectedName, int expectedRanking)
-    {
-        Assert.IsNotNull(team);
-        Assert.AreEqual(expectedName, team.Name);
-        Assert.AreEqual(_defaultConfederation, team.Confederation);
-        Assert.AreEqual(expectedRanking, team.FifaRanking);
-    }
-
+    
     [TestMethod]
     public void UpdateFifaRanking_WithValidRanking_ShouldUpdateRanking()
     {
@@ -267,5 +259,13 @@ public class TeamTests
         team.UpdateFifaRanking(MaxFifaRanking);
 
         Assert.AreEqual(MaxFifaRanking, team.FifaRanking);
+    }
+
+    private void VerifyTeam(Team team, string expectedName, int expectedRanking)
+    {
+        Assert.IsNotNull(team);
+        Assert.AreEqual(expectedName, team.Name);
+        Assert.AreEqual(_defaultConfederation, team.Confederation);
+        Assert.AreEqual(expectedRanking, team.FifaRanking);
     }
 }
