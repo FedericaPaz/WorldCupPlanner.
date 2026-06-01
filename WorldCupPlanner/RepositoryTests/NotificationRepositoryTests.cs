@@ -16,6 +16,9 @@ public class NotificationRepositoryTests
         );
 
         repository.Add(notification);
+        var result = repository.GetByRecipient("periodista@gmail.com");
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(notification, result[0]);
     }
     
     [TestMethod]
