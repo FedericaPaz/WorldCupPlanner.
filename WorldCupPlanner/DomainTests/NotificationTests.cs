@@ -56,4 +56,12 @@ public class NotificationTests
     {
         Assert.ThrowsException<ArgumentException>(() => new Notification("journalist@test.com", ""));
     }
+    
+    [TestMethod]
+    public void CreatingNotification_WithValidData_ShouldGenerateId()
+    {
+        var notification = new Notification("journalist@test.com", "Resultado cargado.");
+
+        Assert.AreNotEqual(Guid.Empty, notification.Id);
+    }
 }

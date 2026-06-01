@@ -3,6 +3,7 @@ using Domain.Interfaces;
 
 public class Notification
 {
+    private Guid _id;
     private DateTime _timestamp;
     private string _message;
     private string _recipientEmail;
@@ -28,14 +29,21 @@ public class Notification
         get => _isRead;
     }
     
+    public Guid Id
+    {
+        get => _id;
+    }
+    
     public Notification(
         string recipientEmail,
         string message,
-        IDateTimeMatch? clock = null)
+        IDateTimeMatch? clock = null,
+        Guid? id = null)
     {
         EnsureRecipientEmailIsValid(recipientEmail);
         EnsureMessageIsValid(message);
-
+        
+        _id = Guid.NewGuid();
         _recipientEmail = recipientEmail;
         _message = message;
         _timestamp = clock?.Now ?? DateTime.UtcNow;
