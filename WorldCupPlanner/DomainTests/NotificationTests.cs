@@ -64,4 +64,19 @@ public class NotificationTests
 
         Assert.AreNotEqual(Guid.Empty, notification.Id);
     }
+    
+    [TestMethod]
+    public void UnreadNotification_MarkingAsRead_ShouldSetReadAt()
+    {
+        var readAt = new DateTime(2026, 6, 1, 12, 0, 0);
+        var clock = new DateTimeMatchStub(readAt);
+
+        var notification = new Notification(
+            "journalist@test.com",
+            "Resultado cargado.");
+
+        notification.MarkAsRead(clock);
+
+        Assert.AreEqual(readAt, notification.ReadAt);
+    }
 }

@@ -8,6 +8,7 @@ public class Notification
     private string _message;
     private string _recipientEmail;
     private bool _isRead;
+    private DateTime? _readAt;
 
     public DateTime Timestamp
     {
@@ -34,11 +35,15 @@ public class Notification
         get => _id;
     }
     
+    public DateTime? ReadAt
+    {
+        get => _readAt;
+    }
+    
     public Notification(
         string recipientEmail,
         string message,
-        IDateTimeMatch? clock = null,
-        Guid? id = null)
+        IDateTimeMatch? clock = null)
     {
         EnsureRecipientEmailIsValid(recipientEmail);
         EnsureMessageIsValid(message);
@@ -48,11 +53,13 @@ public class Notification
         _message = message;
         _timestamp = clock?.Now ?? DateTime.UtcNow;
         _isRead = false;
+        _readAt = null;
     }
 
-    public void MarkAsRead()
+    public void MarkAsRead(IDateTimeMatch? clock = null)
     {
         _isRead = true;
+        _readAt = clock?.Now ?? DateTime.UtcNow;
     }
 
     private static void EnsureRecipientEmailIsValid(string recipientEmail)
