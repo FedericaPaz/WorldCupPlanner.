@@ -107,4 +107,28 @@ public class NotificationRepositoryTests
 
         Assert.AreEqual(0, result.Count);
     }
+    
+    [TestMethod]
+    public void GetUnread_WithNotificationsFromDifferentRecipients_ShouldReturnOnlyUnreadNotificationsForRecipient()
+    {
+        var repository = new NotificationRepository();
+
+        var journalistNotification = new Notification(
+            "periodista@test.com",
+            "Nuevo resultado disponible"
+        );
+
+        var adminNotification = new Notification(
+            "admin@test.com",
+            "Notificación para admin"
+        );
+
+        repository.Add(journalistNotification);
+        repository.Add(adminNotification);
+
+        var result = repository.GetUnread("periodista@test.com");
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(journalistNotification, result[0]);
+    }
 }
