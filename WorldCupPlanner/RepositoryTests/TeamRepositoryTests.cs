@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Domain.Entities;
 using Repository;
 
 namespace RepositoryTests;
@@ -6,14 +7,27 @@ namespace RepositoryTests;
 [TestClass]
 public class TeamRepositoryTests
 {
+    private WorldCupPlannerContext _context;
     private TeamRepository _teamRepository;
-        
+
     [TestInitialize]
     public void Setup()
     {
-        _teamRepository = new TeamRepository();
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        _context = new WorldCupPlannerContext(options);
+        _teamRepository = new TeamRepository(_context);
     }
-    
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
+    }
+
     [TestMethod]
     public void AddTeam_ShouldStoreTeam()
     {
@@ -24,15 +38,15 @@ public class TeamRepositoryTests
         var teams = _teamRepository.GetAll();
 
         Assert.AreEqual(1, teams.Count);
-        Assert.AreEqual(team, teams[0]);
+        Assert.AreEqual(team.Name, teams[0].Name);
     }
-    
+
     [TestMethod]
     public void AddTeam_Null_ShouldThrowException()
     {
         Assert.ThrowsException<ArgumentNullException>(() => _teamRepository.Add(null));
     }
-    
+
     [TestMethod]
     public void Get_ExistingTeam_ShouldReturnTeam()
     {
@@ -42,9 +56,10 @@ public class TeamRepositoryTests
 
         var result = _teamRepository.Get("Uruguay");
 
-        Assert.AreEqual(team, result);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(team.Name, result.Name);
     }
-    
+
     [TestMethod]
     public void Get_NonExistingTeam_ShouldReturnNull()
     {
@@ -52,7 +67,7 @@ public class TeamRepositoryTests
 
         Assert.IsNull(result);
     }
-    
+
     [TestMethod]
     public void GivenMultipleTeams_WhenGetAll_ShouldReturnAllTeams()
     {
@@ -65,10 +80,10 @@ public class TeamRepositoryTests
         var teams = _teamRepository.GetAll();
 
         Assert.AreEqual(2, teams.Count);
-        Assert.IsTrue(teams.Contains(team1));
-        Assert.IsTrue(teams.Contains(team2));
+        Assert.IsTrue(teams.Any(t => t.Name == "Uruguay"));
+        Assert.IsTrue(teams.Any(t => t.Name == "Argentina"));
     }
-    
+
     [TestMethod]
     public void DeleteTeam_WhenExists_ShouldRemoveTeam()
     {
@@ -87,7 +102,7 @@ public class TeamRepositoryTests
 
         Assert.ThrowsException<InvalidOperationException>(() => _teamRepository.Delete(team));
     }
-    
+
     [TestMethod]
     public void UpdateTeam_WhenExists_ShouldUpdateTeam()
     {
@@ -112,7 +127,7 @@ public class TeamRepositoryTests
 
         Assert.ThrowsException<InvalidOperationException>(() => _teamRepository.Update(team));
     }
-    
+
     [TestMethod]
     public void GetAll_ShouldReturnCopy_NotInternalList()
     {
@@ -126,7 +141,7 @@ public class TeamRepositoryTests
 
         Assert.AreEqual(1, result.Count);
     }
-    
+
     private Team CreateTeam(string name)
     {
         return new Team(name, new Confederation("AFC"), 500);
