@@ -12,7 +12,7 @@ namespace Services.Mappers;
              request.Name,
              confederation,
              request.FifaRanking,
-             request.FlagBase64
+             request.FlagBase64 ?? ""
          );
      }
  

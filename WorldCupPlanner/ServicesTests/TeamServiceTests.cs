@@ -1,4 +1,5 @@
-﻿using Repository;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository;
 using Services;
 using Domain.Entities;
 using DTOs.Team;
@@ -9,6 +10,7 @@ namespace ServicesTests;
 [TestClass]
 public class TeamServiceTests
 {
+    private WorldCupPlannerContext _context;
     private TeamService _teamService;
     private TeamRepository _teamRepository;
     private TournamentConfig _config;
@@ -16,10 +18,24 @@ public class TeamServiceTests
     [TestInitialize]
     public void Initialize()
     {
-        _teamRepository = new TeamRepository();  
+        // Crear DbContext InMemory con nombre único por test
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        _context = new WorldCupPlannerContext(options);
+        _teamRepository = new TeamRepository(_context);
         _config = new TournamentConfig();
         _teamService = new TeamService(_teamRepository, new FixtureRepository(), new MatchRepositoryStub(), new CrucesRepository(), _config);
     }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
+    }
+
     private TeamDTO CreateRequest(string name, string confederationName, int fifaRanking)
     {
         return new TeamDTO { Name = name, ConfederationName = confederationName, FifaRanking = fifaRanking };
@@ -55,11 +71,9 @@ public class TeamServiceTests
     [DataRow("OFC", 1)]
     public void CreateTeam_WhenConfederationLimitExceeded_ShouldThrowException(string confName, int limit)
     {
-        var repo    = new TeamRepository();
-        var service = new TeamService(repo, new FixtureRepository(), new MatchRepositoryStub(), new CrucesRepository(), _config);
         for (int i = 0; i < limit; i++)
-            service.Add(CreateRequest($"Team{i}", confName, 1000 + i));
-        Assert.ThrowsException<InvalidOperationException>(() => service.Add(CreateRequest("ExtraName", confName, 2000)));
+            _teamService.Add(CreateRequest($"Team{i}", confName, 1000 + i));
+        Assert.ThrowsException<InvalidOperationException>(() => _teamService.Add(CreateRequest("ExtraName", confName, 2000)));
     }
     
     [DataTestMethod]
@@ -71,11 +85,9 @@ public class TeamServiceTests
     [DataRow("OFC", 1)]
     public void CreateTeam_AtConfederationLimit_ShouldSucceed(string confName, int limit)
     {
-        var repo    = new TeamRepository();
-        var service = new TeamService(repo, new FixtureRepository(), new MatchRepositoryStub(), new CrucesRepository(), _config);
         for (int i = 0; i < limit; i++)
-            service.Add(CreateRequest($"Team{i}", confName, 1000 + i));
-        var teams = repo.GetAll().Count(t => t.Confederation.Name == confName);
+            _teamService.Add(CreateRequest($"Team{i}", confName, 1000 + i));
+        var teams = _teamRepository.GetAll().Count(t => t.Confederation.Name == confName);
         Assert.AreEqual(limit, teams);
     }
     
@@ -162,24 +174,6 @@ public class TeamServiceTests
         Assert.IsNotNull(ofc);
         Assert.AreEqual(1, ofc.MaxTeams);
     }
-    
-    /*[TestMethod]
-    public void Add_WithExistingFifaRanking_ShouldThrowException()
-    {
-        var firstTeam = new TeamDTO { Name = "Uruguay", ConfederationName = "CONMEBOL", FifaRanking = 1000 };
-        var secondTeam = new TeamDTO { Name = "Argentina", ConfederationName = "CONMEBOL", FifaRanking = 1000 };
-        _teamService.Add(firstTeam);
-        Assert.ThrowsException<ArgumentException>(() => _teamService.Add(secondTeam));
-    }*/
-    
-    /*[TestMethod]
-    public void Update_WithExistingFifaRankingFromAnotherTeam_ShouldThrowException()
-    {
-        _teamService.Add(new TeamDTO { Name = "Uruguay", ConfederationName = "CONMEBOL", FifaRanking = 1000 });
-        _teamService.Add(new TeamDTO { Name = "Argentina", ConfederationName = "CONMEBOL", FifaRanking = 1001 });
-        var updatedTeam = new TeamDTO { Name = "Argentina", ConfederationName = "CONMEBOL", FifaRanking = 1000 };
-        Assert.ThrowsException<ArgumentException>(() => _teamService.Update("Argentina", updatedTeam));
-    }*/
     
     [TestMethod]
     public void Add_WithNullRequest_ShouldThrowArgumentNullException()
