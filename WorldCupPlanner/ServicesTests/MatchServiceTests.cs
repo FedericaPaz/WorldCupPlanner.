@@ -16,7 +16,7 @@ public class MatchServiceTests
 {
     private WorldCupPlannerContext _context = null!;
     private UserRepository _userRepository = null!;
-    private NotificationRepository _notificationRepository = null!;
+    private NotificationRepositoryStub _notificationRepository = null!;
     private NotificationService _notificationService = null!;
     private MatchService _service = null!;
     private IMatchRepository _matchRepository = null!;
@@ -35,7 +35,7 @@ public class MatchServiceTests
         _context = DbContextFactory.CreateInMemoryContext();
 
         _userRepository = new UserRepository(_context);
-        _notificationRepository = new NotificationRepository();
+        _notificationRepository = new NotificationRepositoryStub();
         _logRepository = new LogRepository();
         _logService = new LogService(_logRepository);
 

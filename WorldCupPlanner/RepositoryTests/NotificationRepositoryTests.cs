@@ -1,24 +1,43 @@
 using Domain.Entities;
 using Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryTests;
 
 [TestClass]
 public class NotificationRepositoryTests
 {
+    private WorldCupPlannerContext _context = null!;
+    private NotificationRepository _repository = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+
+        _context = new WorldCupPlannerContext(options);
+        _repository = new NotificationRepository(_context);
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _context.Dispose();
+    }
+
     [TestMethod]
     public void AddNotification_WithValidNotification_ShouldStoreNotification()
     {
-        var repository = new NotificationRepository();
-
         var notification = new Notification(
             "periodista@gmail.com",
             "Nuevo resultado disponible"
         );
 
-        repository.Add(notification);
+        _repository.Add(notification);
 
-        var result = repository.GetByRecipient("periodista@gmail.com");
+        var result = _repository.GetByRecipient("periodista@gmail.com");
 
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual(notification, result[0]);
@@ -27,44 +46,38 @@ public class NotificationRepositoryTests
     [TestMethod]
     public void GetById_WithExistingNotification_ShouldReturnNotification()
     {
-        var repository = new NotificationRepository();
-
         var notification = new Notification(
             "periodista@test.com",
             "Se cargó un nuevo resultado",
             new DateTime(2026, 6, 1, 14, 30, 0));
 
-        repository.Add(notification);
+        _repository.Add(notification);
 
-        var storedNotification = repository.GetById(notification.Id);
+        var storedNotification = _repository.GetById(notification.Id);
 
-        Assert.AreSame(notification, storedNotification);
+        Assert.AreEqual(notification.Id, storedNotification!.Id);
     }
 
     [TestMethod]
     public void GetByRecipient_WithStoredNotification_ShouldReturnNotification()
     {
-        var repository = new NotificationRepository();
-
         var notification = new Notification(
             "periodista@test.com",
             "Nuevo resultado disponible"
         );
 
-        repository.Add(notification);
+        _repository.Add(notification);
 
-        var result = repository.GetByRecipient("periodista@test.com");
+        var result = _repository.GetByRecipient("periodista@test.com");
 
         Assert.AreEqual(1, result.Count);
-        Assert.AreEqual(notification, result[0]);
+        Assert.AreEqual(notification.Id, result[0].Id);
     }
 
     [TestMethod]
     public void GetByRecipient_WithNoNotifications_ShouldReturnEmptyList()
     {
-        var repository = new NotificationRepository();
-
-        var result = repository.GetByRecipient("periodista@test.com");
+        var result = _repository.GetByRecipient("periodista@test.com");
 
         Assert.AreEqual(0, result.Count);
     }
@@ -72,8 +85,6 @@ public class NotificationRepositoryTests
     [TestMethod]
     public void GetByRecipient_WithDifferentRecipients_ShouldReturnOnlyMatchingRecipient()
     {
-        var repository = new NotificationRepository();
-
         var journalistNotification = new Notification(
             "periodista@test.com",
             "Nuevo resultado disponible"
@@ -84,38 +95,34 @@ public class NotificationRepositoryTests
             "Notificación para admin"
         );
 
-        repository.Add(journalistNotification);
-        repository.Add(adminNotification);
+        _repository.Add(journalistNotification);
+        _repository.Add(adminNotification);
 
-        var result = repository.GetByRecipient("periodista@test.com");
+        var result = _repository.GetByRecipient("periodista@test.com");
 
         Assert.AreEqual(1, result.Count);
-        Assert.AreEqual(journalistNotification, result[0]);
+        Assert.AreEqual(journalistNotification.Id, result[0].Id);
     }
 
     [TestMethod]
     public void GetUnreadNotification_WithUnreadNotification_ShouldReturnNotification()
     {
-        var repository = new NotificationRepository();
-
         var notification = new Notification(
             "periodista@test.com",
             "Nuevo resultado disponible"
         );
 
-        repository.Add(notification);
+        _repository.Add(notification);
 
-        var result = repository.GetUnread("periodista@test.com");
+        var result = _repository.GetUnread("periodista@test.com");
 
         Assert.AreEqual(1, result.Count);
-        Assert.AreEqual(notification, result[0]);
+        Assert.AreEqual(notification.Id, result[0].Id);
     }
 
     [TestMethod]
     public void GetUnread_WithReadNotification_ShouldNotReturnNotification()
     {
-        var repository = new NotificationRepository();
-
         var notification = new Notification(
             "periodista@test.com",
             "Nuevo resultado disponible"
@@ -123,9 +130,9 @@ public class NotificationRepositoryTests
 
         notification.MarkAsRead();
 
-        repository.Add(notification);
+        _repository.Add(notification);
 
-        var result = repository.GetUnread("periodista@test.com");
+        var result = _repository.GetUnread("periodista@test.com");
 
         Assert.AreEqual(0, result.Count);
     }
@@ -133,8 +140,6 @@ public class NotificationRepositoryTests
     [TestMethod]
     public void GetUnread_WithNotificationsFromDifferentRecipients_ShouldReturnOnlyUnreadNotificationsForRecipient()
     {
-        var repository = new NotificationRepository();
-
         var journalistNotification = new Notification(
             "periodista@test.com",
             "Nuevo resultado disponible"
@@ -145,20 +150,18 @@ public class NotificationRepositoryTests
             "Notificación para admin"
         );
 
-        repository.Add(journalistNotification);
-        repository.Add(adminNotification);
+        _repository.Add(journalistNotification);
+        _repository.Add(adminNotification);
 
-        var result = repository.GetUnread("periodista@test.com");
+        var result = _repository.GetUnread("periodista@test.com");
 
         Assert.AreEqual(1, result.Count);
-        Assert.AreEqual(journalistNotification, result[0]);
+        Assert.AreEqual(journalistNotification.Id, result[0].Id);
     }
 
     [TestMethod]
     public void GetUnread_WithReadAndUnreadNotificationsForSameRecipient_ShouldReturnOnlyUnreadNotifications()
     {
-        var repository = new NotificationRepository();
-
         var unreadNotification = new Notification(
             "periodista@test.com",
             "Notificación no leída"
@@ -171,20 +174,18 @@ public class NotificationRepositoryTests
 
         readNotification.MarkAsRead();
 
-        repository.Add(unreadNotification);
-        repository.Add(readNotification);
+        _repository.Add(unreadNotification);
+        _repository.Add(readNotification);
 
-        var result = repository.GetUnread("periodista@test.com");
+        var result = _repository.GetUnread("periodista@test.com");
 
         Assert.AreEqual(1, result.Count);
-        Assert.AreEqual(unreadNotification, result[0]);
+        Assert.AreEqual(unreadNotification.Id, result[0].Id);
     }
 
     [TestMethod]
     public void GetUnreadByUserEmail_WhenUserHasReadAndUnreadNotifications_ShouldReturnOnlyUnread()
     {
-        var repository = new NotificationRepository();
-
         var unreadNotification = new Notification(
             "periodista@test.com",
             "Resultado nuevo",
@@ -197,35 +198,33 @@ public class NotificationRepositoryTests
 
         readNotification.MarkAsRead(new DateTime(2026, 6, 1, 15, 0, 0));
 
-        repository.Add(unreadNotification);
-        repository.Add(readNotification);
+        _repository.Add(unreadNotification);
+        _repository.Add(readNotification);
 
-        var unreadNotifications = repository
+        var unreadNotifications = _repository
             .GetUnreadByUserEmail("periodista@test.com")
             .ToList();
 
         Assert.AreEqual(1, unreadNotifications.Count);
-        Assert.AreSame(unreadNotification, unreadNotifications[0]);
+        Assert.AreEqual(unreadNotification.Id, unreadNotifications[0].Id);
     }
 
     [TestMethod]
     public void Update_WithExistingNotification_ShouldKeepUpdatedNotification()
     {
-        var repository = new NotificationRepository();
-
         var notification = new Notification(
             "periodista@test.com",
             "Resultado nuevo",
             new DateTime(2026, 6, 1, 14, 30, 0));
 
-        repository.Add(notification);
+        _repository.Add(notification);
 
         var readAt = new DateTime(2026, 6, 1, 15, 0, 0);
         notification.MarkAsRead(readAt);
 
-        repository.Update(notification);
+        _repository.Update(notification);
 
-        var storedNotification = repository.GetById(notification.Id);
+        var storedNotification = _repository.GetById(notification.Id);
 
         Assert.IsNotNull(storedNotification);
         Assert.IsTrue(storedNotification.IsRead);

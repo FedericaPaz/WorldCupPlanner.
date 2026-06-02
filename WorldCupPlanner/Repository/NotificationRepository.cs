@@ -5,29 +5,35 @@ namespace Repository;
 
 public class NotificationRepository : INotificationRepository
 {
-    private readonly List<Notification> _notifications = new();
+    private readonly WorldCupPlannerContext _context;
+
+    public NotificationRepository(WorldCupPlannerContext context)
+    {
+        _context = context;
+    }
 
     public void Add(Notification notification)
     {
-        _notifications.Add(notification);
+        _context.Notifications.Add(notification);
+        _context.SaveChanges();
     }
 
     public Notification? GetById(Guid id)
     {
-        return _notifications
+        return _context.Notifications
             .FirstOrDefault(notification => notification.Id == id);
     }
 
     public List<Notification> GetByRecipient(string email)
     {
-        return _notifications
+        return _context.Notifications
             .Where(notification => notification.RecipientEmail == email)
             .ToList();
     }
 
     public List<Notification> GetUnread(string email)
     {
-        return _notifications
+        return _context.Notifications
             .Where(notification =>
                 notification.RecipientEmail == email &&
                 !notification.IsRead)
@@ -47,5 +53,8 @@ public class NotificationRepository : INotificationRepository
         {
             throw new InvalidOperationException("La notificación no existe.");
         }
+
+        _context.Notifications.Update(notification);
+        _context.SaveChanges();
     }
 }

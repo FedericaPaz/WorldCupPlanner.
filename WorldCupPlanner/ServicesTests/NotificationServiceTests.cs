@@ -2,6 +2,7 @@
 using Domain.Enums;
 using Repository;
 using Services;
+using ServicesTests.Stubs;
 using ServicesTests.TestHelpers;
 
 namespace ServicesTests;
@@ -11,7 +12,7 @@ public class NotificationServiceTests
 {
     private WorldCupPlannerContext _context = null!;
     private UserRepository _userRepository = null!;
-    private NotificationRepository _notificationRepository = null!;
+    private NotificationRepositoryStub _notificationRepository = null!;
     private NotificationService _service = null!;
     private LogRepository _logRepository = null!;
     private LogService _logService = null!;
@@ -21,7 +22,7 @@ public class NotificationServiceTests
     {
         _context = DbContextFactory.CreateInMemoryContext();
         _userRepository = new UserRepository(_context);
-        _notificationRepository = new NotificationRepository();
+        _notificationRepository = new NotificationRepositoryStub();
         _logRepository = new LogRepository();
         _logService = new LogService(_logRepository);
 

@@ -56,8 +56,41 @@ public class WorldCupPlannerContext : DbContext
         modelBuilder.Entity<LogEntry>()
             .HasKey(log => log.Id);
 
-        modelBuilder.Entity<Notification>()
-            .HasKey(notification => notification.Id);
+        modelBuilder.Entity<Notification>(entity =>
+        {
+            entity.HasKey("_id");
+
+            entity.Property<Guid>("_id")
+                .HasColumnName("Id");
+
+            entity.Property<string>("_recipientEmail")
+                .HasColumnName("RecipientEmail")
+                .IsRequired();
+
+            entity.Property<string>("_message")
+                .HasColumnName("Message")
+                .IsRequired();
+
+            entity.Property<DateTime>("_timestamp")
+                .HasColumnName("Timestamp")
+                .IsRequired();
+
+            entity.Property<bool>("_isRead")
+                .HasColumnName("IsRead")
+                .IsRequired();
+
+            entity.Property<DateTime?>("_readAt")
+                .HasColumnName("ReadAt");
+
+            entity.Ignore(notification => notification.Id);
+            entity.Ignore(notification => notification.RecipientEmail);
+            entity.Ignore(notification => notification.UserEmail);
+            entity.Ignore(notification => notification.Message);
+            entity.Ignore(notification => notification.Timestamp);
+            entity.Ignore(notification => notification.CreatedAt);
+            entity.Ignore(notification => notification.IsRead);
+            entity.Ignore(notification => notification.ReadAt);
+        });
 
         modelBuilder.Entity<Group>(entity =>
         {

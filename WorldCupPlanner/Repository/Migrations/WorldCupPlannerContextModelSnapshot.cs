@@ -181,17 +181,34 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Domain.Entities.Notification", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("Id");
 
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("bit");
+                    b.Property<bool>("_isRead")
+                        .HasColumnType("bit")
+                        .HasColumnName("IsRead");
 
-                    b.Property<DateTime?>("ReadAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("_message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Message");
 
-                    b.HasKey("Id");
+                    b.Property<DateTime?>("_readAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ReadAt");
+
+                    b.Property<string>("_recipientEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("RecipientEmail");
+
+                    b.Property<DateTime>("_timestamp")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("Timestamp");
+
+                    b.HasKey("_id");
 
                     b.ToTable("Notifications");
                 });
