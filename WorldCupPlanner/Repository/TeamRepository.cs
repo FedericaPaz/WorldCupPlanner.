@@ -5,19 +5,25 @@ namespace Repository;
 
 public class TeamRepository :  ITeamRepository
 {
-    private readonly List<Team> _teams = new();
+    private readonly WorldCupPlannerContext _context;
+    
+    public TeamRepository(WorldCupPlannerContext context)
+    {
+        _context = context;
+    }
 
     public void Add(Team team)
     {
         if (team == null)
             throw new ArgumentNullException(nameof(team));
 
-        _teams.Add(team);
+        _context.Add(team);
+        _context.SaveChanges();
     }
 
     public Team? Get(string name)
     {
-        return _teams.FirstOrDefault(t => t.Name == name);
+        return _context.Teams.FirstOrDefault(t => t.Name == name);
     }
     
     public void Delete(Team team)
@@ -25,17 +31,18 @@ public class TeamRepository :  ITeamRepository
         if (team is null)
             throw new ArgumentNullException(nameof(team));
         
-        var existingTeam = _teams.FirstOrDefault(t => t.Name == team.Name);
+        var existingTeam = _context.Teams.FirstOrDefault(t => t.Name == team.Name);
         
         if (existingTeam is null)
             throw new InvalidOperationException($"Team {team.Name} does not exist.");
             
-        _teams.Remove(existingTeam);
+        _context.Teams.Remove(existingTeam);
+        _context.SaveChanges();
     }
 
     public List<Team> GetAll()
     {
-        return new List<Team>(_teams);
+        return _context.Teams.ToList();
     }
     
     public void Update(Team team)
@@ -43,17 +50,19 @@ public class TeamRepository :  ITeamRepository
         if (team is null)
             throw new ArgumentNullException(nameof(team));
 
-        var existingTeam = _teams.FirstOrDefault(t => t.Name == team.Name);
+        var existingTeam = _context.Teams.FirstOrDefault(t => t.Name == team.Name);
 
         if (existingTeam is null)
             throw new InvalidOperationException($"Team {team.Name} does not exist.");
 
-        _teams.Remove(existingTeam);
-        _teams.Add(team);
+        _context.Remove(existingTeam);
+        _context.Add(team);
+        _context.SaveChanges();
     }
 
     public void Clear()
     {
-        _teams.Clear();
+        _context.Teams.RemoveRange(_context.Teams);
+        _context.SaveChanges();
     }
 }
