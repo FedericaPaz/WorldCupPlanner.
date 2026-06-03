@@ -15,7 +15,9 @@ public class WorldCupPlannerContext : DbContext
     public DbSet<Group> Groups { get; set; }
     public DbSet<Cruce> Cruces { get; set; }
     public DbSet<Match> Matches { get; set; }
+    
     public DbSet<MatchIncident> MatchIncidents { get; set; }
+    public DbSet<Fixture> Fixtures { get; set; }
 
     public WorldCupPlannerContext(DbContextOptions<WorldCupPlannerContext> options)
         : base(options)
@@ -47,8 +49,23 @@ public class WorldCupPlannerContext : DbContext
                 .Metadata.SetValueComparer(rolesComparer);
         });
 
-        modelBuilder.Entity<Team>()
-            .HasKey(team => team.Name);
+        modelBuilder.Entity<Team>(entity =>
+        {
+            entity.HasKey(team => team.Name);
+
+            entity.Property(team => team.FifaRanking)
+                .HasColumnName("_fifaRanking");
+
+            entity.Property(team => team.CurrentRanking)
+                .HasColumnName("_currentRanking");
+
+            entity.Property(team => team.Confederation)
+                .HasColumnName("_confederation")
+                .HasConversion(
+                    c => c.Name,
+                    name => new Confederation(name)
+                );
+        });
 
         modelBuilder.Entity<Stadium>()
             .HasKey(stadium => stadium.StadiumName);
@@ -160,6 +177,15 @@ public class WorldCupPlannerContext : DbContext
                 .WithMany()
                 .HasForeignKey(incident => incident.TeamName)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+        
+        modelBuilder.Entity<Fixture>(entity =>
+        {
+            entity.HasKey(f => f.Id);
+
+            entity.Property(f => f.CurrentPhase).IsRequired();
+
+            entity.Ignore(f => f.Groups);
         });
     }
 }
