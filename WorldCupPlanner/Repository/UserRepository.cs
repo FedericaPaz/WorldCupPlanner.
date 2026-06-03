@@ -6,7 +6,6 @@ namespace Repository;
 public class UserRepository : IUserRepository
 {
     private readonly WorldCupPlannerContext _context;
-    //private readonly List<User> _users = new();
     
     public UserRepository(WorldCupPlannerContext context)
     {

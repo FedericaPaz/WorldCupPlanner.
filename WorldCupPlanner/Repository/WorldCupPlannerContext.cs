@@ -36,7 +36,23 @@ public class WorldCupPlannerContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(user => user.Email);
+            entity.HasKey("_id");
+            
+            entity.Property(user => user.FirstName)
+                .HasColumnName("_firstName")
+                .IsRequired();
+            
+            entity.Property(user => user.LastName)
+                .HasColumnName("_lastName")
+                .IsRequired();
+            
+            entity.Property(user => user.Email)
+                .HasColumnName("_email")
+                .IsRequired();
+            
+            entity.Property(user => user.PasswordHash)
+                .HasColumnName("_passwordHash")
+                .IsRequired();
 
             entity.Property(user => user.Roles)
                 .HasConversion(
@@ -65,6 +81,9 @@ public class WorldCupPlannerContext : DbContext
                     c => c.Name,
                     name => new Confederation(name)
                 );
+            
+            entity.Property(team => team.FlagBase64)
+                .HasColumnName("_flagBase64");
         });
 
         modelBuilder.Entity<Stadium>()

@@ -27,6 +27,7 @@
       <_ContentIncludedByDefault Remove="Components\Auth\ChangePassword.razor" />
       <_ContentIncludedByDefault Remove="Components\Auth\Login.razor" />
       <_ContentIncludedByDefault Remove="Components\Auth\Register.razor" />
+      <_ContentIncludedByDefault Remove="Components\Pages\Logs\Logs.razor" />
     </ItemGroup>
 
     <ItemGroup>
