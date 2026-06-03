@@ -49,7 +49,7 @@ public class MatchServiceTests
         _stadiumRepository = new StadiumRepositoryStub();
         _clock = new DateTimeMatchStub(new DateTime(2027, 1, 1));
         _simulationService = new SimulationServiceStub();
-        _fixtureRepository = new FixtureRepository();
+        _fixtureRepository = new FixtureRepository(_context);
         _config = new TournamentConfig();
 
         _service = new MatchService(

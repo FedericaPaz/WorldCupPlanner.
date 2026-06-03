@@ -1,4 +1,5 @@
-﻿using Repository;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository;
 using Services;
 using Domain.Entities;
 using Domain.Enums;
@@ -11,6 +12,7 @@ namespace ServicesTests;
 [TestClass]
 public class FixtureGeneratorTests
 {
+    private WorldCupPlannerContext _context = null!;
     private TeamRepository _teamRepository = null!;
     private IStadiumRepository _stadiumRepository = null!;
     private FixtureRepository _fixtureRepository = null!;
@@ -21,12 +23,28 @@ public class FixtureGeneratorTests
     [TestInitialize]
     public void Setup()
     {
-        _teamRepository    = new TeamRepository();
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        _context = new WorldCupPlannerContext(options);
+
+        _teamRepository = new TeamRepository(_context);
+        _fixtureRepository = new FixtureRepository(_context);
         _stadiumRepository = new StadiumRepositoryStub();
-        _fixtureRepository = new FixtureRepository();
-        _config            = new TournamentConfig();
-        _clock             = new ClockStub(new DateTime(2026, 1, 1));
-        _generator         = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository, _config, _clock);
+        _config = new TournamentConfig();
+        _clock = new ClockStub(new DateTime(2026, 1, 1));
+        _generator = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository, _config, _clock);
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        if (_context != null)
+        {
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
+        }
     }
 
     private void AddTeams(int count)
@@ -199,9 +217,15 @@ public class FixtureGeneratorTests
         AddStadiums(4);
         var fixture1 = _generator.GenerateGroupsStageFixture();
 
-        _teamRepository    = new TeamRepository();
+        var options2 = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        using var context2 = new WorldCupPlannerContext(options2);
+        _teamRepository    = new TeamRepository(context2);
         _stadiumRepository = new StadiumRepositoryStub();
-        _fixtureRepository = new FixtureRepository();
+        _fixtureRepository = new FixtureRepository(context2);
+
         AddTeams(48);
         AddStadiums(4);
 
@@ -233,14 +257,21 @@ public class FixtureGeneratorTests
         AddStadiums(4);
         var fixture1 = _generator.GenerateGroupsStageFixture();
 
-        _teamRepository    = new TeamRepository();
+        var options2 = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        using var context2 = new WorldCupPlannerContext(options2);
+        _teamRepository    = new TeamRepository(context2);
         _stadiumRepository = new StadiumRepositoryStub();
-        _fixtureRepository = new FixtureRepository();
+        _fixtureRepository = new FixtureRepository(context2);
+
         AddTeamsWithSameRanking();
         AddStadiums(4);
 
         var fixture2 = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository, _config, _clock)
             .GenerateGroupsStageFixture();
+
 
         for (int i = 0; i < fixture1.Groups.Count; i++)
         {
@@ -262,7 +293,7 @@ public class FixtureGeneratorTests
 
         var fixture1 = _generator.GenerateGroupsStageFixture();
 
-        _fixtureRepository = new FixtureRepository();
+        _fixtureRepository = new FixtureRepository(_context);
         var fixture2       = generator2.GenerateGroupsStageFixture();
 
         bool isDifferent = false;

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Domain.Entities;
 using Domain.Enums;
 using IRepository;
 using Repository;
@@ -10,6 +11,7 @@ namespace ServicesTests;
 [TestClass]
 public class FixtureServiceTests
 {
+    private WorldCupPlannerContext _context;
     private FixtureRepository _fixtureRepository = null!;
     private FixtureService _service = null!;
     private ITeamRepository _teamRepository = null!;
@@ -24,19 +26,36 @@ public class FixtureServiceTests
     [TestInitialize]
     public void Setup()
     {
-        _fixtureRepository = new FixtureRepository();
-        _teamRepository    = new TeamRepository();
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        _context = new WorldCupPlannerContext(options);
+
+        _fixtureRepository = new FixtureRepository(_context);
+        _teamRepository    = new TeamRepository(_context);
+
         _stadiumRepository = new StadiumRepositoryStub();
         _matchRepository   = new MatchRepositoryStub();
-        _crucesRepository  = new CrucesRepository();
+        _crucesRepository   = new CrucesRepository();
+
         _config            = new TournamentConfig();
         var clock          = new ClockStub(ClockDate);
-
         _fixtureGenerator = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository, _config, clock);
         _service = new FixtureService(
             _fixtureRepository, _fixtureGenerator, _teamRepository,
             _stadiumRepository, _matchRepository, _crucesRepository, _config);
         _fixture = new Fixture(_config);
+    }
+    
+    [TestCleanup]
+    public void Cleanup()
+    {
+        if (_context != null)
+        {
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
+        }
     }
 
     private Fixture CreateValidFixture()

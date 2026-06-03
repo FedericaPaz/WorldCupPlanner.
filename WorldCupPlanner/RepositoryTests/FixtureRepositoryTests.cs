@@ -1,4 +1,5 @@
-﻿using Repository;
+﻿using Microsoft.EntityFrameworkCore;
+using Repository;
 using Domain.Entities;
 
 namespace RepositoryTests;
@@ -6,16 +7,30 @@ namespace RepositoryTests;
 [TestClass]
 public class FixtureRepositoryTests
 {
+    private WorldCupPlannerContext _context;
     private FixtureRepository _repository;
     private Fixture _fixture;
     
     [TestInitialize]
     public void Setup()
     {
-        _repository = new FixtureRepository();
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+        _context = new WorldCupPlannerContext(options);
+        _repository = new FixtureRepository(_context);
+        
         var config = new TournamentConfig();
         _fixture = new Fixture(config);
         _fixture.InitializeGroups();
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
     }
     
     [TestMethod]
@@ -37,7 +52,7 @@ public class FixtureRepositoryTests
         _repository.AddFixture(_fixture);
         var result = _repository.GetFixture();
         Assert.IsNotNull(result);
-        Assert.AreSame(_fixture, result);
+        Assert.AreEqual(_fixture.Id, result.Id);
     }
     
     [TestMethod]
@@ -95,7 +110,7 @@ public class FixtureRepositoryTests
         _repository.AddFixture(fixture2);
         
         var result = _repository.GetFixture();
-        Assert.AreSame(fixture2, result);
-        Assert.AreNotSame(fixture1, result);
+        Assert.AreEqual(fixture2.Id, result.Id);
+        Assert.AreNotEqual(fixture1.Id, result.Id);
     }
 }

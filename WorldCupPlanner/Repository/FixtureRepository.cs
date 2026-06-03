@@ -5,27 +5,38 @@ namespace Repository;
 
 public class FixtureRepository : IFixtureRepository
 {
-    private Fixture? _fixture;
+    private readonly WorldCupPlannerContext _context;
+    
+    public FixtureRepository(WorldCupPlannerContext context)
+    {
+        _context = context;
+    }
     
     public void AddFixture(Fixture fixture)
     {
         if (fixture == null)
             throw new ArgumentNullException(nameof(fixture));
         
-        _fixture = fixture;
+        var existing = _context.Fixtures.ToList();
+        if (existing.Any())
+            _context.Fixtures.RemoveRange(existing);
+        
+        _context.Fixtures.Add(fixture);
+        _context.SaveChanges();
     }
 
     public Fixture GetFixture()
     {
-        if (_fixture == null)
+        var fixture = _context.Fixtures.FirstOrDefault();
+        if (fixture == null)
             throw new InvalidOperationException("No hay fixture generado");
-        
-        return _fixture;
+
+        return fixture;
     }
 
     public bool ContainsFixture()
     {
-        return _fixture !=  null;
+        return _context.Fixtures.Any();
     }
 
     public void RemoveFixture(Fixture? fixture)
@@ -33,7 +44,12 @@ public class FixtureRepository : IFixtureRepository
         if (fixture == null)
             throw new ArgumentNullException(nameof(fixture));
         
-        if (_fixture == fixture)
-            _fixture = null;
+        var existingFixture = _context.Fixtures.FirstOrDefault(f => f.Id == fixture.Id);
+
+        if (existingFixture != null)
+        {
+            _context.Fixtures.Remove(existingFixture);
+            _context.SaveChanges();
+        }
     }
 }

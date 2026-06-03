@@ -26,7 +26,7 @@ public class TeamServiceTests
         _context = new WorldCupPlannerContext(options);
         _teamRepository = new TeamRepository(_context);
         _config = new TournamentConfig();
-        _teamService = new TeamService(_teamRepository, new FixtureRepository(), new MatchRepositoryStub(), new CrucesRepository(), _config);
+        _teamService = new TeamService(_teamRepository, new FixtureRepository(_context), new MatchRepositoryStub(), new CrucesRepository(), _config);
     }
 
     [TestCleanup]
