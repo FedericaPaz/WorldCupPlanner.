@@ -1,0 +1,140 @@
+﻿@page "/notifications"
+@using Domain.Entities
+@using IServices
+@using Web.Services
+
+@inject INotificationService NotificationService
+@inject SessionService SessionService
+@inject NavigationManager Navigation
+
+<PageTitle>Notificaciones</PageTitle>
+
+<div class="users-shell">
+    <div class="users-header">
+        <div>
+            <h3>Centro de notificaciones</h3>
+            <p>Notificaciones no leídas del periodista</p>
+        </div>
+
+        <button class="primary-button" @onclick="LoadNotifications">
+            Actualizar
+        </button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+    {
+        <div class="error-message">
+            @_errorMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(_successMessage))
+    {
+        <div class="success-message">
+            @_successMessage
+        </div>
+    }
+
+    @if (_notifications.Count == 0)
+    {
+        <div class="users-table-card">
+            <p class="empty-state">No tenés notificaciones pendientes.</p>
+        </div>
+    }
+    else
+    {
+        <div class="users-table-card">
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>Mensaje</th>
+                        <th>Estado</th>
+                        <th class="actions-column">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var notification in _notifications)
+                    {
+                        <tr>
+                            <td>@notification.Message</td>
+                            <td class="muted">No leída</td>
+                            <td class="actions-cell">
+                                <button class="icon-button"
+                                        @onclick="() => MarkAsRead(notification.Id)">
+                                    Marcar como leída
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Notification> _notifications = new();
+    private string _errorMessage = string.Empty;
+    private string _successMessage = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsJournalist())
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
+        LoadNotifications();
+    }
+
+    private void LoadNotifications()
+    {
+        try
+        {
+            _errorMessage = string.Empty;
+            _successMessage = string.Empty;
+
+            var email = GetCurrentUserEmail();
+            _notifications = NotificationService.GetUnread(email).ToList();
+        }
+        catch (Exception exception)
+        {
+            _errorMessage = exception.Message;
+        }
+    }
+
+    private void MarkAsRead(Guid notificationId)
+    {
+        try
+        {
+            _errorMessage = string.Empty;
+            _successMessage = string.Empty;
+
+            var email = GetCurrentUserEmail();
+
+            NotificationService.MarkAsRead(notificationId, email);
+
+            _notifications = _notifications
+                .Where(notification => notification.Id != notificationId)
+                .ToList();
+
+            _successMessage = "Notificación marcada como leída.";
+        }
+        catch (Exception exception)
+        {
+            _errorMessage = exception.Message;
+        }
+    }
+
+    private string GetCurrentUserEmail()
+    {
+        if (!SessionService.IsUserActive())
+        {
+            return "Sistema";
+        }
+
+        return SessionService.GetCurrentUser()!.Email;
+    }
+}
