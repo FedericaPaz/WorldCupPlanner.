@@ -13,6 +13,7 @@
             <h3>Listado de Partidos</h3>
             <p>@_pendientes pendientes · @_jugados jugados · @_matchesFiltrados.Count mostrados</p>
         </div>
+
         @if (_pendientes > 0 && SessionService.IsEditor())
         {
             <button class="btn-generar-cruces" @onclick="SimularPendientes" disabled="@_cargando">
@@ -35,6 +36,7 @@
     {
         <div class="message error">⚠️ @_mensajeError</div>
     }
+
     @if (!string.IsNullOrEmpty(_mensajeExito))
     {
         <div class="message success">✅ @_mensajeExito</div>
@@ -47,6 +49,7 @@
                    @bind="_filtroFecha"
                    @bind:after="AplicarFiltros" />
         </div>
+
         <div class="filtro-group">
             <label>Estadio</label>
             <select class="form-control" @bind="_filtroEstadio" @bind:after="AplicarFiltros">
@@ -57,6 +60,7 @@
                 }
             </select>
         </div>
+
         <div class="filtro-group">
             <label>Grupo</label>
             <select class="form-control" @bind="_filtroGrupo" @bind:after="AplicarFiltros">
@@ -67,6 +71,7 @@
                 }
             </select>
         </div>
+
         <div class="filtro-group">
             <label>Fase</label>
             <select class="form-control" @bind="_filtroFase" @bind:after="AplicarFiltros">
@@ -75,6 +80,7 @@
                 <option value="Eliminatoria">Eliminatoria</option>
             </select>
         </div>
+
         @if (HayFiltrosActivos)
         {
             <button class="btn-limpiar" @onclick="LimpiarFiltros">✖ Limpiar</button>
@@ -100,6 +106,7 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach (var match in _matchesFiltrados)
                     {
@@ -109,9 +116,11 @@
                                 <br />
                                 @match.dateMatch.ToString("HH:mm")
                             </td>
+
                             <td class="teams-cell">
                                 @match.homeTeamName vs @match.awayTeamName
                             </td>
+
                             <td>
                                 @if (match.homeGoals.HasValue && match.awayGoals.HasValue)
                                 {
@@ -124,15 +133,19 @@
                                     <span class="no-result">-</span>
                                 }
                             </td>
+
                             <td class="stadium-cell">@match.stadiumName</td>
+
                             <td>
                                 <span class="phase-pill">
                                     @(match.group == 'N' ? "-" : match.group.ToString())
                                 </span>
                             </td>
+
                             <td>
                                 <span class="phase-pill">@match.phase</span>
                             </td>
+
                             <td>
                                 @if (SessionService.IsEditor())
                                 {
@@ -140,7 +153,7 @@
                                 }
                                 else
                                 {
-                                    <span>-</span>
+                                    <span class="text-muted">Solo lectura</span>
                                 }
                             </td>
                         </tr>
@@ -160,18 +173,21 @@
 
     private DateTime? _filtroFecha = null;
     private string _filtroEstadio = string.Empty;
-    private string _filtroGrupo   = string.Empty;
-    private string _filtroFase    = string.Empty;
+    private string _filtroGrupo = string.Empty;
+    private string _filtroFase = string.Empty;
 
     private List<string> _estadios =>
         _matches.Select(m => m.stadiumName).Distinct().OrderBy(s => s).ToList();
+
     private List<string> _grupos =>
         _matches.Where(m => m.group != 'N')
-                .Select(m => m.group.ToString())
-                .Distinct().OrderBy(g => g).ToList();
+            .Select(m => m.group.ToString())
+            .Distinct()
+            .OrderBy(g => g)
+            .ToList();
 
     private int _pendientes => _matches.Count(m => !m.homeGoals.HasValue);
-    private int _jugados    => _matches.Count(m =>  m.homeGoals.HasValue);
+    private int _jugados => _matches.Count(m => m.homeGoals.HasValue);
 
     private bool HayFiltrosActivos =>
         _filtroFecha.HasValue ||
@@ -186,6 +202,7 @@
             Navigation.NavigateTo("/");
             return;
         }
+
         LoadData();
     }
 
@@ -196,6 +213,7 @@
             _matches = MatchService.GetAllMatches()
                 .OrderBy(m => m.dateMatch)
                 .ToList();
+
             AplicarFiltros();
         }
         catch (Exception ex)
@@ -209,16 +227,24 @@
         var resultado = _matches.AsEnumerable();
 
         if (_filtroFecha.HasValue)
+        {
             resultado = resultado.Where(m => m.dateMatch.Date == _filtroFecha.Value.Date);
+        }
 
         if (!string.IsNullOrEmpty(_filtroEstadio))
+        {
             resultado = resultado.Where(m => m.stadiumName == _filtroEstadio);
+        }
 
         if (!string.IsNullOrEmpty(_filtroGrupo))
+        {
             resultado = resultado.Where(m => m.group.ToString() == _filtroGrupo);
+        }
 
         if (!string.IsNullOrEmpty(_filtroFase))
+        {
             resultado = resultado.Where(m => m.phase == _filtroFase);
+        }
 
         _matchesFiltrados = resultado.ToList();
         StateHasChanged();
@@ -226,15 +252,21 @@
 
     private void LimpiarFiltros()
     {
-        _filtroFecha   = null;
+        _filtroFecha = null;
         _filtroEstadio = string.Empty;
-        _filtroGrupo   = string.Empty;
-        _filtroFase    = string.Empty;
+        _filtroGrupo = string.Empty;
+        _filtroFase = string.Empty;
+
         AplicarFiltros();
     }
 
     private void SimularPendientes()
     {
+        if (!SessionService.IsEditor())
+        {
+            return;
+        }
+
         try
         {
             _cargando = true;
@@ -246,6 +278,7 @@
             CruceService.SimulateCruces();
 
             _mensajeExito = "Partidos simulados correctamente.";
+
             LoadData();
         }
         catch (Exception ex)
