@@ -39,10 +39,10 @@ public class CruceServiceTests
 
         _service = new CruceService(
             _stubCrucesRepository,
-            _stubFixtureRepository,
+            new FixtureServiceStub(_stubFixtureRepository),
             _stubStadiumRepository,
             _stubCrucesGenerator,
-            new CrucesSimulationService(_logService),
+            new CrucesSimulationService(_logService, _matchRepository),
             new TournamentConfig(),
             _matchRepository);
     }

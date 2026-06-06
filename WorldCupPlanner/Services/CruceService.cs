@@ -10,17 +10,17 @@ namespace Services;
 public class CruceService : ICruceService
 {
     private readonly ICrucesRepository _repository;
-    private readonly IFixtureRepository _fixtureRepository;
+    private readonly IFixtureService _fixtureService;
     private readonly IStadiumRepository _stadiumRepository;
     private readonly ICrucesGeneratorService _generator;
     private readonly ISimulationService _simulationService;
     private readonly TournamentConfig _config;
     private readonly IMatchRepository _matchRepository;
 
-    public CruceService(ICrucesRepository repository, IFixtureRepository fixtureRepository, IStadiumRepository stadiumRepository, ICrucesGeneratorService generator, ISimulationService simulationService, TournamentConfig config, IMatchRepository matchRepository)
+    public CruceService(ICrucesRepository repository, IFixtureService fixtureService, IStadiumRepository stadiumRepository, ICrucesGeneratorService generator, ISimulationService simulationService, TournamentConfig config, IMatchRepository matchRepository)
     {
         _repository = repository;
-        _fixtureRepository = fixtureRepository;
+        _fixtureService = fixtureService;
         _stadiumRepository = stadiumRepository;
         _generator = generator;
         _simulationService = simulationService;
@@ -30,25 +30,29 @@ public class CruceService : ICruceService
 
     public void GenerateRoundOf32()
     {
-        Fixture fixture = _fixtureRepository.GetFixture();
+        Fixture fixture = _fixtureService.GetFixtureEntity();
         if (fixture == null)
             throw new ArgumentNullException(nameof(fixture));
-        
+    
         if (!fixture.CanAdvanceToPhase(TournamentPhase.RoundOf32))
             throw new InvalidOperationException("Todos los partidos de la fase de grupos deben estar jugados antes de generar los cruces.");
-        
+    
         foreach (var group in fixture.Groups)
         {
             foreach (var match in group.MatchesInGroup)
                 match.Lock();
         }
-        
+    
         List<Stadium> estadios = _stadiumRepository.GetAllStadiums();
-        List<Cruce> cruces = _generator.GenerateRoundOf32(fixture, estadios, _config.SemillaCrucesFase);
+        int nextMatchId = _matchRepository.GetNextId();
+        List<Cruce> cruces = _generator.GenerateRoundOf32(fixture, estadios, _config.SemillaCrucesFase, nextMatchId);
+    
         _repository.RemoveCruces();
-        _repository.AddCruces(cruces);
+    
         foreach (var cruce in cruces)
-            _matchRepository.AddMatch(cruce.Match);
+            _matchRepository.AddMatch(cruce.Match);  
+    
+        _repository.AddCruces(cruces);
     }
 
     public void GenerateNextRound()
@@ -62,10 +66,12 @@ public class CruceService : ICruceService
         List<Cruce> ultimaRonda = actuales.Where(x => x.Phase == ultimaFase).ToList();
         if (ultimaRonda.Any(c => c.GetWinner() == null))
             throw new InvalidOperationException("Todos los cruces de la ronda actual deben tener resultado antes de generar la siguiente.");
-        List<Cruce> nuevos = _generator.GenerateNextRound(ultimaRonda, _stadiumRepository.GetAllStadiums(), _config.SemillaCrucesFase);
-        _repository.AddCruces(nuevos);
+        int nextMatchId = _matchRepository.GetNextId();
+        List<Cruce> nuevos = _generator.GenerateNextRound(ultimaRonda, _stadiumRepository.GetAllStadiums(), _config.SemillaCrucesFase, nextMatchId);
         foreach (var cruce in nuevos)
-            _matchRepository.AddMatch(cruce.Match);
+            _matchRepository.AddMatch(cruce.Match); 
+
+        _repository.AddCruces(nuevos);  
     }
 
     public List<CruceResponse> GetAllCruces()
