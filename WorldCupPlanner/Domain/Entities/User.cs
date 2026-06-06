@@ -219,4 +219,9 @@ public class User
 
         return Convert.ToBase64String(hashedPassword);
     }
+    
+    public void SyncPasswordHash(string passwordHash)
+    {
+        _passwordHash = passwordHash;
+    }
 }
