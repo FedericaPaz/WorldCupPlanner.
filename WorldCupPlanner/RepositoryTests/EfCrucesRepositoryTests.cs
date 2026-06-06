@@ -19,12 +19,18 @@ public class EfCrucesRepositoryTests
         using var context = new WorldCupPlannerContext(options);
         var repository = new EfCrucesRepository(context);
 
-        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+        var clock = new DateTimeMatchStub(new DateTime(2026, 6, 21));
         var confederation = new Confederation("CONMEBOL");
         var homeTeam = new Team("Uruguay", confederation, 1500);
         var awayTeam = new Team("Argentina", confederation, 1500);
         var stadium = new Stadium("Centenario", "Montevideo", "Estadio principal", 60000);
         var match = new Match(1, clock.Now, stadium, homeTeam, awayTeam, 'N', clock);
+
+        context.Teams.Add(homeTeam);
+        context.Teams.Add(awayTeam);
+        context.Stadiums.Add(stadium);
+        context.Matches.Add(match);
+        context.SaveChanges();
 
         var cruce = new Cruce("A1", match, TournamentPhase.RoundOf32);
 

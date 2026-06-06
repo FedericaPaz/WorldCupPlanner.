@@ -16,8 +16,24 @@ public class EfCrucesRepository : ICrucesRepository
     public void AddCruces(List<Cruce> cruces)
     {
         if (cruces is null)
-        {
             throw new ArgumentNullException(nameof(cruces));
+
+        foreach (var entry in _context.ChangeTracker.Entries().ToList())
+            entry.State = EntityState.Detached;
+
+        foreach (var cruce in cruces)
+        {
+            if (_context.Entry(cruce.Match).State == EntityState.Detached)
+                _context.Entry(cruce.Match).State = EntityState.Unchanged;
+
+            if (_context.Entry(cruce.Match.HomeTeam).State == EntityState.Detached)
+                _context.Entry(cruce.Match.HomeTeam).State = EntityState.Unchanged;
+
+            if (_context.Entry(cruce.Match.AwayTeam).State == EntityState.Detached)
+                _context.Entry(cruce.Match.AwayTeam).State = EntityState.Unchanged;
+
+            if (_context.Entry(cruce.Match.Stadium).State == EntityState.Detached)
+                _context.Entry(cruce.Match.Stadium).State = EntityState.Unchanged;
         }
 
         _context.Cruces.AddRange(cruces);
@@ -27,6 +43,16 @@ public class EfCrucesRepository : ICrucesRepository
     public List<Cruce> GetAllCruces()
     {
         return _context.Cruces
+            .Include(c => c.Match)
+            .ThenInclude(m => m.HomeTeam)
+            .Include(c => c.Match)
+            .ThenInclude(m => m.AwayTeam)
+            .Include(c => c.Match)
+            .ThenInclude(m => m.Stadium)
+            .Include(c => c.Match)
+            .ThenInclude(m => m.WinnerMatch)
+            .Include(c => c.Match)
+            .ThenInclude(m => m.LoserMatch)
             .AsNoTracking()
             .ToList();
     }
