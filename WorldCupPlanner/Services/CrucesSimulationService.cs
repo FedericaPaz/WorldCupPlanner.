@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Enums;
+using IRepository;
 
 namespace Services;
 
@@ -13,10 +14,13 @@ public class CrucesSimulationService : ISimulationService
     private const string SimulationEngineName = "CrucesSimulationService";
 
     private readonly ILogService _logService;
+    private readonly IMatchRepository _matchRepository;
 
-    public CrucesSimulationService(ILogService logService)
+
+    public CrucesSimulationService(ILogService logService, IMatchRepository matchRepository)
     {
         _logService = logService;
+        _matchRepository = matchRepository;
     }
 
     public (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed)
@@ -75,6 +79,7 @@ public class CrucesSimulationService : ISimulationService
         match.ClearCardIncidents();
         AddSimulatedCardIncidents(match, seed);
         match.SimulateResult(homeGoals, awayGoals);
+        _matchRepository.UpdateMatch(match);
     }
 
     private void RegisterSimulation(int seed)

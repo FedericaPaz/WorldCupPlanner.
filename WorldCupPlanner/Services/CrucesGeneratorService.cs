@@ -24,8 +24,9 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         _nextMatchId  = 1;
     }
 
-    public List<Cruce> GenerateRoundOf32(Fixture fixture, List<Stadium> estadios, int semilla)
+    public List<Cruce> GenerateRoundOf32(Fixture fixture, List<Stadium> estadios, int semilla, int startMatchId = 1)
     {
+        _nextMatchId = startMatchId;
         var grupos = fixture.Groups.ToList();
         ValidateInputs(grupos, estadios);
 
@@ -71,8 +72,9 @@ public class CrucesGeneratorService : ICrucesGeneratorService
 
         return cruces;
     }
-    public List<Cruce> GenerateNextRound(List<Cruce> crucesAnteriores, List<Stadium> estadios, int semilla)
+    public List<Cruce> GenerateNextRound(List<Cruce> crucesAnteriores, List<Stadium> estadios, int semilla, int startMatchId = 1)
     {
+        _nextMatchId = startMatchId;
         if (crucesAnteriores == null || crucesAnteriores.Count == 0)
             throw new ArgumentException("Se requieren cruces anteriores para generar la siguiente ronda.");
 
@@ -251,8 +253,6 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         int diaOffset = slotIndex / _config.MaxPartidosPorDia;
         int hour = StartHour + slotEnDia * HoursBetweenMatches;
 
-        // Si es una fase posterior (tenemos ultimaFecha), comenzar luego de la separación
-        // Si es la primera fase, comenzar 21 días después del inicio
         DateTime startDate = ultimaFecha.HasValue
             ? ultimaFecha.Value.Date.AddDays(_config.SeparacionEntreFechas)
             : _config.FechaInicioTorneo.AddDays(21).Date;

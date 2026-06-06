@@ -1,6 +1,7 @@
 ﻿using Services;
 using Domain.Entities;
 using Domain.Enums;
+using IRepository;
 using ServicesTests.Stubs;
 using Repository;
 
@@ -15,6 +16,7 @@ public class CruceSimulatorServiceTests
     private LogRepository _logRepository = null!;
     private LogService _logService = null!;
     private CrucesSimulationService _service = null!;
+    private IMatchRepository _matchRepository;
     private const int Seed = 42;
     private int _nextId;
 
@@ -24,7 +26,8 @@ public class CruceSimulatorServiceTests
         _nextId = 1;
         _logRepository = new LogRepository();
         _logService = new LogService(_logRepository);
-        _service = new CrucesSimulationService(_logService);
+        _matchRepository = new MatchRepositoryStub();
+        _service = new CrucesSimulationService(_logService, _matchRepository);
     }
 
     private Match BuildMatch(string homeName, int homeRanking, string awayName, int awayRanking, char group = 'A')
