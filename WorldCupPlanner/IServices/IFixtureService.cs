@@ -1,4 +1,5 @@
 ﻿using DTOs.Fixture;
+using Domain.Entities;
 
 namespace IServices;
 
@@ -8,4 +9,5 @@ public interface IFixtureService
     bool HasFixture();
     List<StandingResponse> GetStandingsForGroup(char groupLetter);
     void GenerateFixture();
+    Fixture GetFixtureEntity();
 }

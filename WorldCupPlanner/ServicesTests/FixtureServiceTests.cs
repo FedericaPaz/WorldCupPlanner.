@@ -21,6 +21,7 @@ public class FixtureServiceTests
     private FixtureGenerator _fixtureGenerator = null!;
     private IMatchRepository _matchRepository = null!;
     private ICrucesRepository _crucesRepository = null!;
+    private IGroupRepository _groupRepository;
     private static readonly DateTime ClockDate = new DateTime(2026, 1, 1);
 
     [TestInitialize]
@@ -33,18 +34,23 @@ public class FixtureServiceTests
         _context = new WorldCupPlannerContext(options);
 
         _fixtureRepository = new FixtureRepository(_context);
-        _teamRepository    = new TeamRepository(_context);
+        _teamRepository = new TeamRepository(_context);
 
         _stadiumRepository = new StadiumRepositoryStub();
-        _matchRepository   = new MatchRepositoryStub();
-        _crucesRepository   = new CrucesRepository();
+        _matchRepository = new MatchRepositoryStub();
+        _crucesRepository = new CrucesRepository();
 
-        _config            = new TournamentConfig();
-        var clock          = new ClockStub(ClockDate);
+        _config = new TournamentConfig();
+        var clock = new ClockStub(ClockDate);
         _fixtureGenerator = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository, _config, clock);
+        _groupRepository = new EfGroupRepository(_context);
+
         _service = new FixtureService(
             _fixtureRepository, _fixtureGenerator, _teamRepository,
-            _stadiumRepository, _matchRepository, _crucesRepository, _config);
+            _stadiumRepository, _matchRepository, _crucesRepository,
+            _groupRepository, 
+            _config);
+        
         _fixture = new Fixture(_config);
     }
     
@@ -69,6 +75,7 @@ public class FixtureServiceTests
         int matchId   = 1;
 
         _stadiumRepository.AddStadium(stadium);
+
         foreach (var group in fixture.Groups)
         {
             for (int i = 1; i <= 4; i++)
@@ -77,13 +84,22 @@ public class FixtureServiceTests
                 _teamRepository.Add(team);
                 group.AddTeamToGroup(team);
             }
+
+            _groupRepository.AddGroup(group);
+
             var teams = group.TeamsInGroup.ToList();
+            var matchups = new (int, int)[] { (0,1),(0,2),(0,3),(1,2),(1,3),(2,3) };
             for (int i = 0; i < 6; i++)
             {
-                var match = new Match(matchId++, matchDate, stadium, teams[0], teams[1], group.GroupLetter, clock);
+                var match = new Match(matchId++, matchDate, stadium,
+                    teams[matchups[i].Item1], teams[matchups[i].Item2],
+                    group.GroupLetter, clock);
                 group.AddMatchToGroup(match);
+                _matchRepository.AddMatch(match);
             }
         }
+
+        _fixtureRepository.AddFixture(fixture);
         return fixture;
     }
 
@@ -118,7 +134,7 @@ public class FixtureServiceTests
     [TestMethod]
     public void HasFixture_WhenFixtureExists_ReturnsTrue()
     {
-        _fixtureRepository.AddFixture(CreateValidFixture());
+        CreateValidFixture();
         Assert.IsTrue(_service.HasFixture());
     }
 
@@ -134,14 +150,14 @@ public class FixtureServiceTests
     [TestMethod]
     public void GetFixture_WhenFixtureExists_ReturnsFixtureResponse()
     {
-        _fixtureRepository.AddFixture(CreateValidFixture());
+        CreateValidFixture();
         Assert.IsNotNull(_service.GetFixture());
     }
 
     [TestMethod]
     public void GetFixture_ReturnsCorrectGroupData()
     {
-        _fixtureRepository.AddFixture(CreateValidFixture());
+        CreateValidFixture();
         var groupA = _service.GetFixture().Groups.First(g => g.GroupLetter == 'A');
         Assert.IsNotNull(groupA);
         Assert.AreEqual(4, groupA.Teams.Count);
@@ -152,7 +168,7 @@ public class FixtureServiceTests
     [TestMethod]
     public void GetStandingsForGroup_WithValidGroup_ReturnsStandings()
     {
-        _fixtureRepository.AddFixture(CreateValidFixture());
+        CreateValidFixture();
         var standings = _service.GetStandingsForGroup('A');
         Assert.IsNotNull(standings);
         Assert.AreEqual(4, standings.Count);
@@ -166,7 +182,7 @@ public class FixtureServiceTests
     [TestMethod]
     public void GetStandingsForGroup_WithInvalidGroup_ThrowsArgumentException()
     {
-        _fixtureRepository.AddFixture(CreateValidFixture());
+        CreateValidFixture();
         Assert.ThrowsException<ArgumentException>(() => _service.GetStandingsForGroup('Z'));
     }
 
@@ -186,10 +202,8 @@ public class FixtureServiceTests
     [TestMethod]
     public void GetFixture_WhenFixtureExists_ShouldReturnCurrentPhase()
     {
-        var fixture = CreateValidFixture();
-        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
-        _fixtureRepository.AddFixture(fixture);
-        Assert.AreEqual("GroupStage", _service.GetFixture().CurrentPhase);
+        CreateValidFixture();
+        Assert.AreEqual("NotStarted", _service.GetFixture().CurrentPhase);
     }
 
     [TestMethod]

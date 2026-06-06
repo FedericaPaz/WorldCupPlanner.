@@ -16,6 +16,7 @@ public class FixtureService : IFixtureService
     private readonly IStadiumRepository _stadiumRepository;
     private readonly IMatchRepository _matchRepository;
     private readonly ICrucesRepository _crucesRepository;
+    private readonly IGroupRepository _groupRepository;
     private readonly TournamentConfig _config;
 
     public FixtureService(
@@ -25,6 +26,7 @@ public class FixtureService : IFixtureService
         IStadiumRepository stadiumRepository,
         IMatchRepository matchRepository,
         ICrucesRepository crucesRepository,
+        IGroupRepository groupRepository,
         TournamentConfig config)
     {
         if (config == null)
@@ -36,6 +38,7 @@ public class FixtureService : IFixtureService
         _stadiumRepository = stadiumRepository;
         _matchRepository = matchRepository;
         _crucesRepository = crucesRepository;
+        _groupRepository = groupRepository;
         _config = config;
     }
 
@@ -44,7 +47,32 @@ public class FixtureService : IFixtureService
         if (!_fixtureRepository.ContainsFixture())
             return new FixtureResponse();
 
-        return _fixtureRepository.GetFixture().ToEntity();
+        var fixture = _fixtureRepository.GetFixture();
+        var allMatches = _matchRepository.GetAllMatches();
+        var groups = _groupRepository.GetAllGroups();
+        var allTeams = _teamRepository.GetAll();
+
+        foreach (var group in groups)
+        {
+            var groupMatches = allMatches
+                .Where(m => m.Group == group.GroupLetter)
+                .ToList();
+
+            var teamsInGroup = groupMatches
+                .SelectMany(m => new[] { m.HomeTeam.Name, m.AwayTeam.Name })
+                .Distinct()
+                .Select(name => allTeams.First(t => t.Name == name))
+                .ToList();
+
+            foreach (var team in teamsInGroup)
+                group.AddTeamToGroup(team);
+
+            foreach (var match in groupMatches)
+                group.LoadMatchFromRepository(match);
+        }
+
+        fixture.SetGroups(groups);
+        return fixture.ToEntity();
     }
 
     public bool HasFixture()
@@ -93,10 +121,42 @@ public class FixtureService : IFixtureService
     private void ValidateExistingFixture()
     {
         if (!_fixtureRepository.ContainsFixture()) return;
-        var fixture = _fixtureRepository.GetFixture();
+        var fixture = GetFixtureEntity();
         if (!fixture.IsStillValid(
                 _teamRepository.GetAll().Cast<ITeam>().ToList(),
                 _stadiumRepository.GetAllStadiums().Cast<IStadium>().ToList()))
             _fixtureRepository.RemoveFixture(fixture);
+    }
+    public Fixture GetFixtureEntity()
+    {
+        if (!_fixtureRepository.ContainsFixture())
+            throw new InvalidOperationException("No hay fixture generado.");
+
+        var fixture = _fixtureRepository.GetFixture();
+        var allMatches = _matchRepository.GetAllMatches();
+        var groups = _groupRepository.GetAllGroups();
+        var allTeams = _teamRepository.GetAll();
+
+        foreach (var group in groups)
+        {
+            var groupMatches = allMatches
+                .Where(m => m.Group == group.GroupLetter)
+                .ToList();
+
+            var teamsInGroup = groupMatches
+                .SelectMany(m => new[] { m.HomeTeam.Name, m.AwayTeam.Name })
+                .Distinct()
+                .Select(name => allTeams.First(t => t.Name == name))
+                .ToList();
+
+            foreach (var team in teamsInGroup)
+                group.AddTeamToGroup(team);
+
+            foreach (var match in groupMatches)
+                group.LoadMatchFromRepository(match);
+        }
+
+        fixture.SetGroups(groups);
+        return fixture;
     }
 }
