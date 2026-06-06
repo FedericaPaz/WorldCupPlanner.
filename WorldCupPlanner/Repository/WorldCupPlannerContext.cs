@@ -36,7 +36,7 @@ public class WorldCupPlannerContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey("_id");
+            entity.HasKey(user => user.Email);
             
             entity.Property(user => user.FirstName)
                 .HasColumnName("_firstName")
@@ -143,19 +143,23 @@ public class WorldCupPlannerContext : DbContext
         {
             entity.HasKey(cruce => cruce.Id);
 
-            entity.Property(cruce => cruce.Name)
-                .IsRequired();
+            entity.Property(cruce => cruce.Name).IsRequired();
+            entity.Property(cruce => cruce.Phase).IsRequired();
 
-            entity.Property(cruce => cruce.Phase)
-                .IsRequired();
+            entity.HasOne(cruce => cruce.Match)
+                .WithMany()
+                .HasForeignKey("MatchId")
+                .OnDelete(DeleteBehavior.Restrict);
 
-            entity.Ignore(cruce => cruce.Match);
             entity.Ignore(cruce => cruce.NextCruce);
         });
 
         modelBuilder.Entity<Match>(entity =>
         {
             entity.HasKey(match => match.IdMatch);
+            
+            entity.Property(match => match.IdMatch)
+                .ValueGeneratedNever();
 
             entity.HasOne(match => match.Stadium)
                 .WithMany()
@@ -201,9 +205,7 @@ public class WorldCupPlannerContext : DbContext
         modelBuilder.Entity<Fixture>(entity =>
         {
             entity.HasKey(f => f.Id);
-
             entity.Property(f => f.CurrentPhase).IsRequired();
-
             entity.Ignore(f => f.Groups);
         });
     }
