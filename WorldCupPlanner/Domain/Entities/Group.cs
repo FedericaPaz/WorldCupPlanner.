@@ -120,4 +120,11 @@ public class Group
             throw new InvalidOperationException("El equipo no pertenece al grupo.");
         _teamsInGroup.Remove(team);
     }
+    
+    public void LoadMatchFromRepository(Match match)
+    {
+        if (match == null)
+            throw new ArgumentNullException(nameof(match));
+        _matchesInGroup.Add(match);
+    }
 }
