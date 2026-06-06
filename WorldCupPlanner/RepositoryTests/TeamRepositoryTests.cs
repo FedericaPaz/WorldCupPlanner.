@@ -109,13 +109,11 @@ public class TeamRepositoryTests
         var team = CreateTeam("Uruguay");
         _teamRepository.Add(team);
 
-        var updatedTeam = new Team(team.Name, new Confederation("CONMEBOL"), 1000);
-
+        var updatedTeam = new Team("Uruguay", new Confederation("CONMEBOL"), 1000);
         _teamRepository.Update(updatedTeam);
 
-        var result = _teamRepository.Get(team.Name);
+        var result = _teamRepository.Get("Uruguay");
 
-        Assert.IsNotNull(result);
         Assert.AreEqual("CONMEBOL", result.Confederation.Name);
         Assert.AreEqual(1000, result.FifaRanking);
     }
