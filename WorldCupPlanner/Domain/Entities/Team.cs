@@ -77,4 +77,10 @@ public class Team : ITeam
         if (ranking < MinRanking || ranking > MaxRanking)
             throw new ArgumentException($"El ranking FIFA debe estar entre {MinRanking} y {MaxRanking}.");
     }
+    
+    public void UpdateConfederation(Confederation confederation)
+    {
+        ValidateConfederation(confederation);
+        _confederation = confederation;
+    }
 }
