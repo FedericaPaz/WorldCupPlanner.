@@ -6,7 +6,7 @@ public class TournamentConfig
     private const int DefaultSemillaCompletar = 67890;
     private const int DefaultSemillaCrucesFase = 13579;
     private const int DefaultSemillaSimulation = 24680;
-    private static readonly DateTime DefaultFechaInicioTorneo = new DateTime(2026, 6, 1);
+    private static readonly DateTime DefaultFechaInicioTorneo = new DateTime(2026, 6, 20);
     private const int DefaultMaxPartidosPorDia = 3;
     private const int DefaultSeparacionEntreFechas = 3;
 

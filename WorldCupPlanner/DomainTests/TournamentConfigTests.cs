@@ -13,7 +13,7 @@ public class TournamentConfigTests
         Assert.AreEqual(67890, config.SemillaCompletar);
         Assert.AreEqual(13579, config.SemillaCrucesFase);
         Assert.AreEqual(24680, config.SemillaSimulation);
-        Assert.AreEqual(new DateTime(2026, 6, 1), config.FechaInicioTorneo);
+        Assert.AreEqual(new DateTime(2026, 6, 20), config.FechaInicioTorneo); //revisar
         Assert.AreEqual(3, config.MaxPartidosPorDia);
         Assert.AreEqual(3, config.SeparacionEntreFechas);
     }
