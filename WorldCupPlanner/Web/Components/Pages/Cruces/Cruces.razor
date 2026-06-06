@@ -365,7 +365,17 @@
             _mensajeExito = null;
             StateHasChanged();
 
-            CruceService.GenerateRoundOf32();
+            //CruceService.GenerateRoundOf32();
+            
+            try
+            {
+                CruceService.GenerateRoundOf32();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
 
             LogService.Register(
                 GetCurrentUserEmail(),
