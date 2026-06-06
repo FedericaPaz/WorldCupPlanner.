@@ -1,4 +1,5 @@
-﻿@page "/Fixture"
+﻿@page "/fixture"
+@page "/Fixture"
 @using DTOs.Fixture
 @using IServices
 @using Web.Services
@@ -27,7 +28,7 @@ else if (!FixtureService.HasFixture())
         <div class="text-center py-5">
             <h4>No hay fixture generado</h4>
             <p class="text-muted">Se necesitan 48 equipos y al menos 4 estadios para generar el fixture.</p>
-            
+
             <div class="d-flex justify-content-center gap-4 my-3">
                 <div>
                     <span class="@(_teamCount >= 48 ? "text-success" : "text-danger") fw-bold fs-5">
@@ -35,6 +36,7 @@ else if (!FixtureService.HasFixture())
                     </span>
                     <span class="text-muted"> / 48 equipos</span>
                 </div>
+
                 <div>
                     <span class="@(_stadiumCount >= 4 ? "text-success" : "text-danger") fw-bold fs-5">
                         @_stadiumCount
@@ -42,18 +44,22 @@ else if (!FixtureService.HasFixture())
                     <span class="text-muted"> / 4 estadios</span>
                 </div>
             </div>
-            
+
             @if (_canGenerate && SessionService.IsEditor())
             {
                 <button class="btn btn-success btn-lg mt-3" @onclick="GenerateInitialFixture">
                     ⚽ Generar Fixture
                 </button>
             }
-            else
+            else if (SessionService.IsEditor())
             {
                 <p class="text-muted mt-3">Completá los requisitos para habilitar la generación.</p>
             }
-            
+            else
+            {
+                <p class="text-muted mt-3">El fixture todavía no fue generado.</p>
+            }
+
             @if (!string.IsNullOrEmpty(_error))
             {
                 <div class="alert alert-danger mt-3 mx-auto" style="max-width: 500px;">
@@ -66,10 +72,11 @@ else if (!FixtureService.HasFixture())
 else
 {
     var fixture = FixtureService.GetFixture();
-    
+
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div></div>
+
             @if (SessionService.IsEditor())
             {
                 <button class="btn btn-success btn-md" @onclick="RegenerateFixture" disabled="@isReloading">
@@ -84,9 +91,10 @@ else
                     }
                 </button>
             }
+
             <div></div>
         </div>
-        
+
         <div class="row g-3 reload-container">
             @if (isReloading)
             {
@@ -106,6 +114,7 @@ else
                             <div class="card-header text-center bg-dark text-white">
                                 <h4 class="mb-0">Grupo @group.GroupLetter</h4>
                             </div>
+
                             <div class="card-body">
                                 @foreach (var team in group.Teams)
                                 {
@@ -115,6 +124,7 @@ else
                                     </div>
                                 }
                             </div>
+
                             <div class="card-footer text-center text-muted small">
                                 @group.Matches.Count partidos
                             </div>
@@ -134,9 +144,11 @@ else
                 <h4>Grupo @SelectedGroup.GroupLetter</h4>
                 <button class="btn-close" @onclick="CloseModal">✖</button>
             </div>
+
             <div class="modal-body">
                 <GroupDetail Group="SelectedGroup" />
             </div>
+
             <div class="modal-footer">
                 <button class="btn btn-secondary" @onclick="CloseModal">Cerrar</button>
             </div>
@@ -160,20 +172,26 @@ else
             Navigation.NavigateTo("/");
             return;
         }
-        
+
         _teamCount = TeamService.GetAll().Count;
         _stadiumCount = StadiumService.GetAllStadiums().Count;
         _canGenerate = _teamCount >= 48 && _stadiumCount >= 4;
     }
-    
+
     private void GenerateInitialFixture()
     {
+        if (!SessionService.IsEditor())
+        {
+            return;
+        }
+
         _isGenerating = true;
         _error = null;
 
         try
         {
             FixtureService.GenerateFixture();
+
             LogService.Register(
                 GetCurrentUserEmail(),
                 "Fixture",
@@ -194,7 +212,15 @@ else
 
     private async Task RegenerateFixture()
     {
-        if (isReloading) return;
+        if (!SessionService.IsEditor())
+        {
+            return;
+        }
+
+        if (isReloading)
+        {
+            return;
+        }
 
         isReloading = true;
         _error = null;
@@ -203,7 +229,9 @@ else
         try
         {
             await Task.Delay(500);
+
             FixtureService.GenerateFixture();
+
             LogService.Register(
                 GetCurrentUserEmail(),
                 "Fixture",
@@ -221,7 +249,7 @@ else
             StateHasChanged();
         }
     }
-    
+
     private void SelectGroup(GroupResponse group)
     {
         SelectedGroup = group;
@@ -233,13 +261,14 @@ else
         SelectedGroup = null;
         StateHasChanged();
     }
-    
+
     private string GetCurrentUserEmail()
     {
         if (!SessionService.IsUserActive())
         {
             return "Sistema";
         }
-        return SessionService.GetCurrentUser().Email;
+
+        return SessionService.GetCurrentUser()!.Email;
     }
 }
