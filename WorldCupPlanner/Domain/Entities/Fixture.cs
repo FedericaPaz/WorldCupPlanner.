@@ -25,7 +25,8 @@ public class Fixture
     
     private Fixture()
     {
-        
+        _groups = new List<Group>();
+        _eliminatoryMatches = new List<Match>();
     }
     
     public Fixture(TournamentConfig config)
