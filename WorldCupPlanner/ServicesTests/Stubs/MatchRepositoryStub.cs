@@ -44,4 +44,15 @@ public class MatchRepositoryStub : IMatchRepository
     {
         _matches.Clear();
     }
+
+    public void UpdateMatch(Match match)
+    {
+        var existing = _matches.FirstOrDefault(m => m.IdMatch == match.IdMatch);
+        if (existing != null)
+        {
+            _matches.Remove(existing);
+            _matches.Add(match);
+        }
+    }
+    
 }

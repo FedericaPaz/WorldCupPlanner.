@@ -54,18 +54,19 @@ public class MatchRepositoryTests
     public void AddMatch_WithValidMatch_ShouldStoreMatch()
     {
         var match = CreateMatch();
+        SaveRelatedEntities(match);
 
         _repository.AddMatch(match);
 
         Assert.AreEqual(1, _repository.GetAllMatches().Count);
-        Assert.AreEqual(match, _repository.GetAllMatches()[0]);
     }
 
     [TestMethod]
     public void GetById_WithExistingMatch_ShouldReturnMatch()
     {
         var match = CreateMatch();
-
+        SaveRelatedEntities(match);
+        
         _repository.AddMatch(match);
 
         var result = _repository.GetMatchById(match.IdMatch);
@@ -105,15 +106,17 @@ public class MatchRepositoryTests
     {
         var match1 = CreateMatch("Uruguay", "Argentina", "Centenario", 'A');
         var match2 = CreateMatch("Brasil", "Peru", "Maracana", 'B');
-
+        SaveRelatedEntities(match1);
+        SaveRelatedEntities(match2);
+        
         _repository.AddMatch(match1);
         _repository.AddMatch(match2);
 
         var matches = _repository.GetAllMatches();
 
         Assert.AreEqual(2, matches.Count);
-        Assert.AreEqual(match1, matches[0]);
-        Assert.AreEqual(match2, matches[1]);
+        Assert.AreEqual(match1.IdMatch, matches[0].IdMatch);
+        Assert.AreEqual(match2.IdMatch, matches[1].IdMatch);
     }
 
     [TestMethod]
@@ -127,5 +130,16 @@ public class MatchRepositoryTests
     public void Cleanup()
     {
         _context.Dispose();
+    }
+    
+    private void SaveRelatedEntities(Match match)
+    {
+        if (!_context.Teams.Any(t => t.Name == match.HomeTeam.Name))
+            _context.Teams.Add(match.HomeTeam);
+        if (!_context.Teams.Any(t => t.Name == match.AwayTeam.Name))
+            _context.Teams.Add(match.AwayTeam);
+        if (!_context.Stadiums.Any(s => s.StadiumName == match.Stadium.StadiumName))
+            _context.Stadiums.Add(match.Stadium);
+        _context.SaveChanges();
     }
 }

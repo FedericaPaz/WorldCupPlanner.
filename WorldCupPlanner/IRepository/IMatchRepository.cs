@@ -9,4 +9,5 @@ public interface IMatchRepository
     List<Match> GetAllMatches();
     Match GetMatchById(int matchId);
     void ClearMatches();
+    void UpdateMatch(Match match);
 }
