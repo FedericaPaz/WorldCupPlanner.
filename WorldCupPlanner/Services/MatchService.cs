@@ -65,6 +65,8 @@ public class MatchService : IMatchService
         AddCardIncidents(match, request);
 
         match.SetMatchResult(request.homeGoals, request.awayGoals);
+        
+        _matchRepository.UpdateMatch(match);
 
         _notificationService.NotifyJournalists(
             $"Se cargó el resultado de {match.HomeTeam.Name} vs {match.AwayTeam.Name}: {request.homeGoals}-{request.awayGoals}");
