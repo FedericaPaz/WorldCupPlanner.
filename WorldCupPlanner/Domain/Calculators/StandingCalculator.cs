@@ -59,7 +59,7 @@ public class StandingCalculator
 
     private Standing FindStandingForTeam(List<Standing> standings, ITeam team)
     {
-        return standings.First(standing => standing.TeamInGroup == team);
+        return standings.First(s => s.TeamInGroup.Name == team.Name);
     }
 
     private List<Standing> OrderStandings(List<Standing> standings)
