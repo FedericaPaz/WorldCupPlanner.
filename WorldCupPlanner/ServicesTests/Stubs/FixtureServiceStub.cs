@@ -19,6 +19,11 @@ public class FixtureServiceStub : IFixtureService
         return _repository.GetFixture();
     }
 
+    public void DeleteFixture(Fixture fixture)
+    { 
+        _repository.RemoveFixture(fixture);
+    }
+
     public FixtureResponse GetFixture()
     {
         if (!_repository.ContainsFixture())

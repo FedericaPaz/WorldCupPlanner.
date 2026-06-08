@@ -71,10 +71,11 @@ public class FixtureServiceTests
         fixture.InitializeGroups();
         var clock     = new ClockStub(ClockDate);
         var matchDate = ClockDate.AddMonths(5);
-        var stadium   = new Stadium("Estadio", "Ciudad", "", 50000);
         int matchId   = 1;
 
-        _stadiumRepository.AddStadium(stadium);
+        var stadiumNames = new[] { "Estadio1", "Estadio2", "Estadio3", "Estadio4" };
+        foreach (var name in stadiumNames)
+            _stadiumRepository.AddStadium(new Stadium(name, "Ciudad", "", 50000));
 
         foreach (var group in fixture.Groups)
         {
@@ -91,6 +92,7 @@ public class FixtureServiceTests
             var matchups = new (int, int)[] { (0,1),(0,2),(0,3),(1,2),(1,3),(2,3) };
             for (int i = 0; i < 6; i++)
             {
+                var stadium = _stadiumRepository.GetStadium(stadiumNames[i % 4]);
                 var match = new Match(matchId++, matchDate, stadium,
                     teams[matchups[i].Item1], teams[matchups[i].Item2],
                     group.GroupLetter, clock);

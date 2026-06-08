@@ -11,6 +11,7 @@ public class StadiumServiceTests
 {
     private StadiumService _service;
     private IStadiumRepository _repository = null!;
+    private IMatchRepository _matchrepository = new MatchRepositoryStub();
 
     private StadiumRequest CreateRequest(string stadiumName, string stadiumCity, string? stadiumDescription, int locativeCapacity)
     {
@@ -27,7 +28,7 @@ public class StadiumServiceTests
     public void Setup()
     {
         _repository = new StadiumRepositoryStub();
-        _service = new StadiumService(_repository);
+        _service = new StadiumService(_repository,_matchrepository);
     }
     
     [TestMethod]
