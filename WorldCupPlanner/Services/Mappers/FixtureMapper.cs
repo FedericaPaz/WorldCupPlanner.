@@ -22,7 +22,7 @@ public static class FixtureMapper
         return new GroupResponse
         {
             GroupLetter = group.GroupLetter,
-            Teams = group.TeamsInGroup.Select(t => t.FromEntity()).ToList(),
+            Teams = group.GetTeamsInGroup().Select(t => t.FromEntity()).ToList(),
             Matches = group.MatchesInGroup.Select(m => m.ToResponse()).ToList()
         };
     }
