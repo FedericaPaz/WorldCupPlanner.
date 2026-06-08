@@ -134,14 +134,19 @@ public class Match
 
     public void SetMatchResult(int homeGoals, int awayGoals)
     {
-        EnsureMatchWasPlayed();
+        Console.WriteLine($"entre a setmatchres Setting match result for {HomeTeam.Name} vs {AwayTeam.Name}: {homeGoals}-{awayGoals}");
+        //EnsureMatchWasPlayed();
         EnsureResultWasNotSet();
         ApplyResult(homeGoals, awayGoals);
+        Console.WriteLine($"sali de setmatchres Match result set: {HomeTeam.Name} vs {AwayTeam.Name}: {homeGoals}-{awayGoals}");
     }
 
     public void SimulateResult(int homeGoals, int awayGoals)
     {
+        Console.WriteLine("entre simulateResult for mathc");
         ApplyResult(homeGoals, awayGoals);
+        Console.WriteLine("sali de simulateResult for mathc");
+        
     }
 
     public void UpdateDate(DateTime newDate)
@@ -158,8 +163,12 @@ public class Match
 
     public void AddIncident(MatchIncident incident)
     {
+        Console.WriteLine("entre a add incident");
         EnsureIncidentIsNotNull(incident);
         _incidents.Add(incident);
+        Console.WriteLine($"Incident added: {incident.Type} for team {incident.Team.Name}");
+        Console.WriteLine($"Current number of incidents: {_incidents.Count}");
+        Console.WriteLine("sali de add incident");
     }
 
     public void ClearCardIncidents()
@@ -168,14 +177,21 @@ public class Match
             incident.Type == IncidentType.YellowCard ||
             incident.Type == IncidentType.RedCard);
     }
+    
+    public void ClearAllIncidents()
+    {
+        _incidents.Clear();
+    }   
 
     private void ApplyResult(int homeGoals, int awayGoals)
     {
+        Console.WriteLine("entre a aplly res");
         EnsureValidGoals(homeGoals, awayGoals);
         HomeGoals = homeGoals;
         AwayGoals = awayGoals;
         SetWinnerFromResult(homeGoals, awayGoals);
         SetLoserFromResult(homeGoals, awayGoals);
+        Console.WriteLine($"sali de applyresult. HomeGoals: {HomeGoals}, AwayGoals: {AwayGoals}, Winner: {WinnerMatch?.Name}, Loser: {LoserMatch?.Name}");
     }
 
     private void EnsureValidClock(IDateTimeMatch clock)
@@ -192,14 +208,19 @@ public class Match
 
     private void EnsureMatchWasPlayed()
     {
+        Console.WriteLine("entro a ensuremattchwasplayed");
+        Console.WriteLine($"entre Ensuring match was played. Current time: {_clock.Now}, Match date: {DateMatch}");
         if (_clock.Now.ToUniversalTime() < DateMatch.ToUniversalTime())
             throw new InvalidOperationException("El partido todavía no se jugó.");
+        Console.WriteLine("sali de Ensuring match was played");
     }
 
     private void EnsureResultWasNotSet()
     {
+        Console.WriteLine($"entre Ensuring result was not set. Current HomeGoals: {HomeGoals}, Current AwayGoals: {AwayGoals}");
         if (HomeGoals.HasValue || AwayGoals.HasValue)
             throw new InvalidOperationException("El resultado ya fue seteado.");
+        Console.WriteLine("sali de Ensuring result was not set");
     }
 
     private void EnsureValidGoals(int homeGoals, int awayGoals)
@@ -230,11 +251,13 @@ public class Match
 
     private void EnsureValidDate(DateTime dateMatch)
     {
+        Console.WriteLine("entre a ensure valid date");
         if (_clock == null)
             throw new InvalidOperationException("El reloj no fue configurado.");
 
         if (dateMatch.ToUniversalTime() < _clock.Now.ToUniversalTime())
             throw new ArgumentException("La fecha no puede ser pasada.");
+        Console.WriteLine("sali de ensure valid date");
     }
 
     private void EnsureValidStadium(Stadium stadium)
@@ -278,6 +301,7 @@ public class Match
 
     private static void EnsureIncidentIsNotNull(MatchIncident incident)
     {
+        Console.WriteLine("entre a ensure incident is not null");
         if (incident == null)
             throw new ArgumentNullException(nameof(incident));
     }

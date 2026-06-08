@@ -190,6 +190,9 @@ public class WorldCupPlannerContext : DbContext
                 .HasConversion<string>();
 
             entity.Property(incident => incident.Quantity);
+            
+            entity.Property(incident => incident.MatchId)
+                .HasField("_matchId");
 
             entity.HasOne(incident => incident.Team)
                 .WithMany()
