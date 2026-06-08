@@ -81,15 +81,6 @@ public class WorldCupPlannerContext : DbContext
 
             entity.Property<DateTime?>("_readAt")
                 .HasColumnName("ReadAt");
-
-            entity.Ignore(notification => notification.Id);
-            entity.Ignore(notification => notification.RecipientEmail);
-            entity.Ignore(notification => notification.UserEmail);
-            entity.Ignore(notification => notification.Message);
-            entity.Ignore(notification => notification.Timestamp);
-            entity.Ignore(notification => notification.CreatedAt);
-            entity.Ignore(notification => notification.IsRead);
-            entity.Ignore(notification => notification.ReadAt);
         });
 
         modelBuilder.Entity<Group>(entity =>
