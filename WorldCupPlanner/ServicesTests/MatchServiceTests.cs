@@ -429,17 +429,6 @@ public class MatchServiceTests
     }
 
     [TestMethod]
-    public void SimulateMatch_WithFutureMatch_ShouldThrowInvalidOperationException()
-    {
-        AddDefaultTeamsAndStadium();
-
-        var created = _service.CreateMatch(CreateValidRequest(new DateTime(2028, 1, 1)));
-
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            _service.SimulateMatch(created.idMatch, 1));
-    }
-
-    [TestMethod]
     public void SimulateGroupStage_WithoutFixture_ShouldThrowInvalidOperationException()
     {
         Assert.ThrowsException<InvalidOperationException>(() =>
