@@ -50,6 +50,7 @@ public class FixtureService : IFixtureService
         }
     
         var fixture = _fixtureRepository.GetFixture();
+        
         ReconstructGroups(fixture);
         return fixture.ToEntity();
     }
@@ -146,5 +147,12 @@ public class FixtureService : IFixtureService
             foreach (var match in groupMatches)
                 group.LoadMatchFromRepository(match);
         }
+    }
+
+    public void DeleteFixture(Fixture fixture)
+    {
+        _crucesRepository.RemoveCruces();
+        _matchRepository.ClearMatches();
+        _fixtureRepository.RemoveFixture(fixture);
     }
 }

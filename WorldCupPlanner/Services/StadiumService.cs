@@ -8,15 +8,17 @@ namespace Services;
 public class StadiumService : IStadiumService
 {
     private readonly IStadiumRepository _stadiumRepository;
+    private readonly IMatchRepository _matchRepository;
     
     private const int MinCapacity = 20000;
     private const int MaxNameLength = 80;
     private const int MaxCityLength = 60;
     private const int MaxDescriptionLength = 400;
 
-    public StadiumService(IStadiumRepository repository)
+    public StadiumService(IStadiumRepository repository, IMatchRepository matchRepository)
     {
         _stadiumRepository = repository;
+        _matchRepository = matchRepository;
     }
 
     public void AddStadium(StadiumRequest request)
@@ -79,8 +81,11 @@ public class StadiumService : IStadiumService
     {
         EnsureValidStadiumName(name);
 
-        var stadium = _stadiumRepository.GetStadium(name);
+        if (_matchRepository.GetAllMatches().Any(m => m.Stadium.StadiumName == name))
+            throw new InvalidOperationException(
+                "No se puede eliminar el estadio porque tiene partidos asignados. Eliminá el fixture primero.");
 
+        var stadium = _stadiumRepository.GetStadium(name);
         if (stadium == null)
             throw new InvalidOperationException("Estadio no encontrado");
 

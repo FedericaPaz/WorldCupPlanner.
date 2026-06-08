@@ -89,6 +89,17 @@ else
                         <span>⚽ ReGenerar Fixture</span>
                     }
                 </button>
+                <button class="btn btn-success btn-md" @onclick="EliminarFixture" disabled="@isReloading">
+                    @if (isReloading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                        <span>Eliminando fixture...</span>
+                    }
+                    else
+                    {
+                        <span>⚽ Eliminar Fixture</span>
+                    }
+                </button>
             }
 
             <div></div>
@@ -209,6 +220,44 @@ else
         }
     }
 
+
+    private async Task EliminarFixture()
+    {
+        if (!SessionService.IsEditor())
+        {
+            return;
+        }
+        if (isReloading)
+        {
+            return;
+        }
+        isReloading = true;
+        _error = null;
+        StateHasChanged();
+        try
+        {
+            await Task.Delay(500);
+
+            FixtureService.DeleteFixture(FixtureService.GetFixtureEntity());
+
+            LogService.Register(
+                GetCurrentUserEmail(),
+                "Fixture",
+                "Generación",
+                $"Se elimino el fixture generado con:  {ConfigService.GetConfig().SemillaFixture}"
+            );
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            isReloading = false;
+            StateHasChanged();
+        }
+    }
+    
     private async Task RegenerateFixture()
     {
         if (!SessionService.IsEditor())

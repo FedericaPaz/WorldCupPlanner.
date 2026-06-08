@@ -10,4 +10,5 @@ public interface IFixtureService
     List<StandingResponse> GetStandingsForGroup(char groupLetter);
     void GenerateFixture();
     Fixture GetFixtureEntity();
+    void DeleteFixture(Fixture fixture);
 }

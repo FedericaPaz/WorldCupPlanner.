@@ -39,9 +39,11 @@ public class Fixture
 
     public void InitializeGroups()
     {
+        Console.WriteLine($"Inicializando grupos: {_groups.Count}");
         _groups = new List<Group>();
         for (int i = 0; i < ExpectedGroups; i++)
             _groups.Add(new Group((char)('A' + i)));
+        Console.WriteLine($"Finalizando inicialización grupos: {_groups.Count}");
     }
 
     public void AdvanceToPhase(TournamentPhase newPhase)
@@ -87,7 +89,8 @@ public class Fixture
 
     public bool IsStillValid(List<ITeam> existingTeams, List<IStadium> existingStadiums)
     {
-        return _groups.Count == ExpectedGroups;
+        //check
+        return _groups.Count == ExpectedGroups && existingStadiums.Count >= 4 && existingTeams.Count == 48;
     }
 
     public void AddEliminatoryMatch(Match match)
