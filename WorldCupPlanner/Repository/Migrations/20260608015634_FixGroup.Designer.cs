@@ -12,8 +12,8 @@ using Repository;
 namespace Repository.Migrations
 {
     [DbContext(typeof(WorldCupPlannerContext))]
-    [Migration("20260606162627_standingCalculator")]
-    partial class standingCalculator
+    [Migration("20260608015634_FixGroup")]
+    partial class FixGroup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("MatchId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -41,6 +44,8 @@ namespace Repository.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MatchId");
 
                     b.ToTable("Cruces");
                 });
@@ -69,11 +74,16 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("FixtureId")
+                        .HasColumnType("int");
+
                     b.Property<string>("GroupLetter")
                         .IsRequired()
                         .HasColumnType("nvarchar(1)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FixtureId");
 
                     b.ToTable("Groups");
                 });
@@ -257,21 +267,17 @@ namespace Repository.Migrations
 
                     b.Property<string>("Confederation")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("_confederation");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CurrentRanking")
-                        .HasColumnType("int")
-                        .HasColumnName("_currentRanking");
+                        .HasColumnType("int");
 
                     b.Property<int>("FifaRanking")
-                        .HasColumnType("int")
-                        .HasColumnName("_fifaRanking");
+                        .HasColumnType("int");
 
                     b.Property<string>("FlagBase64")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("_flagBase64");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Name");
 
@@ -281,26 +287,22 @@ namespace Repository.Migrations
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("_email");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("_firstName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("_lastName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("_passwordHash");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Roles")
                         .IsRequired()
@@ -309,6 +311,41 @@ namespace Repository.Migrations
                     b.HasKey("Email");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("GroupTeams", b =>
+                {
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TeamName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("GroupId", "TeamName");
+
+                    b.HasIndex("TeamName");
+
+                    b.ToTable("GroupTeams");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Cruce", b =>
+                {
+                    b.HasOne("Domain.Entities.Match", "Match")
+                        .WithMany()
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Match");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Group", b =>
+                {
+                    b.HasOne("Domain.Entities.Fixture", null)
+                        .WithMany("Groups")
+                        .HasForeignKey("FixtureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entities.Match", b =>
@@ -369,6 +406,26 @@ namespace Repository.Migrations
                     b.Navigation("Match");
 
                     b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("GroupTeams", b =>
+                {
+                    b.HasOne("Domain.Entities.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Team", null)
+                        .WithMany()
+                        .HasForeignKey("TeamName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Fixture", b =>
+                {
+                    b.Navigation("Groups");
                 });
 
             modelBuilder.Entity("Domain.Entities.Match", b =>

@@ -12,20 +12,6 @@ namespace Repository.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cruces",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phase = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cruces", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Fixtures",
                 columns: table => new
                 {
@@ -103,9 +89,9 @@ namespace Repository.Migrations
                 columns: table => new
                 {
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    _confederation = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    _fifaRanking = table.Column<int>(type: "int", nullable: false),
-                    _currentRanking = table.Column<int>(type: "int", nullable: false),
+                    Confederation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FifaRanking = table.Column<int>(type: "int", nullable: false),
+                    CurrentRanking = table.Column<int>(type: "int", nullable: false),
                     FlagBase64 = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -133,8 +119,7 @@ namespace Repository.Migrations
                 name: "Matches",
                 columns: table => new
                 {
-                    IdMatch = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdMatch = table.Column<int>(type: "int", nullable: false),
                     DateMatch = table.Column<DateTime>(type: "datetime2", nullable: false),
                     StadiumName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     HomeTeamName = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -182,6 +167,27 @@ namespace Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cruces",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MatchId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phase = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cruces", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cruces_Matches_MatchId",
+                        column: x => x.MatchId,
+                        principalTable: "Matches",
+                        principalColumn: "IdMatch",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MatchIncidents",
                 columns: table => new
                 {
@@ -208,6 +214,11 @@ namespace Repository.Migrations
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cruces_MatchId",
+                table: "Cruces",
+                column: "MatchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Matches_AwayTeamName",

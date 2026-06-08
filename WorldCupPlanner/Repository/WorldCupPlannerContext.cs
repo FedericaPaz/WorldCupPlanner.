@@ -39,19 +39,15 @@ public class WorldCupPlannerContext : DbContext
             entity.HasKey(user => user.Email);
             
             entity.Property(user => user.FirstName)
-                .HasColumnName("_firstName")
                 .IsRequired();
             
             entity.Property(user => user.LastName)
-                .HasColumnName("_lastName")
                 .IsRequired();
             
             entity.Property(user => user.Email)
-                .HasColumnName("_email")
                 .IsRequired();
             
             entity.Property(user => user.PasswordHash)
-                .HasColumnName("_passwordHash")
                 .IsRequired();
 
             entity.Property(user => user.Roles)
@@ -69,21 +65,17 @@ public class WorldCupPlannerContext : DbContext
         {
             entity.HasKey(team => team.Name);
 
-            entity.Property(team => team.FifaRanking)
-                .HasColumnName("_fifaRanking");
+            entity.Property(team => team.FifaRanking);
 
-            entity.Property(team => team.CurrentRanking)
-                .HasColumnName("_currentRanking");
+            entity.Property(team => team.CurrentRanking);
 
             entity.Property(team => team.Confederation)
-                .HasColumnName("_confederation")
                 .HasConversion(
                     c => c.Name,
                     name => new Confederation(name)
                 );
-            
-            entity.Property(team => team.FlagBase64)
-                .HasColumnName("_flagBase64");
+
+            entity.Property(team => team.FlagBase64);
         });
 
         modelBuilder.Entity<Stadium>()
@@ -130,13 +122,16 @@ public class WorldCupPlannerContext : DbContext
 
         modelBuilder.Entity<Group>(entity =>
         {
-            entity.HasKey(group => group.Id);
+            entity.HasKey(g => g.Id);
+            entity.Property(g => g.GroupLetter).IsRequired();
 
-            entity.Property(group => group.GroupLetter)
-                .IsRequired();
-
-            entity.Ignore(group => group.TeamsInGroup);
-            entity.Ignore(group => group.MatchesInGroup);
+            entity.HasOne<Fixture>()
+                .WithMany(f => f.Groups)
+                .HasForeignKey(g => g.FixtureId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.Ignore(g => g.MatchesInGroup);
+            entity.Ignore(g => g.TeamsInGroup);
         });
 
         modelBuilder.Entity<Cruce>(entity =>
@@ -148,7 +143,7 @@ public class WorldCupPlannerContext : DbContext
 
             entity.HasOne(cruce => cruce.Match)
                 .WithMany()
-                .HasForeignKey("MatchId")
+                .HasForeignKey(cruce => cruce.MatchId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.Ignore(cruce => cruce.NextCruce);
@@ -206,7 +201,11 @@ public class WorldCupPlannerContext : DbContext
         {
             entity.HasKey(f => f.Id);
             entity.Property(f => f.CurrentPhase).IsRequired();
-            entity.Ignore(f => f.Groups);
+
+            entity.HasMany(f => f.Groups)
+                .WithOne()
+                .HasForeignKey(g => g.FixtureId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

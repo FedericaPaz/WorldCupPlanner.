@@ -12,8 +12,8 @@ using Repository;
 namespace Repository.Migrations
 {
     [DbContext(typeof(WorldCupPlannerContext))]
-    [Migration("20260606155343_FixMatchID")]
-    partial class FixMatchID
+    [Migration("20260608011525_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,9 @@ namespace Repository.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("MatchId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -41,6 +44,8 @@ namespace Repository.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MatchId");
 
                     b.ToTable("Cruces");
                 });
@@ -257,21 +262,17 @@ namespace Repository.Migrations
 
                     b.Property<string>("Confederation")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("_confederation");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CurrentRanking")
-                        .HasColumnType("int")
-                        .HasColumnName("_currentRanking");
+                        .HasColumnType("int");
 
                     b.Property<int>("FifaRanking")
-                        .HasColumnType("int")
-                        .HasColumnName("_fifaRanking");
+                        .HasColumnType("int");
 
                     b.Property<string>("FlagBase64")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("_flagBase64");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Name");
 
@@ -281,26 +282,22 @@ namespace Repository.Migrations
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("_email");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("_firstName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("_lastName");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("_passwordHash");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Roles")
                         .IsRequired()
@@ -309,6 +306,17 @@ namespace Repository.Migrations
                     b.HasKey("Email");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Cruce", b =>
+                {
+                    b.HasOne("Domain.Entities.Match", "Match")
+                        .WithMany()
+                        .HasForeignKey("MatchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Match");
                 });
 
             modelBuilder.Entity("Domain.Entities.Match", b =>
