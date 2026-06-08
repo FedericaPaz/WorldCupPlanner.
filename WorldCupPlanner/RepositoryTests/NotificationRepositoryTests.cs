@@ -229,4 +229,16 @@ public class NotificationRepositoryTests
         Assert.IsTrue(storedNotification.IsRead);
         Assert.AreEqual(readAt, storedNotification.ReadAt);
     }
+    
+    [TestMethod]
+    public void Update_WithNonExistingNotification_ShouldThrowInvalidOperationException()
+    {
+        var notification = new Notification(
+            "periodista@test.com",
+            "Resultado nuevo",
+            new DateTime(2026, 6, 1, 14, 30, 0));
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            _repository.Update(notification));
+    }
 }
