@@ -45,34 +45,33 @@ public class FixtureService : IFixtureService
     public FixtureResponse GetFixture()
     {
         if (!_fixtureRepository.ContainsFixture())
-            return new FixtureResponse();
-
-        var fixture = _fixtureRepository.GetFixture();
-        var allMatches = _matchRepository.GetAllMatches();
-        var groups = _groupRepository.GetAllGroups();
-        var allTeams = _teamRepository.GetAll();
-
-        foreach (var group in groups)
         {
-            var groupMatches = allMatches
-                .Where(m => m.Group == group.GroupLetter)
-                .ToList();
+            return new FixtureResponse();
+        }
+    
+        var fixture = _fixtureRepository.GetFixture();
+        ReconstructGroups(fixture);
+        return fixture.ToEntity();
+    }
 
-            var teamsInGroup = groupMatches
-                .SelectMany(m => new[] { m.HomeTeam.Name, m.AwayTeam.Name })
-                .Distinct()
-                .Select(name => allTeams.First(t => t.Name == name))
-                .ToList();
-
-            foreach (var team in teamsInGroup)
-                group.AddTeamToGroup(team);
-
-            foreach (var match in groupMatches)
-                group.LoadMatchFromRepository(match);
+    public Fixture GetFixtureEntity()
+    {
+        if (!_fixtureRepository.ContainsFixture())
+        {
+            throw new InvalidOperationException("No hay fixture generado.");
         }
 
-        fixture.SetGroups(groups);
-        return fixture.ToEntity();
+        try
+        {
+            var fixture = _fixtureRepository.GetFixture();
+            ReconstructGroups(fixture);
+            return fixture;
+        }
+        catch
+        {
+            Console.WriteLine("Error al obtener el fixture en getFixtureEntity.");
+            throw;
+        }
     }
 
     public bool HasFixture()
@@ -84,13 +83,14 @@ public class FixtureService : IFixtureService
         }
         catch
         {
+            Console.WriteLine("fallo en hasFixture");
             return false;
         }
     }
 
     public List<StandingResponse> GetStandingsForGroup(char groupLetter)
     {
-        var fixture = _fixtureRepository.GetFixture();
+        var fixture = GetFixtureEntity();
         var group = fixture.Groups.FirstOrDefault(g => g.GroupLetter == groupLetter);
         if (group == null)
             throw new ArgumentException($"Grupo {groupLetter} no encontrado");
@@ -102,61 +102,49 @@ public class FixtureService : IFixtureService
 
     public void GenerateFixture()
     {
-        _fixtureGenerator.GenerateGroupsStageFixture();
-
-        var fixture = _fixtureRepository.GetFixture();
-        var partidos = new List<Match>();
-        foreach (var grupo in fixture.Groups)
-        {
-            foreach (var partido in grupo.MatchesInGroup)
-                partidos.Add(partido);
-        }
+        var fixture = _fixtureGenerator.GenerateGroupsStageFixture();
 
         _matchRepository.ClearMatches();
         _crucesRepository.RemoveCruces();
-        foreach (var match in partidos)
-            _matchRepository.AddMatch(match);
+
+        foreach (var grupo in fixture.Groups)
+        foreach (var partido in grupo.MatchesInGroup)
+            _matchRepository.AddMatch(partido);
+
+        _fixtureRepository.AddFixture(fixture);
     }
     
     private void ValidateExistingFixture()
     {
-        if (!_fixtureRepository.ContainsFixture()) return;
+        if (!_fixtureRepository.ContainsFixture())
+        {
+            return;
+        }
+        
         var fixture = GetFixtureEntity();
+
         if (!fixture.IsStillValid(
                 _teamRepository.GetAll().Cast<ITeam>().ToList(),
                 _stadiumRepository.GetAllStadiums().Cast<IStadium>().ToList()))
+        {
             _fixtureRepository.RemoveFixture(fixture);
+        }
     }
-    public Fixture GetFixtureEntity()
+
+    private void ReconstructGroups(Fixture fixture)
     {
-        if (!_fixtureRepository.ContainsFixture())
-            throw new InvalidOperationException("No hay fixture generado.");
-
-        var fixture = _fixtureRepository.GetFixture();
         var allMatches = _matchRepository.GetAllMatches();
-        var groups = _groupRepository.GetAllGroups();
-        var allTeams = _teamRepository.GetAll();
-
-        foreach (var group in groups)
+        
+        foreach (var group in fixture.Groups)
         {
             var groupMatches = allMatches
                 .Where(m => m.Group == group.GroupLetter)
                 .ToList();
 
-            var teamsInGroup = groupMatches
-                .SelectMany(m => new[] { m.HomeTeam.Name, m.AwayTeam.Name })
-                .Distinct()
-                .Select(name => allTeams.First(t => t.Name == name))
-                .ToList();
-
-            foreach (var team in teamsInGroup)
-                group.AddTeamToGroup(team);
-
+            if (group.MatchesInGroup.Count == 6) break;
+            
             foreach (var match in groupMatches)
                 group.LoadMatchFromRepository(match);
         }
-
-        fixture.SetGroups(groups);
-        return fixture;
     }
 }

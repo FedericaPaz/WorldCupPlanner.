@@ -10,6 +10,8 @@ public class Group
     private char _groupLetter;
     private readonly List<Team> _teamsInGroup = new List<Team>();
     private readonly List<Match> _matchesInGroup = new List<Match>();
+    
+    public int FixtureId { get; private set; }
 
     public int Id { get; private set; }
     

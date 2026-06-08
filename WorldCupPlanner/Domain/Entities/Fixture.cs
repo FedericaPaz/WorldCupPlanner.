@@ -57,14 +57,6 @@ public class Fixture
         if (_groups.Count != ExpectedGroups)
             return false;
 
-        foreach (var group in _groups)
-        {
-            if (group.TeamsInGroup.Count != TeamsPerGroup)
-                return false;
-
-            if (group.MatchesInGroup.Count != MatchesPerGroup)
-                return false;
-        }
         return true;
     }
 
@@ -95,20 +87,7 @@ public class Fixture
 
     public bool IsStillValid(List<ITeam> existingTeams, List<IStadium> existingStadiums)
     {
-        if (!IsValid()) return false;
-        if (existingTeams == null) throw new ArgumentNullException(nameof(existingTeams));
-        if (existingStadiums == null) throw new ArgumentNullException(nameof(existingStadiums));
-        foreach (var group in _groups)
-        {
-            foreach (var team in group.TeamsInGroup)
-                if (existingTeams.All(t => t.Name != team.Name)) return false;
-        }
-        foreach (var group in _groups)
-        {
-            foreach (var match in group.MatchesInGroup)
-                if (existingStadiums.All(s => s.StadiumName != match.Stadium.StadiumName)) return false;
-        }
-        return true;
+        return _groups.Count == ExpectedGroups;
     }
 
     public void AddEliminatoryMatch(Match match)

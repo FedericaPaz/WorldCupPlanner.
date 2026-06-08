@@ -23,8 +23,7 @@ public class StadiumRepository : IStadiumRepository
     {
         EnsureValidName(stadiumName);
 
-        return _context.Stadiums.FirstOrDefault(s =>
-            s.StadiumName.Equals(stadiumName, StringComparison.OrdinalIgnoreCase));
+        return _context.Stadiums.FirstOrDefault(s => s.StadiumName == stadiumName);
     }
 
     public void DeleteStadium(Stadium stadium)

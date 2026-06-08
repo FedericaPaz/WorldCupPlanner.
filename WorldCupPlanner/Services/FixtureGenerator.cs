@@ -56,7 +56,6 @@ public class FixtureGenerator
         GenerateMatches(fixture, stadiums);
 
         fixture.AdvanceToPhase(TournamentPhase.GroupStage);
-        _fixtureRepository.AddFixture(fixture);
         return fixture;
     }
 
