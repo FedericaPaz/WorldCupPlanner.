@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Repository;
 
 namespace RepositoryTests;
@@ -6,32 +7,44 @@ namespace RepositoryTests;
 [TestClass]
 public class LogRepositoryTests
 {
+    private WorldCupPlannerContext _context = null!;
+    private LogRepository _logRepository = null;
+    private LogEntry _log = null!;
+
+    [TestInitialize]
+    public void Setup()
+    {
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        _context = new WorldCupPlannerContext(options);
+        _logRepository = new LogRepository(_context);
+        _log = new LogEntry(
+            "admin@test.com", "Usuarios","Alta","Se creó el usuario usuario@test.com"
+        );
+    }
+    
+    
     [TestMethod]
     public void Add_WithValidLogEntry_ShouldStoreLogEntry()
     {
-        var repository = new LogRepository();
-        var logEntry = new LogEntry(
-            "admin@test.com", "Usuarios","Alta","Se creó el usuario usuario@test.com"
-        );
-        repository.Add(logEntry);
+        _logRepository.Add(_log);
         
-        var logs = repository.GetAll();
+        var logs = _logRepository.GetAll();
 
         Assert.AreEqual(1, logs.Count);
-        Assert.AreEqual(logEntry, logs[0]);
+        Assert.AreEqual(_log, logs[0]);
     }
     
     [TestMethod]
     public void Add_WithNullLogEntry_ShouldThrowException()
     {
-        var repository = new LogRepository();
-        Assert.ThrowsException<ArgumentNullException>(() => repository.Add(null!));
+        Assert.ThrowsException<ArgumentNullException>(() => _logRepository.Add(null!));
     }
     
     [TestMethod]
     public void GetAll_WithMultipleLogs_ShouldReturnLogsOrderedByNewestFirst()
     {
-        var repository = new LogRepository();
 
         var firstLog = new LogEntry("admin@test.com", "Usuarios", "Alta", "Se creó el usuario primero@test.com"
         );
@@ -41,10 +54,10 @@ public class LogRepositoryTests
         var secondLog = new LogEntry("admin@test.com", "Usuarios", "Alta", "Se creó el usuario segundo@test.com"
         );
 
-        repository.Add(firstLog);
-        repository.Add(secondLog);
+        _logRepository.Add(firstLog);
+        _logRepository.Add(secondLog);
 
-        var logs = repository.GetAll();
+        var logs = _logRepository.GetAll();
 
         Assert.AreEqual(secondLog, logs[0]);
         Assert.AreEqual(firstLog, logs[1]);

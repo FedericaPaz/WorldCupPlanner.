@@ -1,5 +1,6 @@
 ﻿using Repository;
 using Services;
+using ServicesTests.Stubs;
 
 namespace ServicesTests;
 
@@ -9,7 +10,7 @@ public class LogServiceTests
     [TestMethod]
     public void Register_WithValidData_ShouldCreateLogEntry()
     {
-        var repository = new LogRepository();
+        var repository = new LogRepositoryStub();
         var service = new LogService(repository);
 
         service.Register("admin@test.com", "Usuarios", "Alta", "Se creó el usuario usuario@test.com"
