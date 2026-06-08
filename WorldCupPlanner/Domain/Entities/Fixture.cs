@@ -58,6 +58,15 @@ public class Fixture
     {
         if (_groups.Count != ExpectedGroups)
             return false;
+        
+        foreach (var group in _groups)
+        {
+            if (group.TeamsInGroup.Count != TeamsPerGroup)
+                return false;
+
+            if (group.MatchesInGroup.Count != MatchesPerGroup)
+                return false;
+        }
 
         return true;
     }
