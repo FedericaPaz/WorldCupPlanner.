@@ -125,8 +125,16 @@ public class Group
     
     public void LoadMatchFromRepository(Match match)
     {
-        if (match == null)
-            throw new ArgumentNullException(nameof(match));
-        _matchesInGroup.Add(match);
+        if (!_matchesInGroup.Contains(match))
+            _matchesInGroup.Add(match);
+    }
+
+    public List<Team> GetTeamsInGroup()
+    {
+        return _matchesInGroup
+            .SelectMany(m => new[] { m.HomeTeam, m.AwayTeam })
+            .DistinctBy(t => t.Name)
+            .Cast<Team>()
+            .ToList();
     }
 }

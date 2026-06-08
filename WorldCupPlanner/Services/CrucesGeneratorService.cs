@@ -35,7 +35,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         var cruces = new List<Cruce>();
 
         int indicePartidoGlobal = 0;
-
+        
         // A1-A8: 8 primeros con mayor puntaje vs 8 mejores terceros
         cruces.AddRange(PairAndCreateMatches(
             primeros.Take(8).ToList(),
@@ -49,7 +49,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
             segundos.TakeLast(4).Reverse().ToList(),
             estadios, semilla + 1, "B", TournamentPhase.RoundOf32,
             ref indicePartidoGlobal, equipoAGrupo));
-
+        
         // B5-B8: 8 segundos restantes entre sí
         List<Team> segundosRestantes = new List<Team>();
         if (segundos.Count > 4)
@@ -69,7 +69,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
 
         foreach (var cruce in cruces)
             fixture.AddEliminatoryMatch(cruce.Match);
-
+        
         return cruces;
     }
     public List<Cruce> GenerateNextRound(List<Cruce> crucesAnteriores, List<Stadium> estadios, int semilla, int startMatchId = 1)
@@ -107,6 +107,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
         var primeros = SortAndBreakTies(primerosPorGrupo);
         var segundos = SortAndBreakTies(segundosPorGrupo);
         var mejoresTerceros = SortAndBreakTies(tercerosPorGrupo).Take(8).ToList();
+        
         return (primeros, segundos, mejoresTerceros);
     }
 
@@ -210,8 +211,12 @@ public class CrucesGeneratorService : ICrucesGeneratorService
     {
         var map = new Dictionary<string, char>();
         foreach (var grupo in grupos)
-            foreach (var team in grupo.TeamsInGroup)
-                map[team.Name] = grupo.GroupLetter;
+        foreach (var match in grupo.MatchesInGroup)
+        {
+            map[match.HomeTeam.Name] = grupo.GroupLetter;
+            map[match.AwayTeam.Name] = grupo.GroupLetter;
+        }
+        
         return map;
     }
 

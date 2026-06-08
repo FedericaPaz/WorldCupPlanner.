@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Domain.Enums;
+﻿using Domain.Enums;
 using Domain.Interfaces;
 
 namespace Domain.Entities;
@@ -10,7 +9,9 @@ public class Cruce
     private Match _match;
     private TournamentPhase _phase;
     private Cruce? _nextCruce;
+
     public int Id { get; private set; }
+    public int MatchId { get; private set; }
 
     public string Name
     {
@@ -21,7 +22,12 @@ public class Cruce
     public Match Match
     {
         get { return _match; }
-        private set { _match = value; }
+        private set
+        {
+            _match = value;
+            if (value != null)
+                MatchId = value.IdMatch;
+        }
     }
 
     public TournamentPhase Phase
@@ -35,19 +41,21 @@ public class Cruce
         get { return _nextCruce; }
         private set { _nextCruce = value; }
     }
-    
+
     private Cruce()
     {
+        _name = string.Empty;
+        _match = null!;
     }
-    
+
     public Cruce(string name, Match match, TournamentPhase phase)
     {
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("El nombre del cruce no puede ser vacío o nulo", nameof(name));
-        
+
         if (match == null)
             throw new ArgumentNullException(nameof(match), "El partido no puede ser nulo");
-        
+
         Name = name;
         Match = match;
         Phase = phase;
@@ -68,7 +76,7 @@ public class Cruce
     {
         return Match.WinnerMatch;
     }
-    
+
     public ITeam? GetLoser()
     {
         return Match.LoserMatch;

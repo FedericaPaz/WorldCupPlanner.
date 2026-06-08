@@ -115,13 +115,13 @@ public class TeamService : ITeamService
 
         if (team is null)
             throw new InvalidOperationException($"No existe un equipo con el nombre '{name}'.");
+
+        _crucesRepository.RemoveCruces();
+        _matchRepository.ClearMatches();
+
         if (_fixtureRepository.ContainsFixture())
-        {
             _fixtureRepository.RemoveFixture(_fixtureRepository.GetFixture());
-            _matchRepository.ClearMatches();
-            _crucesRepository.RemoveCruces();
-        }
-        
+
         _repository.Delete(team);
     }
 

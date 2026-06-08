@@ -38,20 +38,17 @@ public class CruceService : ICruceService
             throw new InvalidOperationException("Todos los partidos de la fase de grupos deben estar jugados antes de generar los cruces.");
     
         foreach (var group in fixture.Groups)
-        {
             foreach (var match in group.MatchesInGroup)
                 match.Lock();
-        }
     
         List<Stadium> estadios = _stadiumRepository.GetAllStadiums();
         int nextMatchId = _matchRepository.GetNextId();
         List<Cruce> cruces = _generator.GenerateRoundOf32(fixture, estadios, _config.SemillaCrucesFase, nextMatchId);
     
+        
         _repository.RemoveCruces();
-    
         foreach (var cruce in cruces)
             _matchRepository.AddMatch(cruce.Match);  
-    
         _repository.AddCruces(cruces);
     }
 

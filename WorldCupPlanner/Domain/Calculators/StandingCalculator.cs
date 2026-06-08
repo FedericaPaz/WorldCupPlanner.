@@ -21,7 +21,8 @@ public class StandingCalculator
     {
         List<Standing> standings = new List<Standing>();
 
-        foreach (Team team in group.TeamsInGroup)
+        Console.WriteLine($"teamsInGroup: {group.GetTeamsInGroup().Count}");
+        foreach (Team team in group.GetTeamsInGroup())  
         {
             standings.Add(new Standing(team));
         }
