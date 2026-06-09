@@ -13,10 +13,13 @@ public class CruceSimulatorServiceTests
     private static readonly DateTime FechaCreacionClock = new DateTime(2027, 6, 10);
     private static readonly DateTime FechaPartido = new DateTime(2027, 6, 12);
     private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
+
     private LogRepository _logRepository = null!;
     private LogService _logService = null!;
     private CrucesSimulationService _service = null!;
-    private IMatchRepository _matchRepository;
+    private IMatchRepository _matchRepository = null!;
+    private ProbabilisticSimulationEngine _engine = null!;
+
     private const int Seed = 42;
     private int _nextId;
 
@@ -28,6 +31,7 @@ public class CruceSimulatorServiceTests
         _logService = new LogService(_logRepository);
         _matchRepository = new MatchRepositoryStub();
         _service = new CrucesSimulationService(_logService, _matchRepository);
+        _engine = new ProbabilisticSimulationEngine();
     }
 
     private Match BuildMatch(string homeName, int homeRanking, string awayName, int awayRanking, char group = 'A')
@@ -106,7 +110,7 @@ public class CruceSimulatorServiceTests
     {
         var match = BuildMatch("Argentina", 1800, "Bolivia", 500);
 
-        var (home, away) = _service.SimulateMatch(match, Seed);
+        var (home, away) = _service.SimulateMatch(match, Seed, _engine);
 
         Assert.IsTrue(home >= 0);
         Assert.IsTrue(away >= 0);
@@ -136,8 +140,8 @@ public class CruceSimulatorServiceTests
             'A',
             clock);
 
-        var result1 = _service.SimulateMatch(match1, Seed);
-        var result2 = _service.SimulateMatch(match2, Seed);
+        var result1 = _service.SimulateMatch(match1, Seed, _engine);
+        var result2 = _service.SimulateMatch(match2, Seed, _engine);
 
         Assert.AreEqual(result1.homeGoals, result2.homeGoals);
         Assert.AreEqual(result1.awayGoals, result2.awayGoals);
@@ -149,8 +153,8 @@ public class CruceSimulatorServiceTests
         var match1 = BuildMatch("Francia", 2000, "Ecuador", 600);
         var match2 = BuildMatch("Francia", 2000, "Ecuador", 600);
 
-        var result1 = _service.SimulateMatch(match1, seed: 1);
-        var result2 = _service.SimulateMatch(match2, seed: 99999);
+        var result1 = _service.SimulateMatch(match1, 1, _engine);
+        var result2 = _service.SimulateMatch(match2, 99999, _engine);
 
         bool sonDistintos =
             result1.homeGoals != result2.homeGoals ||
@@ -170,7 +174,7 @@ public class CruceSimulatorServiceTests
                 $"Team{i}B",
                 1000 + i + 1);
 
-            var (home, away) = _service.SimulateMatch(match, seed: i);
+            var (home, away) = _service.SimulateMatch(match, i, _engine);
 
             Assert.IsTrue(home <= 7, $"Goles local {home} superan el máximo");
             Assert.IsTrue(away <= 7, $"Goles visitante {away} superan el máximo");
@@ -182,7 +186,7 @@ public class CruceSimulatorServiceTests
     {
         var group = BuildGroupWithMatches();
 
-        _service.SimulateGroupStage(new List<Group> { group }, Seed);
+        _service.SimulateGroupStage(new List<Group> { group }, Seed, _engine);
 
         foreach (var match in group.MatchesInGroup)
         {
@@ -200,7 +204,7 @@ public class CruceSimulatorServiceTests
         primerPartido.SetClock(new ClockStub(FechaResultadoClock));
         primerPartido.SetMatchResult(3, 0);
 
-        _service.SimulateGroupStage(new List<Group> { group }, Seed);
+        _service.SimulateGroupStage(new List<Group> { group }, Seed, _engine);
 
         Assert.AreEqual(3, primerPartido.HomeGoals);
         Assert.AreEqual(0, primerPartido.AwayGoals);
@@ -211,7 +215,7 @@ public class CruceSimulatorServiceTests
     {
         var cruce = BuildCruce("A1");
 
-        _service.SimulateCruces(new List<Cruce> { cruce }, Seed);
+        _service.SimulateCruces(new List<Cruce> { cruce }, Seed, _engine);
 
         Assert.IsNotNull(cruce.GetWinner());
     }
@@ -224,7 +228,7 @@ public class CruceSimulatorServiceTests
         cruce.Match.SetClock(new ClockStub(FechaResultadoClock));
         cruce.Match.SetMatchResult(2, 1);
 
-        _service.SimulateCruces(new List<Cruce> { cruce }, Seed);
+        _service.SimulateCruces(new List<Cruce> { cruce }, Seed, _engine);
 
         Assert.AreEqual(2, cruce.Match.HomeGoals);
         Assert.AreEqual(1, cruce.Match.AwayGoals);
@@ -235,7 +239,7 @@ public class CruceSimulatorServiceTests
     {
         var match = BuildMatch("Uruguay", 1500, "Argentina", 1500);
 
-        _service.SimulateMatch(match, Seed);
+        _service.SimulateMatch(match, Seed, _engine);
 
         var logs = _logRepository.GetAll();
 
@@ -244,7 +248,7 @@ public class CruceSimulatorServiceTests
         Assert.AreEqual("Simulation", logs[0].Category);
         Assert.AreEqual("SimulationExecuted", logs[0].Action);
         StringAssert.Contains(logs[0].Detail, Seed.ToString());
-        StringAssert.Contains(logs[0].Detail, "CrucesSimulationService");
+        StringAssert.Contains(logs[0].Detail, "Probabilístico");
     }
 
     [TestMethod]
@@ -252,7 +256,7 @@ public class CruceSimulatorServiceTests
     {
         var group = BuildGroupWithMatches();
 
-        _service.SimulateGroupStage(new List<Group> { group }, Seed);
+        _service.SimulateGroupStage(new List<Group> { group }, Seed, _engine);
 
         foreach (var match in group.MatchesInGroup)
         {

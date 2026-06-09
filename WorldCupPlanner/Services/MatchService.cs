@@ -105,9 +105,14 @@ public class MatchService : IMatchService
 
     public void SimulateMatch(int matchId, int seed)
     {
+        SimulateMatch(matchId, seed, new ProbabilisticSimulationEngine());
+    }
+
+    public void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
+    {
         var match = _matchRepository.GetMatchById(matchId);
 
-        var (home, away) = _simulationService.SimulateMatch(match, seed);
+        var (home, away) = _simulationService.SimulateMatch(match, seed, engine);
 
         var random = new Random(seed);
 
@@ -126,6 +131,11 @@ public class MatchService : IMatchService
 
     public void SimulateGroupStage()
     {
+        SimulateGroupStage(new ProbabilisticSimulationEngine());
+    }
+
+    public void SimulateGroupStage(ISimulationEngine engine)
+    {
         var fixture = _fixtureRepository.GetFixture();
 
         if (fixture == null)
@@ -133,7 +143,7 @@ public class MatchService : IMatchService
 
         var groups = fixture.Groups.ToList();
 
-        _simulationService.SimulateGroupStage(groups, _config.SemillaSimulation);
+        _simulationService.SimulateGroupStage(groups, _config.SemillaSimulation, engine);
     }
 
     private static void EnsureValidRequest(MatchRequest request)

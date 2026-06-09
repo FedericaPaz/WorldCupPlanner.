@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using Domain.Interfaces;
 using DTOs.Cruces;
 using IRepository;
 using IServices;
@@ -78,7 +79,12 @@ public class CruceService : ICruceService
 
     public void SimulateCruces()
     {
+        SimulateCruces(new ProbabilisticSimulationEngine());
+    }
+
+    public void SimulateCruces(ISimulationEngine engine)
+    {
         var cruces = _repository.GetAllCruces();
-        _simulationService.SimulateCruces(cruces, _config.SemillaSimulation);
+        _simulationService.SimulateCruces(cruces, _config.SemillaSimulation, engine);
     }
 }
