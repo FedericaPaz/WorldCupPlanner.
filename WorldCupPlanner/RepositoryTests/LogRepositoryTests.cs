@@ -8,7 +8,7 @@ namespace RepositoryTests;
 public class LogRepositoryTests
 {
     private WorldCupPlannerContext _context = null!;
-    private LogRepository _logRepository = null;
+    private LogRepository _logRepository = null!;
     private LogEntry _log = null!;
 
     [TestInitialize]
@@ -22,18 +22,6 @@ public class LogRepositoryTests
         _log = new LogEntry(
             "admin@test.com", "Usuarios","Alta","Se creó el usuario usuario@test.com"
         );
-    }
-    
-    
-    [TestMethod]
-    public void Add_WithValidLogEntry_ShouldStoreLogEntry()
-    {
-        _logRepository.Add(_log);
-        
-        var logs = _logRepository.GetAll();
-
-        Assert.AreEqual(1, logs.Count);
-        Assert.AreEqual(_log, logs[0]);
     }
     
     [TestMethod]
@@ -62,4 +50,18 @@ public class LogRepositoryTests
         Assert.AreEqual(secondLog, logs[0]);
         Assert.AreEqual(firstLog, logs[1]);
     }
+    
+    [TestMethod]
+        public void Add_WithValidLogEntry_ShouldPersistLogEntry()
+        {
+            _logRepository.Add(_log);
+
+            var logs = _logRepository.GetAll();
+
+            Assert.AreEqual(1, logs.Count);
+            Assert.AreEqual("admin@test.com", logs[0].UserEmail);
+            Assert.AreEqual("Usuarios", logs[0].Category);
+            Assert.AreEqual("Alta", logs[0].Action);
+            Assert.AreEqual("Se creó el usuario usuario@test.com", logs[0].Detail);
+        }
 }
