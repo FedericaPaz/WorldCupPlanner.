@@ -259,24 +259,25 @@
         try
         {
             if (_match is null)
-            {
                 return;
-            }
 
-            MatchService.SimulateMatch(_match.idMatch, Config.SemillaSimulation);
+            var randomSeed = new Random().Next(); 
+            MatchService.SimulateMatch(_match.idMatch, randomSeed);
 
             LogService.Register(
                 GetCurrentUserEmail(),
                 "Partidos",
                 "Modificación",
-                $"Se simuló el resultado del partido {_match.homeTeamName} vs {_match.awayTeamName} con semilla {Config.SemillaSimulation}"
+                $"Se simuló el resultado del partido {_match.homeTeamName} vs {_match.awayTeamName}"
             );
 
             LoadData();
+            StateHasChanged();
         }
         catch (Exception ex)
         {
             _errorMessage = ex.Message;
+            StateHasChanged();
         }
     }
 
