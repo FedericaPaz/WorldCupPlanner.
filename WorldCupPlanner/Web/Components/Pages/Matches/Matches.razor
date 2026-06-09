@@ -2,6 +2,9 @@
 @using DTOs.Match
 @using IServices
 @using Web.Services
+@using Domain.Interfaces
+@using global::Services
+@using Services
 @inject IMatchService MatchService
 @inject ICruceService CruceService
 @inject SessionService SessionService
@@ -12,23 +15,40 @@
         <div>
             <h3>Listado de Partidos</h3>
             <p>@_pendientes pendientes · @_jugados jugados · @_matchesFiltrados.Count mostrados</p>
+
+            @if (!string.IsNullOrWhiteSpace(_lastEngineUsed))
+            {
+                <p class="text-muted mb-0">
+                    Último motor usado: @_lastEngineUsed
+                </p>
+            }
         </div>
 
         @if (_pendientes > 0 && SessionService.IsEditor())
         {
-            <button class="btn-generar-cruces" @onclick="SimularPendientes" disabled="@_cargando">
-                @if (_cargando)
-                {
-                    <span>⏳ Simulando...</span>
-                }
-                else
-                {
-                    <span>
-                        <i class="bi bi-dice-5-fill"></i>
-                        Simular pendientes (@_pendientes)
-                    </span>
-                }
-            </button>
+            <div class="d-flex gap-2 align-items-end">
+                <div>
+                    <label class="form-label mb-1">Motor de simulación</label>
+                    <select class="form-control" @bind="_selectedEngine">
+                        <option value="probabilistic">Probabilístico</option>
+                        <option value="pureRandom">Aleatorio puro</option>
+                    </select>
+                </div>
+
+                <button class="btn-generar-cruces" @onclick="SimularPendientes" disabled="@_cargando">
+                    @if (_cargando)
+                    {
+                        <span>⏳ Simulando...</span>
+                    }
+                    else
+                    {
+                        <span>
+                            <i class="bi bi-dice-5-fill"></i>
+                            Simular pendientes (@_pendientes)
+                        </span>
+                    }
+                </button>
+            </div>
         }
     </div>
 
@@ -171,6 +191,9 @@
     private string? _mensajeError;
     private string? _mensajeExito;
 
+    private string _selectedEngine = "probabilistic";
+    private string _lastEngineUsed = string.Empty;
+
     private DateTime? _filtroFecha = null;
     private string _filtroEstadio = string.Empty;
     private string _filtroGrupo = string.Empty;
@@ -274,10 +297,13 @@
             _mensajeExito = null;
             StateHasChanged();
 
-            MatchService.SimulateGroupStage();
-            CruceService.SimulateCruces();
+            ISimulationEngine engine = GetSelectedEngine();
 
-            _mensajeExito = "Partidos simulados correctamente.";
+            MatchService.SimulateGroupStage(engine);
+            CruceService.SimulateCruces(engine);
+
+            _lastEngineUsed = engine.Name;
+            _mensajeExito = $"Partidos simulados correctamente usando el motor {engine.Name}.";
 
             LoadData();
         }
@@ -290,5 +316,15 @@
             _cargando = false;
             StateHasChanged();
         }
+    }
+
+    private ISimulationEngine GetSelectedEngine()
+    {
+        if (_selectedEngine == "pureRandom")
+        {
+            return new PureRandomSimulationEngine();
+        }
+
+        return new ProbabilisticSimulationEngine();
     }
 }
