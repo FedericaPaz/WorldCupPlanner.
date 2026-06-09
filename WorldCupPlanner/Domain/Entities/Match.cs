@@ -305,4 +305,9 @@ public class Match
         if (incident == null)
             throw new ArgumentNullException(nameof(incident));
     }
+    
+    public void UpdateMatchResult(int homeGoals, int awayGoals)
+    {
+        ApplyResult(homeGoals, awayGoals);
+    }
 }

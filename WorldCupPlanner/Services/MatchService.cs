@@ -66,7 +66,7 @@ public class MatchService : IMatchService
         Console.WriteLine($"Incidents DESPUES de clear: {match.Incidents.Count}");
 
         AddCardIncidents(match, request);
-        match.SetMatchResult(request.homeGoals, request.awayGoals);
+        match.UpdateMatchResult(request.homeGoals, request.awayGoals);
         
         Console.WriteLine($"Incidents antes de UpdateMatch: {match.Incidents.Count}");
         foreach (var i in match.Incidents)

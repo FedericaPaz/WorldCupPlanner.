@@ -83,42 +83,33 @@ public class MatchRepository : IMatchRepository
     
     public void UpdateMatch(Match match)
     {
-        Console.WriteLine("Entra en update match");
         if (match is null)
             throw new ArgumentNullException(nameof(match));
-
-        var toDelete = _context.MatchIncidents
-            .Where(i => i.MatchId == match.IdMatch)
-            .ToList();
-        _context.MatchIncidents.RemoveRange(toDelete);
-        _context.SaveChanges();
         
+        var incidentsToAdd = match.Incidents.ToList();
+    
+        Console.WriteLine($"Incidents capturados: {incidentsToAdd.Count}");
+
         var existing = _context.Matches
+                           .Include(m => m.Incidents)
                            .FirstOrDefault(m => m.IdMatch == match.IdMatch)
                        ?? throw new KeyNotFoundException($"No existe un partido con id {match.IdMatch}.");
 
-        Console.WriteLine("existe");
         existing.SetClock(_clock);
+        existing.ClearAllIncidents();
         existing.SimulateResult(match.HomeGoals!.Value, match.AwayGoals!.Value);
-        
-        /*foreach (var incident in match.Incidents.ToList())
+
+        foreach (var incident in incidentsToAdd)
         {
             var trackedTeam = _context.Teams.Find(incident.Team.Name)
                               ?? throw new KeyNotFoundException($"No existe el equipo {incident.Team.Name}.");
 
-            var newIncident = new MatchIncident(incident.Type, trackedTeam, incident.Quantity);
-            existing.AddIncident(newIncident);
-        }*/
+            existing.AddIncident(new MatchIncident(incident.Type, trackedTeam, incident.Quantity, match.IdMatch));
+        }
 
-        Console.WriteLine("antes de save changes");
+        Console.WriteLine($"Incidents en existing antes de SaveChanges: {existing.Incidents.Count}");
+    
         _context.SaveChanges();
-        Console.WriteLine("despues de save changes");
-    }
-
-    private void EnsureNotNull(Match match)
-    {
-        if (match == null)
-            throw new ArgumentNullException(nameof(match));
     }
 
     private void EnsureValidId(int matchId)
