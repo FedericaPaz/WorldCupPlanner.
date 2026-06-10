@@ -29,6 +29,10 @@
     cursor: pointer;
 }
 
+.create-btn:hover {
+    background-color: #15803d;
+}
+
 .create-btn:focus {
     outline: 2px solid #00000033;
 }

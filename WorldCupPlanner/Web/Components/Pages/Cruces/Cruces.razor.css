@@ -24,24 +24,17 @@
 }
 
 .btn-generar-cruces, .btn-siguiente-ronda {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: #3b82f6;
+    background: green;
     color: white;
-    border: none;
     padding: 10px 20px;
     border-radius: 8px;
     font-size: 14px;
-    font-weight: 500;
+    border: none;
     cursor: pointer;
-    transition: all 0.2s;
-    margin: 0 auto;
 }
 
-.btn-generar-cruces:hover, .btn-siguiente-ronda:hover {
-    background-color: #2563eb;
-    transform: translateY(-1px);
+.btn-generar-cruces:hover, .btn-siguiente-ronda :hover {
+    background-color: #15803d;
 }
 
 .btn-icon {

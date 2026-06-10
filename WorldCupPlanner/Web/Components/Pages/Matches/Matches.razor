@@ -19,7 +19,7 @@
             <button class="btn-generar-cruces" @onclick="SimularPendientes" disabled="@_cargando">
                 @if (_cargando)
                 {
-                    <span>⏳ Simulando...</span>
+                    <span>Simulando...</span>
                 }
                 else
                 {
@@ -34,12 +34,12 @@
 
     @if (!string.IsNullOrEmpty(_mensajeError))
     {
-        <div class="message error">⚠️ @_mensajeError</div>
+        <div class="message error"> @_mensajeError</div>
     }
 
     @if (!string.IsNullOrEmpty(_mensajeExito))
     {
-        <div class="message success">✅ @_mensajeExito</div>
+        <div class="message success"> @_mensajeExito</div>
     }
 
     <div class="filtros-container">

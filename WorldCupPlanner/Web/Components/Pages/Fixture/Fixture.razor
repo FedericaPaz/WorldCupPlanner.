@@ -47,7 +47,8 @@ else if (!FixtureService.HasFixture())
             @if (_canGenerate && SessionService.IsEditor())
             {
                 <button class="btn btn-success btn-lg mt-3" @onclick="GenerateInitialFixture">
-                    ⚽ Generar Fixture
+                    Generar Fixture
+                    <i class="bi-dribbble"></i>
                 </button>
             }
             else if (SessionService.IsEditor())
@@ -86,7 +87,7 @@ else
                     }
                     else
                     {
-                        <span>⚽ ReGenerar Fixture</span>
+                        <span><i class="bi bi-dribbble"></i> ReGenerar Fixture</span>
                     }
                 </button>
                 <button class="btn btn-success btn-md" @onclick="EliminarFixture" disabled="@isReloading">
@@ -97,7 +98,7 @@ else
                     }
                     else
                     {
-                        <span>⚽ Eliminar Fixture</span>
+                        <span><i class="bi bi-dribbble"></i> Eliminar Fixture</span>
                     }
                 </button>
             }
@@ -129,7 +130,7 @@ else
                                 @foreach (var team in group.Teams)
                                 {
                                     <div class="team-item d-flex align-items-center gap-2 py-1">
-                                        <span>⚽</span>
+                                        <span><i class="bi bi-dribbble"></i></span>
                                         <span>@team.Name</span>
                                     </div>
                                 }

@@ -24,17 +24,13 @@
 }
 
 .primary-button {
-    background-color: #16a34a;
+    background: green;
     color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
     border: none;
-    border-radius: 10px;
-    padding: 12px 20px;
-    font-weight: 700;
     cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
 }
 
 .primary-button:hover {
