@@ -98,3 +98,16 @@
 .teams-edit .back-link {
     margin-bottom: 0.5rem;
 }
+
+::deep .validation-message {
+    background: #C6282833;
+    color: #c62828;
+    padding: 0.8rem;
+    border-radius: 10px;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
