@@ -74,10 +74,21 @@
                                     Editar
                                 </button>
 
-                                <button class="icon-button danger"
-                                        @onclick="() => DeleteUser(user.Email)">
-                                    Eliminar
-                                </button>
+                                @if (IsCurrentUser(user.Email))
+                                {
+                                    <button class="icon-button danger"
+                                            disabled
+                                            title="No podés eliminar tu propio usuario">
+                                        Eliminar
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="icon-button danger"
+                                            @onclick="() => DeleteUser(user.Email)">
+                                        Eliminar
+                                    </button>
+                                }
 
                                 <button class="icon-button"
                                         @onclick="() => ResetPassword(user.Email)">
@@ -134,7 +145,7 @@
             _pageErrorMessage = string.Empty;
             _pageSuccessMessage = string.Empty;
 
-            UserService.DeleteUser(email);
+            UserService.DeleteUser(email, GetCurrentUserEmail());
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -187,7 +198,9 @@
     private string FormatRoles(List<UserRoleDto> roles)
     {
         if (roles.Count == 0)
+        {
             return "Sin rol";
+        }
 
         var roleNames = roles.Select(role => role switch
         {
@@ -208,5 +221,11 @@
         }
 
         return SessionService.GetCurrentUser()!.Email;
+    }
+
+    private bool IsCurrentUser(string email)
+    {
+        return SessionService.IsUserActive() &&
+               SessionService.GetCurrentUser()!.Email.Equals(email, StringComparison.OrdinalIgnoreCase);
     }
 }
