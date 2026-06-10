@@ -179,16 +179,20 @@
 
             if (_dateTime != _match.dateMatch)
             {
+                Console.WriteLine($"Updating match date from {_match.dateMatch} to {_dateTime}");
                 MatchService.UpdateMatchDate(_match.idMatch, _dateTime);
 
                 wasModified = true;
+                Console.WriteLine($"Match date updated successfully for match {_match.idMatch}");
             }
 
             if (_stadiumName != _match.stadiumName)
             {
+                Console.WriteLine($"Updating match stadium from {_match.stadiumName} to {_stadiumName}");
                 MatchService.UpdateMatchStadium(_match.idMatch, _stadiumName);
 
                 wasModified = true;
+                Console.WriteLine($"Match stadium updated successfully for match {_match.idMatch}");
             }
 
             int currentHomeGoals = _match.homeGoals ?? 0;
@@ -197,17 +201,25 @@
             bool goalsChanged =
                 _homeGoals != currentHomeGoals ||
                 _awayGoals != currentAwayGoals;
+            
+            Console.WriteLine($"Current goals: Home={currentHomeGoals}, Away={currentAwayGoals}");
+            Console.WriteLine($"New goals: Home={_homeGoals}, Away={_awayGoals}");
+            Console.WriteLine($"Goals changed: {goalsChanged}");
 
             bool cardsChanged =
                 _homeYellowCards != _match.homeYellowCards ||
                 _awayYellowCards != _match.awayYellowCards ||
                 _homeRedCards != _match.homeRedCards ||
                 _awayRedCards != _match.awayRedCards;
-
+            
+            Console.WriteLine($"New Cards: {cardsChanged}");
+            
             bool resultChanged = goalsChanged || cardsChanged;
+            Console.WriteLine($"Result changed: {resultChanged}");
 
             if (resultChanged)
             {
+                Console.WriteLine("Updating match result with new goals and cards");
                 var request = new MatchResultRequest
                 {
                     homeGoals = _homeGoals,
@@ -221,6 +233,7 @@
                 MatchService.SetMatchResult(_match.idMatch, request);
 
                 wasModified = true;
+                Console.WriteLine($"Match result updated successfully for match {_match.idMatch}");
             }
 
             if (wasModified)
@@ -246,24 +259,25 @@
         try
         {
             if (_match is null)
-            {
                 return;
-            }
 
-            MatchService.SimulateMatch(_match.idMatch, Config.SemillaSimulation);
+            var randomSeed = new Random().Next(); 
+            MatchService.SimulateMatch(_match.idMatch, randomSeed);
 
             LogService.Register(
                 GetCurrentUserEmail(),
                 "Partidos",
                 "Modificación",
-                $"Se simuló el resultado del partido {_match.homeTeamName} vs {_match.awayTeamName} con semilla {Config.SemillaSimulation}"
+                $"Se simuló el resultado del partido {_match.homeTeamName} vs {_match.awayTeamName}"
             );
 
             LoadData();
+            StateHasChanged();
         }
         catch (Exception ex)
         {
             _errorMessage = ex.Message;
+            StateHasChanged();
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Interfaces;
 using IRepository;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,10 +8,12 @@ namespace Repository;
 public class MatchRepository : IMatchRepository
 {
     private readonly WorldCupPlannerContext _context;
+    private readonly IDateTimeMatch _clock;
 
-    public MatchRepository(WorldCupPlannerContext context)
+    public MatchRepository(WorldCupPlannerContext context, IDateTimeMatch clock)
     {
         _context = context;
+        _clock = clock;
     }
 
     public void AddMatch(Match match)
@@ -43,28 +46,33 @@ public class MatchRepository : IMatchRepository
 
     public List<Match> GetAllMatches()
     {
-        return _context.Matches
+        var matches = _context.Matches
             .Include(m => m.HomeTeam)
             .Include(m => m.AwayTeam)
             .Include(m => m.Stadium)
             .AsNoTracking()
             .ToList();
+
+        matches.ForEach(m => m.SetClock(_clock));
+        return matches;
     }
 
     public Match GetMatchById(int matchId)
     {
         EnsureValidId(matchId);
+        var match = _context.Matches
+                        .Include(m => m.HomeTeam)
+                        .Include(m => m.AwayTeam)
+                        .Include(m => m.Stadium)
+                        .Include(m => m.WinnerMatch)
+                        .Include(m => m.LoserMatch)
+                        .Include(m => m.Incidents)
+                        .ThenInclude(i => i.Team)
+                        .FirstOrDefault(m => m.IdMatch == matchId)
+                    ?? throw new KeyNotFoundException("No existe un partido con ese id.");
 
-        return _context.Matches
-                   .Include(m => m.HomeTeam)
-                   .Include(m => m.AwayTeam)
-                   .Include(m => m.Stadium)
-                   .Include(m => m.WinnerMatch)
-                   .Include(m => m.LoserMatch)
-                   .Include(m => m.Incidents)
-                   .ThenInclude(i => i.Team)
-                   .FirstOrDefault(m => m.IdMatch == matchId)
-               ?? throw new KeyNotFoundException("No existe un partido con ese id.");
+        match.SetClock(_clock); 
+        return match;
     }
 
     public void ClearMatches()
@@ -77,38 +85,31 @@ public class MatchRepository : IMatchRepository
     {
         if (match is null)
             throw new ArgumentNullException(nameof(match));
-
-        foreach (var entry in _context.ChangeTracker.Entries().ToList())
-            entry.State = EntityState.Detached;
+        
+        var incidentsToAdd = match.Incidents.ToList();
+    
+        Console.WriteLine($"Incidents capturados: {incidentsToAdd.Count}");
 
         var existing = _context.Matches
                            .Include(m => m.Incidents)
                            .FirstOrDefault(m => m.IdMatch == match.IdMatch)
                        ?? throw new KeyNotFoundException($"No existe un partido con id {match.IdMatch}.");
 
-        if (_context.Entry(match.HomeTeam).State == EntityState.Detached)
-            _context.Entry(match.HomeTeam).State = EntityState.Unchanged;
-
-        if (_context.Entry(match.AwayTeam).State == EntityState.Detached)
-            _context.Entry(match.AwayTeam).State = EntityState.Unchanged;
-
+        existing.SetClock(_clock);
+        existing.ClearAllIncidents();
         existing.SimulateResult(match.HomeGoals!.Value, match.AwayGoals!.Value);
 
-        foreach (var incident in match.Incidents)
+        foreach (var incident in incidentsToAdd)
         {
-            if (_context.Entry(incident.Team).State == EntityState.Detached)
-                _context.Entry(incident.Team).State = EntityState.Unchanged;
+            var trackedTeam = _context.Teams.Find(incident.Team.Name)
+                              ?? throw new KeyNotFoundException($"No existe el equipo {incident.Team.Name}.");
 
-            existing.AddIncident(incident);
+            existing.AddIncident(new MatchIncident(incident.Type, trackedTeam, incident.Quantity, match.IdMatch));
         }
 
+        Console.WriteLine($"Incidents en existing antes de SaveChanges: {existing.Incidents.Count}");
+    
         _context.SaveChanges();
-    }
-
-    private void EnsureNotNull(Match match)
-    {
-        if (match == null)
-            throw new ArgumentNullException(nameof(match));
     }
 
     private void EnsureValidId(int matchId)

@@ -1,5 +1,6 @@
 using Domain.Entities;
 using IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository;
 
@@ -21,22 +22,21 @@ public class NotificationRepository : INotificationRepository
     public Notification? GetById(Guid id)
     {
         return _context.Notifications
-            .FirstOrDefault(notification => notification.Id == id);
+            .FirstOrDefault(n => EF.Property<Guid>(n, "_id") == id);
     }
 
     public List<Notification> GetByRecipient(string email)
     {
         return _context.Notifications
-            .Where(notification => notification.RecipientEmail == email)
+            .Where(n => EF.Property<string>(n, "_recipientEmail") == email)
             .ToList();
     }
 
     public List<Notification> GetUnread(string email)
     {
         return _context.Notifications
-            .Where(notification =>
-                notification.RecipientEmail == email &&
-                !notification.IsRead)
+            .Where(n => EF.Property<string>(n, "_recipientEmail") == email &&
+                        !EF.Property<bool>(n, "_isRead"))
             .ToList();
     }
 

@@ -56,20 +56,30 @@ public class MatchService : IMatchService
 
     public void SetMatchResult(int matchId, MatchResultRequest request)
     {
+        Console.WriteLine($"Setting match result for match id: {matchId}");
         EnsureValidResultRequest(request);
 
         var match = _matchRepository.GetMatchById(matchId);
-
-        match.ClearCardIncidents();
+        
+        Console.WriteLine($"Incidents ANTES de clear: {match.Incidents.Count}");
+        match.ClearAllIncidents();
+        Console.WriteLine($"Incidents DESPUES de clear: {match.Incidents.Count}");
 
         AddCardIncidents(match, request);
-
-        match.SetMatchResult(request.homeGoals, request.awayGoals);
+        match.UpdateMatchResult(request.homeGoals, request.awayGoals);
         
+        Console.WriteLine($"Incidents antes de UpdateMatch: {match.Incidents.Count}");
+        foreach (var i in match.Incidents)
+            Console.WriteLine($"  {i.Type} - {i.Team.Name} - {i.Quantity}");
+
+        Console.WriteLine($"Match result aaa: {match.ToResponse()}");
         _matchRepository.UpdateMatch(match);
+        Console.WriteLine($"Match result updated in repository for match id: {matchId}");
 
         _notificationService.NotifyJournalists(
             $"Se cargó el resultado de {match.HomeTeam.Name} vs {match.AwayTeam.Name}: {request.homeGoals}-{request.awayGoals}");
+        
+        Console.WriteLine("sali de setMatchResult");
     }
 
     public MatchResponse GetMatchById(int matchId)
@@ -105,9 +115,14 @@ public class MatchService : IMatchService
 
     public void SimulateMatch(int matchId, int seed)
     {
+        SimulateMatch(matchId, seed, new ProbabilisticSimulationEngine());
+    }
+
+    public void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
+    {
         var match = _matchRepository.GetMatchById(matchId);
 
-        var (home, away) = _simulationService.SimulateMatch(match, seed);
+        var (home, away) = _simulationService.SimulateMatch(match, seed, engine);
 
         var random = new Random(seed);
 
@@ -126,6 +141,11 @@ public class MatchService : IMatchService
 
     public void SimulateGroupStage()
     {
+        SimulateGroupStage(new ProbabilisticSimulationEngine());
+    }
+
+    public void SimulateGroupStage(ISimulationEngine engine)
+    {
         var fixture = _fixtureRepository.GetFixture();
 
         if (fixture == null)
@@ -133,7 +153,7 @@ public class MatchService : IMatchService
 
         var groups = fixture.Groups.ToList();
 
-        _simulationService.SimulateGroupStage(groups, _config.SemillaSimulation);
+        _simulationService.SimulateGroupStage(groups, _config.SemillaSimulation, engine);
     }
 
     private static void EnsureValidRequest(MatchRequest request)
@@ -147,8 +167,11 @@ public class MatchService : IMatchService
 
     private static void EnsureValidResultRequest(MatchResultRequest request)
     {
+        Console.WriteLine("entre a ensure valid result request");
         if (request == null)
             throw new ArgumentNullException(nameof(request));
+        Console.WriteLine("sali de ensure valid result request");
+        
     }
 
     private Stadium GetStadiumOrThrow(string stadiumName)

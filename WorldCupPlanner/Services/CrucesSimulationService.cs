@@ -8,14 +8,13 @@ namespace Services;
 
 public class CrucesSimulationService : ISimulationService
 {
-    private const int MaxGoals = 7;
     private const int MaxYellowCards = 4;
     private const int MaxRedCards = 1;
-    private const string SimulationEngineName = "CrucesSimulationService";
 
     private readonly ILogService _logService;
     private readonly IMatchRepository _matchRepository;
 
+    public string LastUsedEngineName { get; private set; } = string.Empty;
 
     public CrucesSimulationService(ILogService logService, IMatchRepository matchRepository)
     {
@@ -23,44 +22,45 @@ public class CrucesSimulationService : ISimulationService
         _matchRepository = matchRepository;
     }
 
-    public (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed)
+    public (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed, ISimulationEngine engine)
     {
-        var home = (Team)match.HomeTeam;
-        var away = (Team)match.AwayTeam;
-        var random = new Random(seed + match.IdMatch);
+        EnsureValidEngine(engine);
 
-        double homeStrength = (double)home.FifaRanking / (home.FifaRanking + away.FifaRanking);
+        LastUsedEngineName = engine.Name;
 
-        int homeGoals = (int)Math.Round(homeStrength * random.Next(0, MaxGoals + 1));
-        int awayGoals = (int)Math.Round((1 - homeStrength) * random.Next(0, MaxGoals + 1));
+        var result = engine.SimulateMatch(match, seed);
 
-        RegisterSimulation(seed);
+        RegisterSimulation(seed, engine.Name);
 
-        return (homeGoals, awayGoals);
+        return result;
     }
 
-    public void SimulateGroupStage(List<Group> groups, int seed)
+    public void SimulateGroupStage(List<Group> groups, int seed, ISimulationEngine engine)
     {
+        EnsureValidEngine(engine);
+
         foreach (var group in groups)
         {
             foreach (var match in group.MatchesInGroup.Where(match => !match.HomeGoals.HasValue))
             {
-                SimulateAndSetResult(match, seed);
+                SimulateAndSetResult(match, seed, engine);
             }
         }
     }
 
-    public void SimulateCruces(List<Cruce> cruces, int seed)
+    public void SimulateCruces(List<Cruce> cruces, int seed, ISimulationEngine engine)
     {
+        EnsureValidEngine(engine);
+
         foreach (var cruce in cruces.Where(cruce => cruce.GetWinner() == null))
         {
-            SimulateAndSetResult(cruce.Match, seed);
+            SimulateAndSetResult(cruce.Match, seed, engine);
         }
     }
 
-    private void SimulateAndSetResult(Match match, int seed)
+    private void SimulateAndSetResult(Match match, int seed, ISimulationEngine engine)
     {
-        var (homeGoals, awayGoals) = SimulateMatch(match, seed);
+        var (homeGoals, awayGoals) = SimulateMatch(match, seed, engine);
 
         if (homeGoals == awayGoals)
         {
@@ -82,13 +82,13 @@ public class CrucesSimulationService : ISimulationService
         _matchRepository.UpdateMatch(match);
     }
 
-    private void RegisterSimulation(int seed)
+    private void RegisterSimulation(int seed, string engineName)
     {
         _logService.Register(
             "system",
             "Simulation",
             "SimulationExecuted",
-            $"Se ejecutó una simulación con semilla {seed} usando el motor {SimulationEngineName}.");
+            $"Se ejecutó una simulación con semilla {seed} usando el motor {engineName}.");
     }
 
     private static void AddSimulatedCardIncidents(Match match, int seed)
@@ -129,6 +129,14 @@ public class CrucesSimulationService : ISimulationService
         if (quantity > 0)
         {
             match.AddIncident(new MatchIncident(type, (Team)team, quantity));
+        }
+    }
+
+    private static void EnsureValidEngine(ISimulationEngine engine)
+    {
+        if (engine == null)
+        {
+            throw new ArgumentNullException(nameof(engine), "El motor de simulación es obligatorio.");
         }
     }
 }

@@ -24,7 +24,7 @@ public class MatchIncident
     {
     }
     
-    public MatchIncident(IncidentType type, Team team, int quantity)
+    public MatchIncident(IncidentType type, Team team, int quantity, int matchId = 0)
     {
         EnsureTeamIsNotNull(team);
         EnsureQuantityIsValid(quantity);
@@ -33,6 +33,7 @@ public class MatchIncident
         _team = team;
         _teamName = team.Name;
         _quantity = quantity;
+        _matchId = matchId;
     }
 
     private static void EnsureTeamIsNotNull(Team team)
