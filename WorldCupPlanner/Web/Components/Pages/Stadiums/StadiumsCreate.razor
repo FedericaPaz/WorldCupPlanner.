@@ -30,7 +30,6 @@
 
         <EditForm Model="_model" OnValidSubmit="HandleValidSubmit">
             <DataAnnotationsValidator />
-            <ValidationSummary />
 
             @if (!string.IsNullOrEmpty(_errorMessage))
             {
