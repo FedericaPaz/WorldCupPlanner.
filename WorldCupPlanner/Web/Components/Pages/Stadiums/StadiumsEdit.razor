@@ -42,11 +42,6 @@ else
                     <div class="error-message">@_errorMessage</div>
                 }
 
-                @if (_request is not null)
-                {
-                    <ValidationSummary class="error-message" />
-                }
-
                 <div class="form-section">
                     <label>Nombre del Estadio <span style="color:red">*</span></label>
                     <InputText class="form-control" @bind-Value="_request.stadiumName" />
