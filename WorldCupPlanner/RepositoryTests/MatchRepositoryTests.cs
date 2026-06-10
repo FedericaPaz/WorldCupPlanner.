@@ -22,8 +22,8 @@ public class MatchRepositoryTests
 
         _context = new WorldCupPlannerContext(options);
 
-        _repository = new MatchRepository(_context);
         _clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
+        _repository = new MatchRepository(_context, _clock);  
         _nextId = 1;
     }
 

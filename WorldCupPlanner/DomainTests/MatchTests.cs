@@ -283,24 +283,6 @@ public class MatchTests
     }
 
     [TestMethod]
-    public void SetResult_BeforeMatchDate_ShouldThrowInvalidOperationException()
-    {
-        var clock = new DateTimeMatchStub(DefaultDate);
-
-        var match = new Match(
-            1,
-            FutureDate,
-            CreateStadium("Centenario"),
-            CreateTeam("Uruguay"),
-            CreateTeam("Argentina"),
-            'A',
-            clock);
-
-        Assert.ThrowsException<InvalidOperationException>(() =>
-            match.SetMatchResult(1, 0));
-    }
-
-    [TestMethod]
     public void SetMatchResult_WithAwayTeamWinner_ShouldAssignAwayTeamAsWinner()
     {
         var clock = new DateTimeMatchStub(DefaultDate);

@@ -56,20 +56,30 @@ public class MatchService : IMatchService
 
     public void SetMatchResult(int matchId, MatchResultRequest request)
     {
+        Console.WriteLine($"Setting match result for match id: {matchId}");
         EnsureValidResultRequest(request);
 
         var match = _matchRepository.GetMatchById(matchId);
-
-        match.ClearCardIncidents();
+        
+        Console.WriteLine($"Incidents ANTES de clear: {match.Incidents.Count}");
+        match.ClearAllIncidents();
+        Console.WriteLine($"Incidents DESPUES de clear: {match.Incidents.Count}");
 
         AddCardIncidents(match, request);
-
-        match.SetMatchResult(request.homeGoals, request.awayGoals);
+        match.UpdateMatchResult(request.homeGoals, request.awayGoals);
         
+        Console.WriteLine($"Incidents antes de UpdateMatch: {match.Incidents.Count}");
+        foreach (var i in match.Incidents)
+            Console.WriteLine($"  {i.Type} - {i.Team.Name} - {i.Quantity}");
+
+        Console.WriteLine($"Match result aaa: {match.ToResponse()}");
         _matchRepository.UpdateMatch(match);
+        Console.WriteLine($"Match result updated in repository for match id: {matchId}");
 
         _notificationService.NotifyJournalists(
             $"Se cargó el resultado de {match.HomeTeam.Name} vs {match.AwayTeam.Name}: {request.homeGoals}-{request.awayGoals}");
+        
+        Console.WriteLine("sali de setMatchResult");
     }
 
     public MatchResponse GetMatchById(int matchId)
@@ -157,8 +167,11 @@ public class MatchService : IMatchService
 
     private static void EnsureValidResultRequest(MatchResultRequest request)
     {
+        Console.WriteLine("entre a ensure valid result request");
         if (request == null)
             throw new ArgumentNullException(nameof(request));
+        Console.WriteLine("sali de ensure valid result request");
+        
     }
 
     private Stadium GetStadiumOrThrow(string stadiumName)
