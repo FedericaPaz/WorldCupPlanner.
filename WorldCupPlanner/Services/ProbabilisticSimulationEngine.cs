@@ -9,17 +9,31 @@ public class ProbabilisticSimulationEngine : ISimulationEngine
 
     public string Name => "Probabilístico";
 
-    public (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed)
+    public (int homeGoals, int awayGoals) SimulateMatch(int homeRanking, int awayRanking, int seed)
     {
-        var home = match.HomeTeam;
-        var away = match.AwayTeam;
-        var random = new Random(seed + match.IdMatch);
+        var random = new Random(seed);
 
-        double homeStrength = (double)home.FifaRanking / (home.FifaRanking + away.FifaRanking);
+        double homeStrength = 1.0 / (1.0 + Math.Pow(10, (double)(awayRanking - homeRanking) / 1000.0));
+        
+        double probability = random.NextDouble();
 
-        int homeGoals = (int)Math.Round(homeStrength * random.Next(0, MaxGoals + 1));
-        int awayGoals = (int)Math.Round((1 - homeStrength) * random.Next(0, MaxGoals + 1));
+        int homeGoals;
+        int awayGoals;
 
+        if (probability < homeStrength)
+        {
+            homeGoals = random.Next(1, MaxGoals);
+            awayGoals = random.Next(0, homeGoals);
+        } else if (probability < homeStrength + (1 - homeStrength) / 2)
+        {
+            homeGoals = random.Next(0, MaxGoals);
+            awayGoals = homeGoals;
+        }
+        else
+        {
+            awayGoals = random.Next(1, MaxGoals);
+            homeGoals = random.Next(0, awayGoals);
+        }
         return (homeGoals, awayGoals);
     }
 }
