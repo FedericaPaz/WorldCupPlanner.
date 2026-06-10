@@ -39,7 +39,7 @@
         }
         else
         {
-            <EditForm Model="_request" OnSubmit="HandleSubmit">
+            <EditForm Model="_request" OnValidSubmit="HandleSubmit">
                 <DataAnnotationsValidator />
 
                 <div class="form-section">
@@ -62,7 +62,10 @@
 
                 <div class="form-section">
                     <label>Ranking FIFA</label>
-                    <InputNumber class="form-control" @bind-Value="_request.FifaRanking" />
+                    <InputNumber class="form-control"
+                                 @bind-Value="_request.FifaRanking"
+                                 DisplayName="Ranking FIFA"
+                                 ParsingErrorMessage="El campo {0} debe ser un número." />
                     <ValidationMessage For="@(() => _request.FifaRanking)" />
                 </div>
                 
