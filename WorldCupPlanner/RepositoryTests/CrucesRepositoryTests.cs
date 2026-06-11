@@ -1,6 +1,8 @@
 ﻿using Repository;
 using Domain.Entities;
 using Domain.Enums;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServicesTests.Stubs;
 
 namespace RepositoryTests;
@@ -8,26 +10,67 @@ namespace RepositoryTests;
 [TestClass]
 public class CrucesRepositoryTests
 {
+    private WorldCupPlannerContext _context = null!;
+    private CrucesRepository _crucesRepository = null!;
     private static readonly DateTime FechaCreacionClock  = new DateTime(2027, 6, 10);
     private static readonly DateTime FechaPartido        = new DateTime(2027, 6, 12);
     private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
-
-    private CrucesRepository _crucesRepository = null!;
     private int _nextId;
 
     [TestInitialize]
     public void Setup()
     {
-        _crucesRepository = new CrucesRepository();
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        
+        _context = new  WorldCupPlannerContext(options);
+        
+        _crucesRepository = new CrucesRepository(_context);
+        
         _nextId = 1;
     }
 
+    
     private List<Cruce> CreateCruces(int cant, TournamentPhase phase)
+    {
+        var cruces = new List<Cruce>();
+
+        for (int i = 0; i < cant; i++)
+        {
+            var local = new Team($"Local{i}", new Confederation("UEFA"), 500);
+            var visitante = new Team($"Visitante{i}", new Confederation("CONMEBOL"), 501);
+
+            var estadio = new Stadium(
+                $"Estadio{i}",
+                "Ciudad",
+                "Desc",
+                50000);
+
+            var partido = new Match(
+                _nextId++,
+                FechaPartido,
+                estadio,
+                local,
+                visitante,
+                'A',
+                new ClockStub(FechaCreacionClock));
+
+            partido.SetClock(new ClockStub(FechaResultadoClock));
+            partido.SetMatchResult(2, 0);
+
+            cruces.Add(new Cruce($"C{i}", partido, phase));
+        }
+
+        return cruces;
+    }
+    
+    /*private List<Cruce> CreateCruces(int cant, TournamentPhase phase)
     {
         var cruces = new List<Cruce>();
         for (int i = 0; i < cant; i++)
         {
-            var local     = new Team($"Local{i}",     new Confederation("UEFA"),     500);
+            var local = new Team($"Local{i}",     new Confederation("UEFA"),     500);
             var visitante = new Team($"Visitante{i}", new Confederation("CONMEBOL"), 501);
             var partido   = new Match(
                 _nextId++, FechaPartido,
@@ -40,7 +83,7 @@ public class CrucesRepositoryTests
             cruces.Add(new Cruce($"C{i}", partido, phase));
         }
         return cruces;
-    }
+    }*/
 
     [TestMethod]
     public void AddCruces_WhenCrucesAreAdded_StoresThem()
@@ -97,5 +140,12 @@ public class CrucesRepositoryTests
         _crucesRepository.AddCruces(CreateCruces(2, TournamentPhase.RoundOf32));
         _crucesRepository.AddCruces(CreateCruces(3, TournamentPhase.RoundOf16));
         Assert.AreEqual(5, _crucesRepository.GetAllCruces().Count);
+    }
+    
+    [TestMethod]
+    public void AddCruces_WithNullCruces_ShouldThrowException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(
+            () => _crucesRepository.AddCruces(null!));
     }
 }
