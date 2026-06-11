@@ -62,7 +62,7 @@ public class SessionService
 
     public bool IsEditor()
     {
-        return HasRole(UserRoleDto.Editor);
+        return IsSystemAdministrator() || HasRole(UserRoleDto.Editor);
     }
 
     public bool IsJournalist()
