@@ -166,6 +166,12 @@ public class MatchService : IMatchService
         _simulationService.SimulateGroupStage(groups, _config.SemillaSimulation, engine);
     }
 
+    public bool MatchesHaveBeenPlayed()
+    {
+        return _matchRepository.GetAllMatches()
+            .Any(m => m.HomeGoals.HasValue && m.AwayGoals.HasValue);
+    }
+
     private static void EnsureValidRequest(MatchRequest request)
     {
         if (request == null)

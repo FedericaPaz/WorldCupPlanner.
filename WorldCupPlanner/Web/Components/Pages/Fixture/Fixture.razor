@@ -9,6 +9,7 @@
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject IConfigService ConfigService
+@inject IMatchService MatchService
 
 <h3 class="text-center my-4">Fixture - Fase de Grupos</h3>
 
@@ -81,46 +82,61 @@ else
     var fixture = FixtureService.GetFixture();
 
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <p class="text-muted">Motor de simulación: <strong>@fixture.SimulationEngineName</strong></p>
-            </div>
-
-            @if (SessionService.IsEditor())
-            {
-                @if (!_showRegenerateOptions)
-                {
-                    <button class="btn btn-success btn-md" @onclick="() => _showRegenerateOptions = true">
-                        ⚽ ReGenerar Fixture
-                    </button>
-                }
-                else
-                {
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Motor de simulación</label>
-                        <select class="form-select w-auto" @bind="_selectedEngine" disabled="@isReloading">
-                            <option value="Probabilístico">Probabilístico</option>
-                            <option value="Aleatorio puro">Aleatorio puro</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-success btn-md" @onclick="RegenerateFixture" disabled="@isReloading">
-                        ⚽ Confirmar Regenerar
-                    </button>
-                    <button class="btn btn-secondary btn-md" @onclick="() => _showRegenerateOptions = false" disabled="@isReloading">
-                        Cancelar
-                    </button>
-                }
-
-                <button class="btn btn-success btn-md" @onclick="EliminarFixture" disabled="@isReloading">
-                    ⚽ Eliminar Fixture
-                </button>
-            }
-
-            <div></div>
+        <div class="mb-3">
+            <p class="text-muted">Motor de simulación: <strong>@fixture.SimulationEngineName</strong></p>
         </div>
 
+        @if (SessionService.IsEditor())
+        {
+            <div class="d-flex flex-column gap-2 mb-3">
+
+                @if (!_showRegenerateOptions)
+                {
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-success" @onclick="MostrarOpcionesRegenerar">
+                            ⚽ ReGenerar Fixture
+                        </button>
+                        <button class="btn btn-outline-danger" @onclick="EliminarFixture" disabled="@_isReloading">
+                            🗑 Eliminar Fixture
+                        </button>
+                    </div>
+                }
+
+                @if (_showRegenerateOptions && _matchesHaveBeenPlayed)
+                {
+                    <div class="alert alert-warning d-flex align-items-center gap-3 mb-0">
+                        <span style="font-size:1.5rem">⚠️</span>
+                        <div class="flex-grow-1">
+                            <strong>Hay partidos con resultados cargados.</strong>
+                            <p class="mb-0 small">Si regenerás el fixture se perderán todos los resultados.</p>
+                        </div>
+                    </div>
+                }
+
+                @if (_showRegenerateOptions)
+                {
+                    <div class="d-flex align-items-end gap-3">
+                        <div>
+                            <label class="form-label fw-bold mb-1">Motor de simulación</label>
+                            <select class="form-select w-auto" @bind="_selectedEngine" disabled="@_isReloading">
+                                <option value="Probabilístico">Probabilístico</option>
+                                <option value="Aleatorio puro">Aleatorio puro</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-success" @onclick="RegenerateFixture" disabled="@_isReloading">
+                            ⚽ Confirmar Regenerar
+                        </button>
+                        <button class="btn btn-secondary" @onclick="() => _showRegenerateOptions = false" disabled="@_isReloading">
+                            Cancelar
+                        </button>
+                    </div>
+                }
+
+            </div>
+        }
+
         <div class="row g-3 reload-container">
-            @if (isReloading)
+            @if (_isReloading)
             {
                 <div class="col-12 text-center py-5">
                     <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;">
@@ -138,7 +154,6 @@ else
                             <div class="card-header text-center bg-dark text-white">
                                 <h4 class="mb-0">Grupo @group.GroupLetter</h4>
                             </div>
-
                             <div class="card-body">
                                 @foreach (var team in group.Teams)
                                 {
@@ -148,7 +163,6 @@ else
                                     </div>
                                 }
                             </div>
-
                             <div class="card-footer text-center text-muted small">
                                 @group.Matches.Count partidos
                             </div>
@@ -187,10 +201,10 @@ else
     private int _stadiumCount;
     private bool _canGenerate;
     private GroupResponse? SelectedGroup { get; set; }
-    private bool isReloading = false;
+    private bool _isReloading = false;
     private string _selectedEngine = "Probabilístico";
     private bool _showRegenerateOptions = false;
-    //private bool _engineChanged = false;
+    private bool _matchesHaveBeenPlayed = false;
 
     protected override void OnInitialized()
     {
@@ -199,6 +213,8 @@ else
             Navigation.NavigateTo("/");
             return;
         }
+        
+        _matchesHaveBeenPlayed = MatchService.MatchesHaveBeenPlayed();
 
         _teamCount = TeamService.GetAll().Count;
         _stadiumCount = StadiumService.GetAllStadiums().Count;
@@ -244,11 +260,11 @@ else
         {
             return;
         }
-        if (isReloading)
+        if (_isReloading)
         {
             return;
         }
-        isReloading = true;
+        _isReloading = true;
         _error = null;
         StateHasChanged();
         try
@@ -270,7 +286,7 @@ else
         }
         finally
         {
-            isReloading = false;
+            _isReloading = false;
             StateHasChanged();
         }
     }
@@ -282,12 +298,12 @@ else
             return;
         }
 
-        if (isReloading)
+        if (_isReloading)
         {
             return;
         }
 
-        isReloading = true;
+        _isReloading = true;
         _error = null;
         StateHasChanged();
 
@@ -312,7 +328,7 @@ else
         }
         finally
         {
-            isReloading = false;
+            _isReloading = false;
             StateHasChanged();
         }
     }
@@ -337,5 +353,11 @@ else
         }
 
         return SessionService.GetCurrentUser()!.Email;
+    }
+    
+    private void MostrarOpcionesRegenerar()
+    {
+        _showRegenerateOptions = true;
+        StateHasChanged();
     }
 }

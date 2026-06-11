@@ -17,4 +17,6 @@ public interface IMatchService
 
     void SimulateGroupStage();
     void SimulateGroupStage(ISimulationEngine engine);
+    
+    bool MatchesHaveBeenPlayed();
 }
