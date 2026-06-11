@@ -141,8 +141,18 @@ public class MatchService : IMatchService
 
     public void SimulateGroupStage()
     {
-        SimulateGroupStage(new ProbabilisticSimulationEngine());
+        var fixture = _fixtureRepository.GetFixture()
+                      ?? throw new InvalidOperationException("No hay fixture generado.");
+
+        ISimulationEngine engine = ResolveEngine(fixture.SimulationEngineName);
+        SimulateGroupStage(engine);
     }
+    
+    private ISimulationEngine ResolveEngine(string name) => name switch
+    {
+        "Aleatorio puro" => new PureRandomSimulationEngine(),
+        _ => new ProbabilisticSimulationEngine()
+    };
 
     public void SimulateGroupStage(ISimulationEngine engine)
     {

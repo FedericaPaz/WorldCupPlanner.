@@ -8,6 +8,7 @@
 @inject IMatchService MatchService
 @inject ICruceService CruceService
 @inject SessionService SessionService
+@inject IFixtureService FixtureService
 @inject NavigationManager Navigation
 
 <div class="matches-page">
@@ -15,25 +16,14 @@
         <div>
             <h3>Listado de Partidos</h3>
             <p>@_pendientes pendientes · @_jugados jugados · @_matchesFiltrados.Count mostrados</p>
-
-            @if (!string.IsNullOrWhiteSpace(_lastEngineUsed))
-            {
-                <p class="text-muted mb-0">
-                    Último motor usado: @_lastEngineUsed
-                </p>
-            }
         </div>
 
         @if (_pendientes > 0 && SessionService.IsEditor())
         {
             <div class="d-flex gap-2 align-items-end">
-                <div>
-                    <label class="form-label mb-1">Motor de simulación</label>
-                    <select class="form-control" @bind="_selectedEngine">
-                        <option value="probabilistic">Probabilístico</option>
-                        <option value="pureRandom">Aleatorio puro</option>
-                    </select>
-                </div>
+                <p class="text-muted mb-0">
+                    Motor: <strong>@_motorActual</strong>
+                </p>
 
                 <button class="btn-generar-cruces" @onclick="SimularPendientes" disabled="@_cargando">
                     @if (_cargando)
@@ -42,10 +32,7 @@
                     }
                     else
                     {
-                        <span>
-                            <i class="bi bi-dice-5-fill"></i>
-                            Simular pendientes (@_pendientes)
-                        </span>
+                        <span>Simular pendientes (@_pendientes)</span>
                     }
                 </button>
             </div>
@@ -191,8 +178,7 @@
     private string? _mensajeError;
     private string? _mensajeExito;
 
-    private string _selectedEngine = "probabilistic";
-    private string _lastEngineUsed = string.Empty;
+    private string _motorActual = string.Empty;
 
     private DateTime? _filtroFecha = null;
     private string _filtroEstadio = string.Empty;
@@ -227,6 +213,9 @@
         }
 
         LoadData();
+        
+        if (FixtureService.HasFixture())
+            _motorActual = FixtureService.GetFixture().SimulationEngineName;
     }
 
     private void LoadData()
@@ -293,17 +282,10 @@
         try
         {
             _cargando = true;
-            _mensajeError = null;
-            _mensajeExito = null;
             StateHasChanged();
 
-            ISimulationEngine engine = GetSelectedEngine();
-
-            MatchService.SimulateGroupStage(engine);
-            CruceService.SimulateCruces(engine);
-
-            _lastEngineUsed = engine.Name;
-            _mensajeExito = $"Partidos simulados correctamente usando el motor {engine.Name}.";
+            MatchService.SimulateGroupStage();
+            CruceService.SimulateCruces();
 
             LoadData();
         }
@@ -316,15 +298,5 @@
             _cargando = false;
             StateHasChanged();
         }
-    }
-
-    private ISimulationEngine GetSelectedEngine()
-    {
-        if (_selectedEngine == "pureRandom")
-        {
-            return new PureRandomSimulationEngine();
-        }
-
-        return new ProbabilisticSimulationEngine();
     }
 }
