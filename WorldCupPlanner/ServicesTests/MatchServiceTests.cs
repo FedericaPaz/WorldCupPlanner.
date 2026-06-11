@@ -26,7 +26,7 @@ public class MatchServiceTests
     private ISimulationService _simulationService = null!;
     private FixtureRepository _fixtureRepository = null!;
     private TournamentConfig _config = null!;
-    private LogRepository _logRepository = null!;
+    private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
 
     [TestInitialize]
@@ -36,7 +36,7 @@ public class MatchServiceTests
 
         _userRepository = new UserRepository(_context);
         _notificationRepository = new NotificationRepositoryStub();
-        _logRepository = new LogRepository();
+        _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
 
         _notificationService = new NotificationService(

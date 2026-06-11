@@ -14,7 +14,7 @@ public class NotificationServiceTests
     private UserRepository _userRepository = null!;
     private NotificationRepositoryStub _notificationRepository = null!;
     private NotificationService _service = null!;
-    private LogRepository _logRepository = null!;
+    private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
 
     [TestInitialize]
@@ -23,7 +23,7 @@ public class NotificationServiceTests
         _context = DbContextFactory.CreateInMemoryContext();
         _userRepository = new UserRepository(_context);
         _notificationRepository = new NotificationRepositoryStub();
-        _logRepository = new LogRepository();
+        _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
 
         _service = new NotificationService(

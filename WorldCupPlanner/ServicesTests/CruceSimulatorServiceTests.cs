@@ -14,7 +14,7 @@ public class CruceSimulatorServiceTests
     private static readonly DateTime FechaPartido = new DateTime(2027, 6, 12);
     private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
 
-    private LogRepository _logRepository = null!;
+    private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
     private CrucesSimulationService _service = null!;
     private IMatchRepository _matchRepository = null!;
@@ -27,7 +27,7 @@ public class CruceSimulatorServiceTests
     public void Setup()
     {
         _nextId = 1;
-        _logRepository = new LogRepository();
+        _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
         _matchRepository = new MatchRepositoryStub();
         _service = new CrucesSimulationService(_logService, _matchRepository);

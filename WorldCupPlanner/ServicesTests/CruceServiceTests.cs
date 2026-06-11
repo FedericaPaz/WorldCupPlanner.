@@ -20,7 +20,7 @@ public class CruceServiceTests
     private CrucesGeneratorServiceStub _stubCrucesGenerator;
     private CruceService _service;
     private IMatchRepository _matchRepository;
-    private LogRepository _logRepository;
+    private LogRepositoryStub _logRepository;
     private LogService _logService;
     private int _nextId;
     
@@ -34,7 +34,7 @@ public class CruceServiceTests
         _stubCrucesGenerator   = new CrucesGeneratorServiceStub();
         _matchRepository       = new MatchRepositoryStub();
 
-        _logRepository = new LogRepository();
+        _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
 
         _service = new CruceService(

@@ -3,6 +3,7 @@ using Domain.Enums;
 using DomainTests.Stubs;
 using Repository;
 using Services;
+using ServicesTests.Stubs;
 
 namespace ServicesTests;
 
@@ -10,7 +11,7 @@ namespace ServicesTests;
 public class RankingServiceTests
 {
     private RankingService _service = null!;
-    private LogRepository _logRepository = null!;
+    private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
     private Team _strongTeam = null!;
     private Team _weakTeam = null!;
@@ -28,7 +29,7 @@ public class RankingServiceTests
         var stadium = new Stadium("Centenario", "Montevideo", null, 60000);
         _match = new Match(1, clock.Now, stadium, _strongTeam, _weakTeam, 'A', clock);
 
-        _logRepository = new LogRepository();
+        _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
         _service = new RankingService(_logService);
     }
@@ -114,7 +115,7 @@ public class RankingServiceTests
         var stadium = new Stadium("Centenario", "Montevideo", "Estadio principal", 60000);
         var match = new Match(1, clock.Now, stadium, strongTeam, weakTeam, 'A', clock);
 
-        var logRepository = new LogRepository();
+        var logRepository = new LogRepositoryStub();
         var logService = new LogService(logRepository);
         var service = new RankingService(logService);
 

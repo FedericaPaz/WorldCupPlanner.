@@ -2,6 +2,7 @@
 using Domain.Enums;
 using Repository;
 using Services;
+using ServicesTests.Stubs;
 using ServicesTests.TestHelpers;
 
 namespace ServicesTests;
@@ -11,7 +12,7 @@ public class ExportServiceTests
 {
     private WorldCupPlannerContext _context = null!;
     private UserRepository _userRepository = null!;
-    private LogRepository _logRepository = null!;
+    private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
     private ExportService _service = null!;
 
@@ -21,7 +22,7 @@ public class ExportServiceTests
         _context = DbContextFactory.CreateInMemoryContext();
 
         _userRepository = new UserRepository(_context);
-        _logRepository = new LogRepository();
+        _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
 
         _service = new ExportService(_userRepository, _logService);
