@@ -11,8 +11,6 @@ public class LogRepository : ILogRepository
     {
         _context = context;
     }
-    
-    private readonly List<LogEntry> _logs = new();
 
     public void Add(LogEntry logEntry)
     {
