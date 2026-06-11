@@ -17,8 +17,9 @@ public class CruceService : ICruceService
     private readonly ISimulationService _simulationService;
     private readonly TournamentConfig _config;
     private readonly IMatchRepository _matchRepository;
+    private readonly IFixtureRepository _fixtureRepository;
 
-    public CruceService(ICrucesRepository repository, IFixtureService fixtureService, IStadiumRepository stadiumRepository, ICrucesGeneratorService generator, ISimulationService simulationService, TournamentConfig config, IMatchRepository matchRepository)
+    public CruceService(ICrucesRepository repository, IFixtureService fixtureService, IStadiumRepository stadiumRepository, ICrucesGeneratorService generator, ISimulationService simulationService, TournamentConfig config, IMatchRepository matchRepository,IFixtureRepository fixtureRepository)
     {
         _repository = repository;
         _fixtureService = fixtureService;
@@ -27,6 +28,7 @@ public class CruceService : ICruceService
         _simulationService = simulationService;
         _config = config;
         _matchRepository = matchRepository;
+        _fixtureRepository = fixtureRepository;
     }
 
     public void GenerateRoundOf32()
@@ -79,8 +81,18 @@ public class CruceService : ICruceService
 
     public void SimulateCruces()
     {
-        SimulateCruces(new ProbabilisticSimulationEngine());
+        var fixture = _fixtureRepository.GetFixture()
+                      ?? throw new InvalidOperationException("No hay fixture generado.");
+
+        ISimulationEngine engine = ResolveEngine(fixture.SimulationEngineName);
+        SimulateCruces(engine);
     }
+
+    private ISimulationEngine ResolveEngine(string name) => name switch
+    {
+        "Aleatorio puro" => new PureRandomSimulationEngine(),
+        _ => new ProbabilisticSimulationEngine()
+    };
 
     public void SimulateCruces(ISimulationEngine engine)
     {
