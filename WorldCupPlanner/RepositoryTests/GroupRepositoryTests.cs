@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Repository;
 
 namespace RepositoryTests;
@@ -6,72 +7,80 @@ namespace RepositoryTests;
 [TestClass]
 public class GroupRepositoryTests
 {
+    private WorldCupPlannerContext _context = null!;
+    private GroupRepository _groupRepository = null!;
+    private Group _group = null!;
+    private Group _group2 = null!;
+    private Group _group3 = null!;
+
+
+    [TestInitialize]
+    public void Setup()
+    {
+        var options = new DbContextOptionsBuilder<WorldCupPlannerContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+        
+        _context = new WorldCupPlannerContext(options);
+        _groupRepository = new GroupRepository(_context);
+        _group = new Group('A');
+        _group2 = new Group('B');
+        _group3 = new Group('C');
+    }
+    
     [TestMethod]
     public void AddGroup_WithValidGroup_ShouldAddGroup()
     {
-        var repository = new GroupRepository();
-        var newGroup = new Group('A');
-        
-        repository.AddGroup(newGroup);
-        Assert.AreEqual(1, repository.GetAllGroups().Count);
-        Assert.AreEqual(newGroup, repository.GetAllGroups()[0]);
+        _groupRepository.AddGroup(_group);
+        Assert.AreEqual(1, _groupRepository.GetAllGroups().Count);
+        Assert.AreEqual(_group, _groupRepository.GetAllGroups()[0]);
     }
 
     [TestMethod]
     public void AddGroup_WithNullGroup_ShouldThrowArgumentNullException()
     {
-        var repository = new GroupRepository();
-        Assert.ThrowsException<ArgumentNullException>(() => repository.AddGroup(null));
+        Assert.ThrowsException<ArgumentNullException>(() => _groupRepository.AddGroup(null));
     }
     
     [TestMethod]
     public void GetGroup_WithExistingName_ShouldReturnGroup()
-    {
-        var repository = new GroupRepository();
-        var groupA = new Group('A');
-        repository.AddGroup(groupA);        
-        var result = repository.GetGroupByName('A');
-        Assert.AreEqual(groupA, result);
+    { ;
+        _groupRepository.AddGroup(_group);        
+        var result = _groupRepository.GetGroupByName('A');
+        Assert.AreEqual(_group, result);
     }
     
     [TestMethod]
     public void GetGroup_WithNonExistingGroup_ShouldThrowKeyNotFoundException()
     {
-        var repository = new GroupRepository();
-        Assert.ThrowsException<KeyNotFoundException>(() => repository.GetGroupByName('A'));
+        Assert.ThrowsException<KeyNotFoundException>(() => _groupRepository.GetGroupByName('A'));
     }
     
     [TestMethod]
     public void GetGroup_WithInvalidGroupLetter_ShouldThrowArgumentException()
     {
-        var repository = new GroupRepository();
-        Assert.ThrowsException<ArgumentException>(() => repository.GetGroupByName('0'));
+        Assert.ThrowsException<ArgumentException>(() => _groupRepository.GetGroupByName('0'));
     }
     
     [TestMethod]
     public void GetAllGroups_WhenRepositoryIsEmpty_ShouldReturnEmptyList()
     {
-        var repository = new GroupRepository();
-        var groups = repository.GetAllGroups();
+        var groups = _groupRepository.GetAllGroups();
         Assert.AreEqual(0, groups.Count);
     }
     
     [TestMethod]
     public void GetAllGroups_WithMultipleGroups_ShouldReturnAllGroups()
     {
-        var repository = new GroupRepository();
-        var groupA = new Group('A');
-        var groupB = new Group('B');
-        var groupC = new Group('C');
 
-        repository.AddGroup(groupA);
-        repository.AddGroup(groupB);
-        repository.AddGroup(groupC);
+        _groupRepository.AddGroup(_group);
+        _groupRepository.AddGroup(_group2);
+        _groupRepository.AddGroup(_group3);
 
-        var allGroups = repository.GetAllGroups();
+        var allGroups = _groupRepository.GetAllGroups();
         Assert.AreEqual(3, allGroups.Count);
-        Assert.IsTrue(allGroups.Contains(groupA));
-        Assert.IsTrue(allGroups.Contains(groupB));
-        Assert.IsTrue(allGroups.Contains(groupC));
+        Assert.IsTrue(allGroups.Contains(_group));
+        Assert.IsTrue(allGroups.Contains(_group2));
+        Assert.IsTrue(allGroups.Contains(_group3));
     }
 }

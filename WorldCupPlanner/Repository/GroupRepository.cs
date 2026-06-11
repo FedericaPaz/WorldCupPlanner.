@@ -5,19 +5,26 @@ namespace Repository;
 
 public class GroupRepository : IGroupRepository
 {
-    private readonly List<Group> _group = new();
+    private WorldCupPlannerContext _context = null!;
+
+    public GroupRepository(WorldCupPlannerContext context)
+    {
+        _context = context;
+    }
+    
     public void AddGroup(Group group)
     {
         if(group is null)
-            throw new ArgumentNullException(nameof(group));
+            throw new ArgumentNullException();
         
-        _group.Add(group);
+        _context.Add(group);
+        _context.SaveChanges();
     }
 
     public Group GetGroupByName(char groupName)
     {
         EnsureValidLetter(groupName);
-        Group? group = _group.FirstOrDefault(g => g.GroupLetter == groupName);
+        Group? group = _context.Groups.FirstOrDefault(g => g.GroupLetter == groupName);
         if (group is null)
             throw new KeyNotFoundException();
         
@@ -26,7 +33,7 @@ public class GroupRepository : IGroupRepository
 
     public List<Group> GetAllGroups()
     {
-        return _group.ToList();
+        return _context.Groups.ToList();
     }
 
     private void EnsureValidLetter(char groupLetter)
