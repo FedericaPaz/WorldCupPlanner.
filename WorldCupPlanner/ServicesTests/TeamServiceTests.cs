@@ -2,6 +2,7 @@
 using Services;
 using Domain.Entities;
 using DTOs.Team;
+using ServicesTests.Stubs;
 
 namespace ServicesTests;
 
@@ -17,7 +18,7 @@ public class TeamServiceTests
     {
         _teamRepository = new TeamRepository();  
         _config = new TournamentConfig();
-        _teamService = new TeamService(_teamRepository, new FixtureRepository(), new MatchRepository(), new CrucesRepository(), _config);
+        _teamService = new TeamService(_teamRepository, new FixtureRepository(), new MatchRepository(), new CrucesRepositoryStub(), _config);
     }
     private TeamDTO CreateRequest(string name, string confederationName, int fifaRanking)
     {
@@ -55,7 +56,7 @@ public class TeamServiceTests
     public void CreateTeam_WhenConfederationLimitExceeded_ShouldThrowException(string confName, int limit)
     {
         var repo    = new TeamRepository();
-        var service = new TeamService(repo, new FixtureRepository(), new MatchRepository(), new CrucesRepository(), _config);
+        var service = new TeamService(repo, new FixtureRepository(), new MatchRepository(), new CrucesRepositoryStub(), _config);
         for (int i = 0; i < limit; i++)
             service.Add(CreateRequest($"Team{i}", confName, 1000 + i));
         Assert.ThrowsException<InvalidOperationException>(() => service.Add(CreateRequest("ExtraName", confName, 2000)));
@@ -71,7 +72,7 @@ public class TeamServiceTests
     public void CreateTeam_AtConfederationLimit_ShouldSucceed(string confName, int limit)
     {
         var repo    = new TeamRepository();
-        var service = new TeamService(repo, new FixtureRepository(), new MatchRepository(), new CrucesRepository(), _config);
+        var service = new TeamService(repo, new FixtureRepository(), new MatchRepository(), new CrucesRepositoryStub(), _config);
         for (int i = 0; i < limit; i++)
             service.Add(CreateRequest($"Team{i}", confName, 1000 + i));
         var teams = repo.GetAll().Count(t => t.Confederation.Name == confName);

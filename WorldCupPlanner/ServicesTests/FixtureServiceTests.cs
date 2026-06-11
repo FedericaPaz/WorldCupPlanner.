@@ -28,7 +28,7 @@ public class FixtureServiceTests
         _teamRepository    = new TeamRepository();
         _stadiumRepository = new StadiumRepository();
         _matchRepository   = new MatchRepository();
-        _crucesRepository  = new CrucesRepository();
+        _crucesRepository  = new CrucesRepositoryStub();
         _config            = new TournamentConfig();
         var clock          = new ClockStub(ClockDate);
 
