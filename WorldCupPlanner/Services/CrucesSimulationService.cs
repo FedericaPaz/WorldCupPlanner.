@@ -27,8 +27,9 @@ public class CrucesSimulationService : ISimulationService
         EnsureValidEngine(engine);
 
         LastUsedEngineName = engine.Name;
-//REVISAR
-        var result = engine.SimulateMatch(match.HomeTeam.CurrentRanking,match.AwayTeam.CurrentRanking, seed);
+
+        var matchSeed = seed + match.IdMatch;
+        var result = engine.SimulateMatch(match.HomeTeam.CurrentRanking, match.AwayTeam.CurrentRanking, matchSeed);
 
         RegisterSimulation(seed, engine.Name);
 
