@@ -13,7 +13,8 @@ public static class FixtureMapper
         return new FixtureResponse
         {
             Groups = fixture.Groups.Select(g => g.ToEntity()).ToList(),
-            CurrentPhase = fixture.CurrentPhase.ToString()
+            CurrentPhase = fixture.CurrentPhase.ToString(),
+            SimulationEngineName = fixture.SimulationEngineName
         };
     }
     

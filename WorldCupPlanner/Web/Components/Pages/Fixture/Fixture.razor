@@ -46,6 +46,14 @@ else if (!FixtureService.HasFixture())
 
             @if (_canGenerate && SessionService.IsEditor())
             {
+                <div class="mt-3">
+                    <label class="form-label">Motor de simulación</label>
+                    <select class="form-select w-auto" @bind="_selectedEngine">
+                        <option value="Probabilístico">Probabilístico</option>
+                        <option value="Aleatorio puro">Aleatorio puro</option>
+                    </select>
+                </div>
+
                 <button class="btn btn-success btn-lg mt-3" @onclick="GenerateInitialFixture">
                     ⚽ Generar Fixture
                 </button>
@@ -74,31 +82,37 @@ else
 
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <div></div>
+            <div>
+                <p class="text-muted">Motor de simulación: <strong>@fixture.SimulationEngineName</strong></p>
+            </div>
 
             @if (SessionService.IsEditor())
             {
-                <button class="btn btn-success btn-md" @onclick="RegenerateFixture" disabled="@isReloading">
-                    @if (isReloading)
-                    {
-                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-                        <span>Regenerando fixture...</span>
-                    }
-                    else
-                    {
-                        <span>⚽ ReGenerar Fixture</span>
-                    }
-                </button>
+                @if (!_showRegenerateOptions)
+                {
+                    <button class="btn btn-success btn-md" @onclick="() => _showRegenerateOptions = true">
+                        ⚽ ReGenerar Fixture
+                    </button>
+                }
+                else
+                {
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Motor de simulación</label>
+                        <select class="form-select w-auto" @bind="_selectedEngine" disabled="@isReloading">
+                            <option value="Probabilístico">Probabilístico</option>
+                            <option value="Aleatorio puro">Aleatorio puro</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success btn-md" @onclick="RegenerateFixture" disabled="@isReloading">
+                        ⚽ Confirmar Regenerar
+                    </button>
+                    <button class="btn btn-secondary btn-md" @onclick="() => _showRegenerateOptions = false" disabled="@isReloading">
+                        Cancelar
+                    </button>
+                }
+
                 <button class="btn btn-success btn-md" @onclick="EliminarFixture" disabled="@isReloading">
-                    @if (isReloading)
-                    {
-                        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-                        <span>Eliminando fixture...</span>
-                    }
-                    else
-                    {
-                        <span>⚽ Eliminar Fixture</span>
-                    }
+                    ⚽ Eliminar Fixture
                 </button>
             }
 
@@ -174,6 +188,9 @@ else
     private bool _canGenerate;
     private GroupResponse? SelectedGroup { get; set; }
     private bool isReloading = false;
+    private string _selectedEngine = "Probabilístico";
+    private bool _showRegenerateOptions = false;
+    //private bool _engineChanged = false;
 
     protected override void OnInitialized()
     {
@@ -200,7 +217,7 @@ else
 
         try
         {
-            FixtureService.GenerateFixture();
+            FixtureService.GenerateFixture(_selectedEngine);
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -278,7 +295,7 @@ else
         {
             await Task.Delay(500);
 
-            FixtureService.GenerateFixture();
+            FixtureService.GenerateFixture(_selectedEngine);
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -286,6 +303,8 @@ else
                 "Generación",
                 $"Se regeneró el fixture del torneo con semilla {ConfigService.GetConfig().SemillaFixture}"
             );
+
+            _showRegenerateOptions = false;
         }
         catch (Exception ex)
         {

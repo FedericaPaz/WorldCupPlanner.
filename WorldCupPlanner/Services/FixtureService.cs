@@ -101,7 +101,7 @@ public class FixtureService : IFixtureService
         return standings.Select(s => StandingMapper.ToResponse(s)).ToList();
     }
 
-    public void GenerateFixture()
+    public void GenerateFixture(string simulationEngineName = "Probabilistico")
     {
         var fixture = _fixtureGenerator.GenerateGroupsStageFixture();
 
@@ -112,6 +112,7 @@ public class FixtureService : IFixtureService
         foreach (var partido in grupo.MatchesInGroup)
             _matchRepository.AddMatch(partido);
 
+        fixture.SetSimulationEngine(simulationEngineName);
         _fixtureRepository.AddFixture(fixture);
     }
     

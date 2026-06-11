@@ -58,6 +58,10 @@ namespace Repository.Migrations
                     b.Property<int>("CurrentPhase")
                         .HasColumnType("int");
 
+                    b.Property<string>("SimulationEngineName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Fixtures");

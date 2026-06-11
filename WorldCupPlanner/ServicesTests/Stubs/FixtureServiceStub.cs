@@ -8,10 +8,16 @@ namespace ServicesTests.Stubs;
 public class FixtureServiceStub : IFixtureService
 {
     private readonly IFixtureRepository _repository;
+    public string LastEngineUsed { get; private set; } = string.Empty;
 
     public FixtureServiceStub(IFixtureRepository repository)
     {
         _repository = repository;
+    }
+
+    public void GenerateFixture(string simulationEngineName = "Probabilístico")
+    {
+        LastEngineUsed = simulationEngineName;
     }
 
     public Fixture GetFixtureEntity()
@@ -32,8 +38,6 @@ public class FixtureServiceStub : IFixtureService
     }
 
     public bool HasFixture() => _repository.ContainsFixture();
-
-    public void GenerateFixture() { }
 
     public List<StandingResponse> GetStandingsForGroup(char groupLetter)
         => new List<StandingResponse>();
