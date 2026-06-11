@@ -43,7 +43,7 @@ public class FixtureServiceTests
         _config = new TournamentConfig();
         var clock = new ClockStub(ClockDate);
         _fixtureGenerator = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository, _config, clock);
-        _groupRepository = new EfGroupRepository(_context);
+        _groupRepository = new GroupRepository(_context);
 
         _service = new FixtureService(
             _fixtureRepository, _fixtureGenerator, _teamRepository,
