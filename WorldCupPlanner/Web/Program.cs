@@ -54,7 +54,7 @@ builder.Services.AddScoped<TournamentConfig>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<ISimulationService, CrucesSimulationService>();
 
-builder.Services.AddScoped<ICrucesRepository, CrucesRepository>();
+builder.Services.AddScoped<ICrucesRepository, EfCrucesRepository>();
 builder.Services.AddScoped<ICrucesGeneratorService, CrucesGeneratorService>();
 builder.Services.AddScoped<ICruceService, CruceService>();
 

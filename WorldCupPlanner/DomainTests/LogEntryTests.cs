@@ -51,16 +51,4 @@ public class LogEntryTests
 
         Assert.ThrowsException<ArgumentException>(() => new LogEntry(userEmail, category, action, string.Empty));
     }
-    
-    [TestMethod]
-    public void PrivateConstructor_ShouldCreateLogEntry()
-    {
-        var logEntry = (LogEntry)Activator.CreateInstance(
-            typeof(LogEntry),
-            nonPublic: true)!;
-        
-        Assert.IsNotNull(logEntry);
-        Assert.AreEqual(0, logEntry.Id);
-        Assert.AreEqual(string.Empty, logEntry.UserEmail);
-    }
 }

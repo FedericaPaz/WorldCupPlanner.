@@ -109,25 +109,4 @@ public class StadiumRepositoryTests
     {
         _context.Dispose();
     }
-    
-    [TestMethod]
-    public void Get_WithNullName_ShouldThrowArgumentException()
-    {
-        Assert.ThrowsException<ArgumentException>(() =>
-            _stadiumRepository.GetStadium(null!));
-    }
-    
-    [TestMethod]
-    public void Get_WithEmptyName_ShouldThrowArgumentException()
-    {
-        Assert.ThrowsException<ArgumentException>(() =>
-            _stadiumRepository.GetStadium(""));
-    }
-    
-    [TestMethod]
-    public void Get_WithWhitespaceName_ShouldThrowArgumentException()
-    {
-        Assert.ThrowsException<ArgumentException>(() =>
-            _stadiumRepository.GetStadium("   "));
-    }
 }

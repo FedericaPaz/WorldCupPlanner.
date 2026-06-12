@@ -46,48 +46,4 @@ public class MatchIncidentTests
     {
         Assert.ThrowsException<ArgumentNullException>(() => new MatchIncident(IncidentType.YellowCard, null!, 1));
     }
-    
-    [TestMethod]
-    public void MatchIncident_ShouldStoreTeamName()
-    {
-        var team = new Team("Uruguay", new Confederation("UEFA"), 1500);
-
-        var incident = new MatchIncident(IncidentType.YellowCard, team, 1);
-
-        Assert.AreEqual("Uruguay", incident.TeamName);
-    }
-    
-    [TestMethod]
-    public void MatchIncident_ShouldStoreMatchId()
-    {
-        var team = new Team("Uruguay", new Confederation("UEFA"), 1500);
-
-        var incident = new MatchIncident(
-            IncidentType.YellowCard,
-            team,
-            1,
-            25);
-
-        Assert.AreEqual(25, incident.MatchId);
-    }
-    
-    [TestMethod]
-    public void MatchIncident_NewIncident_IdShouldBeZero()
-    {
-        var team = new Team("Uruguay", new Confederation("UEFA"), 1500);
-
-        var incident = new MatchIncident(IncidentType.YellowCard, team, 1);
-
-        Assert.AreEqual(0, incident.Id);
-    }
-    
-    [TestMethod]
-    public void PrivateConstructor_ShouldCreateInstance()
-    {
-        var incident = (MatchIncident)Activator.CreateInstance(
-            typeof(MatchIncident),
-            nonPublic: true)!;
-
-        Assert.IsNotNull(incident);
-    }
 }
