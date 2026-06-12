@@ -32,8 +32,9 @@ public class GroupRepositoryTests
     public void AddGroup_WithValidGroup_ShouldAddGroup()
     {
         _groupRepository.AddGroup(_group);
-        Assert.AreEqual(1, _groupRepository.GetAllGroups().Count);
-        Assert.AreEqual(_group, _groupRepository.GetAllGroups()[0]);
+        var groups = _groupRepository.GetAllGroups();
+        Assert.AreEqual(1, groups.Count);
+        Assert.AreEqual(_group.GroupLetter, groups[0].GroupLetter);
     }
 
     [TestMethod]
@@ -72,15 +73,14 @@ public class GroupRepositoryTests
     [TestMethod]
     public void GetAllGroups_WithMultipleGroups_ShouldReturnAllGroups()
     {
-
         _groupRepository.AddGroup(_group);
         _groupRepository.AddGroup(_group2);
         _groupRepository.AddGroup(_group3);
 
         var allGroups = _groupRepository.GetAllGroups();
         Assert.AreEqual(3, allGroups.Count);
-        Assert.IsTrue(allGroups.Contains(_group));
-        Assert.IsTrue(allGroups.Contains(_group2));
-        Assert.IsTrue(allGroups.Contains(_group3));
+        Assert.IsTrue(allGroups.Any(g => g.GroupLetter == 'A'));
+        Assert.IsTrue(allGroups.Any(g => g.GroupLetter == 'B'));
+        Assert.IsTrue(allGroups.Any(g => g.GroupLetter == 'C'));
     }
 }

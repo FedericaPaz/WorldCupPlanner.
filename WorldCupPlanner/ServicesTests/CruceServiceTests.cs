@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 using IRepository;
-using Repository;
 using Services;
 using ServicesTests.Stubs;
 
@@ -14,40 +13,42 @@ public class CruceServiceTests
     private static readonly DateTime FechaPartido        = new DateTime(2027, 6, 12);
     private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
     
-    private CrucesRepositoryStub _stubCrucesRepository;
-    private FixtureRepositoryStub _stubFixtureRepository;
-    private StadiumRepositoryStub _stubStadiumRepository;
-    private CrucesGeneratorServiceStub _stubCrucesGenerator;
-    private CruceService _service;
-    private IMatchRepository _matchRepository;
-    private LogRepositoryStub _logRepository;
-    private LogService _logService;
+    private CrucesRepositoryStub _stubCrucesRepository = null!;
+    private FixtureRepositoryStub _stubFixtureRepository = null!;
+    private StadiumRepositoryStub _stubStadiumRepository = null!;
+    private CrucesGeneratorServiceStub _stubCrucesGenerator = null!;
+    private CruceService _service = null!;
+    private IMatchRepository _matchRepository = null!;
+    private LogRepositoryStub _logRepository = null!;
+    private LogService _logService = null!;
+    private RankingServiceStub _rankingService = null!;
     private int _nextId;
     
     [TestInitialize]
     public void Setup()
     {
         _nextId = 1;
-        _stubCrucesRepository  = new CrucesRepositoryStub();
+        _stubCrucesRepository = new CrucesRepositoryStub();
         _stubFixtureRepository = new FixtureRepositoryStub();
         _stubStadiumRepository = new StadiumRepositoryStub();
-        _stubCrucesGenerator   = new CrucesGeneratorServiceStub();
-        _matchRepository       = new MatchRepositoryStub();
-        _stubFixtureRepository = new FixtureRepositoryStub();
+        _stubCrucesGenerator = new CrucesGeneratorServiceStub();
+        _matchRepository = new MatchRepositoryStub();
 
         _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
+        _rankingService = new RankingServiceStub();
 
         _service = new CruceService(
             _stubCrucesRepository,
             new FixtureServiceStub(_stubFixtureRepository),
             _stubStadiumRepository,
             _stubCrucesGenerator,
-            new CrucesSimulationService(_logService, _matchRepository),
+            new CrucesSimulationService(_logService, _matchRepository, _rankingService),
             new TournamentConfig(),
             _matchRepository,
             _stubFixtureRepository);
     }
+
 
     private Fixture CreateFixture()
     {

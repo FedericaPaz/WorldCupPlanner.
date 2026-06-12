@@ -26,6 +26,8 @@ public class GroupRepository : IGroupRepository
 
     public Group GetGroupByName(char groupName)
     {
+        EnsureValidLetter(groupName);
+        
         var group = _context.Groups
             .FirstOrDefault(group => group.GroupLetter == groupName);
 

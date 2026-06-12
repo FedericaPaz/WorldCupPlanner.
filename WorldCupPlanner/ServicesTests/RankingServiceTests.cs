@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
-using Domain.Enums;
+using Domain.Calculators;
 using DomainTests.Stubs;
-using Repository;
 using Services;
 using ServicesTests.Stubs;
 
@@ -13,6 +12,8 @@ public class RankingServiceTests
     private RankingService _service = null!;
     private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
+    private TeamRepositoryStub _teamRepository = null!;
+    private RankingCalculator _rankingCalculator = null!;
     private Team _strongTeam = null!;
     private Team _weakTeam = null!;
     private Match _match = null!;
@@ -31,7 +32,13 @@ public class RankingServiceTests
 
         _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
-        _service = new RankingService(_logService);
+
+        _teamRepository = new TeamRepositoryStub();
+        _teamRepository.Add(_strongTeam);
+        _teamRepository.Add(_weakTeam);
+
+        _rankingCalculator = new RankingCalculator();
+        _service = new RankingService(_logService, _rankingCalculator, _teamRepository);
     }
 
     [TestMethod]
@@ -63,6 +70,9 @@ public class RankingServiceTests
         var stadium = new Stadium("Estadio", "Ciudad", null, 50000);
         var match = new Match(2, clock.Now, stadium, home, away, 'A', clock);
 
+        _teamRepository.Add(home);   
+        _teamRepository.Add(away);   
+
         match.SetMatchResult(1, 1);
 
         _service.UpdateRankingsAfterMatch(match);
@@ -70,7 +80,7 @@ public class RankingServiceTests
         Assert.AreEqual(1500, home.CurrentRanking);
         Assert.AreEqual(1500, away.CurrentRanking);
     }
-
+    
     [TestMethod]
     public void UpdateRankingsAfterMatch_WhenStrongTeamWins_ShouldChangeRankingsSlightly()
     {
@@ -96,7 +106,7 @@ public class RankingServiceTests
     [TestMethod]
     public void UpdateRankingsAfterMatch_WithNullMatch_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentNullException>(() => _service.UpdateRankingsAfterMatch(null));
+        Assert.ThrowsException<ArgumentNullException>(() => _service.UpdateRankingsAfterMatch(null!));
     }
 
     [TestMethod]
@@ -117,8 +127,12 @@ public class RankingServiceTests
 
         var logRepository = new LogRepositoryStub();
         var logService = new LogService(logRepository);
-        var service = new RankingService(logService);
-
+        var teamRepository = new TeamRepositoryStub();
+        teamRepository.Add(strongTeam);
+        teamRepository.Add(weakTeam);
+    
+        var service = new RankingService(logService, new RankingCalculator(), teamRepository);
+        
         match.SetMatchResult(0, 1);
 
         service.UpdateRankingsAfterMatch(match);

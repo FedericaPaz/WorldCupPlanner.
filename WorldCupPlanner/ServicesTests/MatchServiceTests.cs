@@ -28,6 +28,8 @@ public class MatchServiceTests
     private TournamentConfig _config = null!;
     private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
+    private IRankingService _rankingService = null!;
+    
 
     [TestInitialize]
     public void Setup()
@@ -51,6 +53,7 @@ public class MatchServiceTests
         _simulationService = new SimulationServiceStub();
         _fixtureRepository = new FixtureRepository(_context);
         _config = new TournamentConfig();
+        _rankingService = new RankingServiceStub();
 
         _service = new MatchService(
             _matchRepository,
@@ -60,7 +63,8 @@ public class MatchServiceTests
             _simulationService,
             _fixtureRepository,
             _config,
-            _notificationService);
+            _notificationService,
+            _rankingService);
     }
 
     [TestCleanup]

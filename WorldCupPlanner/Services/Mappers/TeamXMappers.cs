@@ -11,7 +11,7 @@ namespace Services.Mappers;
          return new Team(
              request.Name,
              confederation,
-             request.CurrentRanking,
+             request.FifaRanking,
              request.FlagBase64 ?? ""
          );
      }

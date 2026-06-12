@@ -19,6 +19,8 @@ public class CruceSimulatorServiceTests
     private CrucesSimulationService _service = null!;
     private IMatchRepository _matchRepository = null!;
     private ProbabilisticSimulationEngine _engine = null!;
+    private RankingServiceStub _rankingService = null!;
+    
 
     private const int Seed = 42;
     private int _nextId;
@@ -30,9 +32,11 @@ public class CruceSimulatorServiceTests
         _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
         _matchRepository = new MatchRepositoryStub();
-        _service = new CrucesSimulationService(_logService, _matchRepository);
+        _rankingService = new RankingServiceStub();
+        _service = new CrucesSimulationService(_logService, _matchRepository, _rankingService);
         _engine = new ProbabilisticSimulationEngine();
     }
+
 
     private Match BuildMatch(string homeName, int homeRanking, string awayName, int awayRanking, char group = 'A')
     {
