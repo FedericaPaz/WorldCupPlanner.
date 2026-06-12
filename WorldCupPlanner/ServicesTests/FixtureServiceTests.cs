@@ -38,7 +38,8 @@ public class FixtureServiceTests
 
         _stadiumRepository = new StadiumRepositoryStub();
         _matchRepository = new MatchRepositoryStub();
-        _crucesRepository = new CrucesRepository();
+        
+        _crucesRepository = new CrucesRepository(_context); 
 
         _config = new TournamentConfig();
         var clock = new ClockStub(ClockDate);
@@ -50,7 +51,7 @@ public class FixtureServiceTests
             _stadiumRepository, _matchRepository, _crucesRepository,
             _groupRepository, 
             _config);
-        
+    
         _fixture = new Fixture(_config);
     }
     
@@ -264,4 +265,5 @@ public class FixtureServiceTests
         _service.GenerateFixture();
         Assert.AreEqual(72, _matchRepository.GetAllMatches().Count);
     }
+    
 }
