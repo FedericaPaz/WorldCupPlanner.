@@ -52,10 +52,10 @@ else
         </thead>
 
         <tbody>
-        @foreach (var team in _teams.OrderBy(t => t.FifaRanking))
+        @foreach (var team in _teams.OrderBy(t => t.CurrentRanking))
         {
             <tr>
-                <td>@team.FifaRanking</td>
+                <td>@team.CurrentRanking</td>
 
                 <td>
                     @if (!string.IsNullOrWhiteSpace(team.FlagBase64))

@@ -18,6 +18,7 @@ public class MatchService : IMatchService
     private readonly IFixtureRepository _fixtureRepository;
     private readonly TournamentConfig _config;
     private readonly INotificationService _notificationService;
+    private readonly IRankingService _rankingService;
 
     public MatchService(
         IMatchRepository matchRepository,
@@ -27,7 +28,8 @@ public class MatchService : IMatchService
         ISimulationService simulationService,
         IFixtureRepository fixtureRepository,
         TournamentConfig config,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IRankingService rankingService)
     {
         _matchRepository = matchRepository;
         _teamRepository = teamRepository;
@@ -37,6 +39,7 @@ public class MatchService : IMatchService
         _fixtureRepository = fixtureRepository;
         _config = config;
         _notificationService = notificationService;
+        _rankingService = rankingService;
     }
 
     public MatchResponse CreateMatch(MatchRequest request)
@@ -56,36 +59,24 @@ public class MatchService : IMatchService
 
     public void SetMatchResult(int matchId, MatchResultRequest request)
     {
-        Console.WriteLine($"Setting match result for match id: {matchId}");
         EnsureValidResultRequest(request);
 
         var match = _matchRepository.GetMatchById(matchId);
-        
-        Console.WriteLine($"Incidents ANTES de clear: {match.Incidents.Count}");
         match.ClearAllIncidents();
-        Console.WriteLine($"Incidents DESPUES de clear: {match.Incidents.Count}");
 
         AddCardIncidents(match, request);
         match.UpdateMatchResult(request.homeGoals, request.awayGoals);
         
-        Console.WriteLine($"Incidents antes de UpdateMatch: {match.Incidents.Count}");
-        foreach (var i in match.Incidents)
-            Console.WriteLine($"  {i.Type} - {i.Team.Name} - {i.Quantity}");
-
-        Console.WriteLine($"Match result aaa: {match.ToResponse()}");
         _matchRepository.UpdateMatch(match);
-        Console.WriteLine($"Match result updated in repository for match id: {matchId}");
+        _rankingService.UpdateRankingsAfterMatch(match);
 
         _notificationService.NotifyJournalists(
             $"Se cargó el resultado de {match.HomeTeam.Name} vs {match.AwayTeam.Name}: {request.homeGoals}-{request.awayGoals}");
-        
-        Console.WriteLine("sali de setMatchResult");
     }
 
     public MatchResponse GetMatchById(int matchId)
     {
         var match = _matchRepository.GetMatchById(matchId);
-
         return match.ToResponse();
     }
 
@@ -116,6 +107,7 @@ public class MatchService : IMatchService
     public void SimulateMatch(int matchId, int seed)
     {
         SimulateMatch(matchId, seed, new ProbabilisticSimulationEngine());
+        
     }
 
     public void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
@@ -160,10 +152,28 @@ public class MatchService : IMatchService
 
         if (fixture == null)
             throw new InvalidOperationException("No hay fixture generado.");
-
-        var groups = fixture.Groups.ToList();
-
-        _simulationService.SimulateGroupStage(groups, _config.SemillaSimulation, engine);
+        
+        var allMatches = _matchRepository.GetAllMatches();
+        foreach (var group in fixture.Groups)
+        {
+            //if (group.MatchesInGroup.Count == 6) continue;
+            var groupMatches = allMatches.Where(m => m.Group == group.GroupLetter).ToList();
+            foreach (var match in groupMatches)
+                group.LoadMatchFromRepository(match);
+        }
+        
+        foreach (var group in fixture.Groups)
+        {
+            foreach (var match in group.MatchesInGroup)
+            {
+                Console.WriteLine($"Grupo {group.GroupLetter} | Match {match.IdMatch} | " +
+                                  $"{match.HomeTeam.Name} vs {match.AwayTeam.Name} | " +
+                                  $"Goals: {match.HomeGoals?.ToString() ?? "null"}-{match.AwayGoals?.ToString() ?? "null"} | " +
+                                  $"Pendiente: {!match.HomeGoals.HasValue && !match.AwayGoals.HasValue}");
+            }
+        }
+        
+        _simulationService.SimulateGroupStage(fixture.Groups.ToList(), _config.SemillaSimulation, engine);
     }
 
     public bool MatchesHaveBeenPlayed()

@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Domain.Calculators;
 using Domain.Entities;
 using Web.Components;
 using IRepository;
@@ -62,6 +63,9 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<IExportService, ExportService>();
+
+builder.Services.AddScoped<RankingCalculator>();
+builder.Services.AddScoped<IRankingService, RankingService>();
 
 var app = builder.Build();
 

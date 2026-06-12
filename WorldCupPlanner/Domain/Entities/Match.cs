@@ -185,13 +185,11 @@ public class Match
 
     private void ApplyResult(int homeGoals, int awayGoals)
     {
-        Console.WriteLine("entre a aplly res");
         EnsureValidGoals(homeGoals, awayGoals);
         HomeGoals = homeGoals;
         AwayGoals = awayGoals;
         SetWinnerFromResult(homeGoals, awayGoals);
         SetLoserFromResult(homeGoals, awayGoals);
-        Console.WriteLine($"sali de applyresult. HomeGoals: {HomeGoals}, AwayGoals: {AwayGoals}, Winner: {WinnerMatch?.Name}, Loser: {LoserMatch?.Name}");
     }
 
     private void EnsureValidClock(IDateTimeMatch clock)
@@ -251,13 +249,11 @@ public class Match
 
     private void EnsureValidDate(DateTime dateMatch)
     {
-        Console.WriteLine("entre a ensure valid date");
         if (_clock == null)
             throw new InvalidOperationException("El reloj no fue configurado.");
 
         if (dateMatch.ToUniversalTime() < _clock.Now.ToUniversalTime())
             throw new ArgumentException("La fecha no puede ser pasada.");
-        Console.WriteLine("sali de ensure valid date");
     }
 
     private void EnsureValidStadium(Stadium stadium)
@@ -295,13 +291,11 @@ public class Match
     private void EnsureGroupPhaseIsEditable()
     {
         if (IsLocked)
-            throw new InvalidOperationException(
-                "No se puede editar un partido de fase de grupos una vez generados los cruces.");
+            throw new InvalidOperationException("No se puede editar un partido de fase de grupos una vez generados los cruces.");
     }
 
     private static void EnsureIncidentIsNotNull(MatchIncident incident)
     {
-        Console.WriteLine("entre a ensure incident is not null");
         if (incident == null)
             throw new ArgumentNullException(nameof(incident));
     }
