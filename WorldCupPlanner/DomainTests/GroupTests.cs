@@ -160,4 +160,93 @@ public class GroupTests
 
         Assert.ThrowsException<InvalidOperationException>(() => group.AddMatchToGroup(match));
     }
+    
+    [TestMethod]
+    public void RemoveTeamFromGroup_WithExistingTeam_ShouldRemoveTeam()
+    {
+        var group = new Group('A');
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+
+        group.AddTeamToGroup(team);
+
+        group.RemoveTeamFromGroup(team);
+
+        Assert.AreEqual(0, group.TeamsInGroup.Count);
+    }
+    
+    [TestMethod]
+    public void RemoveTeamFromGroup_WithNullTeam_ShouldThrowException()
+    {
+        var group = new Group('A');
+
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            group.RemoveTeamFromGroup(null!));
+    }
+    
+    [TestMethod]
+    public void RemoveTeamFromGroup_WithTeamNotInGroup_ShouldThrowException()
+    {
+        var group = new Group('A');
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+
+        Assert.ThrowsException<InvalidOperationException>(() =>
+            group.RemoveTeamFromGroup(team));
+    }
+    
+    [TestMethod]
+    public void PrivateConstructor_ShouldCreateGroup()
+    {
+        var group = (Group)Activator.CreateInstance(
+            typeof(Group),
+            nonPublic: true)!;
+
+        Assert.IsNotNull(group);
+    }
+    
+    [TestMethod]
+    public void LoadMatchFromRepository_WithNewMatch_ShouldAddMatch()
+    {
+        var group = new Group('A');
+
+        var home = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var away = new Team("Argentina", new Confederation("CONMEBOL"), 1800);
+
+        var match = CreateMatch(home, away);
+
+        group.LoadMatchFromRepository(match);
+
+        Assert.AreEqual(1, group.MatchesInGroup.Count);
+    }
+    
+    [TestMethod]
+    public void LoadMatchFromRepository_WithExistingMatch_ShouldNotDuplicateMatch()
+    {
+        var group = new Group('A');
+
+        var home = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var away = new Team("Argentina", new Confederation("CONMEBOL"), 1800);
+
+        var match = CreateMatch(home, away);
+
+        group.LoadMatchFromRepository(match);
+        group.LoadMatchFromRepository(match);
+
+        Assert.AreEqual(1, group.MatchesInGroup.Count);
+    }
+    
+    [TestMethod]
+    public void GetTeamsInGroup_ShouldReturnDistinctTeamsFromMatches()
+    {
+        var group = new Group('A');
+
+        var team1 = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var team2 = new Team("Argentina", new Confederation("CONMEBOL"), 1800);
+
+        group.LoadMatchFromRepository(CreateMatch(team1, team2));
+        group.LoadMatchFromRepository(CreateMatch(team2, team1));
+
+        var teams = group.GetTeamsInGroup();
+
+        Assert.AreEqual(2, teams.Count);
+    }
 }
