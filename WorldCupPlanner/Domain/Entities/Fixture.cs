@@ -19,7 +19,7 @@ public class Fixture
         get { return _currentPhase; }
         private set { _currentPhase = value; }
     }
-
+    public string SimulationEngineName { get; private set; } = string.Empty;
     public IReadOnlyList<Group> Groups => _groups;
     public int Id { get; private set; }
     
@@ -111,5 +111,13 @@ public class Fixture
     {
         if (groups == null) throw new ArgumentNullException(nameof(groups));
         _groups = groups;
+    }
+    
+
+    public void SetSimulationEngine(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("El nombre del motor no puede ser vacío.");
+        SimulationEngineName = name;
     }
 }

@@ -125,8 +125,14 @@ public class Group
     
     public void LoadMatchFromRepository(Match match)
     {
-        if (!_matchesInGroup.Contains(match))
+        var existing = _matchesInGroup.FirstOrDefault(m => m.IdMatch == match.IdMatch);
+        if (existing == null)
             _matchesInGroup.Add(match);
+        else
+        {
+            var index = _matchesInGroup.IndexOf(existing);
+            _matchesInGroup[index] = match;
+        }
     }
 
     public List<Team> GetTeamsInGroup()

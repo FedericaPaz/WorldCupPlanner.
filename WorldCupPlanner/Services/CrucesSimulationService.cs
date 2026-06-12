@@ -13,13 +13,15 @@ public class CrucesSimulationService : ISimulationService
 
     private readonly ILogService _logService;
     private readonly IMatchRepository _matchRepository;
+    private readonly IRankingService _rankingService;
 
     public string LastUsedEngineName { get; private set; } = string.Empty;
 
-    public CrucesSimulationService(ILogService logService, IMatchRepository matchRepository)
+    public CrucesSimulationService(ILogService logService, IMatchRepository matchRepository, IRankingService rankingService)
     {
         _logService = logService;
         _matchRepository = matchRepository;
+        _rankingService = rankingService;
     }
 
     public (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed, ISimulationEngine engine)
@@ -28,7 +30,8 @@ public class CrucesSimulationService : ISimulationService
 
         LastUsedEngineName = engine.Name;
 
-        var result = engine.SimulateMatch(match, seed);
+        var matchSeed = seed + match.IdMatch;
+        var result = engine.SimulateMatch(match.HomeTeam.CurrentRanking, match.AwayTeam.CurrentRanking, matchSeed);
 
         RegisterSimulation(seed, engine.Name);
 
@@ -41,9 +44,9 @@ public class CrucesSimulationService : ISimulationService
 
         foreach (var group in groups)
         {
-            foreach (var match in group.MatchesInGroup.Where(match => !match.HomeGoals.HasValue))
+            foreach (var match in group.MatchesInGroup.Where(match => !match.HomeGoals.HasValue && !match.AwayGoals.HasValue))
             {
-                SimulateAndSetResult(match, seed, engine);
+                SimulateAndSetResult(match, seed, engine, false);
             }
         }
     }
@@ -53,33 +56,29 @@ public class CrucesSimulationService : ISimulationService
         EnsureValidEngine(engine);
 
         foreach (var cruce in cruces.Where(cruce => cruce.GetWinner() == null))
-        {
-            SimulateAndSetResult(cruce.Match, seed, engine);
-        }
+            SimulateAndSetResult(cruce.Match, seed, engine, true);
     }
 
-    private void SimulateAndSetResult(Match match, int seed, ISimulationEngine engine)
+    private void SimulateAndSetResult(Match match, int seed, ISimulationEngine engine, bool empates)
     {
+        if (match.HomeGoals.HasValue && match.AwayGoals.HasValue) return;
+
         var (homeGoals, awayGoals) = SimulateMatch(match, seed, engine);
 
-        if (homeGoals == awayGoals)
+        if (empates && homeGoals == awayGoals)
         {
             var tiebreaker = new Random(seed + match.IdMatch * 31 + 1);
-
             if (tiebreaker.NextDouble() > 0.5)
-            {
                 homeGoals++;
-            }
             else
-            {
                 awayGoals++;
-            }
         }
 
         match.ClearCardIncidents();
         AddSimulatedCardIncidents(match, seed);
         match.SimulateResult(homeGoals, awayGoals);
         _matchRepository.UpdateMatch(match);
+        _rankingService.UpdateRankingsAfterMatch(match);
     }
 
     private void RegisterSimulation(int seed, string engineName)

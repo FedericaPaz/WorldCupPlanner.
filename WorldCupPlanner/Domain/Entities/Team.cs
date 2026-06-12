@@ -83,4 +83,9 @@ public class Team : ITeam
         ValidateConfederation(confederation);
         _confederation = confederation;
     }
+    
+    public void ResetRankingToFifa()
+    {
+        UpdateCurrentRanking(FifaRanking);
+    }
 }

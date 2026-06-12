@@ -5,8 +5,6 @@ namespace IServices;
 
 public interface ISimulationService
 {
-    string LastUsedEngineName { get; }
-
     (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed, ISimulationEngine engine);
 
     void SimulateGroupStage(List<Group> groups, int seed, ISimulationEngine engine);

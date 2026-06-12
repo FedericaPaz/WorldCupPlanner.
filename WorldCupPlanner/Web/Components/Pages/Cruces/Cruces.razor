@@ -326,9 +326,10 @@
 
     protected override void OnInitialized()
     {
-        if (!SessionService.IsEditor())
+        if (!SessionService.IsEditor() && !SessionService.IsJournalist())
         {
             Navigation.NavigateTo("/");
+            return;
         }
         CargarCruces();
         CalcularEstadoFaseGrupos();
@@ -365,18 +366,8 @@
             _mensajeExito = null;
             StateHasChanged();
 
-            //CruceService.GenerateRoundOf32();
-            Console.WriteLine("Generando cruces de 32avos de final...");
-            try
-            {
-                CruceService.GenerateRoundOf32();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
-
+            CruceService.GenerateRoundOf32();
+            
             LogService.Register(
                 GetCurrentUserEmail(),
                 "Cruces",

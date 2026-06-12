@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using Domain.Interfaces;
+﻿using Domain.Interfaces;
 
 namespace Services;
 
@@ -9,9 +8,9 @@ public class PureRandomSimulationEngine : ISimulationEngine
 
     public string Name => "Aleatorio puro";
 
-    public (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed)
+    public (int homeGoals, int awayGoals) SimulateMatch(int homeRanking, int awayRanking, int seed)
     {
-        var random = new Random(seed + match.IdMatch);
+        var random = new Random(seed);
 
         int homeGoals = random.Next(0, MaxGoals + 1);
         int awayGoals = random.Next(0, MaxGoals + 1);

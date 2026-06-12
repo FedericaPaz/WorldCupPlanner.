@@ -101,8 +101,15 @@ public class FixtureService : IFixtureService
         return standings.Select(s => StandingMapper.ToResponse(s)).ToList();
     }
 
-    public void GenerateFixture()
+    public void GenerateFixture(string simulationEngineName = "Probabilistico")
     {
+        var teams = _teamRepository.GetAll();
+        foreach (var team in teams)
+        {
+            team.UpdateCurrentRanking(team.FifaRanking);
+            _teamRepository.Update(team);
+        }
+        
         var fixture = _fixtureGenerator.GenerateGroupsStageFixture();
 
         _matchRepository.ClearMatches();
@@ -112,6 +119,7 @@ public class FixtureService : IFixtureService
         foreach (var partido in grupo.MatchesInGroup)
             _matchRepository.AddMatch(partido);
 
+        fixture.SetSimulationEngine(simulationEngineName);
         _fixtureRepository.AddFixture(fixture);
     }
     
@@ -142,7 +150,7 @@ public class FixtureService : IFixtureService
                 .Where(m => m.Group == group.GroupLetter)
                 .ToList();
 
-            if (group.MatchesInGroup.Count == 6) break;
+            //if (group.MatchesInGroup.Count == 6) continue;
             
             foreach (var match in groupMatches)
                 group.LoadMatchFromRepository(match);
@@ -151,6 +159,13 @@ public class FixtureService : IFixtureService
 
     public void DeleteFixture(Fixture fixture)
     {
+        var teams = _teamRepository.GetAll();
+        foreach (var team in teams)
+        {
+            team.UpdateCurrentRanking(team.FifaRanking);
+            _teamRepository.Update(team);
+        }
+        
         _crucesRepository.RemoveCruces();
         _matchRepository.ClearMatches();
         _fixtureRepository.RemoveFixture(fixture);
