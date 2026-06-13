@@ -38,102 +38,102 @@
 
     @if (_userRequest is not null)
     {
-            <EditForm Model="_userRequest" OnValidSubmit="SubmitUser">
-                <DataAnnotationsValidator />
+        <EditForm Model="_userRequest" OnValidSubmit="SubmitUser">
+            <DataAnnotationsValidator />
 
-                <div class="form-group">
-                    <label>Nombre</label>
-                    <InputText class="form-control" @bind-Value="_userRequest.FirstName" />
-                    <ValidationMessage For="@(() => _userRequest.FirstName)" />
+            <div class="form-group">
+                <label>Nombre</label>
+                <InputText class="form-control" @bind-Value="_userRequest.FirstName" />
+                <ValidationMessage For="@(() => _userRequest.FirstName)" />
+            </div>
+
+            <div class="form-group">
+                <label>Apellido</label>
+                <InputText class="form-control" @bind-Value="_userRequest.LastName" />
+                <ValidationMessage For="@(() => _userRequest.LastName)" />
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input class="form-control" value="@_editingEmail" disabled />
+            </div>
+
+            <div class="form-group">
+                <label>Fecha de Nacimiento</label>
+                <InputDate class="form-control" @bind-Value="_userRequest.BirthDate" />
+                <ValidationMessage For="@(() => _userRequest.BirthDate)" />
+            </div>
+
+            <div class="form-group">
+                <label>Roles</label>
+
+                <div class="roles-options">
+                    <label class="role-option">
+                        <input type="checkbox"
+                               checked="@_userRequest.Roles.Contains(UserRoleDto.SystemAdministrator)"
+                               @onchange="ToggleSystemAdministratorRole" />
+                        Administrador
+                    </label>
+
+                    <label class="role-option">
+                        <input type="checkbox"
+                               checked="@_userRequest.Roles.Contains(UserRoleDto.Editor)"
+                               @onchange="ToggleEditorRole" />
+                        Editor
+                    </label>
+
+                    <label class="role-option">
+                        <input type="checkbox"
+                               checked="@_userRequest.Roles.Contains(UserRoleDto.Journalist)"
+                               @onchange="ToggleJournalistRole" />
+                        Periodista
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Acciones de contraseña</label>
+
+                <div class="password-actions">
+                    <button type="button" class="secondary-button normal-button" @onclick="GenerateAndSetPassword">
+                        Generar contraseña por defecto
+                    </button>
+
+                    <button type="button" class="secondary-button normal-button" @onclick="ToggleCustomPassword">
+                        Definir contraseña personalizada
+                    </button>
                 </div>
 
-                <div class="form-group">
-                    <label>Apellido</label>
-                    <InputText class="form-control" @bind-Value="_userRequest.LastName" />
-                    <ValidationMessage For="@(() => _userRequest.LastName)" />
-                </div>
-
-                <div class="form-group">
-                    <label>Email</label>
-                    <input class="form-control" value="@_editingEmail" disabled />
-                </div>
-
-                <div class="form-group">
-                    <label>Fecha de Nacimiento</label>
-                    <InputDate class="form-control" @bind-Value="_userRequest.BirthDate" />
-                    <ValidationMessage For="@(() => _userRequest.BirthDate)" />
-                </div>
-
-                <div class="form-group">
-                    <label>Roles</label>
-
-                    <div class="roles-options">
-                        <label class="role-option">
-                            <input type="checkbox"
-                                   checked="@_userRequest.Roles.Contains(UserRoleDto.SystemAdministrator)"
-                                   @onchange="ToggleSystemAdministratorRole" />
-                            Administrador
-                        </label>
-
-                        <label class="role-option">
-                            <input type="checkbox"
-                                   checked="@_userRequest.Roles.Contains(UserRoleDto.Editor)"
-                                   @onchange="ToggleEditorRole" />
-                            Editor
-                        </label>
-                        
-                        <label class="role-option">
-                            <input type="checkbox"
-                                   checked="@_userRequest.Roles.Contains(UserRoleDto.Journalist)"
-                                   @onchange="ToggleJournalistRole" />
-                            Periodista
-                        </label>
+                @if (_showCustomPasswordInput)
+                {
+                    <div class="form-group">
+                        <label>Nueva contraseña</label>
+                        <InputText type="password" class="form-control" @bind-Value="_customPassword" />
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label>Acciones de contraseña</label>
+                    <div class="form-group">
+                        <label>Confirmar contraseña</label>
+                        <InputText type="password" class="form-control" @bind-Value="_customPasswordConfirm" />
+                    </div>
 
                     <div class="password-actions">
-                        <button type="button" class="secondary-button normal-button" @onclick="GenerateAndSetPassword">
-                            Generar contraseña por defecto
-                        </button>
-
-                        <button type="button" class="secondary-button normal-button" @onclick="ToggleCustomPassword">
-                            Definir contraseña personalizada
+                        <button type="button" class="primary-button normal-button" @onclick="SetCustomPassword">
+                            Aplicar contraseña
                         </button>
                     </div>
+                }
+            </div>
 
-                    @if (_showCustomPasswordInput)
-                    {
-                        <div class="form-group">
-                            <label>Nueva contraseña</label>
-                            <InputText type="password" class="form-control" @bind-Value="_customPassword" />
-                        </div>
+            <div class="modal-actions">
+                <button type="button" class="secondary-button" @onclick="GoBack">
+                    Cancelar
+                </button>
 
-                        <div class="form-group">
-                            <label>Confirmar contraseña</label>
-                            <InputText type="password" class="form-control" @bind-Value="_customPasswordConfirm" />
-                        </div>
-
-                        <div class="password-actions">
-                            <button type="button" class="primary-button normal-button" @onclick="SetCustomPassword">
-                                Aplicar contraseña
-                            </button>
-                        </div>
-                    }
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="secondary-button" @onclick="GoBack">
-                        Cancelar
-                    </button>
-
-                    <button type="submit" class="primary-button full">
-                        Actualizar
-                    </button>
-                </div>
-            </EditForm>
+                <button type="submit" class="primary-button full">
+                    Actualizar
+                </button>
+            </div>
+        </EditForm>
     }
 </div>
 
@@ -216,9 +216,7 @@
     {
         try
         {
-            string currentUserEmail = GetCurrentUserEmail();
-            string newPassword = UserService.GenerateDefaultPassword();
-            UserService.ChangeOwnPassword(currentUserEmail, newPassword);
+            string newPassword = UserService.ResetPassword(_editingEmail);
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -255,7 +253,7 @@
                 return;
             }
 
-            UserService.ChangeOwnPassword(GetCurrentUserEmail(), _customPassword);
+            UserService.ChangeOwnPassword(_editingEmail, _customPassword);
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -287,19 +285,20 @@
         ToggleRole(UserRoleDto.Editor, args);
     }
 
+    private void ToggleJournalistRole(ChangeEventArgs args)
+    {
+        ToggleRole(UserRoleDto.Journalist, args);
+    }
+
     private void ToggleRole(UserRoleDto role, ChangeEventArgs args)
     {
         bool isChecked = args.Value is bool value && value;
 
         if (isChecked && !_userRequest!.Roles.Contains(role))
-        {
             _userRequest.Roles.Add(role);
-        }
 
         if (!isChecked && _userRequest!.Roles.Contains(role))
-        {
             _userRequest.Roles.Remove(role);
-        }
     }
 
     private void GoBack()
@@ -310,15 +309,8 @@
     private string GetCurrentUserEmail()
     {
         if (!SessionService.IsUserActive())
-        {
             return "Sistema";
-        }
 
         return SessionService.GetCurrentUser()!.Email;
-    }
-    
-    private void ToggleJournalistRole(ChangeEventArgs args)
-    {
-        ToggleRole(UserRoleDto.Journalist, args);
     }
 }

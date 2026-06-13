@@ -173,9 +173,7 @@
             _pageErrorMessage = string.Empty;
             _pageSuccessMessage = string.Empty;
 
-            var newPassword = UserService.GenerateDefaultPassword();
-
-            UserService.ResetPassword(email, newPassword);
+            string newPassword = UserService.ResetPassword(email); 
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -185,7 +183,6 @@
             );
 
             _pageSuccessMessage = $"Nueva contraseña para {email}: {newPassword}";
-
             LoadUsers();
         }
         catch (Exception exception)

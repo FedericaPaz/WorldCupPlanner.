@@ -110,12 +110,14 @@ public class UserService
         _userRepository.UpdateUser(user);
     }
 
-    public void ResetPassword(string email, string defaultPassword)
+    public string ResetPassword(string email)
     {
         ValidateEmailNotEmpty(email);
         var user = GetExistingUserOrThrow(email);
-        user.ChangePassword(defaultPassword);
+        string newPassword = User.GenerateDefaultPassword();
+        user.ChangePassword(newPassword);
         _userRepository.UpdateUser(user);
+        return newPassword;
     }
 
     public void ChangeOwnPassword(string email, string newPassword)
@@ -124,30 +126,6 @@ public class UserService
         var user = GetExistingUserOrThrow(email);
         user.ChangePassword(newPassword);
         _userRepository.UpdateUser(user);
-    }
-
-    public string GenerateDefaultPassword()
-    {
-        const string upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const string lower = "abcdefghijklmnopqrstuvwxyz";
-        const string digits = "0123456789";
-        const string specials = "!@#$%^&*()-_+=";
-
-        var rnd = new Random();
-        var all = upper + lower + digits + specials;
-        var pwd = new char[10];
-
-        pwd[0] = upper[rnd.Next(upper.Length)];
-        pwd[1] = lower[rnd.Next(lower.Length)];
-        pwd[2] = digits[rnd.Next(digits.Length)];
-        pwd[3] = specials[rnd.Next(specials.Length)];
-
-        for (int i = 4; i < pwd.Length; i++)
-        {
-            pwd[i] = all[rnd.Next(all.Length)];
-        }
-
-        return new string(pwd.OrderBy(x => rnd.Next()).ToArray());
     }
 
     public void UpdateUserWithoutPassword(
