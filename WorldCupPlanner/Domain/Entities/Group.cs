@@ -146,12 +146,26 @@ public class Group
     
     public List<Standing> GetStandings()
     {
-        var standings = _teamsInGroup.ToDictionary(
+        var equipos = _teamsInGroup.Any()
+            ? _teamsInGroup.ToList()
+            : _matchesInGroup
+                .SelectMany(m => new[] { m.HomeTeam, m.AwayTeam })
+                .Where(t => t != null)  
+                .DistinctBy(t => t.Name)
+                .ToList();
+
+        if (!equipos.Any())
+            return new List<Standing>();
+
+        var standings = equipos.ToDictionary(
             t => t.Name,
             t => new Standing(t));
 
         foreach (var match in _matchesInGroup.Where(m => m.HomeGoals.HasValue && m.AwayGoals.HasValue))
         {
+            if (!standings.ContainsKey(match.HomeTeam.Name)) continue;
+            if (!standings.ContainsKey(match.AwayTeam.Name)) continue;
+        
             standings[match.HomeTeam.Name].AddMatchResult(match.HomeGoals!.Value, match.AwayGoals!.Value);
             standings[match.AwayTeam.Name].AddMatchResult(match.AwayGoals!.Value, match.HomeGoals!.Value);
         }
@@ -171,5 +185,17 @@ public class Group
     public Team? GetSecondPlace() => GetStandings().ElementAtOrDefault(1)?.TeamInGroup;
     public Team? GetThirdPlace() => GetStandings().ElementAtOrDefault(2)?.TeamInGroup;
     
+    public IEnumerable<Match> GetPendingMatches()
+        => _matchesInGroup.Where(m => !m.HomeGoals.HasValue && !m.AwayGoals.HasValue);
     
+    private const int MaxUefaTeamsPerGroup = 2;
+    private const string ConfederationUefa = "UEFA";
+
+    public bool CanAddTeam(Team team)
+    {
+        if (team.Confederation.Name == ConfederationUefa)
+            return _teamsInGroup.Count(t => t.Confederation.Name == ConfederationUefa) < MaxUefaTeamsPerGroup;
+
+        return _teamsInGroup.All(t => t.Confederation.Name != team.Confederation.Name);
+    }
 }
