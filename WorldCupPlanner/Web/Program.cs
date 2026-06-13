@@ -52,7 +52,7 @@ builder.Services.AddScoped<TournamentConfig>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<ISimulationService, SimulationService>();
 
-builder.Services.AddScoped<ICrucesRepository, EfCrucesRepository>();
+builder.Services.AddScoped<ICrucesRepository, CrucesRepository>();
 builder.Services.AddScoped<ICruceService, CruceService>();
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
@@ -60,7 +60,6 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<IExportService, ExportService>();
 
-builder.Services.AddScoped<RankingCalculator>();
 builder.Services.AddScoped<IRankingService, RankingService>();
 
 Fixture.RegisterEngine("Aleatorio puro", () => new PureRandomSimulationEngine());
