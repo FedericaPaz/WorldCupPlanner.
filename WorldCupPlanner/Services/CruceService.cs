@@ -18,8 +18,18 @@ public class CruceService : ICruceService
     private readonly TournamentConfig _config;
     private readonly IMatchRepository _matchRepository;
     private readonly IFixtureRepository _fixtureRepository;
+    private readonly Services.Simulation.ISimulationEngineFactory _engineFactory;
 
-    public CruceService(ICrucesRepository repository, IFixtureService fixtureService, IStadiumRepository stadiumRepository, ICrucesGeneratorService generator, ISimulationService simulationService, TournamentConfig config, IMatchRepository matchRepository,IFixtureRepository fixtureRepository)
+    public CruceService(
+        ICrucesRepository repository,
+        IFixtureService fixtureService,
+        IStadiumRepository stadiumRepository,
+        ICrucesGeneratorService generator,
+        ISimulationService simulationService,
+        TournamentConfig config,
+        IMatchRepository matchRepository,
+        IFixtureRepository fixtureRepository,
+        Services.Simulation.ISimulationEngineFactory engineFactory)
     {
         _repository = repository;
         _fixtureService = fixtureService;
@@ -29,6 +39,7 @@ public class CruceService : ICruceService
         _config = config;
         _matchRepository = matchRepository;
         _fixtureRepository = fixtureRepository;
+        _engineFactory = engineFactory ?? throw new ArgumentNullException(nameof(engineFactory));
     }
 
     public void GenerateRoundOf32()
@@ -84,15 +95,9 @@ public class CruceService : ICruceService
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
-        ISimulationEngine engine = ResolveEngine(fixture.SimulationEngineName);
+        ISimulationEngine engine = _engineFactory.Create(fixture.SimulationEngineName);
         SimulateCruces(engine);
     }
-
-    private ISimulationEngine ResolveEngine(string name) => name switch
-    {
-        "Aleatorio puro" => new PureRandomSimulationEngine(),
-        _ => new ProbabilisticSimulationEngine()
-    };
 
     public void SimulateCruces(ISimulationEngine engine)
     {

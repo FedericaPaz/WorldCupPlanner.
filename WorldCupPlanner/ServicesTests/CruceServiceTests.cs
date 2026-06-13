@@ -47,7 +47,8 @@ public class CruceServiceTests
             new CrucesSimulationService(_logService, _matchRepository, _rankingService),
             new TournamentConfig(),
             _matchRepository,
-            _stubFixtureRepository);
+            _stubFixtureRepository,
+            new Services.Simulation.DefaultSimulationEngineFactory());
     }
 
 

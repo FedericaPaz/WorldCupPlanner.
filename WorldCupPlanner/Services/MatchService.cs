@@ -19,6 +19,7 @@ public class MatchService : IMatchService
     private readonly TournamentConfig _config;
     private readonly INotificationService _notificationService;
     private readonly IRankingService _rankingService;
+    private readonly Services.Simulation.ISimulationEngineFactory _engineFactory;
 
     public MatchService(
         IMatchRepository matchRepository,
@@ -40,6 +41,7 @@ public class MatchService : IMatchService
         _config = config;
         _notificationService = notificationService;
         _rankingService = rankingService;
+        _engineFactory = new Services.Simulation.DefaultSimulationEngineFactory();
     }
 
     public MatchResponse CreateMatch(MatchRequest request)
@@ -106,8 +108,7 @@ public class MatchService : IMatchService
 
     public void SimulateMatch(int matchId, int seed)
     {
-        SimulateMatch(matchId, seed, new ProbabilisticSimulationEngine());
-        
+        SimulateMatch(matchId, seed, _engineFactory.Create(null));
     }
 
     public void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
@@ -136,15 +137,10 @@ public class MatchService : IMatchService
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
-        ISimulationEngine engine = ResolveEngine(fixture.SimulationEngineName);
+        ISimulationEngine engine = _engineFactory.Create(fixture.SimulationEngineName);
         SimulateGroupStage(engine);
     }
     
-    private ISimulationEngine ResolveEngine(string name) => name switch
-    {
-        "Aleatorio puro" => new PureRandomSimulationEngine(),
-        _ => new ProbabilisticSimulationEngine()
-    };
 
     public void SimulateGroupStage(ISimulationEngine engine)
     {

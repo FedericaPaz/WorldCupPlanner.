@@ -1,8 +1,10 @@
 ---
-
 name: grasp-creator
-description: Analiza la creación de objetos según el principio GRASP Creator e identifica responsabilidades de creación mal asignadas. Usalo cuando quieras revisar diseño orientado a objetos, uso de new, Factories o Generators.
------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+description: >
+  Analiza la creación de objetos según el principio GRASP Creator e identifica 
+  responsabilidades de creación mal asignadas. Usalo cuando quieras revisar 
+  diseño orientado a objetos, uso de new, Factories o Generators.
+---
 
 # GRASP Creator
 
@@ -35,48 +37,48 @@ No asumir que toda creación debe moverse a una Factory. Evaluar siempre el cont
 
 2. Identificar todas las instanciaciones relevantes realizadas mediante:
 
-    * new
-    * Factories
-    * Builders
-    * Generators
-    * Métodos de creación especializados
+   * new
+   * Factories
+   * Builders
+   * Generators
+   * Métodos de creación especializados
 
 3. Para cada creación encontrada registrar:
 
-    * Clase creadora.
-    * Objeto creado.
-    * Método donde ocurre la creación.
+   * Clase creadora.
+   * Objeto creado.
+   * Método donde ocurre la creación.
 
 4. Evaluar si la clase creadora:
 
-    * Contiene el objeto creado.
-    * Lo agrega o administra.
-    * Posee la información necesaria para construirlo.
-    * Es experta en la información requerida.
-    * Mantiene una responsabilidad coherente con el resto de la clase.
+   * Contiene el objeto creado.
+   * Lo agrega o administra.
+   * Posee la información necesaria para construirlo.
+   * Es experta en la información requerida.
+   * Mantiene una responsabilidad coherente con el resto de la clase.
 
 5. Analizar el impacto de la decisión sobre:
 
-    * Cohesión.
-    * Acoplamiento.
-    * Encapsulamiento.
-    * Claridad del modelo de dominio.
+   * Cohesión.
+   * Acoplamiento.
+   * Encapsulamiento.
+   * Claridad del modelo de dominio.
 
 6. Detectar posibles problemas:
 
-    * Servicios que crean demasiados tipos de objetos.
-    * Componentes Razor o UI que crean entidades de dominio.
-    * Repositorios que crean objetos ajenos a persistencia.
-    * Clases con responsabilidades de creación innecesarias.
-    * Uso excesivo de new que aumente el acoplamiento.
-    * Factories o Generators innecesarios.
+   * Servicios que crean demasiados tipos de objetos.
+   * Componentes Razor o UI que crean entidades de dominio.
+   * Repositorios que crean objetos ajenos a persistencia.
+   * Clases con responsabilidades de creación innecesarias.
+   * Uso excesivo de new que aumente el acoplamiento.
+   * Factories o Generators innecesarios.
 
 7. Para cada problema encontrado:
 
-    * Explicar por qué incumple o aplica parcialmente GRASP Creator.
-    * Identificar riesgos de diseño.
-    * Recomendar una mejora concreta.
-    * Justificar la recomendación utilizando exclusivamente GRASP Creator.
+   * Explicar por qué incumple o aplica parcialmente GRASP Creator.
+   * Identificar riesgos de diseño.
+   * Recomendar una mejora concreta.
+   * Justificar la recomendación utilizando exclusivamente GRASP Creator.
 
 8. Presentar los hallazgos ordenados por impacto arquitectónico.
 
