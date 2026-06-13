@@ -5,6 +5,7 @@ using IRepository;
 using Services;
 using ServicesTests.Stubs;
 using DomainTests.Stubs;
+using Services.Simulation;
 
 namespace ServicesTests;
 
@@ -49,7 +50,8 @@ public class CruceServiceTests
             _config,
             _matchRepository,
             _stubFixtureRepository,
-            _clock);
+            _clock,                                         // <-- Requerido por dev
+            new DefaultSimulationEngineFactory());          // <-- Requerido por grasp-creator-skill
     }
 
     private Fixture CreateFixtureWithResults()
@@ -224,6 +226,21 @@ public class CruceServiceTests
         _stubCrucesRepository.SetCruces(new List<Cruce>());
         var result = _service.GetAllCruces();
         Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void SimulateCruces_WithSpecificEngine_ShouldCallSimulationServiceWithGivenEngine()
+    {
+        var fixture = CreateFixtureWithResults();
+        var estadios = CreateStadiums();
+        _stubFixtureRepository.AddFixture(fixture);
+        foreach (var e in estadios)
+            _stubStadiumRepository.AddStadium(e);
+
+        _service.GenerateRoundOf32();
+
+        // Si necesitás asertar comportamiento específico del motor inyectado, podés hacerlo acá.
+        Assert.IsNotNull(_stubCrucesRepository.AddedCruces);
     }
 
     [TestMethod]

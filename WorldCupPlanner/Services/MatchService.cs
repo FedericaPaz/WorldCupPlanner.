@@ -5,6 +5,7 @@ using DTOs.Match;
 using IRepository;
 using IServices;
 using Services.Mappers;
+using Services.Simulation;
 
 namespace Services;
 
@@ -17,6 +18,9 @@ public class MatchService : IMatchService
     private readonly IFixtureRepository _fixtureRepository;
     private readonly INotificationService _notificationService;
     private readonly IRankingService _rankingService;
+    private readonly ISimulationEngineFactory _engineFactory;
+    private readonly ISimulationService _simulationService; // <-- Agregado para soportar los métodos de simulación
+    private readonly TournamentConfig _config;             // <-- Agregado para usar _config.SemillaSimulation
 
     public MatchService(
         IMatchRepository matchRepository,
@@ -25,7 +29,10 @@ public class MatchService : IMatchService
         IDateTimeMatch clock,
         IFixtureRepository fixtureRepository,
         INotificationService notificationService,
-        IRankingService rankingService)
+        IRankingService rankingService,
+        ISimulationEngineFactory engineFactory,         // <-- Cambiado de New() a Inyección
+        ISimulationService simulationService,           // <-- Inyectado
+        TournamentConfig config)                         // <-- Inyectado
     {
         _matchRepository = matchRepository;
         _teamRepository = teamRepository;
@@ -34,6 +41,9 @@ public class MatchService : IMatchService
         _fixtureRepository = fixtureRepository;
         _notificationService = notificationService;
         _rankingService = rankingService;
+        _engineFactory = engineFactory ?? throw new ArgumentNullException(nameof(engineFactory));
+        _simulationService = simulationService;
+        _config = config;
     }
 
     public MatchResponse CreateMatch(MatchRequest request)
@@ -93,6 +103,71 @@ public class MatchService : IMatchService
         var match = _matchRepository.GetMatchById(matchId);
         var stadium = GetStadiumOrThrow(stadiumName);
         match.UpdateStadium(stadium);
+    }
+
+    public void SimulateMatch(int matchId, int seed)
+    {
+        SimulateMatch(matchId, seed, _engineFactory.Create(null));
+    }
+
+    public void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
+    {
+        var match = _matchRepository.GetMatchById(matchId);
+
+        var (home, away) = _simulationService.SimulateMatch(match, seed, engine);
+
+        var random = new Random(seed);
+
+        var request = new MatchResultRequest
+        {
+            homeGoals = home,
+            awayGoals = away,
+            homeYellowCards = random.Next(0, 5),
+            awayYellowCards = random.Next(0, 5),
+            homeRedCards = random.Next(0, 2),
+            awayRedCards = random.Next(0, 2)
+        };
+
+        SetMatchResult(matchId, request);
+    }
+
+    public void SimulateGroupStage()
+    {
+        var fixture = _fixtureRepository.GetFixture()
+                      ?? throw new InvalidOperationException("No hay fixture generado.");
+
+        ISimulationEngine engine = _engineFactory.Create(fixture.SimulationEngineName);
+        SimulateGroupStage(engine);
+    }
+
+    public void SimulateGroupStage(ISimulationEngine engine)
+    {
+        var fixture = _fixtureRepository.GetFixture();
+
+        if (fixture == null)
+            throw new InvalidOperationException("No hay fixture generado.");
+        
+        var allMatches = _matchRepository.GetAllMatches();
+        foreach (var group in fixture.Groups)
+        {
+            var groupMatches = allMatches.Where(m => m.Group == group.GroupLetter).ToList();
+            foreach (var match in groupMatches)
+                group.LoadMatchFromRepository(match);
+        }
+        
+        foreach (var group in fixture.Groups)
+        {
+            foreach (var match in group.MatchesInGroup)
+            {
+                Console.WriteLine($"Grupo {group.GroupLetter} | Match {match.IdMatch} | " +
+                                  $"{match.HomeTeam.Name} vs {match.AwayTeam.Name} | " +
+                                  $"Goals: {match.HomeGoals?.ToString() ?? "null"}-{match.AwayGoals?.ToString() ?? "null"} | " +
+                                  $"Pendiente: {!match.HomeGoals.HasValue && !match.AwayGoals.HasValue}");
+            }
+        }
+        
+        // Solo le pasamos el engine, tal como pide tu interfaz
+        _simulationService.SimulateGroupStage(engine);
     }
 
     public bool MatchesHaveBeenPlayed()

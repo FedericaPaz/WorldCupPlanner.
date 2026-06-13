@@ -5,6 +5,7 @@ using DTOs.Cruces;
 using IRepository;
 using IServices;
 using Services.Mappers;
+using Services.Simulation;
 
 namespace Services;
 
@@ -21,6 +22,7 @@ public class CruceService : ICruceService
     private readonly IMatchRepository _matchRepository;
     private readonly IFixtureRepository _fixtureRepository;
     private readonly IDateTimeMatch _clock;
+    private readonly ISimulationEngineFactory _engineFactory;
 
     private int _nextMatchId = 1;
 
@@ -32,7 +34,8 @@ public class CruceService : ICruceService
         TournamentConfig config,
         IMatchRepository matchRepository,
         IFixtureRepository fixtureRepository,
-        IDateTimeMatch clock)
+        IDateTimeMatch clock,
+        ISimulationEngineFactory engineFactory)
     {
         _repository = repository;
         _fixtureService = fixtureService;
@@ -42,6 +45,7 @@ public class CruceService : ICruceService
         _matchRepository = matchRepository;
         _fixtureRepository = fixtureRepository;
         _clock = clock;
+        _engineFactory = engineFactory ?? throw new ArgumentNullException(nameof(engineFactory));
     }
 
     public void GenerateRoundOf32()
@@ -110,7 +114,8 @@ public class CruceService : ICruceService
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
-        SimulateCruces(fixture.CreateEngine());
+        ISimulationEngine engine = _engineFactory.Create(fixture.SimulationEngineName);
+        SimulateCruces(engine);
     }
 
     public void SimulateCruces(ISimulationEngine engine)

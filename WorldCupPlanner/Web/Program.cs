@@ -62,6 +62,9 @@ builder.Services.AddScoped<IExportService, ExportService>();
 
 builder.Services.AddScoped<IRankingService, RankingService>();
 
+// Registramos la fábrica para que MatchService y CruceService la puedan usar
+builder.Services.AddScoped<Services.Simulation.ISimulationEngineFactory, Services.Simulation.DefaultSimulationEngineFactory>();
+
 Fixture.RegisterEngine("Aleatorio puro", () => new PureRandomSimulationEngine());
 Fixture.RegisterEngine("Probabilístico", () => new ProbabilisticSimulationEngine());
 
