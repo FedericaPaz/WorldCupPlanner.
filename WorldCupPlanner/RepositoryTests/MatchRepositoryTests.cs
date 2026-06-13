@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using DomainTests.Stubs;
 using Repository;
 using Microsoft.EntityFrameworkCore;
@@ -141,5 +142,114 @@ public class MatchRepositoryTests
         if (!_context.Stadiums.Any(s => s.StadiumName == match.Stadium.StadiumName))
             _context.Stadiums.Add(match.Stadium);
         _context.SaveChanges();
+    }
+    
+    [TestMethod]
+    public void GetNextId_WhenNoMatches_ShouldReturnOne()
+    {
+        var nextId = _repository.GetNextId();
+
+        Assert.AreEqual(1, nextId);
+    }
+    
+    [TestMethod]
+    public void GetNextId_WithMatches_ShouldReturnMaxIdPlusOne()
+    {
+        var match1 = CreateMatch();
+        var match2 = CreateMatch();
+
+        SaveRelatedEntities(match1);
+        SaveRelatedEntities(match2);
+
+        _repository.AddMatch(match1);
+        _repository.AddMatch(match2);
+
+        var nextId = _repository.GetNextId();
+
+        Assert.AreEqual(match2.IdMatch + 1, nextId);
+    }
+    
+    [TestMethod]
+    public void ClearMatches_ShouldRemoveAllMatches()
+    {
+        var match1 = CreateMatch();
+        var match2 = CreateMatch();
+
+        SaveRelatedEntities(match1);
+        SaveRelatedEntities(match2);
+
+        _repository.AddMatch(match1);
+        _repository.AddMatch(match2);
+
+        _repository.ClearMatches();
+
+        Assert.AreEqual(0, _repository.GetAllMatches().Count);
+    }
+    
+    [TestMethod]
+    public void UpdateMatch_WithNullMatch_ShouldThrowArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            _repository.UpdateMatch(null!));
+    }
+    
+    [TestMethod]
+    public void UpdateMatch_WithNonExistingMatch_ShouldThrowKeyNotFoundException()
+    {
+        var match = CreateMatch();
+
+        Assert.ThrowsException<KeyNotFoundException>(() =>
+            _repository.UpdateMatch(match));
+    }
+    
+    [TestMethod]
+    public void UpdateMatch_WithExistingMatch_ShouldUpdateResult()
+    {
+        var original = CreateMatch();
+
+        SaveRelatedEntities(original);
+        _repository.AddMatch(original);
+
+        var updated = _repository.GetMatchById(original.IdMatch);
+
+        updated.SimulateResult(2, 1);
+
+        _repository.UpdateMatch(updated);
+
+        var result = _repository.GetMatchById(original.IdMatch);
+
+        Assert.AreEqual(2, result.HomeGoals);
+        Assert.AreEqual(1, result.AwayGoals);
+    }
+    
+    [TestMethod]
+    public void UpdateMatch_WithExistingMatch_ShouldUpdateResultAndIncidents()
+    {
+        var match = CreateMatch();
+
+        SaveRelatedEntities(match);
+        _repository.AddMatch(match);
+
+        var updated = _repository.GetMatchById(match.IdMatch);
+
+        updated.SimulateResult(2, 1);
+
+        updated.AddIncident(
+            new MatchIncident(
+                IncidentType.YellowCard,
+                updated.HomeTeam,
+                2,
+                updated.IdMatch));
+
+        _repository.UpdateMatch(updated);
+
+        var result = _repository.GetMatchById(match.IdMatch);
+
+        Assert.AreEqual(2, result.HomeGoals);
+        Assert.AreEqual(1, result.AwayGoals);
+
+        Assert.AreEqual(1, result.Incidents.Count);
+        Assert.AreEqual(IncidentType.YellowCard, result.Incidents[0].Type);
+        Assert.AreEqual(2, result.Incidents[0].Quantity);
     }
 }

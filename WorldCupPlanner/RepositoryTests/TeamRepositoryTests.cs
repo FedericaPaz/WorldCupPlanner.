@@ -102,6 +102,13 @@ public class TeamRepositoryTests
 
         Assert.ThrowsException<InvalidOperationException>(() => _teamRepository.Delete(team));
     }
+    
+    [TestMethod]
+    public void DeleteTeam_Null_ShouldThrowArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            _teamRepository.Delete(null!));
+    }
 
     [TestMethod]
     public void UpdateTeam_WhenExists_ShouldUpdateTeam()
@@ -125,6 +132,13 @@ public class TeamRepositoryTests
 
         Assert.ThrowsException<InvalidOperationException>(() => _teamRepository.Update(team));
     }
+    
+    [TestMethod]
+    public void UpdateTeam_Null_ShouldThrowArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() =>
+            _teamRepository.Update(null!));
+    }
 
     [TestMethod]
     public void GetAll_ShouldReturnCopy_NotInternalList()
@@ -143,5 +157,16 @@ public class TeamRepositoryTests
     private Team CreateTeam(string name)
     {
         return new Team(name, new Confederation("AFC"), 500);
+    }
+    
+    [TestMethod]
+    public void Clear_ShouldRemoveAllTeams()
+    {
+        _teamRepository.Add(CreateTeam("Uruguay"));
+        _teamRepository.Add(CreateTeam("Argentina"));
+
+        _teamRepository.Clear();
+
+        Assert.AreEqual(0, _teamRepository.GetAll().Count);
     }
 }

@@ -60,6 +60,7 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<IExportService, ExportService>();
 
+builder.Services.AddScoped<RankingCalculator>();
 builder.Services.AddScoped<IRankingService, RankingService>();
 
 Fixture.RegisterEngine("Aleatorio puro", () => new PureRandomSimulationEngine());
