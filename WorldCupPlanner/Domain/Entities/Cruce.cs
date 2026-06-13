@@ -42,6 +42,9 @@ public class Cruce
     {
         if (match == null)
             throw new ArgumentNullException(nameof(match));
+        
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("El nombre del cruce no puede ser vacío o nulo", nameof(name));
 
         Name = name;
         Match = match;
