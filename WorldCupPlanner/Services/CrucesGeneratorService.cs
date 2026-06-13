@@ -1,5 +1,4 @@
-﻿using Domain.Calculators;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using IServices;
@@ -8,7 +7,6 @@ namespace Services;
 
 public class CrucesGeneratorService : ICrucesGeneratorService
 {
-    private readonly StandingCalculator _calculator;
     private readonly TournamentConfig _config;
     private readonly IDateTimeMatch _clock;
 
@@ -18,7 +16,6 @@ public class CrucesGeneratorService : ICrucesGeneratorService
     private int _nextMatchId = 1;
     public CrucesGeneratorService(TournamentConfig config, IDateTimeMatch clock)
     {
-        _calculator = new StandingCalculator();
         _config = config;
         _clock = clock;
         _nextMatchId  = 1;
@@ -96,7 +93,7 @@ public class CrucesGeneratorService : ICrucesGeneratorService
 
         foreach (var grupo in grupos)
         {
-            var standings = _calculator.CalculateStandings(grupo);
+            var standings = grupo.GetStandings();
             if (standings.Count >= 3)
             {
                 primerosPorGrupo.Add(standings[0]);
@@ -104,10 +101,11 @@ public class CrucesGeneratorService : ICrucesGeneratorService
                 tercerosPorGrupo.Add(standings[2]);
             }
         }
+
         var primeros = SortAndBreakTies(primerosPorGrupo);
         var segundos = SortAndBreakTies(segundosPorGrupo);
         var mejoresTerceros = SortAndBreakTies(tercerosPorGrupo).Take(8).ToList();
-        
+
         return (primeros, segundos, mejoresTerceros);
     }
 
@@ -211,12 +209,8 @@ public class CrucesGeneratorService : ICrucesGeneratorService
     {
         var map = new Dictionary<string, char>();
         foreach (var grupo in grupos)
-        foreach (var match in grupo.MatchesInGroup)
-        {
-            map[match.HomeTeam.Name] = grupo.GroupLetter;
-            map[match.AwayTeam.Name] = grupo.GroupLetter;
-        }
-        
+        foreach (var team in grupo.TeamsInGroup)
+            map[team.Name] = grupo.GroupLetter;
         return map;
     }
 
