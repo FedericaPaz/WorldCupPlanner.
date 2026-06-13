@@ -1,11 +1,12 @@
 ﻿using Domain.Entities;
 using IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository;
 
 public class CrucesRepository : ICrucesRepository
 {
-    private WorldCupPlannerContext _context;
+    private readonly WorldCupPlannerContext _context;
 
     public CrucesRepository(WorldCupPlannerContext context)
     {
@@ -15,31 +16,46 @@ public class CrucesRepository : ICrucesRepository
     public void AddCruces(List<Cruce> cruces)
     {
         if (cruces is null)
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(cruces));
+
+        foreach (var entry in _context.ChangeTracker.Entries().ToList())
+            entry.State = EntityState.Detached;
+
+        foreach (var cruce in cruces)
+        {
+            if (_context.Entry(cruce.Match).State == EntityState.Detached)
+                _context.Entry(cruce.Match).State = EntityState.Unchanged;
+
+            if (_context.Entry(cruce.Match.HomeTeam).State == EntityState.Detached)
+                _context.Entry(cruce.Match.HomeTeam).State = EntityState.Unchanged;
+
+            if (_context.Entry(cruce.Match.AwayTeam).State == EntityState.Detached)
+                _context.Entry(cruce.Match.AwayTeam).State = EntityState.Unchanged;
+
+            if (_context.Entry(cruce.Match.Stadium).State == EntityState.Detached)
+                _context.Entry(cruce.Match.Stadium).State = EntityState.Unchanged;
+        }
+
         _context.Cruces.AddRange(cruces);
         _context.SaveChanges();
     }
-    
-   /* public void AddCruces(List<Cruce> cruces)
-    {
-        foreach (var c in cruces)
-            _cruces.Add(c);
-    }*/
 
-   public List<Cruce> GetAllCruces()
-   {
-       return _context.Cruces.ToList();
-   }
-   
-    /*public List<Cruce> GetAllCruces()
+    public List<Cruce> GetAllCruces()
     {
-        return _cruces;
-    }*/
-    
-    /*public bool HasCruces()
-    {
-        return _cruces.Count > 0;
-    }*/
+        return _context.Cruces
+            .Include(c => c.Match)
+            .ThenInclude(m => m.HomeTeam)
+            .Include(c => c.Match)
+            .ThenInclude(m => m.AwayTeam)
+            .Include(c => c.Match)
+            .ThenInclude(m => m.Stadium)
+            .Include(c => c.Match)
+            .ThenInclude(m => m.WinnerMatch)
+            .Include(c => c.Match)
+            .ThenInclude(m => m.LoserMatch)
+            .AsNoTracking()
+            .ToList();
+    }
 
     public bool HasCruces()
     {
@@ -51,9 +67,4 @@ public class CrucesRepository : ICrucesRepository
         _context.Cruces.RemoveRange(_context.Cruces);
         _context.SaveChanges();
     }
-
-   /* public void RemoveCruces()
-    {
-        _cruces.Clear();
-    }*/
 }
