@@ -147,10 +147,10 @@ public class Group
     public List<Standing> GetStandings()
     {
         var equipos = _teamsInGroup.Any()
-            ? _teamsInGroup.ToList()
+            ? _teamsInGroup.Where(t => t != null).ToList()
             : _matchesInGroup
                 .SelectMany(m => new[] { m.HomeTeam, m.AwayTeam })
-                .Where(t => t != null)  
+                .Where(t => t != null)
                 .DistinctBy(t => t.Name)
                 .ToList();
 
@@ -163,14 +163,16 @@ public class Group
 
         foreach (var match in _matchesInGroup.Where(m => m.HomeGoals.HasValue && m.AwayGoals.HasValue))
         {
+            if (match.HomeTeam == null || match.AwayTeam == null) continue;
             if (!standings.ContainsKey(match.HomeTeam.Name)) continue;
             if (!standings.ContainsKey(match.AwayTeam.Name)) continue;
-        
+
             standings[match.HomeTeam.Name].AddMatchResult(match.HomeGoals!.Value, match.AwayGoals!.Value);
             standings[match.AwayTeam.Name].AddMatchResult(match.AwayGoals!.Value, match.HomeGoals!.Value);
         }
 
         return standings.Values
+            .Where(s => s.TeamInGroup != null)
             .OrderByDescending(s => s.PointsInGroup)
             .ThenByDescending(s => s.GoalDifference)
             .ThenByDescending(s => s.GoalsFor)

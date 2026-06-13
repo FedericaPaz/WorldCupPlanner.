@@ -211,6 +211,12 @@ public class CruceService : ICruceService
                 }
             }
 
+            if (emparejado == null && disponibles.Count > 0)
+            {
+                emparejado = disponibles[0];
+                indiceEmparejado = 0;
+            }
+
             if (emparejado == null)
                 throw new InvalidOperationException($"No se pudo emparejar al equipo {equipo1.Name}.");
 

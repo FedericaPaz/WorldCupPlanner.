@@ -168,6 +168,7 @@ public class Fixture
             .Where(s => s != null)
             .Cast<Standing>()
             .ToList());
+    
     private List<Team> SortAndBreakTies(List<Standing> standings)
     {
         var ordenados = standings
@@ -183,7 +184,10 @@ public class Fixture
         while (i < ordenados.Count)
         {
             int j = i + 1;
-            while (j < ordenados.Count && ordenados[j].CompareTo(ordenados[i]) == 0)
+            while (j < ordenados.Count
+                   && ordenados[j].PointsInGroup == ordenados[i].PointsInGroup
+                   && ordenados[j].GoalDifference == ordenados[i].GoalDifference
+                   && ordenados[j].GoalsFor == ordenados[i].GoalsFor)
                 j++;
 
             var empatados = ordenados.Skip(i).Take(j - i).ToList();
