@@ -7,12 +7,12 @@ namespace Services;
 
 public class NotificationService : INotificationService
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUserReadRepository _userRepository;
     private readonly INotificationRepository _notificationRepository;
     private readonly ILogService _logService;
 
     public NotificationService(
-        IUserRepository userRepository,
+        IUserReadRepository userRepository,
         INotificationRepository notificationRepository,
         ILogService logService)
     {

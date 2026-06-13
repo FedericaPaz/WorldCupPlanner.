@@ -11,10 +11,10 @@ public class ExportService : IExportService
     private const string CsvFormat = "CSV";
     private const string XlsxFormat = "XLSX";
 
-    private readonly IUserRepository _userRepository;
+    private readonly IUserReadRepository _userRepository;
     private readonly ILogService _logService;
 
-    public ExportService(IUserRepository userRepository, ILogService logService)
+    public ExportService(IUserReadRepository userRepository, ILogService logService)
     {
         _userRepository = userRepository;
         _logService = logService;
