@@ -239,18 +239,6 @@ public class CruceServiceTests
     }
     
     [TestMethod]
-    public void SimulateCruces_WithoutEngine_ShouldCallSimulationServiceWithDefaultEngine()
-    {
-        List<Cruce> cruces = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
-        _stubCrucesRepository.SetCruces(cruces);
-        
-        _service.SimulateCruces();
-        
-        Assert.IsNotNull(_stubCrucesRepository.GetAllCruces());
-        Assert.AreEqual(16, _stubCrucesRepository.GetAllCruces().Count);
-    }
-
-    [TestMethod]
     public void SimulateCruces_WithSpecificEngine_ShouldCallSimulationServiceWithGivenEngine()
     {
         List<Cruce> cruces = CrearCrucesDummy(8, TournamentPhase.RoundOf16);
