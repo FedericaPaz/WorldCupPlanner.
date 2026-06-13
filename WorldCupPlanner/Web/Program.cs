@@ -62,8 +62,10 @@ builder.Services.AddScoped<IExportService, ExportService>();
 
 builder.Services.AddScoped<IRankingService, RankingService>();
 
-Fixture.RegisterEngine("Aleatorio puro", () => new PureRandomSimulationEngine());
-Fixture.RegisterEngine("Probabilístico", () => new ProbabilisticSimulationEngine());
+var simFactory = new SimulationEngineFactory();
+simFactory.Register("Aleatorio puro", () => new PureRandomSimulationEngine());
+simFactory.Register("Probabilístico", () => new ProbabilisticSimulationEngine());
+builder.Services.AddSingleton<ISimulationEngineFactory>(simFactory);
 
 var app = builder.Build();
 

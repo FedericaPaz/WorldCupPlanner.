@@ -41,15 +41,22 @@ public class CruceServiceTests
         _clock = new ClockStub(FechaCreacionClock);
         _config = new TournamentConfig();
 
+        var engineFactory = new SimulationEngineFactory();
+        engineFactory.Register("Aleatorio puro", () => new PureRandomSimulationEngine());
+        engineFactory.Register("Probabilístico", () => new ProbabilisticSimulationEngine());
+
+        var simulationService = new SimulationService(_logService, _matchRepository, _rankingService, _stubFixtureRepository, _config, engineFactory);
+
         _service = new CruceService(
             _stubCrucesRepository,
             new FixtureServiceStub(_stubFixtureRepository),
             _stubStadiumRepository,
-            new SimulationService(_logService, _matchRepository, _rankingService, _stubFixtureRepository, _config),
+            simulationService,
             _config,
             _matchRepository,
             _stubFixtureRepository,
-            _clock);
+            _clock,
+            engineFactory);
     }
 
     private Fixture CreateFixtureWithResults()

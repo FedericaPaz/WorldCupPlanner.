@@ -36,12 +36,17 @@ public class SimulationServiceTests
         _fixtureRepository = new FixtureRepositoryStub();
         _config = new TournamentConfig();
 
+        var engineFactory = new SimulationEngineFactory();
+        engineFactory.Register("Aleatorio puro", () => new PureRandomSimulationEngine());
+        engineFactory.Register("Probabilístico", () => new ProbabilisticSimulationEngine());
+
         _service = new SimulationService(
             _logService,
             _matchRepository,
             _rankingService,
             _fixtureRepository,
-            _config);
+            _config,
+            engineFactory);
 
         _engine = new ProbabilisticSimulationEngine();
     }

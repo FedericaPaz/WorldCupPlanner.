@@ -14,8 +14,6 @@ public class Fixture
     private const int TeamsPerGroup = 4;
     private const int MatchesPerGroup = 6;
 
-    private static readonly Dictionary<string, Func<ISimulationEngine>> _engines = new();
-
     public TournamentPhase CurrentPhase
     {
         get { return _currentPhase; }
@@ -37,19 +35,6 @@ public class Fixture
         _groups = new List<Group>();
         _eliminatoryMatches = new List<Match>();
         CurrentPhase = TournamentPhase.NotStarted;
-    }
-
-    public static void RegisterEngine(string name, Func<ISimulationEngine> factory)
-    {
-        _engines[name] = factory;
-    }
-
-    public ISimulationEngine CreateEngine()
-    {
-        if (_engines.TryGetValue(SimulationEngineName, out var factory))
-            return factory();
-
-        throw new InvalidOperationException($"No hay motor registrado con el nombre '{SimulationEngineName}'.");
     }
 
     public void InitializeGroups()

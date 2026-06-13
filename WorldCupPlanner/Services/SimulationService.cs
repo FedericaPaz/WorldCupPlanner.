@@ -16,6 +16,7 @@ public class SimulationService : ISimulationService
     private readonly IRankingService _rankingService;
     private readonly IFixtureRepository _fixtureRepository;
     private readonly TournamentConfig _config;
+    private readonly ISimulationEngineFactory _engineFactory;
 
     public string LastUsedEngineName { get; private set; } = string.Empty;
 
@@ -24,13 +25,15 @@ public class SimulationService : ISimulationService
         IMatchRepository matchRepository,
         IRankingService rankingService,
         IFixtureRepository fixtureRepository,
-        TournamentConfig config)
+        TournamentConfig config,
+        ISimulationEngineFactory engineFactory)
     {
         _logService = logService;
         _matchRepository = matchRepository;
         _rankingService = rankingService;
         _fixtureRepository = fixtureRepository;
         _config = config;
+        _engineFactory = engineFactory;
     }
 
     public void SimulateMatch(int matchId, int seed)
@@ -38,7 +41,8 @@ public class SimulationService : ISimulationService
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
-        SimulateMatch(matchId, seed, fixture.CreateEngine());
+        var engine = _engineFactory.Create(fixture.SimulationEngineName);
+        SimulateMatch(matchId, seed, engine);
     }
 
     public void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
@@ -84,7 +88,8 @@ public class SimulationService : ISimulationService
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
-        SimulateGroupStage(fixture.CreateEngine());
+        var engine = _engineFactory.Create(fixture.SimulationEngineName);
+        SimulateGroupStage(engine);
     }
 
     public void SimulateGroupStage(ISimulationEngine engine)
