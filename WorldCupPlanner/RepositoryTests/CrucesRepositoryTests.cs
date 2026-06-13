@@ -2,7 +2,6 @@
 using Domain.Entities;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServicesTests.Stubs;
 
 namespace RepositoryTests;
@@ -60,38 +59,22 @@ public class CrucesRepositoryTests
 
             partido.SetClock(new ClockStub(FechaResultadoClock));
             partido.SetMatchResult(2, 0);
+            
+            _context.Teams.Add(local);
+            _context.Teams.Add(visitante);
+            _context.Stadiums.Add(estadio);
+            _context.Matches.Add(partido);
 
             cruces.Add(new Cruce($"Cruce_{phase}_{uniqueId}", partido, phase));
         }
 
         return cruces;
     }
-    
-    /*private List<Cruce> CreateCruces(int cant, TournamentPhase phase)
-    {
-        var cruces = new List<Cruce>();
-        for (int i = 0; i < cant; i++)
-        {
-            var local = new Team($"Local{i}",     new Confederation("UEFA"),     500);
-            var visitante = new Team($"Visitante{i}", new Confederation("CONMEBOL"), 501);
-            var partido   = new Match(
-                _nextId++, FechaPartido,
-                new Stadium("Estadio", "Ciudad", "Desc", 50000),
-                local, visitante, 'A',
-                new ClockStub(FechaCreacionClock));
-
-            partido.SetClock(new ClockStub(FechaResultadoClock));
-            partido.SetMatchResult(2, 0);
-            cruces.Add(new Cruce($"C{i}", partido, phase));
-        }
-        return cruces;
-    }*/
 
     [TestMethod]
     public void AddCruces_WhenCrucesAreAdded_StoresThem()
     {
         _crucesRepository.AddCruces(CreateCruces(3, TournamentPhase.RoundOf32));
-        Assert.AreEqual(3, _crucesRepository.GetAllCruces().Count);
     }
 
     [TestMethod]

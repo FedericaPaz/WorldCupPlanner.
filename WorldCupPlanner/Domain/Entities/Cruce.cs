@@ -12,22 +12,12 @@ public class Cruce
 
     public int Id { get; private set; }
     public int MatchId { get; private set; }
+    public Match Match { get; private set; } = null!;
 
     public string Name
     {
         get { return _name; }
         private set { _name = value; }
-    }
-
-    public Match Match
-    {
-        get { return _match; }
-        private set
-        {
-            _match = value;
-            if (value != null)
-                MatchId = value.IdMatch;
-        }
     }
 
     public TournamentPhase Phase
@@ -50,14 +40,12 @@ public class Cruce
 
     public Cruce(string name, Match match, TournamentPhase phase)
     {
-        if (string.IsNullOrEmpty(name))
-            throw new ArgumentException("El nombre del cruce no puede ser vacío o nulo", nameof(name));
-
         if (match == null)
-            throw new ArgumentNullException(nameof(match), "El partido no puede ser nulo");
+            throw new ArgumentNullException(nameof(match));
 
         Name = name;
         Match = match;
+        MatchId = match.IdMatch;
         Phase = phase;
     }
 
