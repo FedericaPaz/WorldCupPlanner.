@@ -26,6 +26,7 @@ public class CruceServiceTests
     private RankingServiceStub _rankingService = null!;
     private IDateTimeMatch _clock = null!;
     private TournamentConfig _config = null!;
+    private NotificationServiceStub _notificationServiceStub = null!;
     private int _nextId;
 
     [TestInitialize]
@@ -41,12 +42,13 @@ public class CruceServiceTests
         _rankingService = new RankingServiceStub();
         _clock = new ClockStub(FechaCreacionClock);
         _config = new TournamentConfig();
+        var notificationStub = new NotificationServiceStub();
 
         _service = new CruceService(
             _stubCrucesRepository,
             new FixtureServiceStub(_stubFixtureRepository),
             _stubStadiumRepository,
-            new SimulationService(_logService, _matchRepository, _rankingService, _stubFixtureRepository, _config),
+            new SimulationService(_logService, _matchRepository, _rankingService, _stubFixtureRepository, _config, notificationStub),
             _config,
             _matchRepository,
             _stubFixtureRepository,

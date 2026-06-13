@@ -16,6 +16,7 @@ public class SimulationService : ISimulationService
     private readonly IRankingService _rankingService;
     private readonly IFixtureRepository _fixtureRepository;
     private readonly TournamentConfig _config;
+    private readonly INotificationService _notificationService;
 
     public string LastUsedEngineName { get; private set; } = string.Empty;
 
@@ -24,13 +25,15 @@ public class SimulationService : ISimulationService
         IMatchRepository matchRepository,
         IRankingService rankingService,
         IFixtureRepository fixtureRepository,
-        TournamentConfig config)
+        TournamentConfig config,
+        INotificationService notificationService)
     {
         _logService = logService;
         _matchRepository = matchRepository;
         _rankingService = rankingService;
         _fixtureRepository = fixtureRepository;
         _config = config;
+        _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
     }
 
     public void SimulateMatch(int matchId, int seed)
@@ -85,6 +88,9 @@ public class SimulationService : ISimulationService
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
         SimulateGroupStage(fixture.CreateEngine());
+
+        // Notificar a periodistas sobre la simulación masiva iniciada desde la UI
+        _notificationService.NotifyJournalists("Se simularon los resultados de los partidos pendientes.");
     }
 
     public void SimulateGroupStage(ISimulationEngine engine)

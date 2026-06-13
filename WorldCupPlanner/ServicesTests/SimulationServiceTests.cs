@@ -36,12 +36,15 @@ public class SimulationServiceTests
         _fixtureRepository = new FixtureRepositoryStub();
         _config = new TournamentConfig();
 
+        var notificationStub = new NotificationServiceStub();
+
         _service = new SimulationService(
             _logService,
             _matchRepository,
             _rankingService,
             _fixtureRepository,
-            _config);
+            _config,
+            notificationStub);
 
         _engine = new ProbabilisticSimulationEngine();
     }
