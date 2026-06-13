@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using Domain.Interfaces;
 using IRepository;
 using Services;
 using ServicesTests.Stubs;
@@ -235,5 +236,31 @@ public class CruceServiceTests
         _stubCrucesRepository.SetCruces(new List<Cruce>());
         var result = _service.GetAllCruces();
         Assert.AreEqual(0, result.Count);
+    }
+    
+    [TestMethod]
+    public void SimulateCruces_WithoutEngine_ShouldCallSimulationServiceWithDefaultEngine()
+    {
+        List<Cruce> cruces = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
+        _stubCrucesRepository.SetCruces(cruces);
+        
+        _service.SimulateCruces();
+        
+        Assert.IsNotNull(_stubCrucesRepository.GetAllCruces());
+        Assert.AreEqual(16, _stubCrucesRepository.GetAllCruces().Count);
+    }
+
+    [TestMethod]
+    public void SimulateCruces_WithSpecificEngine_ShouldCallSimulationServiceWithGivenEngine()
+    {
+        List<Cruce> cruces = CrearCrucesDummy(8, TournamentPhase.RoundOf16);
+        _stubCrucesRepository.SetCruces(cruces);
+        
+        ISimulationEngine customEngine = new ProbabilisticSimulationEngine();
+        
+        _service.SimulateCruces(customEngine);
+        
+        Assert.IsNotNull(_stubCrucesRepository.GetAllCruces());
+        Assert.AreEqual(8, _stubCrucesRepository.GetAllCruces().Count);
     }
 }

@@ -340,4 +340,92 @@ public class FixtureTests
         }
         return fixture;
     }
+    
+    [TestMethod]
+    public void PrivateConstructor_ShouldCreateFixtureInstance()
+    {
+        var fixture = (Fixture)Activator.CreateInstance(
+            typeof(Fixture),
+            nonPublic: true)!;
+        
+        Assert.IsNotNull(fixture);
+        Assert.AreEqual(0, fixture.Id);
+        Assert.AreEqual(0, fixture.Groups.Count);
+    }
+
+    [TestMethod]
+    public void SetGroups_WithValidList_ShouldAssignGroups()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+        var targetGroups = new List<Group> { new Group('A'), new Group('B') };
+        
+        fixture.SetGroups(targetGroups);
+        
+        Assert.AreEqual(2, fixture.Groups.Count);
+    }
+
+    [TestMethod]
+    public void SetGroups_WithNull_ShouldThrowArgumentNullException()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+
+        Assert.ThrowsException<ArgumentNullException>(() => fixture.SetGroups(null!));
+    }
+
+    [TestMethod]
+    public void AddEliminatoryMatch_WithNull_ShouldThrowArgumentNullException()
+    {
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
+
+        Assert.ThrowsException<ArgumentNullException>(() => fixture.AddEliminatoryMatch(null!));
+    }
+
+    [TestMethod]
+    public void CanAdvanceToPhase_ThroughAllKnockoutPhases_ShouldValidateCorrectly()
+    {
+        var fixture = CreateValidFixture();
+        var clock = new ClockStub(DateTime.Now);
+        var stadium = new Stadium("Estadio", "Ciudad", "", 50000);
+        var teamA = new Team("TeamA", new Confederation("UEFA"), 1000);
+        var teamB = new Team("TeamB", new Confederation("UEFA"), 1000);
+        
+        Assert.IsFalse(fixture.CanAdvanceToPhase((TournamentPhase)999));
+
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+        
+        foreach (var group in fixture.Groups)
+        {
+            foreach (var m in group.MatchesInGroup)
+            {
+                m.SetClock(clock);
+                m.SetMatchResult(1, 0); 
+            }
+        }
+        
+        Assert.IsTrue(fixture.CanAdvanceToPhase(TournamentPhase.RoundOf32));
+        fixture.AdvanceToPhase(TournamentPhase.RoundOf32);
+        
+        var match = new Match(999, clock.Now, stadium, teamA, teamB, 'A', clock);
+        fixture.AddEliminatoryMatch(match);
+        
+        Assert.IsFalse(fixture.CanAdvanceToPhase(TournamentPhase.RoundOf16)); 
+        match.SetMatchResult(2, 1); 
+        Assert.IsTrue(fixture.CanAdvanceToPhase(TournamentPhase.RoundOf16));
+        
+        fixture.AdvanceToPhase(TournamentPhase.RoundOf16);
+        Assert.IsTrue(fixture.CanAdvanceToPhase(TournamentPhase.QuarterFinals));
+        
+        fixture.AdvanceToPhase(TournamentPhase.QuarterFinals);
+        Assert.IsTrue(fixture.CanAdvanceToPhase(TournamentPhase.SemiFinals));
+        
+        fixture.AdvanceToPhase(TournamentPhase.SemiFinals);
+        Assert.IsTrue(fixture.CanAdvanceToPhase(TournamentPhase.Final));
+        Assert.IsTrue(fixture.CanAdvanceToPhase(TournamentPhase.ThirdPlace));
+        
+        fixture.AdvanceToPhase(TournamentPhase.Final);
+        Assert.IsTrue(fixture.CanAdvanceToPhase(TournamentPhase.Finished));
+    }
 }
