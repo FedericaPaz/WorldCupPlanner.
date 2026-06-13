@@ -50,6 +50,8 @@ public class MatchRepository : IMatchRepository
             .Include(m => m.HomeTeam)
             .Include(m => m.AwayTeam)
             .Include(m => m.Stadium)
+            .Include(m => m.WinnerMatch)
+            .Include(m => m.LoserMatch)
             .AsNoTracking()
             .ToList();
 

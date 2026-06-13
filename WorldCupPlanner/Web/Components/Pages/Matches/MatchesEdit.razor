@@ -6,6 +6,7 @@
 @using IServices
 @using Web.Services
 @inject IMatchService MatchService
+@inject ISimulationService SimulationService
 @inject IStadiumService StadiumService
 @inject NavigationManager Navigation
 @inject TournamentConfig Config
@@ -243,7 +244,7 @@
                 return;
 
             var randomSeed = new Random().Next(); 
-            MatchService.SimulateMatch(_match.idMatch, randomSeed);
+            SimulationService.SimulateMatch(_match.idMatch, randomSeed);
 
             LogService.Register(
                 GetCurrentUserEmail(),

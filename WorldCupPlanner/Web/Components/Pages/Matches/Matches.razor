@@ -2,11 +2,9 @@
 @using DTOs.Match
 @using IServices
 @using Web.Services
-@using Domain.Interfaces
-@using global::Services
-@using Services
 @inject IMatchService MatchService
 @inject ICruceService CruceService
+@inject ISimulationService SimulationService
 @inject SessionService SessionService
 @inject IFixtureService FixtureService
 @inject NavigationManager Navigation
@@ -284,7 +282,7 @@
             _cargando = true;
             StateHasChanged();
 
-            MatchService.SimulateGroupStage();
+            SimulationService.SimulateGroupStage();
             CruceService.SimulateCruces();
 
             LoadData();
