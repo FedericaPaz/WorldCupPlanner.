@@ -106,4 +106,9 @@ public class Confederation
     {
         return name.Trim().ToUpperInvariant();
     }
+    
+    public bool CanAddTeam(int cantidadActual)
+    {
+        return cantidadActual < MaxTeams;
+    }
 }
