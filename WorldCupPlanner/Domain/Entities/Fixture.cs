@@ -14,6 +14,8 @@ public class Fixture
     private const int TeamsPerGroup = 4;
     private const int MatchesPerGroup = 6;
 
+    private static readonly Dictionary<string, Func<ISimulationEngine>> _engines = new();
+
     public TournamentPhase CurrentPhase
     {
         get { return _currentPhase; }
@@ -22,13 +24,13 @@ public class Fixture
     public string SimulationEngineName { get; private set; } = string.Empty;
     public IReadOnlyList<Group> Groups => _groups;
     public int Id { get; private set; }
-    
+
     private Fixture()
     {
         _groups = new List<Group>();
         _eliminatoryMatches = new List<Match>();
     }
-    
+
     public Fixture(TournamentConfig config)
     {
         _config = config;
@@ -37,20 +39,30 @@ public class Fixture
         CurrentPhase = TournamentPhase.NotStarted;
     }
 
+    public static void RegisterEngine(string name, Func<ISimulationEngine> factory)
+    {
+        _engines[name] = factory;
+    }
+
+    public ISimulationEngine CreateEngine()
+    {
+        if (_engines.TryGetValue(SimulationEngineName, out var factory))
+            return factory();
+
+        throw new InvalidOperationException($"No hay motor registrado con el nombre '{SimulationEngineName}'.");
+    }
+
     public void InitializeGroups()
     {
-        Console.WriteLine($"Inicializando grupos: {_groups.Count}");
         _groups = new List<Group>();
         for (int i = 0; i < ExpectedGroups; i++)
             _groups.Add(new Group((char)('A' + i)));
-        Console.WriteLine($"Finalizando inicialización grupos: {_groups.Count}");
     }
 
     public void AdvanceToPhase(TournamentPhase newPhase)
     {
         if (!CanAdvanceToPhase(newPhase))
             throw new InvalidOperationException($"No se puede avanzar a {newPhase}");
-
         CurrentPhase = newPhase;
     }
 
@@ -58,16 +70,14 @@ public class Fixture
     {
         if (_groups.Count != ExpectedGroups)
             return false;
-        
+
         foreach (var group in _groups)
         {
             if (group.TeamsInGroup.Count != TeamsPerGroup)
                 return false;
-
             if (group.MatchesInGroup.Count != MatchesPerGroup)
                 return false;
         }
-
         return true;
     }
 
@@ -86,19 +96,8 @@ public class Fixture
         };
     }
 
-    private bool AllGroupMatchesPlayed()
-    {
-        return _groups.SelectMany(group => group.MatchesInGroup).All(match => match.HomeGoals.HasValue && match.AwayGoals.HasValue);
-    }
-
-    private bool AllKnockoutMatchesPlayed()
-    {
-        return _eliminatoryMatches.All(match => match.HomeGoals.HasValue && match.AwayGoals.HasValue);
-    }
-
     public bool IsStillValid(List<ITeam> existingTeams, List<IStadium> existingStadiums)
     {
-        //check
         return _groups.Count == ExpectedGroups && existingStadiums.Count >= 4 && existingTeams.Count == 48;
     }
 
@@ -107,17 +106,114 @@ public class Fixture
         if (match == null) throw new ArgumentNullException(nameof(match));
         _eliminatoryMatches.Add(match);
     }
+
     public void SetGroups(List<Group> groups)
     {
         if (groups == null) throw new ArgumentNullException(nameof(groups));
         _groups = groups;
     }
-    
 
     public void SetSimulationEngine(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("El nombre del motor no puede ser vacío.");
         SimulationEngineName = name;
+    }
+
+    public void CargarPartidos(IEnumerable<Match> partidos)
+    {
+        foreach (var group in _groups)
+            foreach (var match in partidos.Where(m => m.Group == group.GroupLetter))
+                group.LoadMatchFromRepository(match);
+    }
+
+    public void ResetRankings()
+    {
+        foreach (var group in _groups)
+            foreach (var team in group.TeamsInGroup)
+                team.ResetRankingToFifa();
+    }
+
+    public void LockGroupMatches()
+    {
+        foreach (var group in _groups)
+            foreach (var match in group.MatchesInGroup)
+                match.Lock();
+    }
+
+    public Dictionary<string, char> GetTeamToGroupMap()
+    {
+        return _groups
+            .SelectMany(g => g.TeamsInGroup.Select(t => (t.Name, g.GroupLetter)))
+            .ToDictionary(x => x.Name, x => x.GroupLetter);
+    }
+
+    public List<Team> GetPrimeros()
+        => SortAndBreakTies(_groups
+            .Select(g => g.GetStandings().FirstOrDefault())
+            .Where(s => s != null)
+            .Cast<Standing>()
+            .ToList());
+
+    public List<Team> GetSegundos()
+        => SortAndBreakTies(_groups
+            .Select(g => g.GetStandings().ElementAtOrDefault(1))
+            .Where(s => s != null)
+            .Cast<Standing>()
+            .ToList());
+
+    public List<Team> GetTerceros()
+        => SortAndBreakTies(_groups
+            .Select(g => g.GetStandings().ElementAtOrDefault(2))
+            .Where(s => s != null)
+            .Cast<Standing>()
+            .ToList());
+    private List<Team> SortAndBreakTies(List<Standing> standings)
+    {
+        var ordenados = standings
+            .OrderByDescending(s => s.PointsInGroup)
+            .ThenByDescending(s => s.GoalDifference)
+            .ThenByDescending(s => s.GoalsFor)
+            .ToList();
+
+        var resultado = new List<Standing>();
+        var rng = new Random(_config.SemillaCrucesFase);
+        int i = 0;
+
+        while (i < ordenados.Count)
+        {
+            int j = i + 1;
+            while (j < ordenados.Count && ordenados[j].CompareTo(ordenados[i]) == 0)
+                j++;
+
+            var empatados = ordenados.Skip(i).Take(j - i).ToList();
+            if (empatados.Count > 1) empatados = ApplyFisherYates(empatados, rng);
+
+            resultado.AddRange(empatados);
+            i = j;
+        }
+        return resultado.Select(s => s.TeamInGroup).ToList();
+    }
+
+    private static List<T> ApplyFisherYates<T>(List<T> list, Random rng)
+    {
+        var arr = list.ToArray();
+        for (int i = arr.Length - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            (arr[i], arr[j]) = (arr[j], arr[i]);
+        }
+        return arr.ToList();
+    }
+
+    private bool AllGroupMatchesPlayed()
+    {
+        return _groups.SelectMany(g => g.MatchesInGroup)
+                      .All(m => m.HomeGoals.HasValue && m.AwayGoals.HasValue);
+    }
+
+    private bool AllKnockoutMatchesPlayed()
+    {
+        return _eliminatoryMatches.All(m => m.HomeGoals.HasValue && m.AwayGoals.HasValue);
     }
 }

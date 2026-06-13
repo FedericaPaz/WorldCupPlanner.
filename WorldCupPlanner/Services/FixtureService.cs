@@ -1,5 +1,5 @@
-﻿using Domain.Calculators;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using DTOs.Fixture;
 using IRepository;
@@ -11,68 +11,56 @@ namespace Services;
 public class FixtureService : IFixtureService
 {
     private readonly IFixtureRepository _fixtureRepository;
-    private readonly FixtureGenerator _fixtureGenerator;
     private readonly ITeamRepository _teamRepository;
     private readonly IStadiumRepository _stadiumRepository;
     private readonly IMatchRepository _matchRepository;
     private readonly ICrucesRepository _crucesRepository;
-    private readonly IGroupRepository _groupRepository;
     private readonly TournamentConfig _config;
+    private readonly IDateTimeMatch _clock;
+
+    private const int TeamsPerGroup = 4;
+    private const int StartHour = 14;
+    private const int HoursBetweenMatches = 4;
+    private const int GroupsPerBatch = 6;
+
+    private int _nextMatchId = 1;
 
     public FixtureService(
         IFixtureRepository fixtureRepository,
-        FixtureGenerator fixtureGenerator,
         ITeamRepository teamRepository,
         IStadiumRepository stadiumRepository,
         IMatchRepository matchRepository,
         ICrucesRepository crucesRepository,
-        IGroupRepository groupRepository,
-        TournamentConfig config)
+        TournamentConfig config,
+        IDateTimeMatch clock)
     {
-        if (config == null)
-            throw new ArgumentNullException(nameof(config));
-
         _fixtureRepository = fixtureRepository;
-        _fixtureGenerator = fixtureGenerator;
         _teamRepository = teamRepository;
         _stadiumRepository = stadiumRepository;
         _matchRepository = matchRepository;
         _crucesRepository = crucesRepository;
-        _groupRepository = groupRepository;
         _config = config;
+        _clock = clock;
     }
 
     public FixtureResponse GetFixture()
     {
         if (!_fixtureRepository.ContainsFixture())
-        {
             return new FixtureResponse();
-        }
-    
+
         var fixture = _fixtureRepository.GetFixture();
-        
-        ReconstructGroups(fixture);
+        fixture.CargarPartidos(_matchRepository.GetAllMatches());
         return fixture.ToEntity();
     }
 
     public Fixture GetFixtureEntity()
     {
         if (!_fixtureRepository.ContainsFixture())
-        {
             throw new InvalidOperationException("No hay fixture generado.");
-        }
 
-        try
-        {
-            var fixture = _fixtureRepository.GetFixture();
-            ReconstructGroups(fixture);
-            return fixture;
-        }
-        catch
-        {
-            Console.WriteLine("Error al obtener el fixture en getFixtureEntity.");
-            throw;
-        }
+        var fixture = _fixtureRepository.GetFixture();
+        fixture.CargarPartidos(_matchRepository.GetAllMatches());
+        return fixture;
     }
 
     public bool HasFixture()
@@ -84,7 +72,6 @@ public class FixtureService : IFixtureService
         }
         catch
         {
-            Console.WriteLine("fallo en hasFixture");
             return false;
         }
     }
@@ -96,40 +83,181 @@ public class FixtureService : IFixtureService
         if (group == null)
             throw new ArgumentException($"Grupo {groupLetter} no encontrado");
 
-        var calculator = new StandingCalculator();
-        var standings = calculator.CalculateStandings(group);
-        return standings.Select(s => StandingMapper.ToResponse(s)).ToList();
+        return group.GetStandings()
+            .Select(s => StandingMapper.ToResponse(s))
+            .ToList();
     }
 
     public void GenerateFixture(string simulationEngineName = "Probabilistico")
     {
-        var teams = _teamRepository.GetAll();
-        foreach (var team in teams)
-        {
-            team.UpdateCurrentRanking(team.FifaRanking);
+        _nextMatchId = _matchRepository.GetNextId();
+        var fixture = GenerateGroupsStageFixture();
+        fixture.ResetRankings();
+
+        foreach (var team in fixture.Groups.SelectMany(g => g.TeamsInGroup))
             _teamRepository.Update(team);
-        }
-        
-        var fixture = _fixtureGenerator.GenerateGroupsStageFixture();
 
         _matchRepository.ClearMatches();
         _crucesRepository.RemoveCruces();
 
         foreach (var grupo in fixture.Groups)
-        foreach (var partido in grupo.MatchesInGroup)
-            _matchRepository.AddMatch(partido);
+            foreach (var partido in grupo.MatchesInGroup)
+                _matchRepository.AddMatch(partido);
 
         fixture.SetSimulationEngine(simulationEngineName);
         _fixtureRepository.AddFixture(fixture);
     }
-    
+
+    public void DeleteFixture(Fixture fixture)
+    {
+        var teams = _teamRepository.GetAll();
+        foreach (var team in teams)
+        {
+            team.ResetRankingToFifa();
+            _teamRepository.Update(team);
+        }
+
+        _crucesRepository.RemoveCruces();
+        _matchRepository.ClearMatches();
+        _fixtureRepository.RemoveFixture(fixture);
+    }
+
+    private Fixture GenerateGroupsStageFixture()
+    {
+        var teams = _teamRepository.GetAll();
+        var stadiums = _stadiumRepository.GetAllStadiums();
+
+        if (teams.Count != 48)
+            throw new InvalidOperationException("Se necesitan 48 equipos para generar el fixture.");
+        if (stadiums.Count < 4)
+            throw new InvalidOperationException("Se necesitan al menos 4 estadios para generar el fixture.");
+
+        var fixture = new Fixture(_config);
+        fixture.InitializeGroups();
+
+        var orderedTeams = OrderTeamsWithTieBreak(teams);
+        DistributeTeamsToGroups(orderedTeams, fixture.Groups.ToList());
+        GenerateMatches(fixture, stadiums);
+
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+        return fixture;
+    }
+
+    private List<Team> OrderTeamsWithTieBreak(List<Team> teams)
+    {
+        var result = new List<Team>();
+        var groupedByRanking = teams
+            .GroupBy(t => t.FifaRanking)
+            .OrderByDescending(g => g.Key);
+
+        foreach (var rankingGroup in groupedByRanking)
+        {
+            var tied = rankingGroup.ToList();
+            var shuffled = tied.Count > 1 ? _config.Shuffle(tied, _config.SemillaFixture) : tied;
+            result.AddRange(shuffled);
+        }
+        return result;
+    }
+
+    private void DistributeTeamsToGroups(List<Team> orderedTeams, List<Group> groups)
+    {
+        bool success = TryAssignAll(orderedTeams, 0, groups);
+        if (!success)
+            throw new InvalidOperationException("No se pudo distribuir los equipos respetando las restricciones de confederación.");
+    }
+
+    private bool TryAssignAll(List<Team> teams, int index, List<Group> groups)
+    {
+        if (index == teams.Count) return true;
+
+        var team = teams[index];
+        int roundRobinGroup = index % groups.Count;
+
+        for (int offset = 0; offset < groups.Count; offset++)
+        {
+            int groupIndex = (roundRobinGroup + offset) % groups.Count;
+            var group = groups[groupIndex];
+
+            if (group.TeamsInGroup.Count >= TeamsPerGroup) continue;
+            if (!group.CanAddTeam(team)) continue;
+
+            group.AddTeamToGroup(team);
+            if (TryAssignAll(teams, index + 1, groups)) return true;
+            group.RemoveTeamFromGroup(team);
+        }
+        return false;
+    }
+
+    private void GenerateMatches(Fixture fixture, List<Stadium> stadiums)
+    {
+        var orderedStadiums = stadiums
+            .OrderBy(s => NormalizeName(s.StadiumName))
+            .ToList();
+
+        var groups = fixture.Groups.ToList();
+        int matchCounter = 0;
+
+        foreach (var (groupIndex, group) in groups.Select((g, i) => (i, g)))
+            matchCounter = GenerateGroupMatches(group, orderedStadiums, groupIndex, matchCounter);
+    }
+
+    private int GenerateGroupMatches(Group group, List<Stadium> orderedStadiums, int groupIndex, int matchCounter)
+    {
+        var teams = group.TeamsInGroup.ToList();
+        var matchDates = CalculateMatchDatesForGroup(groupIndex);
+        var matchups = GetGroupRoundRobinMatchups();
+
+        for (int i = 0; i < matchups.Length; i++)
+        {
+            var stadium = orderedStadiums[matchCounter % orderedStadiums.Count];
+            var match = new Match(
+                _nextMatchId++,
+                matchDates[i],
+                stadium,
+                teams[matchups[i].home],
+                teams[matchups[i].away],
+                group.GroupLetter,
+                _clock);
+            group.AddMatchToGroup(match);
+            matchCounter++;
+        }
+        return matchCounter;
+    }
+
+    private static (int home, int away)[] GetGroupRoundRobinMatchups()
+    {
+        return new (int home, int away)[]
+        {
+            (0, 3), (1, 2),
+            (0, 2), (1, 3),
+            (0, 1), (2, 3),
+        };
+    }
+
+    private DateTime[] CalculateMatchDatesForGroup(int groupIndex)
+    {
+        int batchIndex = groupIndex / GroupsPerBatch;
+        int positionInBatch = groupIndex % GroupsPerBatch;
+
+        DateTime round1Date = CalculateRoundDate(batchIndex, roundOffset: 0, positionInBatch);
+        DateTime round2Date = CalculateRoundDate(batchIndex, roundOffset: _config.SeparacionEntreFechas, positionInBatch);
+        DateTime round3Date = CalculateRoundDate(batchIndex, roundOffset: _config.SeparacionEntreFechas * 2, positionInBatch);
+
+        return new[] { round1Date, round1Date, round2Date, round2Date, round3Date, round3Date };
+    }
+
+    private DateTime CalculateRoundDate(int batchIndex, int roundOffset, int positionInBatch)
+    {
+        int daysFromStart = batchIndex + roundOffset;
+        int hour = StartHour + (positionInBatch % _config.MaxPartidosPorDia) * HoursBetweenMatches;
+        return _config.FechaInicioTorneo.Date.AddDays(daysFromStart).AddHours(hour);
+    }
+
     private void ValidateExistingFixture()
     {
         if (!_fixtureRepository.ContainsFixture())
-        {
             return;
-        }
-        
+
         var fixture = GetFixtureEntity();
 
         if (!fixture.IsStillValid(
@@ -140,34 +268,10 @@ public class FixtureService : IFixtureService
         }
     }
 
-    private void ReconstructGroups(Fixture fixture)
+    private static string NormalizeName(string name)
     {
-        var allMatches = _matchRepository.GetAllMatches();
-        
-        foreach (var group in fixture.Groups)
-        {
-            var groupMatches = allMatches
-                .Where(m => m.Group == group.GroupLetter)
-                .ToList();
-
-            //if (group.MatchesInGroup.Count == 6) continue;
-            
-            foreach (var match in groupMatches)
-                group.LoadMatchFromRepository(match);
-        }
-    }
-
-    public void DeleteFixture(Fixture fixture)
-    {
-        var teams = _teamRepository.GetAll();
-        foreach (var team in teams)
-        {
-            team.UpdateCurrentRanking(team.FifaRanking);
-            _teamRepository.Update(team);
-        }
-        
-        _crucesRepository.RemoveCruces();
-        _matchRepository.ClearMatches();
-        _fixtureRepository.RemoveFixture(fixture);
+        var lower = name.ToLowerInvariant();
+        var normalized = string.Concat(lower.Where(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c)));
+        return string.Join(" ", normalized.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
     }
 }
