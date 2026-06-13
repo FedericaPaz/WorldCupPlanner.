@@ -20,7 +20,7 @@
     <div class="card">
         <div class="card-header">
             <div class="icon">
-                <i class="bi bi-building"></i>
+                <i class="bi-pencil-square"></i>
             </div>
             <div>
                 <h3 class="card-title">Crear Nuevo Estadio</h3>
@@ -30,7 +30,6 @@
 
         <EditForm Model="_model" OnValidSubmit="HandleValidSubmit">
             <DataAnnotationsValidator />
-            <ValidationSummary />
 
             @if (!string.IsNullOrEmpty(_errorMessage))
             {

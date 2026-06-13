@@ -174,7 +174,16 @@
 
 .btn-bg-green {
     background: green;
-    border-color: green;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-bg-green:hover {
+    background: #15803d;
 }
 
 .edit-button {

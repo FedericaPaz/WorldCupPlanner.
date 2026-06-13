@@ -79,13 +79,13 @@ else
                         <button class="btn btn-sm btn-outline-primary me-2 edit-button"
                                 type="button"
                                 @onclick="() => GoToEdit(team.Name)">
-                            ✏️ Editar
+                            <i class="bi bi-pencil"></i>
                         </button>
 
                         <button class="btn btn-sm btn-outline-danger"
                                 type="button"
                                 @onclick="() => DeleteTeam(team.Name)">
-                            🗑️ Eliminar
+                            <i class="bi bi-trash"></i>
                         </button>
                     </td>
                 }

@@ -18,19 +18,22 @@
 
         @if (_pendientes > 0 && SessionService.IsEditor())
         {
-            <div class="d-flex gap-2 align-items-end">
-                <p class="text-muted mb-0">
+            <div class="d-flex gap-3 align-items-center">
+                <span class="text-muted small">
                     Motor: <strong>@_motorActual</strong>
-                </p>
+                </span>
 
                 <button class="btn-generar-cruces" @onclick="SimularPendientes" disabled="@_cargando">
                     @if (_cargando)
                     {
-                        <span>⏳ Simulando...</span>
+                        <span>Simulando...</span>
                     }
                     else
                     {
-                        <span>Simular pendientes (@_pendientes)</span>
+                        <span>
+                            <i class="bi bi-dice-5-fill"></i>
+                            Simular pendientes (@_pendientes)
+                        </span>
                     }
                 </button>
             </div>
@@ -39,12 +42,12 @@
 
     @if (!string.IsNullOrEmpty(_mensajeError))
     {
-        <div class="message error">⚠️ @_mensajeError</div>
+        <div class="message error"> @_mensajeError</div>
     }
 
     @if (!string.IsNullOrEmpty(_mensajeExito))
     {
-        <div class="message success">✅ @_mensajeExito</div>
+        <div class="message success"> @_mensajeExito</div>
     }
 
     <div class="filtros-container">

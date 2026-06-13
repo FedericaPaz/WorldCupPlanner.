@@ -187,14 +187,13 @@
 }
 
 .user-primary-button {
-    border: none;
-    background: #16a34a;
+    background: green;
     color: white;
-    padding: 0.85rem 1.25rem;
-    border-radius: 12px;
-    font-weight: 800;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: none;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(22, 163, 74, 0.22);
 }
 
 .user-primary-button:hover {

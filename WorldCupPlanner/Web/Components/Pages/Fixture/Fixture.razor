@@ -56,7 +56,8 @@ else if (!FixtureService.HasFixture())
                 </div>
 
                 <button class="btn btn-success btn-lg mt-3" @onclick="GenerateInitialFixture">
-                    ⚽ Generar Fixture
+                    Generar Fixture
+                    <i class="bi-dribbble"></i>
                 </button>
             }
             else if (SessionService.IsEditor())
@@ -83,7 +84,7 @@ else
 
     <div class="container">
         <div class="mb-3">
-            <p class="text-muted">Motor de simulación: <strong>@fixture.SimulationEngineName</strong></p>
+            <p class="text-muted small">Motor de simulación: <strong>@fixture.SimulationEngineName</strong></p>
         </div>
 
         @if (SessionService.IsEditor())
@@ -158,7 +159,7 @@ else
                                 @foreach (var team in group.Teams)
                                 {
                                     <div class="team-item d-flex align-items-center gap-2 py-1">
-                                        <span>⚽</span>
+                                        <span><i class="bi bi-dribbble"></i></span>
                                         <span>@team.Name</span>
                                     </div>
                                 }

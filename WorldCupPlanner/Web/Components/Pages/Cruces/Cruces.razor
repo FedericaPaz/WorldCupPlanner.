@@ -24,14 +24,16 @@
             var crucesPendientes = crucesUltimaRonda.Count(x => !x.HomeGoals.HasValue);
             @if (crucesPendientes > 0)
             {
-                <p class="text-warning">
+                <p class="text-danger">
                     Faltan <strong>@crucesPendientes</strong> resultado@(crucesPendientes == 1 ? "" : "s") en la ronda actual.
                 </p>
             }
             else
             {
                 <button class="btn-siguiente-ronda" @onclick="GenerarSiguienteRonda" disabled="@_cargando">
-                    <span class="btn-icon">@(_cargando ? "⏳" : "➕")</span>
+                    <span class="btn-icon">
+                        <i class="bi @(_cargando ? "bi-hourglass" : "bi-plus-lg")"></i>
+                    </span>
                     @(_cargando ? "Generando..." : "Siguiente ronda")
                 </button>
             }
@@ -41,8 +43,10 @@
     @if (!string.IsNullOrEmpty(_mensajeError))
     {
         <div class="error-mensaje">
-            <span>⚠@_mensajeError</span>
-            <button class="error-cerrar" @onclick="() => _mensajeError = null">✖</button>
+            <span><i class="bi bi-exclamation-triangle"></i>@_mensajeError</span>
+            <button class="error-cerrar" @onclick="() => _mensajeError = null">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
     }
 
@@ -50,14 +54,18 @@
     {
         <div class="success-mensaje">
             <span>@_mensajeExito</span>
-            <button class="success-cerrar" @onclick="() => _mensajeExito = null">✖</button>
+            <button class="success-cerrar" @onclick="() => _mensajeExito = null">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
     }
 
     @if (!FixtureService.HasFixture())
     {
         <div class="empty-state">
-            <div class="empty-icon">🏆</div>
+            <div class="empty-icon">
+                <i class="bi bi-trophy"></i>
+            </div>
             <h3>No hay fixture generado</h3>
             <p>Primero generá el fixture con 48 equipos y al menos 4 estadios.</p>
         </div>
@@ -65,7 +73,9 @@
     else if (!_hayCruces)
     {
         <div class="empty-state">
-            <div class="empty-icon">🏆</div>
+            <div class="empty-icon">
+                <i class="bi bi-trophy"></i>
+            </div>
             <h3>No hay cruces generados</h3>
             @if (!_todosLosPartidosJugados)
             {
@@ -76,7 +86,9 @@
             {
                 <p>La fase de grupos está completa. Podés generar los cruces.</p>
                 <button class="btn-generar-cruces" @onclick="Generar32avos" disabled="@_cargando">
-                    <span class="btn-icon">@(_cargando ? "⏳" : "✨")</span>
+                    <span class="btn-icon">
+                        <i class="bi @(_cargando ? "bi-hourglass" : "bi-diagram-3")"></i>
+                    </span>
                     @(_cargando ? "Generando..." : "Generar cruces")
                 </button>
             }
@@ -209,7 +221,9 @@
                 @if (_tercerPuesto.Any())
                 {
                     <div class="bracket-round">
-                        <h3 class="round-title">🥉 Tercer Puesto</h3>
+                        <h3 class="round-title">
+                            <i class="bi bi-award"></i> Tercer Puesto
+                        </h3>
                         <div class="round-matches">
                             @foreach (var partido in _tercerPuesto)
                             {
@@ -234,7 +248,7 @@
                                             var ganador = partido.HomeGoals > partido.AwayGoals
                                                 ? partido.HomeTeam
                                                 : partido.AwayTeam;
-                                            <span>🥉 Tercer puesto: @ganador</span>
+                                            <span><i class="bi bi-award"></i> Tercer puesto: @ganador</span>
                                         }
                                         else
                                         {
@@ -250,7 +264,9 @@
                 {
                     <div class="bracket-round final-round">
                         <h3 class="round-title final-title">
-                            <span>🏆</span> Final <span>🏆</span>
+                            <span><i class="bi bi-trophy"></i></span>
+                            Final
+                            <span><i class="bi bi-trophy"></i></span>
                         </h3>
                         <div class="round-matches">
                             @foreach (var partido in _final)
@@ -276,7 +292,7 @@
                                             var ganador = partido.HomeGoals > partido.AwayGoals
                                                 ? partido.HomeTeam
                                                 : partido.AwayTeam;
-                                            <span> 🥇 Campeon: @ganador</span>
+                                            <span><i class="bi bi-trophy"></i> Campeon: @ganador</span>
                                         }
                                         else
                                         {
@@ -294,7 +310,7 @@
 
     <div class="info-footer">
         <p class="info-text">
-            <strong>ℹ️ Información:</strong> Los cruces se generan automáticamente una vez finalizada la fase de grupos.
+            <strong><i class="bi bi-info-circle"></i> Información:</strong> Los cruces se generan automáticamente una vez finalizada la fase de grupos.
             Los primeros, segundos y mejores terceros avanzan a 32avos de final.
         </p>
     </div>

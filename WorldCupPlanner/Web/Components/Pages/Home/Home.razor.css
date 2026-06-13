@@ -76,6 +76,7 @@
 .hero-icon {
     font-size: 4rem;
     margin-bottom: 0.5rem;
+    color: #ffffff;
     animation: bounce 2s ease-in-out infinite;
 }
 

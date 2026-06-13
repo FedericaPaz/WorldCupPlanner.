@@ -39,13 +39,13 @@
         }
         else
         {
-            <EditForm Model="_request" OnSubmit="HandleSubmit">
+            <EditForm Model="_request" OnValidSubmit="HandleSubmit">
                 <DataAnnotationsValidator />
-                <ValidationSummary />
 
                 <div class="form-section">
                     <label>Nombre</label>
                     <InputText class="form-control" @bind-Value="_request.Name" />
+                    <ValidationMessage For="@(() => _request.Name)" />
                 </div>
 
                 <div class="form-section">
@@ -57,11 +57,16 @@
                             <option value="@conf.Name">@conf.Name (@conf.MaxTeams cupos máximos)</option>
                         }
                     </InputSelect>
+                    <ValidationMessage For="@(() => _request.ConfederationName)" />
                 </div>
 
                 <div class="form-section">
                     <label>Ranking FIFA</label>
-                    <InputNumber class="form-control" @bind-Value="_request.FifaRanking" />
+                    <InputNumber class="form-control"
+                                 @bind-Value="_request.FifaRanking"
+                                 DisplayName="Ranking FIFA"
+                                 ParsingErrorMessage="El campo {0} debe ser un número." />
+                    <ValidationMessage For="@(() => _request.FifaRanking)" />
                 </div>
                 
                 <div class="form-section">

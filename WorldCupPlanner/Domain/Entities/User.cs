@@ -22,7 +22,7 @@ public class User
         get { return _firstName; }
         private set
         {
-            EnsureRequiredText(value, "El nombre no puede estar vacío.", nameof(FirstName));
+            EnsureRequiredText(value, "El nombre no puede estar vacío.");
             _firstName = value.Trim();
         }
     }
@@ -32,7 +32,7 @@ public class User
         get { return _lastName; }
         private set
         {
-            EnsureRequiredText(value, "El apellido no puede estar vacío.", nameof(LastName));
+            EnsureRequiredText(value, "El apellido no puede estar vacío.");
             _lastName = value.Trim();
         }
     }
@@ -121,37 +121,37 @@ public class User
         _roles = new List<UserRole>(roles);
     }
 
-    private static void EnsureRequiredText(string value, string message, string parameterName)
+    private static void EnsureRequiredText(string value, string message)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            throw new ArgumentException(message, parameterName);
+            throw new ArgumentException(message);
         }
     }
-
     private static void EnsureValidEmail(string email)
     {
-        EnsureRequiredText(email, "El email no puede estar vacío.", nameof(email));
+        EnsureRequiredText(email, "El email no puede estar vacío.");
 
         if (!email.Contains("@"))
         {
-            throw new ArgumentException("El formato del email no es válido.", nameof(email));
+            throw new ArgumentException("El formato del email no es válido.");
         }
     }
 
+    
     private void EnsureValidBirthDate(DateTime birthDate)
     {
         DateTime today = _clock?.Now.Date ?? DateTime.Today;
 
         if (birthDate > today)
         {
-            throw new ArgumentException("La fecha de nacimiento no puede ser futura.", nameof(birthDate));
+            throw new ArgumentException("La fecha de nacimiento no puede ser futura.");
         }
     }
 
     private static void EnsureValidPassword(string password)
     {
-        EnsureRequiredText(password, "La contraseña no puede estar vacía.", nameof(password));
+        EnsureRequiredText(password, "La contraseña no puede estar vacía.");
         EnsurePasswordHasValidLength(password);
         EnsurePasswordHasUppercase(password);
         EnsurePasswordHasLowercase(password);
@@ -163,7 +163,7 @@ public class User
     {
         if (password.Length < MinPasswordLength)
         {
-            throw new ArgumentException("La contraseña debe tener al menos 8 caracteres.", nameof(password));
+            throw new ArgumentException("La contraseña debe tener al menos 8 caracteres.");
         }
     }
 
@@ -171,7 +171,7 @@ public class User
     {
         if (!password.Any(char.IsUpper))
         {
-            throw new ArgumentException("La contraseña debe contener al menos una letra mayúscula.", nameof(password));
+            throw new ArgumentException("La contraseña debe contener al menos una letra mayúscula.");
         }
     }
 
@@ -179,7 +179,7 @@ public class User
     {
         if (!password.Any(char.IsLower))
         {
-            throw new ArgumentException("La contraseña debe contener al menos una letra minúscula.", nameof(password));
+            throw new ArgumentException("La contraseña debe contener al menos una letra minúscula.");
         }
     }
 
@@ -187,15 +187,16 @@ public class User
     {
         if (!password.Any(char.IsDigit))
         {
-            throw new ArgumentException("La contraseña debe contener al menos un número.", nameof(password));
+            throw new ArgumentException("La contraseña debe contener al menos un número.");
         }
     }
 
+    
     private static void EnsurePasswordHasSpecialCharacter(string password)
     {
         if (!password.Any(character => !char.IsLetterOrDigit(character)))
         {
-            throw new ArgumentException("La contraseña debe contener al menos un carácter especial.", nameof(password));
+            throw new ArgumentException("La contraseña debe contener al menos un carácter especial.");
         }
     }
 
@@ -203,12 +204,12 @@ public class User
     {
         if (roles == null || roles.Count == 0)
         {
-            throw new ArgumentException("El usuario debe tener al menos un rol asignado.", nameof(roles));
+            throw new ArgumentException("El usuario debe tener al menos un rol asignado.");
         }
 
         if (roles.Count != roles.Distinct().Count())
         {
-            throw new ArgumentException("El usuario no puede tener roles duplicados.", nameof(roles));
+            throw new ArgumentException("El usuario no puede tener roles duplicados.");
         }
     }
 
