@@ -7,7 +7,7 @@ using IRepository;
 using IServices;
 using Repository;
 using Services;
-using Services.Simulation; // <-- Agregado para DefaultSimulationEngineFactory
+using Services.Simulation; 
 using ServicesTests.Stubs;
 using ServicesTests.TestHelpers;
 
@@ -29,9 +29,8 @@ public class MatchServiceTests
     private LogService _logService = null!;
     private IRankingService _rankingService = null!;
     private FixtureRepositoryStub _fixtureRepository = null!;
-    private TournamentConfig _config = null!; // <-- Movido arriba para poder usarlo en el constructor
-    private SimulationService _simulationService = null!; // <-- Agregado campo para la simulación
-
+    private TournamentConfig _config = null!; 
+    private SimulationService _simulationService = null!; 
     [TestInitialize]
     public void Setup()
     {
@@ -53,9 +52,8 @@ public class MatchServiceTests
         _clock = new DateTimeMatchStub(new DateTime(2027, 1, 1));
         _rankingService = new RankingServiceStub();
         _fixtureRepository = new FixtureRepositoryStub();
-        _config = new TournamentConfig(); // <-- Inicializado aquí
-
-        // Inicializamos el servicio de simulación requerido
+        _config = new TournamentConfig(); 
+        
         _simulationService = new SimulationService(
             _logService, 
             _matchRepository, 
@@ -71,9 +69,9 @@ public class MatchServiceTests
             _fixtureRepository,
             _notificationService,
             _rankingService,
-            new DefaultSimulationEngineFactory(), // <-- Pasamos la fábrica
-            _simulationService,                  // <-- Pasamos el servicio de simulación
-            _config);                             // <-- Pasamos la configuración del torneo
+            new DefaultSimulationEngineFactory(),
+            _simulationService,                 
+            _config);                            
     }
 
     [TestCleanup]

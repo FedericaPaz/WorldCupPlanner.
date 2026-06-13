@@ -50,8 +50,8 @@ public class CruceServiceTests
             _config,
             _matchRepository,
             _stubFixtureRepository,
-            _clock,                                         // <-- Requerido por dev
-            new DefaultSimulationEngineFactory());          // <-- Requerido por grasp-creator-skill
+            _clock,                                         
+            new DefaultSimulationEngineFactory());        
     }
 
     private Fixture CreateFixtureWithResults()
@@ -238,8 +238,7 @@ public class CruceServiceTests
             _stubStadiumRepository.AddStadium(e);
 
         _service.GenerateRoundOf32();
-
-        // Si necesitás asertar comportamiento específico del motor inyectado, podés hacerlo acá.
+        
         Assert.IsNotNull(_stubCrucesRepository.AddedCruces);
     }
 

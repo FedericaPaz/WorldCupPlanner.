@@ -19,8 +19,8 @@ public class MatchService : IMatchService
     private readonly INotificationService _notificationService;
     private readonly IRankingService _rankingService;
     private readonly ISimulationEngineFactory _engineFactory;
-    private readonly ISimulationService _simulationService; // <-- Agregado para soportar los métodos de simulación
-    private readonly TournamentConfig _config;             // <-- Agregado para usar _config.SemillaSimulation
+    private readonly ISimulationService _simulationService; 
+    private readonly TournamentConfig _config;            
 
     public MatchService(
         IMatchRepository matchRepository,
@@ -30,9 +30,9 @@ public class MatchService : IMatchService
         IFixtureRepository fixtureRepository,
         INotificationService notificationService,
         IRankingService rankingService,
-        ISimulationEngineFactory engineFactory,         // <-- Cambiado de New() a Inyección
-        ISimulationService simulationService,           // <-- Inyectado
-        TournamentConfig config)                         // <-- Inyectado
+        ISimulationEngineFactory engineFactory,      
+        ISimulationService simulationService,       
+        TournamentConfig config)                        
     {
         _matchRepository = matchRepository;
         _teamRepository = teamRepository;
@@ -166,7 +166,6 @@ public class MatchService : IMatchService
             }
         }
         
-        // Solo le pasamos el engine, tal como pide tu interfaz
         _simulationService.SimulateGroupStage(engine);
     }
 
