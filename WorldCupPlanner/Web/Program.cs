@@ -1,16 +1,15 @@
 using Blazored.LocalStorage;
-using Domain.Calculators;
 using Domain.Entities;
-using Web.Components;
-using IRepository;
-using IServices;
-using Repository;
-using Services;
-using Web.Services;
 using Domain.Import;
 using Domain.Import.Interfaces;
 using Domain.Interfaces;
+using IRepository;
+using IServices;
 using Microsoft.EntityFrameworkCore;
+using Repository;
+using Services;
+using Web.Components;
+using Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +17,6 @@ builder.Services.AddDbContext<WorldCupPlannerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
-
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -38,7 +36,6 @@ builder.Services.AddSingleton<IDateTimeMatch, SystemDateTimeMatch>();
 
 builder.Services.AddScoped<IFixtureRepository, FixtureRepository>();
 builder.Services.AddScoped<IFixtureService, FixtureService>();
-builder.Services.AddScoped<FixtureGenerator>();
 
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 
@@ -53,10 +50,9 @@ builder.Services.AddScoped<IImportService, ImportService>();
 
 builder.Services.AddScoped<TournamentConfig>();
 builder.Services.AddScoped<IConfigService, ConfigService>();
-builder.Services.AddScoped<ISimulationService, CrucesSimulationService>();
+builder.Services.AddScoped<ISimulationService, SimulationService>();
 
 builder.Services.AddScoped<ICrucesRepository, EfCrucesRepository>();
-builder.Services.AddScoped<ICrucesGeneratorService, CrucesGeneratorService>();
 builder.Services.AddScoped<ICruceService, CruceService>();
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
@@ -64,8 +60,10 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<IExportService, ExportService>();
 
-builder.Services.AddScoped<RankingCalculator>();
 builder.Services.AddScoped<IRankingService, RankingService>();
+
+Fixture.RegisterEngine("Aleatorio puro", () => new PureRandomSimulationEngine());
+Fixture.RegisterEngine("Probabilístico", () => new ProbabilisticSimulationEngine());
 
 var app = builder.Build();
 
@@ -76,7 +74,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
 

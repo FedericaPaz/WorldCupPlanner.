@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Domain.Entities;
+using Domain.Enums;
 using DTOs.User;
 using Repository;
 using Services;
@@ -187,7 +188,7 @@ public class UserServiceTests
     [TestMethod]
     public void GenerateDefaultPassword_ShouldReturnValidPassword()
     {
-        var pwd = _userService.GenerateDefaultPassword();
+        var pwd = User.GenerateDefaultPassword();
 
         Assert.IsNotNull(pwd);
         Assert.AreEqual(10, pwd.Length);
@@ -260,11 +261,11 @@ public class UserServiceTests
         _userService.CreateUser("Juan", "Perez", "juan.perez@gmail.com",
             new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
 
-        _userService.ResetPassword("juan.perez@gmail.com", "NewPassword1!");
+        string newPassword = _userService.ResetPassword("juan.perez@gmail.com");
 
         var user = _userService.GetUser("juan.perez@gmail.com");
         Assert.IsNotNull(user);
-        Assert.IsTrue(user.HasPassword("NewPassword1!"));
+        Assert.IsTrue(user.HasPassword(newPassword));
     }
 
     [TestMethod]

@@ -95,6 +95,6 @@ public class Stadium : IStadium
     private void EnsureValidCapacity(int capacity)
     {
         if (capacity < MinLocativeCapacity)
-            throw new ArgumentOutOfRangeException(nameof(capacity), capacity, $"Capacity must be at least {MinLocativeCapacity}.");
+            throw new ArgumentException($"Capacity must be at least {MinLocativeCapacity}.", nameof(capacity));
     }
 }

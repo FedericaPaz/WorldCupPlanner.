@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Domain.Calculators;
 using DomainTests.Stubs;
 using Services;
 using ServicesTests.Stubs;
@@ -13,7 +12,6 @@ public class RankingServiceTests
     private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
     private TeamRepositoryStub _teamRepository = null!;
-    private RankingCalculator _rankingCalculator = null!;
     private Team _strongTeam = null!;
     private Team _weakTeam = null!;
     private Match _match = null!;
@@ -37,17 +35,14 @@ public class RankingServiceTests
         _teamRepository.Add(_strongTeam);
         _teamRepository.Add(_weakTeam);
 
-        _rankingCalculator = new RankingCalculator();
-        _service = new RankingService(_logService, _rankingCalculator, _teamRepository);
+        _service = new RankingService(_logService, _teamRepository);
     }
 
     [TestMethod]
     public void UpdateRankingsAfterMatch_WhenWeakAwayTeamWins_ShouldIncreaseAwayTeamCurrentRanking()
     {
         _match.SetMatchResult(0, 1);
-
         _service.UpdateRankingsAfterMatch(_match);
-
         Assert.AreEqual(1220, _weakTeam.CurrentRanking);
     }
 
@@ -55,9 +50,7 @@ public class RankingServiceTests
     public void UpdateRankingsAfterMatch_WhenWeakAwayTeamWins_ShouldDecreaseHomeTeamCurrentRanking()
     {
         _match.SetMatchResult(0, 1);
-
         _service.UpdateRankingsAfterMatch(_match);
-
         Assert.AreEqual(1480, _strongTeam.CurrentRanking);
     }
 
@@ -70,22 +63,20 @@ public class RankingServiceTests
         var stadium = new Stadium("Estadio", "Ciudad", null, 50000);
         var match = new Match(2, clock.Now, stadium, home, away, 'A', clock);
 
-        _teamRepository.Add(home);   
-        _teamRepository.Add(away);   
+        _teamRepository.Add(home);
+        _teamRepository.Add(away);
 
         match.SetMatchResult(1, 1);
-
         _service.UpdateRankingsAfterMatch(match);
 
         Assert.AreEqual(1500, home.CurrentRanking);
         Assert.AreEqual(1500, away.CurrentRanking);
     }
-    
+
     [TestMethod]
     public void UpdateRankingsAfterMatch_WhenStrongTeamWins_ShouldChangeRankingsSlightly()
     {
         _match.SetMatchResult(1, 0);
-
         _service.UpdateRankingsAfterMatch(_match);
 
         Assert.IsTrue(_strongTeam.CurrentRanking > 1500, "El equipo fuerte que gana debería subir ligeramente");
@@ -96,7 +87,6 @@ public class RankingServiceTests
     public void UpdateRankingsAfterMatch_ShouldNotModifyFifaRanking()
     {
         _match.SetMatchResult(0, 1);
-
         _service.UpdateRankingsAfterMatch(_match);
 
         Assert.AreEqual(1500, _strongTeam.FifaRanking);
@@ -120,8 +110,8 @@ public class RankingServiceTests
     {
         var clock = new DateTimeMatchStub(new DateTime(2026, 6, 1));
         var confederation = new Confederation("CONMEBOL");
-        var strongTeam = new Team("Equipo Fuerte", confederation, 1500);
-        var weakTeam = new Team("Equipo Debil", confederation, 1200);
+        var strongTeam = new Team("Equipo Fuerte Log", confederation, 1500);
+        var weakTeam = new Team("Equipo Debil Log", confederation, 1200);
         var stadium = new Stadium("Centenario", "Montevideo", "Estadio principal", 60000);
         var match = new Match(1, clock.Now, stadium, strongTeam, weakTeam, 'A', clock);
 
@@ -130,11 +120,10 @@ public class RankingServiceTests
         var teamRepository = new TeamRepositoryStub();
         teamRepository.Add(strongTeam);
         teamRepository.Add(weakTeam);
-    
-        var service = new RankingService(logService, new RankingCalculator(), teamRepository);
-        
-        match.SetMatchResult(0, 1);
 
+        var service = new RankingService(logService, teamRepository);
+
+        match.SetMatchResult(0, 1);
         service.UpdateRankingsAfterMatch(match);
 
         var logs = logRepository.GetAll();
@@ -143,7 +132,7 @@ public class RankingServiceTests
         Assert.AreEqual("system", logs[0].UserEmail);
         Assert.AreEqual("Ranking", logs[0].Category);
         Assert.AreEqual("RankingUpdated", logs[0].Action);
-        StringAssert.Contains(logs[0].Detail, "Equipo Fuerte");
-        StringAssert.Contains(logs[0].Detail, "Equipo Debil");
+        StringAssert.Contains(logs[0].Detail, "Equipo Fuerte Log");
+        StringAssert.Contains(logs[0].Detail, "Equipo Debil Log");
     }
 }

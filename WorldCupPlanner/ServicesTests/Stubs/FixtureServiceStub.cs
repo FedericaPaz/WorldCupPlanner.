@@ -22,7 +22,10 @@ public class FixtureServiceStub : IFixtureService
 
     public Fixture GetFixtureEntity()
     {
-        return _repository.GetFixture();
+        var fixture = _repository.GetFixture();
+        if (fixture == null)
+            throw new InvalidOperationException("No hay fixture generado.");
+        return fixture;
     }
 
     public void DeleteFixture(Fixture fixture)

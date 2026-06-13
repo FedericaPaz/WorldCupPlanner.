@@ -1,29 +1,32 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using Domain.Interfaces;
 using IRepository;
 using Services;
 using ServicesTests.Stubs;
+using DomainTests.Stubs;
 
 namespace ServicesTests;
 
 [TestClass]
 public class CruceServiceTests
 {
-    private static readonly DateTime FechaCreacionClock  = new DateTime(2027, 6, 10);
-    private static readonly DateTime FechaPartido        = new DateTime(2027, 6, 12);
-    private static readonly DateTime FechaResultadoClock = new DateTime(2027, 6, 15);
-    
+    private static readonly DateTime FechaCreacionClock  = new DateTime(2026, 1, 1);
+    private static readonly DateTime FechaPartido        = new DateTime(2026, 6, 25);
+    private static readonly DateTime FechaResultadoClock = new DateTime(2026, 6, 26);
+
     private CrucesRepositoryStub _stubCrucesRepository = null!;
     private FixtureRepositoryStub _stubFixtureRepository = null!;
     private StadiumRepositoryStub _stubStadiumRepository = null!;
-    private CrucesGeneratorServiceStub _stubCrucesGenerator = null!;
     private CruceService _service = null!;
     private IMatchRepository _matchRepository = null!;
     private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
     private RankingServiceStub _rankingService = null!;
+    private IDateTimeMatch _clock = null!;
+    private TournamentConfig _config = null!;
     private int _nextId;
-    
+
     [TestInitialize]
     public void Setup()
     {
@@ -31,37 +34,36 @@ public class CruceServiceTests
         _stubCrucesRepository = new CrucesRepositoryStub();
         _stubFixtureRepository = new FixtureRepositoryStub();
         _stubStadiumRepository = new StadiumRepositoryStub();
-        _stubCrucesGenerator = new CrucesGeneratorServiceStub();
         _matchRepository = new MatchRepositoryStub();
-
         _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
         _rankingService = new RankingServiceStub();
+        _clock = new ClockStub(FechaCreacionClock);
+        _config = new TournamentConfig();
 
         _service = new CruceService(
             _stubCrucesRepository,
             new FixtureServiceStub(_stubFixtureRepository),
             _stubStadiumRepository,
-            _stubCrucesGenerator,
-            new CrucesSimulationService(_logService, _matchRepository, _rankingService),
-            new TournamentConfig(),
+            new SimulationService(_logService, _matchRepository, _rankingService, _stubFixtureRepository, _config),
+            _config,
             _matchRepository,
-            _stubFixtureRepository);
+            _stubFixtureRepository,
+            _clock);
     }
 
-
-    private Fixture CreateFixture()
+    private Fixture CreateFixtureWithResults()
     {
-        TournamentConfig config = new TournamentConfig();
-        Fixture fixture = new Fixture(config);
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
         fixture.InitializeGroups();
-        List<Group> grupos = Create12GroupsWithTeams();
-        foreach (Group grupo in grupos)
+        var grupos = Create12GroupsWithTeams();
+        foreach (var grupo in grupos)
         {
-            Group grupoFixture = fixture.Groups.First(x => x.GroupLetter == grupo.GroupLetter);
-            foreach (Team team in grupo.TeamsInGroup)
+            var grupoFixture = fixture.Groups.First(x => x.GroupLetter == grupo.GroupLetter);
+            foreach (var team in grupo.TeamsInGroup)
                 grupoFixture.AddTeamToGroup(team);
-            foreach (Match match in grupo.MatchesInGroup)
+            foreach (var match in grupo.MatchesInGroup)
                 grupoFixture.AddMatchToGroup(match);
         }
         fixture.AdvanceToPhase(TournamentPhase.GroupStage);
@@ -70,13 +72,13 @@ public class CruceServiceTests
 
     private List<Group> Create12GroupsWithTeams()
     {
-        List<Group> grupos = new List<Group>();
+        var grupos = new List<Group>();
         for (char letra = 'A'; letra <= 'L'; letra++)
         {
-            Group grupo = new Group(letra);
+            var grupo = new Group(letra);
             for (int i = 0; i < 4; i++)
             {
-                Team equipo = new Team($"Equipo{letra}{i + 1}", new Confederation("UEFA"), 300 + i);
+                var equipo = new Team($"Equipo{letra}{i + 1}", new Confederation("UEFA"), 300 + i * 10);
                 grupo.AddTeamToGroup(equipo);
             }
             CreateResults(grupo);
@@ -98,19 +100,13 @@ public class CruceServiceTests
 
     private void CreateResults(Group grupo)
     {
-        List<Team> teams = grupo.TeamsInGroup.ToList();
-        Match m1 = CreateMatch(teams[0], teams[1], 2, 0, grupo.GroupLetter);
-        Match m2 = CreateMatch(teams[0], teams[2], 2, 0, grupo.GroupLetter);
-        Match m3 = CreateMatch(teams[0], teams[3], 2, 0, grupo.GroupLetter);
-        Match m4 = CreateMatch(teams[1], teams[2], 1, 0, grupo.GroupLetter);
-        Match m5 = CreateMatch(teams[1], teams[3], 1, 0, grupo.GroupLetter);
-        Match m6 = CreateMatch(teams[2], teams[3], 1, 0, grupo.GroupLetter);
-        grupo.AddMatchToGroup(m1);
-        grupo.AddMatchToGroup(m2);
-        grupo.AddMatchToGroup(m3);
-        grupo.AddMatchToGroup(m4);
-        grupo.AddMatchToGroup(m5);
-        grupo.AddMatchToGroup(m6);
+        var teams = grupo.TeamsInGroup.ToList();
+        grupo.AddMatchToGroup(CreateMatch(teams[0], teams[1], 2, 0, grupo.GroupLetter));
+        grupo.AddMatchToGroup(CreateMatch(teams[0], teams[2], 2, 0, grupo.GroupLetter));
+        grupo.AddMatchToGroup(CreateMatch(teams[0], teams[3], 2, 0, grupo.GroupLetter));
+        grupo.AddMatchToGroup(CreateMatch(teams[1], teams[2], 1, 0, grupo.GroupLetter));
+        grupo.AddMatchToGroup(CreateMatch(teams[1], teams[3], 1, 0, grupo.GroupLetter));
+        grupo.AddMatchToGroup(CreateMatch(teams[2], teams[3], 1, 0, grupo.GroupLetter));
     }
 
     private Match CreateMatch(Team homeTeam, Team awayTeam, int homeGoals, int awayGoals, char groupLetter)
@@ -126,7 +122,6 @@ public class CruceServiceTests
         return match;
     }
 
-
     private List<Cruce> CrearCrucesDummy(int cantidad, TournamentPhase fase)
     {
         var cruces = new List<Cruce>();
@@ -137,7 +132,7 @@ public class CruceServiceTests
             var partido   = new Match(
                 _nextId++, FechaPartido,
                 new Stadium("Estadio", "Ciudad", "Desc", 50000),
-                local, visitante, 'A',
+                local, visitante, 'N',
                 new ClockStub(FechaCreacionClock));
 
             partido.SetClock(new ClockStub(FechaResultadoClock));
@@ -147,93 +142,149 @@ public class CruceServiceTests
         return cruces;
     }
 
-
     [TestMethod]
-    public void GenerateRoundOf32_WhenCalled_GeneratesAndAddCruces()
+    public void GenerateRoundOf32_WhenCalled_GeneratesAndAddsCruces()
     {
-        Fixture fixture = CreateFixture();
-        List<Stadium> estadios = CreateStadiums();
-        List<Cruce> crucesGenerados = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
+        var fixture = CreateFixtureWithResults();
+        var estadios = CreateStadiums();
         _stubFixtureRepository.AddFixture(fixture);
         foreach (var e in estadios)
             _stubStadiumRepository.AddStadium(e);
-        _stubCrucesGenerator.SetGeneratedCruces(crucesGenerados);
+
         _service.GenerateRoundOf32();
+
         Assert.IsTrue(_stubCrucesRepository.RemoveCalled);
-        Assert.AreEqual(crucesGenerados.Count, _stubCrucesRepository.AddedCruces.Count);
-        Assert.AreEqual(12, _stubCrucesGenerator.LastGroups.Count);
-        Assert.AreEqual(4, _stubCrucesGenerator.LastStadiums.Count);
-        Assert.AreEqual(new TournamentConfig().SemillaCrucesFase, _stubCrucesGenerator.LastSeed);
+        Assert.AreEqual(16, _stubCrucesRepository.AddedCruces.Count);
     }
-    
+
     [TestMethod]
     public void GenerateRoundOf32_WhenNoFixtureExists_ThrowsException()
     {
         _stubFixtureRepository.AddFixture(null);
-        Assert.ThrowsException<ArgumentNullException>(() => _service.GenerateRoundOf32());
+        Assert.ThrowsException<InvalidOperationException>(() => _service.GenerateRoundOf32());
     }
-    
+
     [TestMethod]
     public void GenerateNextRound_WhenCurrentRoundIsRoundOf32_GeneratesRoundOf16()
     {
-        List<Cruce> crucesActuales = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
-        List<Stadium> estadios = CreateStadiums();
-        List<Cruce> nuevosCruces = CrearCrucesDummy(8, TournamentPhase.RoundOf16);
+        var crucesActuales = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
+        var estadios = CreateStadiums();
         _stubCrucesRepository.SetCruces(crucesActuales);
         foreach (var e in estadios)
             _stubStadiumRepository.AddStadium(e);
-        _stubCrucesGenerator.SetGeneratedCruces(nuevosCruces);
+
         _service.GenerateNextRound();
-        Assert.AreEqual(new TournamentConfig().SemillaCrucesFase, _stubCrucesGenerator.LastSeed);
-        Assert.AreEqual(16, _stubCrucesGenerator.LastRound.Count);
-        Assert.AreEqual(4, _stubCrucesGenerator.LastStadiums.Count);
-        Assert.AreEqual(nuevosCruces.Count, _stubCrucesRepository.AddedCruces.Count);
+
+        Assert.IsTrue(_stubCrucesRepository.AddedCruces.Count > 0);
     }
-    
+
     [TestMethod]
     public void GenerateNextRound_UsesOnlyLatestPhase()
     {
-        List<Cruce> cruces = new List<Cruce>();
-        List<Stadium> estadios = CreateStadiums();
+        var cruces = new List<Cruce>();
         cruces.AddRange(CrearCrucesDummy(16, TournamentPhase.RoundOf32));
         cruces.AddRange(CrearCrucesDummy(8, TournamentPhase.RoundOf16));
+        var estadios = CreateStadiums();
         _stubCrucesRepository.SetCruces(cruces);
         foreach (var e in estadios)
             _stubStadiumRepository.AddStadium(e);
-        _stubCrucesGenerator.SetGeneratedCruces(CrearCrucesDummy(4, TournamentPhase.QuarterFinals));
+
         _service.GenerateNextRound();
-        Assert.AreEqual(TournamentPhase.RoundOf16, _stubCrucesGenerator.LastRound[0].Phase);
+
+        Assert.IsTrue(_stubCrucesRepository.AddedCruces.All(c => c.Phase == TournamentPhase.QuarterFinals));
     }
-    
+
     [TestMethod]
     public void GenerateNextRound_WhenNoCrucesExist_ThrowsException()
     {
         _stubCrucesRepository.SetCruces(new List<Cruce>());
-        Assert.ThrowsException<ArgumentNullException>(() => _service.GenerateNextRound());
+        Assert.ThrowsException<InvalidOperationException>(() => _service.GenerateNextRound());
     }
-    
+
     [TestMethod]
     public void GenerateNextRound_WhenCurrentPhaseIsFinal_ThrowsException()
     {
-        List<Cruce> crucesFinal = CrearCrucesDummy(1, TournamentPhase.Final);
+        var crucesFinal = CrearCrucesDummy(1, TournamentPhase.Final);
         _stubCrucesRepository.SetCruces(crucesFinal);
         Assert.ThrowsException<InvalidOperationException>(() => _service.GenerateNextRound());
     }
-    
+
     [TestMethod]
     public void GetAllCruces_WhenCrucesExist_ReturnsMappedResponses()
     {
-        List<Cruce> cruces = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
+        var cruces = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
         _stubCrucesRepository.SetCruces(cruces);
         var result = _service.GetAllCruces();
         Assert.AreEqual(16, result.Count);
     }
-    
+
     [TestMethod]
     public void GetAllCruces_WhenNoCruces_ReturnsEmptyList()
     {
         _stubCrucesRepository.SetCruces(new List<Cruce>());
         var result = _service.GetAllCruces();
         Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void GenerateRoundOf32_NoDuplicateTeams()
+    {
+        var fixture = CreateFixtureWithResults();
+        var estadios = CreateStadiums();
+        _stubFixtureRepository.AddFixture(fixture);
+        foreach (var e in estadios)
+            _stubStadiumRepository.AddStadium(e);
+
+        _service.GenerateRoundOf32();
+
+        var cruces = _stubCrucesRepository.AddedCruces;
+        var todosEquipos = new HashSet<string>();
+        foreach (var cruce in cruces)
+        {
+            Assert.IsFalse(todosEquipos.Contains(cruce.Match.HomeTeam.Name),
+                $"Equipo {cruce.Match.HomeTeam.Name} aparece múltiples veces");
+            Assert.IsFalse(todosEquipos.Contains(cruce.Match.AwayTeam.Name),
+                $"Equipo {cruce.Match.AwayTeam.Name} aparece múltiples veces");
+            todosEquipos.Add(cruce.Match.HomeTeam.Name);
+            todosEquipos.Add(cruce.Match.AwayTeam.Name);
+        }
+        Assert.AreEqual(32, todosEquipos.Count);
+    }
+
+    [TestMethod]
+    public void GenerateRoundOf32_ShouldHaveCorrectStructure_A8_B8()
+    {
+        var fixture = CreateFixtureWithResults();
+        var estadios = CreateStadiums();
+        _stubFixtureRepository.AddFixture(fixture);
+        foreach (var e in estadios)
+            _stubStadiumRepository.AddStadium(e);
+
+        _service.GenerateRoundOf32();
+
+        var cruces = _stubCrucesRepository.AddedCruces;
+        Assert.AreEqual(8, cruces.Count(c => c.Name.StartsWith("A")), "8 cruces tipo A");
+        Assert.AreEqual(8, cruces.Count(c => c.Name.StartsWith("B")), "8 cruces tipo B");
+    }
+
+    [TestMethod]
+    public void GenerateRoundOf32_AllCrucesHaveValidMatch()
+    {
+        var fixture = CreateFixtureWithResults();
+        var estadios = CreateStadiums();
+        _stubFixtureRepository.AddFixture(fixture);
+        foreach (var e in estadios)
+            _stubStadiumRepository.AddStadium(e);
+
+        _service.GenerateRoundOf32();
+
+        foreach (var cruce in _stubCrucesRepository.AddedCruces)
+        {
+            Assert.IsNotNull(cruce.Match);
+            Assert.IsNotNull(cruce.Match.HomeTeam);
+            Assert.IsNotNull(cruce.Match.AwayTeam);
+            Assert.IsNotNull(cruce.Match.Stadium);
+            Assert.AreNotEqual(cruce.Match.HomeTeam.Name, cruce.Match.AwayTeam.Name);
+        }
     }
 }

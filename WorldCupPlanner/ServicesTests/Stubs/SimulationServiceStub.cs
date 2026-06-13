@@ -8,10 +8,28 @@ public class SimulationServiceStub : ISimulationService
 {
     public string LastUsedEngineName { get; private set; } = string.Empty;
 
+    public void SimulateMatch(int matchId, int seed)
+    {
+    }
+
+    public void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
+    {
+        LastUsedEngineName = engine.Name;
+    }
+
     public (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed, ISimulationEngine engine)
     {
         LastUsedEngineName = engine.Name;
         return (2, 1);
+    }
+
+    public void SimulateGroupStage()
+    {
+    }
+
+    public void SimulateGroupStage(ISimulationEngine engine)
+    {
+        LastUsedEngineName = engine.Name;
     }
 
     public void SimulateGroupStage(List<Group> groups, int seed, ISimulationEngine engine)

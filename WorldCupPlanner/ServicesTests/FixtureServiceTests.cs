@@ -1,27 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 using Domain.Enums;
+using Domain.Interfaces;
 using IRepository;
 using Repository;
 using Services;
 using ServicesTests.Stubs;
+using DomainTests.Stubs;
 
 namespace ServicesTests;
 
 [TestClass]
 public class FixtureServiceTests
 {
-    private WorldCupPlannerContext _context;
+    private WorldCupPlannerContext _context = null!;
     private FixtureRepository _fixtureRepository = null!;
     private FixtureService _service = null!;
     private ITeamRepository _teamRepository = null!;
     private IStadiumRepository _stadiumRepository = null!;
     private TournamentConfig _config = null!;
     private Fixture _fixture = null!;
-    private FixtureGenerator _fixtureGenerator = null!;
     private IMatchRepository _matchRepository = null!;
     private ICrucesRepository _crucesRepository = null!;
-    private IGroupRepository _groupRepository;
+    private IDateTimeMatch _clock = null!;
     private static readonly DateTime ClockDate = new DateTime(2026, 1, 1);
 
     [TestInitialize]
@@ -35,26 +36,24 @@ public class FixtureServiceTests
 
         _fixtureRepository = new FixtureRepository(_context);
         _teamRepository = new TeamRepository(_context);
-
         _stadiumRepository = new StadiumRepositoryStub();
         _matchRepository = new MatchRepositoryStub();
-        
-        _crucesRepository = new CrucesRepository(_context); 
-
+        _crucesRepository = new CrucesRepository(_context);
         _config = new TournamentConfig();
-        var clock = new ClockStub(ClockDate);
-        _fixtureGenerator = new FixtureGenerator(_teamRepository, _stadiumRepository, _fixtureRepository, _config, clock);
-        _groupRepository = new GroupRepository(_context);
+        _clock = new ClockStub(ClockDate);
 
         _service = new FixtureService(
-            _fixtureRepository, _fixtureGenerator, _teamRepository,
-            _stadiumRepository, _matchRepository, _crucesRepository,
-            _groupRepository, 
-            _config);
-    
+            _fixtureRepository,
+            _teamRepository,
+            _stadiumRepository,
+            _matchRepository,
+            _crucesRepository,
+            _config,
+            _clock);
+
         _fixture = new Fixture(_config);
     }
-    
+
     [TestCleanup]
     public void Cleanup()
     {
@@ -67,12 +66,12 @@ public class FixtureServiceTests
 
     private Fixture CreateValidFixture()
     {
-        var config    = new TournamentConfig();
-        var fixture   = new Fixture(config);
+        var config = new TournamentConfig();
+        var fixture = new Fixture(config);
         fixture.InitializeGroups();
-        var clock     = new ClockStub(ClockDate);
+        var clock = new ClockStub(ClockDate);
         var matchDate = ClockDate.AddMonths(5);
-        int matchId   = 1;
+        int matchId = 1;
 
         var stadiumNames = new[] { "Estadio1", "Estadio2", "Estadio3", "Estadio4" };
         foreach (var name in stadiumNames)
@@ -86,8 +85,6 @@ public class FixtureServiceTests
                 _teamRepository.Add(team);
                 group.AddTeamToGroup(team);
             }
-
-            _groupRepository.AddGroup(group);
 
             var teams = group.TeamsInGroup.ToList();
             var matchups = new (int, int)[] { (0,1),(0,2),(0,3),(1,2),(1,3),(2,3) };
@@ -265,5 +262,4 @@ public class FixtureServiceTests
         _service.GenerateFixture();
         Assert.AreEqual(72, _matchRepository.GetAllMatches().Count);
     }
-    
 }

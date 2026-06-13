@@ -39,19 +39,19 @@ public class StadiumTests
     [TestMethod]
     public void createStadium_WithZeroLocativeCapacity_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 0));
+        Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 0));
     }
     
     [TestMethod]
     public void createStadium_WithNegativeLocativeCapacity_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", -1));
+        Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", -1));
     }
     
     [TestMethod]
     public void createStadium_WithCapacityLessThan20000_ShouldThrowException()
     {
-        Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 19999));
+        Assert.ThrowsException<ArgumentException>(() => new Stadium("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 19999));
     }
 
     [TestMethod]
