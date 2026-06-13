@@ -56,21 +56,11 @@ public class ExportService : IExportService
 
     private void ValidateCanExport(string userEmail)
     {
-        var user = _userRepository.GetUser(userEmail);
+        var user = _userRepository.GetUser(userEmail)
+                   ?? throw new InvalidOperationException("El usuario no existe.");
 
-        if (user is null)
-        {
-            throw new InvalidOperationException("El usuario no existe.");
-        }
-
-        var canExport =
-            user.Roles.Contains(UserRole.SystemAdministrator) ||
-            user.Roles.Contains(UserRole.Journalist);
-
-        if (!canExport)
-        {
+        if (!user.CanExport())
             throw new UnauthorizedAccessException("El usuario no tiene permisos para exportar.");
-        }
     }
 
     private static void ValidateDateRange(DateTime from, DateTime to)
