@@ -9,11 +9,11 @@
 
 <PageTitle>Notificaciones</PageTitle>
 
-<div class="users-shell">
+<div class="users-shell notifications-shell">
     <div class="users-header">
         <div>
             <h3>Centro de notificaciones</h3>
-            <p>Notificaciones no leídas del periodista</p>
+            <p>Notificaciones del periodista</p>
         </div>
 
         <button class="primary-button" @onclick="LoadNotifications">
@@ -47,6 +47,7 @@
             <table class="users-table">
                 <thead>
                     <tr>
+                        <th>Fecha</th>
                         <th>Mensaje</th>
                         <th>Estado</th>
                         <th class="actions-column">Acciones</th>
@@ -56,12 +57,25 @@
                 <tbody>
                     @foreach (var notification in _notifications)
                     {
-                        <tr>
-                            <td>@notification.Message</td>
-                            <td class="muted">No leída</td>
+                        <tr class="notification-row @(notification.IsRead ? "read" : "unread")">
+                            <td class="muted">@notification.Timestamp.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                <div class="notification-message @(notification.IsRead ? "" : "bold")">
+                                    @notification.Message
+                                </div>
+                            </td>
+                            <td>
+                                @if (!notification.IsRead)
+                                {
+                                    <span class="badge unread">No leída</span>
+                                }
+                                else
+                                {
+                                    <span class="badge read">Leída</span>
+                                }
+                            </td>
                             <td class="actions-cell">
-                                <button class="icon-button"
-                                        @onclick="() => MarkAsRead(notification.Id)">
+                                <button class="primary-button small" @onclick="() => MarkAsRead(notification.Id)">
                                     Marcar como leída
                                 </button>
                             </td>
