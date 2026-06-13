@@ -12,4 +12,8 @@
         <ProjectReference Include="..\DTOs\DTOs.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="IMatchSimulationOrchestrator.cs" />
+    </ItemGroup>
+
 </Project>
