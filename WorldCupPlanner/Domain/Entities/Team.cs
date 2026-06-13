@@ -1,4 +1,6 @@
-﻿using Domain.Interfaces;
+﻿using Domain.Calculators;
+using Domain.Enums;
+using Domain.Interfaces;
 
 namespace Domain.Entities;
 
@@ -54,11 +56,28 @@ public class Team : ITeam
         _currentRanking = newRanking;
     }
 
+    public void UpdateConfederation(Confederation confederation)
+    {
+        ValidateConfederation(confederation);
+        _confederation = confederation;
+    }
+
+    public void ResetRankingToFifa()
+    {
+        UpdateCurrentRanking(FifaRanking);
+    }
+
+    public void RecalcularRanking(int rankingRival, double resultado, TournamentPhase fase)
+    {
+        var calculator = new RankingCalculator();
+        int nuevoRanking = calculator.CalculateNewRanking(_currentRanking, rankingRival, resultado, fase);
+        UpdateCurrentRanking(nuevoRanking);
+    }
+
     private void ValidateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("El nombre del equipo no puede estar vacío.");
-
         if (name.Length > MaxNameLength)
             throw new ArgumentException($"El nombre del equipo no puede superar los {MaxNameLength} caracteres.");
     }
@@ -67,7 +86,6 @@ public class Team : ITeam
     {
         if (confederation is null)
             throw new ArgumentNullException(nameof(confederation), "La confederación del equipo no puede estar vacía.");
-
         if (string.IsNullOrWhiteSpace(confederation.Name))
             throw new ArgumentException("El nombre de la confederación no puede estar vacío.");
     }
@@ -76,16 +94,5 @@ public class Team : ITeam
     {
         if (ranking < MinRanking || ranking > MaxRanking)
             throw new ArgumentException($"El ranking FIFA debe estar entre {MinRanking} y {MaxRanking}.");
-    }
-    
-    public void UpdateConfederation(Confederation confederation)
-    {
-        ValidateConfederation(confederation);
-        _confederation = confederation;
-    }
-    
-    public void ResetRankingToFifa()
-    {
-        UpdateCurrentRanking(FifaRanking);
     }
 }
