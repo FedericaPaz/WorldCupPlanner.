@@ -143,4 +143,33 @@ public class Group
             .Cast<Team>()
             .ToList();
     }
+    
+    public List<Standing> GetStandings()
+    {
+        var standings = _teamsInGroup.ToDictionary(
+            t => t.Name,
+            t => new Standing(t));
+
+        foreach (var match in _matchesInGroup.Where(m => m.HomeGoals.HasValue && m.AwayGoals.HasValue))
+        {
+            standings[match.HomeTeam.Name].AddMatchResult(match.HomeGoals!.Value, match.AwayGoals!.Value);
+            standings[match.AwayTeam.Name].AddMatchResult(match.AwayGoals!.Value, match.HomeGoals!.Value);
+        }
+
+        return standings.Values
+            .OrderByDescending(s => s.PointsInGroup)
+            .ThenByDescending(s => s.GoalDifference)
+            .ThenByDescending(s => s.GoalsFor)
+            .ToList();
+    }
+
+    public bool AllMatchesPlayed()
+        => _matchesInGroup.Count == MaxMatches
+           && _matchesInGroup.All(m => m.HomeGoals.HasValue && m.AwayGoals.HasValue);
+
+    public Team? GetFirstPlace() => GetStandings().FirstOrDefault()?.TeamInGroup;
+    public Team? GetSecondPlace() => GetStandings().ElementAtOrDefault(1)?.TeamInGroup;
+    public Team? GetThirdPlace() => GetStandings().ElementAtOrDefault(2)?.TeamInGroup;
+    
+    
 }

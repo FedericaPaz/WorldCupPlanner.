@@ -97,7 +97,9 @@ public class Match
     public Team? WinnerMatch => _winnerMatch;
     public Team? LoserMatch => _loserMatch;
     public IReadOnlyList<MatchIncident> Incidents => _incidents;
-
+    public TournamentPhase GetTournamentPhase() =>
+        IsKnockoutPhase() ? TournamentPhase.RoundOf32 : TournamentPhase.GroupStage;
+    
     private Match()
     {
     }
@@ -304,4 +306,24 @@ public class Match
     {
         ApplyResult(homeGoals, awayGoals);
     }
+    
+    public double GetResultForHomeTeam()
+    {
+        if (!HomeGoals.HasValue || !AwayGoals.HasValue)
+            throw new InvalidOperationException("El partido no tiene resultado.");
+        if (HomeGoals > AwayGoals) return 1;
+        if (HomeGoals == AwayGoals) return 0.5;
+        return 0;
+    }
+
+    public double GetResultForAwayTeam()
+    {
+        if (!HomeGoals.HasValue || !AwayGoals.HasValue)
+            throw new InvalidOperationException("El partido no tiene resultado.");
+        if (AwayGoals > HomeGoals) return 1;
+        if (HomeGoals == AwayGoals) return 0.5;
+        return 0;
+    }
+
+    public bool IsKnockoutPhase() => _group == 'N';
 }
