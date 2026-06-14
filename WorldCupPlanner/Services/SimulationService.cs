@@ -42,6 +42,7 @@ public class SimulationService : ISimulationService
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
         SimulateMatch(matchId, seed, fixture.CreateEngine());
+        _notificationService.NotifyJournalists("Se simuló el resultado de un partido.");
     }
 
     public void SimulateMatch(int matchId, int seed, ISimulationEngine engine)

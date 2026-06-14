@@ -1,3 +1,4 @@
+using Domain.Interfaces;
 using DTOs.Match;
 
 namespace IServices;
@@ -11,4 +12,5 @@ public interface IMatchService
     void UpdateMatchDate(int matchId, DateTime date);
     void UpdateMatchStadium(int matchId, string stadiumName);
     bool MatchesHaveBeenPlayed();
+    void SimulateMatch(int matchId, int seed, ISimulationEngine engine);
 }
