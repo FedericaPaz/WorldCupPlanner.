@@ -13,4 +13,8 @@
         <ProjectReference Include="..\IServices\IServices.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="ClosedXML" Version="0.103.0" />
+    </ItemGroup>
+
 </Project>

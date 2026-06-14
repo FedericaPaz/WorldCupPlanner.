@@ -2,8 +2,8 @@
 
 public interface IExportService
 {
-    byte[] ExportFixtureToCsv(string userEmail);
-    byte[] ExportFixtureToXlsx(string userEmail);
-    byte[] ExportLogsToCsv(string userEmail, DateTime from, DateTime to);
-    byte[] ExportLogsToXlsx(string userEmail, DateTime from, DateTime to);
+    string ExportFixtureToCsv(string userEmail);
+    string ExportFixtureToXlsx(string userEmail);
+    string ExportLogsToCsv(string userEmail, DateTime from, DateTime to);
+    string ExportLogsToXlsx(string userEmail, DateTime from, DateTime to);
 }

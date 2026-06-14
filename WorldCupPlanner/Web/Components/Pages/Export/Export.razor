@@ -97,7 +97,8 @@ else
     {
         ExecuteExport(() =>
         {
-            ExportService.ExportFixtureToCsv(GetCurrentUserEmail());
+            var url = ExportService.ExportFixtureToCsv(GetCurrentUserEmail());
+            Navigation.NavigateTo(url, true);
             Message = "Fixture CSV generado correctamente.";
         });
     }
@@ -106,7 +107,8 @@ else
     {
         ExecuteExport(() =>
         {
-            ExportService.ExportFixtureToXlsx(GetCurrentUserEmail());
+            var url = ExportService.ExportFixtureToXlsx(GetCurrentUserEmail());
+            Navigation.NavigateTo(url, true);
             Message = "Fixture XLSX generado correctamente.";
         });
     }
@@ -115,7 +117,8 @@ else
     {
         ExecuteExport(() =>
         {
-            ExportService.ExportLogsToCsv(GetCurrentUserEmail(), FromDate, ToDate);
+            var url = ExportService.ExportLogsToCsv(GetCurrentUserEmail(), FromDate, ToDate);
+            Navigation.NavigateTo(url, true);
             Message = "Logs CSV generados correctamente.";
         });
     }
@@ -124,7 +127,8 @@ else
     {
         ExecuteExport(() =>
         {
-            ExportService.ExportLogsToXlsx(GetCurrentUserEmail(), FromDate, ToDate);
+            var url = ExportService.ExportLogsToXlsx(GetCurrentUserEmail(), FromDate, ToDate);
+            Navigation.NavigateTo(url, true);
             Message = "Logs XLSX generados correctamente.";
         });
     }
