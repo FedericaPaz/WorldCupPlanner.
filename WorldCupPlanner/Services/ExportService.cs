@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using ClosedXML.Excel;
+using Domain.Enums;
 using IRepository;
 using IServices;
 using IServices.UserInterfaces;
@@ -146,6 +147,7 @@ public class ExportService : IExportService
 
         return SaveWorkbook(LogsExportName, "xlsx", ws =>
         {
+            // Header
             ws.Cell(1, 1).Value = "Timestamp";
             ws.Cell(1, 2).Value = "UserEmail";
             ws.Cell(1, 3).Value = "Category";
@@ -174,7 +176,10 @@ public class ExportService : IExportService
 
     private void ValidateCanExport(string userEmail)
     {
-        if (!_userQueryService.CanExport(userEmail))
+        var user = _userRepository.GetUser(userEmail)
+                   ?? throw new InvalidOperationException("El usuario no existe.");
+
+        if (!user.CanExport())
             throw new UnauthorizedAccessException("El usuario no tiene permisos para exportar.");
     }
 

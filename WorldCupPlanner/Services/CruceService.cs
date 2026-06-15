@@ -22,7 +22,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
     private readonly IMatchRepository _matchRepository;
     private readonly IFixtureRepository _fixtureRepository;
     private readonly IDateTimeMatch _clock;
-    private readonly ISimulationEngineFactory _engineFactory;
+    private readonly Services.Simulation.ISimulationEngineFactory _engineFactory;
 
     private int _nextMatchId = 1;
 
@@ -33,7 +33,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
         IMatchRepository matchRepository,
         IFixtureRepository fixtureRepository,
         IDateTimeMatch clock,
-        ISimulationEngineFactory engineFactory)
+        Services.Simulation.ISimulationEngineFactory engineFactory)
     {
         _repository = repository;
         _stadiumRepository = stadiumRepository;

@@ -25,6 +25,7 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserReadRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserQueryService, UserService>();
 builder.Services.AddScoped<IUserEditService, UserService>();
@@ -74,9 +75,6 @@ builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddScoped<IRankingService, RankingService>();
 
 builder.Services.AddScoped<Services.Simulation.ISimulationEngineFactory, Services.Simulation.DefaultSimulationEngineFactory>();
-
-Fixture.RegisterEngine("Aleatorio puro", () => new PureRandomSimulationEngine());
-Fixture.RegisterEngine("Probabilístico", () => new ProbabilisticSimulationEngine());
 
 var app = builder.Build();
 
