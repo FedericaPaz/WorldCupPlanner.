@@ -78,17 +78,10 @@ public class Cruce
         return nextPhase == GetNextPhase();
     }
 
+    private static readonly Domain.Interfaces.IPhaseTransitionPolicy _defaultPhasePolicy = new Domain.Policies.DefaultPhaseTransitionPolicy();
+
     public TournamentPhase GetNextPhase()
     {
-        return Phase switch
-        {
-            TournamentPhase.RoundOf32 => TournamentPhase.RoundOf16,
-            TournamentPhase.RoundOf16 => TournamentPhase.QuarterFinals,
-            TournamentPhase.QuarterFinals => TournamentPhase.SemiFinals,
-            TournamentPhase.SemiFinals => TournamentPhase.Final,
-            TournamentPhase.Final => throw new InvalidOperationException("La final no tiene siguiente fase"),
-            TournamentPhase.ThirdPlace => throw new InvalidOperationException("El partido por el tercer puesto no tiene siguiente fase"),
-            _ => throw new InvalidOperationException($"La fase {Phase} no tiene siguiente definida")
-        };
+        return _defaultPhasePolicy.GetNextPhase(Phase);
     }
 }
