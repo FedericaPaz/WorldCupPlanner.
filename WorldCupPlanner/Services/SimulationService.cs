@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using Domain.Interfaces;
 using IRepository;
 using IServices;
@@ -52,8 +53,9 @@ public class SimulationService : ISimulationService
 
         var homeGoals = home;
         var awayGoals = away;
-
-        CardIncidentGenerator.Generate(match, seed);
+        
+        match.ClearCardIncidents();
+        AddSimulatedCardIncidents(match, seed);
 
         if (homeGoals == awayGoals)
         {
@@ -62,8 +64,9 @@ public class SimulationService : ISimulationService
             else awayGoals++;
         }
 
-        var applier = new SimulationResultApplier(_matchRepository, _rankingService);
-        applier.ApplyAndPersistResult(match, homeGoals, awayGoals);
+        match.SimulateResult(homeGoals, awayGoals);
+        _matchRepository.UpdateMatch(match);
+        _rankingService.UpdateRankingsAfterMatch(match);
     }
 
     public (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed, ISimulationEngine engine)
@@ -128,9 +131,11 @@ public class SimulationService : ISimulationService
             else awayGoals++;
         }
 
-        CardIncidentGenerator.Generate(match, seed);
-        var applier = new SimulationResultApplier(_matchRepository, _rankingService);
-        applier.ApplyAndPersistResult(match, homeGoals, awayGoals);
+        match.ClearCardIncidents();
+        AddSimulatedCardIncidents(match, seed);
+        match.SimulateResult(homeGoals, awayGoals);
+        _matchRepository.UpdateMatch(match);
+        _rankingService.UpdateRankingsAfterMatch(match);
     }
 
     private void RegisterSimulation(int seed, string engineName)
@@ -141,10 +146,21 @@ public class SimulationService : ISimulationService
             "SimulationExecuted",
             $"Se ejecutó una simulación con semilla {seed} usando el motor {engineName}.");
     }
-
+    
     private static void AddSimulatedCardIncidents(Match match, int seed)
     {
-        CardIncidentGenerator.Generate(match, seed);
+        var random = new Random(seed + match.IdMatch * 17);
+
+        AddIncidentIfNeeded(match, IncidentType.YellowCard, match.HomeTeam, random.Next(0, MaxYellowCards + 1));
+        AddIncidentIfNeeded(match, IncidentType.YellowCard, match.AwayTeam, random.Next(0, MaxYellowCards + 1));
+        AddIncidentIfNeeded(match, IncidentType.RedCard, match.HomeTeam, random.Next(0, MaxRedCards + 1));
+        AddIncidentIfNeeded(match, IncidentType.RedCard, match.AwayTeam, random.Next(0, MaxRedCards + 1));
+    }
+    
+    private static void AddIncidentIfNeeded(Match match, IncidentType type, ITeam team, int quantity)
+    {
+        if (quantity > 0)
+            match.AddIncident(new MatchIncident(type, (Team)team, quantity));
     }
 
     private static void EnsureValidEngine(ISimulationEngine engine)

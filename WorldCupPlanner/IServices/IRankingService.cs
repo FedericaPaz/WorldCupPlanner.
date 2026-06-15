@@ -4,6 +4,6 @@ namespace IServices;
 
 public interface IRankingService
 {
-    void UpdateRankingsAfterMatch(Match match, int  homeGoals, int awayGoals);
+    void UpdateRankingsAfterMatch(Match match);
     void RevertRankingsAfterMatch(Match match);
 }

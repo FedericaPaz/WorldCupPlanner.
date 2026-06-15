@@ -8,4 +8,9 @@ public class RankingServiceStub : IRankingService
     public void UpdateRankingsAfterMatch(Match match)
     {
     }
+
+    public void RevertRankingsAfterMatch(Match match)
+    {
+        throw new NotImplementedException();
+    }
 }

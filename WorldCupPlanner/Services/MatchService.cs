@@ -3,13 +3,14 @@ using Domain.Enums;
 using Domain.Interfaces;
 using DTOs.Match;
 using IRepository;
+using IServices.MatchInterfaces;
 using IServices;
 using Services.Mappers;
 using Services.Simulation;
 
 namespace Services;
 
-public class MatchService : IMatchService
+public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateService
 {
     private readonly IMatchRepository _matchRepository;
     private readonly ITeamRepository _teamRepository;

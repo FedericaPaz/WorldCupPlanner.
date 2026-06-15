@@ -1,6 +1,7 @@
 ﻿@page "/fixture"
 @using DTOs.Fixture
 @using IServices
+@using IServices.MatchInterfaces
 @using Web.Services
 @inject IFixtureService FixtureService
 @inject ITeamService TeamService
@@ -9,7 +10,7 @@
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject IConfigService ConfigService
-@inject IMatchService MatchService
+@inject IMatchQueryService MatchService
 
 <h3 class="text-center my-4">Fixture - Fase de Grupos</h3>
 

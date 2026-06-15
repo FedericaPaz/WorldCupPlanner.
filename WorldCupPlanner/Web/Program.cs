@@ -5,6 +5,7 @@ using Domain.Import.Interfaces;
 using Domain.Interfaces;
 using IRepository;
 using IServices;
+using IServices.MatchInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Services;
@@ -31,7 +32,9 @@ builder.Services.AddScoped<IStadiumRepository, StadiumRepository>();
 builder.Services.AddScoped<IStadiumService, StadiumService>();
 
 builder.Services.AddScoped<IMatchRepository, MatchRepository>();
-builder.Services.AddScoped<IMatchService, MatchService>();
+builder.Services.AddScoped<IMatchQueryService, MatchService>();
+builder.Services.AddScoped<IMatchEditService, MatchService>();
+builder.Services.AddScoped<IMatchCreateService, MatchService>();
 builder.Services.AddSingleton<IDateTimeMatch, SystemDateTimeMatch>();
 
 builder.Services.AddScoped<IFixtureRepository, FixtureRepository>();

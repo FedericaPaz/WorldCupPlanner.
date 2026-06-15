@@ -1,17 +1,16 @@
 @page "/matches/edit/{Id:int}"
-@rendermode InteractiveServer
-@using Domain.Entities
 @using DTOs.Match
 @using DTOs.Stadium
+@using Services
 @using IServices
-@using Web.Services
-@inject IMatchService MatchService
-@inject ISimulationService SimulationService
+@using IServices.MatchInterfaces
+@inject IMatchQueryService MatchQueryService   
+@inject IMatchEditService MatchEditService    
 @inject IStadiumService StadiumService
 @inject NavigationManager Navigation
-@inject TournamentConfig Config
 @inject SessionService SessionService
 @inject ILogService LogService
+@inject ISimulationService SimulationService
 
 <div class="edit-match-page">
     <button class="back-link" @onclick="GoBack">← Volver a partidos</button>
@@ -144,7 +143,7 @@
     {
         try
         {
-            _match = MatchService.GetMatchById(Id);
+            _match = MatchQueryService.GetMatchById(Id);
 
             _stadiums = StadiumService.GetAllStadiums();
 
@@ -176,13 +175,13 @@
 
             if (_dateTime != _match.dateMatch)
             {
-                MatchService.UpdateMatchDate(_match.idMatch, _dateTime);
+                MatchEditService.UpdateMatchDate(_match.idMatch, _dateTime);
                 wasModified = true;
             }
 
             if (_stadiumName != _match.stadiumName)
             {
-                MatchService.UpdateMatchStadium(_match.idMatch, _stadiumName);
+                MatchEditService.UpdateMatchStadium(_match.idMatch, _stadiumName);
                 wasModified = true;
             }
 
@@ -213,7 +212,7 @@
                     awayRedCards = _awayRedCards
                 };
 
-                MatchService.SetMatchResult(_match.idMatch, request);
+                MatchEditService.SetMatchResult(_match.idMatch, request);
 
                 wasModified = true;
             }

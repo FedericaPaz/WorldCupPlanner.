@@ -1,10 +1,11 @@
 ﻿@page "/cruces"
 @using DTOs.Cruces
 @using IServices
+@using IServices.MatchInterfaces
 @using Web.Services
 @inject ICruceService CruceService
 @inject IFixtureService FixtureService
-@inject IMatchService MatchService
+@inject IMatchQueryService MatchService
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject NavigationManager Navigation
