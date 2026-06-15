@@ -66,6 +66,11 @@ public class MatchService : IMatchService
             throw new ArgumentNullException(nameof(request));
 
         var match = _matchRepository.GetMatchById(matchId);
+        
+        bool yaTeníaResultado = match.HomeGoals.HasValue && match.AwayGoals.HasValue;
+        if (yaTeníaResultado)
+            _rankingService.RevertRankingsAfterMatch(match);
+        
         match.ClearAllIncidents();
 
         AddCardIncidents(match, request);

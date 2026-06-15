@@ -41,4 +41,17 @@ public class RankingService : IRankingService
             $"{homeTeam.Name}: {prevHome} -> {homeTeam.CurrentRanking}. " +
             $"{awayTeam.Name}: {prevAway} -> {awayTeam.CurrentRanking}.");
     }
+    
+    public void RevertRankingsAfterMatch(Match match)
+    {
+        var homeTeam = match.HomeTeam;
+        var awayTeam = match.AwayTeam;
+        var fase = match.GetTournamentPhase();
+        
+        homeTeam.RecalcularRanking(awayTeam.CurrentRanking, match.GetResultForAwayTeam(), fase);
+        awayTeam.RecalcularRanking(homeTeam.CurrentRanking, match.GetResultForHomeTeam(), fase);
+
+        _teamRepository.Update(homeTeam);
+        _teamRepository.Update(awayTeam);
+    }
 }

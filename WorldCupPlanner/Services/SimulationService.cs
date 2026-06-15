@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Domain.Enums;
 using Domain.Interfaces;
 using IRepository;
 using IServices;
@@ -54,7 +53,6 @@ public class SimulationService : ISimulationService
         var homeGoals = home;
         var awayGoals = away;
 
-        // Generate card incidents (clears previous card incidents internally)
         CardIncidentGenerator.Generate(match, seed);
 
         if (homeGoals == awayGoals)
@@ -64,7 +62,6 @@ public class SimulationService : ISimulationService
             else awayGoals++;
         }
 
-        // Apply result and persist using dedicated applier
         var applier = new SimulationResultApplier(_matchRepository, _rankingService);
         applier.ApplyAndPersistResult(match, homeGoals, awayGoals);
     }
@@ -89,8 +86,6 @@ public class SimulationService : ISimulationService
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
         SimulateGroupStage(fixture.CreateEngine());
-
-        // Notificar a periodistas sobre la simulación masiva iniciada desde la UI
         _notificationService.NotifyJournalists("Se simularon los resultados de los partidos pendientes.");
     }
 
@@ -133,7 +128,6 @@ public class SimulationService : ISimulationService
             else awayGoals++;
         }
 
-        // Generate card incidents and apply result via applier
         CardIncidentGenerator.Generate(match, seed);
         var applier = new SimulationResultApplier(_matchRepository, _rankingService);
         applier.ApplyAndPersistResult(match, homeGoals, awayGoals);
