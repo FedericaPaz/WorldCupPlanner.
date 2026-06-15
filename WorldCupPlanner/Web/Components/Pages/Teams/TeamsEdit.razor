@@ -1,10 +1,12 @@
 ﻿@page "/teams/edit/{Name}"
 @using DTOs.Team
 @using IServices
+@using IServices.TeamInterfaces
 @using Web.Services
 @using Microsoft.AspNetCore.Components.Forms
 
-@inject ITeamService TeamService
+@inject ITeamEditService TeamEditService
+@inject ITeamQueryService TeamQueryService
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject NavigationManager Navigation
@@ -111,10 +113,10 @@
             return;
         }
 
-        _confederations = TeamService.GetAllConfederations();
+        _confederations = TeamQueryService.GetAllConfederations();
 
         var currentName = Uri.UnescapeDataString(Name ?? string.Empty);
-        var team = TeamService.Get(currentName);
+        var team = TeamQueryService.Get(currentName);
 
         if (team is null)
         {
@@ -139,7 +141,7 @@
 
             var currentName = Uri.UnescapeDataString(Name ?? string.Empty);
 
-            TeamService.Update(currentName, _request!);
+            TeamEditService.Update(currentName, _request!);
 
             LogService.Register(
                 GetCurrentUserEmail(),

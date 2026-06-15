@@ -1,9 +1,11 @@
 ﻿@page "/teamsCreate"
 @using DTOs.Team
 @using IServices
+@using IServices.TeamInterfaces
 @using Web.Services
 
-@inject ITeamService TeamService
+@inject ITeamEditService TeamEditService
+@inject ITeamQueryService TeamQueryService
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject NavigationManager Navigation
@@ -106,7 +108,7 @@
             Navigation.NavigateTo("/");
             return;
         }
-        _confederations = TeamService.GetAllConfederations();
+        _confederations = TeamQueryService.GetAllConfederations();
     }
 
     private void HandleSubmit()
@@ -115,7 +117,7 @@
         {
             _errorMessage = null;
 
-            TeamService.Add(_request);
+            TeamEditService.Add(_request);
 
             LogService.Register(
                 GetCurrentUserEmail(),

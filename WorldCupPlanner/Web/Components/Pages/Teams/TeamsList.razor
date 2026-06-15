@@ -1,8 +1,10 @@
 ﻿@page "/teams"
 @using DTOs.Team
 @using IServices
+@using IServices.TeamInterfaces
 @using Web.Services
-@inject ITeamService TeamService
+@inject ITeamQueryService TeamQueryService
+@inject ITeamEditService TeamEditService
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject NavigationManager Navigation
@@ -128,7 +130,7 @@ else
         try
         {
             _errorMessage = null;
-            _teams = TeamService.GetAll();
+            _teams = TeamQueryService.GetAll();
         }
         catch (Exception ex)
         {
@@ -162,7 +164,7 @@ else
         {
             _errorMessage = null;
 
-            TeamService.GenerateMissingTeams();
+            TeamEditService.GenerateMissingTeams();
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -200,7 +202,7 @@ else
         {
             _errorMessage = null;
 
-            TeamService.Delete(name);
+            TeamEditService.Delete(name);
 
             LogService.Register(
                 GetCurrentUserEmail(),

@@ -1,12 +1,12 @@
 ﻿using Domain.Entities;
 using DTOs.Team;
 using IRepository;
-using IServices;
+using IServices.TeamInterfaces;
 using Services.Mappers;
 
 namespace Services;
 
-public class TeamService : ITeamService
+public class TeamService : ITeamQueryService, ITeamEditService
 {
     private readonly ITeamRepository _repository;
     private readonly IFixtureRepository _fixtureRepository;

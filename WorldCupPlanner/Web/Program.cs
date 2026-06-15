@@ -6,6 +6,7 @@ using Domain.Interfaces;
 using IRepository;
 using IServices;
 using IServices.MatchInterfaces;
+using IServices.TeamInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Services;
@@ -26,7 +27,8 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<SessionService>();
 
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
-builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<ITeamQueryService, TeamService>();
+builder.Services.AddScoped<ITeamEditService, TeamService>();
 
 builder.Services.AddScoped<IStadiumRepository, StadiumRepository>();
 builder.Services.AddScoped<IStadiumService, StadiumService>();
