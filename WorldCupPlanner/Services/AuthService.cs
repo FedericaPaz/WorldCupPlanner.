@@ -21,12 +21,14 @@ public class AuthService : IAuthService
         if (request is null)
             throw new ArgumentNullException(nameof(request));
 
-        var passwordHash = HashPassword(request.Password);
-        var user = _userRepository
-            .GetAllUsers()
-            .FirstOrDefault(user => user.Email.Equals(request.Email, StringComparison.OrdinalIgnoreCase) && user.PasswordHash == passwordHash);
+        var user = _userRepository.GetUser(request.Email);
 
         if (user is null)
+            throw new InvalidOperationException("Credenciales Inválidas.");
+
+        var passwordHash = HashPassword(request.Password);
+
+        if (!string.Equals(user.PasswordHash, passwordHash, StringComparison.Ordinal))
             throw new InvalidOperationException("Credenciales Inválidas.");
 
         return new LoginResponse
@@ -42,11 +44,11 @@ public class AuthService : IAuthService
         if (request is null)
             throw new ArgumentNullException(nameof(request));
 
-        if (string.IsNullOrEmpty(request.Password))
+        if (string.IsNullOrWhiteSpace(request.Password))
             throw new ArgumentException("La contraseña no puede estar vacía.", nameof(request.Password));
 
-        var exists = _userRepository.GetAllUsers().Any(user => user.Email.Equals(request.Email, StringComparison.OrdinalIgnoreCase));
-        if (exists)
+        var existingUser = _userRepository.GetUser(request.Email);
+        if (existingUser is not null)
             throw new InvalidOperationException("Ya existe un usuario con ese email.");
 
         var user = UserMapper.ToEntity(request);

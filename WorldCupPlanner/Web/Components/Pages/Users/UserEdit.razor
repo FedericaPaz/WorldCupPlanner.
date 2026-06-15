@@ -1,11 +1,11 @@
 @page "/users/edit/{Email}"
 @using DTOs.User
-@using global::Services
 @using IServices
 @using Web.Services
 @using global::Services.Mappers
-
-@inject UserService UserService
+@using IServices.UserInterfaces
+@inject IUserQueryService UserQueryService
+@inject IUserEditService UserEditService
 @inject ILogService LogService
 @inject NavigationManager Navigation
 @inject SessionService SessionService
@@ -164,8 +164,8 @@
     {
         _editingEmail = Uri.UnescapeDataString(Email ?? string.Empty);
 
-        var user = UserService.GetUser(_editingEmail);
-
+        var user = UserQueryService.GetUserDto(_editingEmail);
+        
         if (user is null)
         {
             Navigation.NavigateTo("/users");
@@ -177,7 +177,7 @@
             FirstName = user.FirstName,
             LastName = user.LastName,
             BirthDate = user.BirthDate,
-            Roles = UserRoleMapper.ToDto(user.Roles.ToList())
+            Roles = user.Roles.ToList()
         };
     }
 
@@ -187,7 +187,7 @@
         {
             _errorMessage = string.Empty;
 
-            UserService.UpdateUserWithoutPassword(
+            UserEditService.UpdateUserWithoutPassword(
                 _userRequest!.FirstName,
                 _userRequest.LastName,
                 _editingEmail,
@@ -216,7 +216,7 @@
     {
         try
         {
-            string newPassword = UserService.ResetPassword(_editingEmail);
+            string newPassword = UserEditService.ResetPassword(_editingEmail);
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -253,7 +253,7 @@
                 return;
             }
 
-            UserService.ChangeOwnPassword(_editingEmail, _customPassword);
+            UserEditService.ChangeOwnPassword(_editingEmail, _customPassword);
 
             LogService.Register(
                 GetCurrentUserEmail(),

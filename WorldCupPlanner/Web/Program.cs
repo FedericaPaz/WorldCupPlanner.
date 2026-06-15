@@ -9,6 +9,7 @@ using IServices.CrucesInterface;
 using IServices.FixtureInterfaces;
 using IServices.MatchInterfaces;
 using IServices.TeamInterfaces;
+using IServices.UserInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Services;
@@ -25,7 +26,8 @@ builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IUserQueryService, UserService>();
+builder.Services.AddScoped<IUserEditService, UserService>();
 builder.Services.AddScoped<SessionService>();
 
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();

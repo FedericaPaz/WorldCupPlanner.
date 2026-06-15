@@ -2,11 +2,12 @@
 using Domain.Enums;
 using IRepository;
 using DTOs.User;
+using IServices.UserInterfaces;
 using Services.Mappers;
 
 namespace Services;
 
-public class UserService
+public class UserService : IUserEditService, IUserQueryService
 {
     private readonly IUserRepository _userRepository;
 

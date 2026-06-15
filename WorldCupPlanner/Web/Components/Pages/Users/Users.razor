@@ -3,8 +3,10 @@
 @using IServices
 @using Web.Services
 @using DTOs.User
+@using IServices.UserInterfaces
 
-@inject UserService UserService
+@inject IUserEditService UserEditService
+@inject IUserQueryService UserQueryService
 @inject ILogService LogService
 @inject NavigationManager Navigation
 @inject SessionService SessionService
@@ -121,7 +123,7 @@
 
     private void LoadUsers()
     {
-        _users = UserService.GetAllUsers();
+        _users = UserQueryService.GetAllUsers();
     }
 
     private void GoToCreate()
@@ -145,7 +147,7 @@
             _pageErrorMessage = string.Empty;
             _pageSuccessMessage = string.Empty;
 
-            UserService.DeleteUser(email, GetCurrentUserEmail());
+            UserEditService.DeleteUser(email, GetCurrentUserEmail());
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -173,7 +175,7 @@
             _pageErrorMessage = string.Empty;
             _pageSuccessMessage = string.Empty;
 
-            string newPassword = UserService.ResetPassword(email); 
+            string newPassword = UserEditService.ResetPassword(email); 
 
             LogService.Register(
                 GetCurrentUserEmail(),
