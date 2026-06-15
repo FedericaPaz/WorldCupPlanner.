@@ -41,7 +41,9 @@ public class Fixture
 
     public static void RegisterEngine(string name, Func<ISimulationEngine> factory)
     {
-        _engines[name] = factory;
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("El nombre del motor no puede ser vacío.", nameof(name));
+        _engines[name] = factory ?? throw new ArgumentNullException(nameof(factory));
     }
 
     public ISimulationEngine CreateEngine()
