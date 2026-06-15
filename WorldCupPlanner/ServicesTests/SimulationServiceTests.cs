@@ -24,9 +24,6 @@ public class SimulationServiceTests
     [TestInitialize]
     public void Setup()
     {
-        Fixture.RegisterEngine("Aleatorio puro", () => new PureRandomSimulationEngine());
-        Fixture.RegisterEngine("Probabilístico", () => new ProbabilisticSimulationEngine());
-
         _nextId = 1;
         _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
@@ -35,12 +32,15 @@ public class SimulationServiceTests
         _fixtureRepository = new FixtureRepositoryStub();
         _config = new TournamentConfig();
 
+        var engineFactory = new Services.Simulation.DefaultSimulationEngineFactory();
+
         _service = new SimulationService(
             _logService,
             _matchRepository,
             _rankingService,
             _fixtureRepository,
             _config,
+            engineFactory,
             new NotificationServiceStub());
 
         var fixture = new Fixture(_config);
@@ -54,7 +54,9 @@ public class SimulationServiceTests
         var away = new Team(awayName, new Confederation("UEFA"), awayRanking);
         var stadium = new Stadium("Estadio Test", "Ciudad", "", 50000);
         var match = new Match(_nextId++, FechaPartido, stadium, home, away, group, new ClockStub(FechaCreacionClock));
+
         _matchRepository.AddMatch(match);
+
         return match;
     }
 
@@ -75,12 +77,18 @@ public class SimulationServiceTests
             group.AddTeamToGroup(team);
 
         var matchups = new[] { (0, 3), (1, 2), (0, 2), (1, 3), (0, 1), (2, 3) };
+
         foreach (var (homeIndex, awayIndex) in matchups)
         {
             var match = new Match(
-                _nextId++, FechaPartido, stadium,
-                teams[homeIndex], teams[awayIndex], 'A',
+                _nextId++,
+                FechaPartido,
+                stadium,
+                teams[homeIndex],
+                teams[awayIndex],
+                'A',
                 new ClockStub(FechaCreacionClock));
+
             group.AddMatchToGroup(match);
             _matchRepository.AddMatch(match);
         }
@@ -95,8 +103,11 @@ public class SimulationServiceTests
     public void SimulateMatch_GoalsShouldNotBeNegative()
     {
         var match = BuildAndAddMatch("Argentina", 1800, "Bolivia", 500);
+
         _service.SimulateMatch(match.IdMatch, Seed);
+
         var updated = _matchRepository.GetMatchById(match.IdMatch);
+
         Assert.IsTrue(updated.HomeGoals >= 0);
         Assert.IsTrue(updated.AwayGoals >= 0);
     }
@@ -105,14 +116,19 @@ public class SimulationServiceTests
     public void SimulateMatch_WithSameSeed_ShouldReturnSameResult()
     {
         var match1 = BuildAndAddMatch("España", 1900, "Peru", 700);
+
         _service.SimulateMatch(match1.IdMatch, Seed);
+
         var result1home = _matchRepository.GetMatchById(match1.IdMatch).HomeGoals;
         var result1away = _matchRepository.GetMatchById(match1.IdMatch).AwayGoals;
 
         _matchRepository.ClearMatches();
         _nextId = 1;
+
         var match2 = BuildAndAddMatch("España", 1900, "Peru", 700);
+
         _service.SimulateMatch(match2.IdMatch, Seed);
+
         var result2home = _matchRepository.GetMatchById(match2.IdMatch).HomeGoals;
         var result2away = _matchRepository.GetMatchById(match2.IdMatch).AwayGoals;
 
@@ -126,9 +142,13 @@ public class SimulationServiceTests
         for (int i = 0; i < 50; i++)
         {
             _matchRepository.ClearMatches();
+
             var match = BuildAndAddMatch($"Team{i}A", 1000 + i, $"Team{i}B", 1000 + i + 1);
+
             _service.SimulateMatch(match.IdMatch, i);
+
             var updated = _matchRepository.GetMatchById(match.IdMatch);
+
             Assert.IsTrue(updated.HomeGoals <= 7);
             Assert.IsTrue(updated.AwayGoals <= 7);
         }
@@ -137,7 +157,8 @@ public class SimulationServiceTests
     [TestMethod]
     public void SimulateGroupStage_ShouldSetResultsForAllMatches()
     {
-        var group = BuildGroupWithMatches();
+        BuildGroupWithMatches();
+
         var fixture = _fixtureRepository.GetFixture();
         fixture.InitializeGroups();
         fixture.CargarPartidos(_matchRepository.GetAllMatches());
@@ -151,7 +172,8 @@ public class SimulationServiceTests
     [TestMethod]
     public void SimulateGroupStage_ShouldNotOverwriteResults()
     {
-        var group = BuildGroupWithMatches();
+        BuildGroupWithMatches();
+
         var primerPartido = _matchRepository.GetAllMatches().First();
         primerPartido.SetClock(new ClockStub(new DateTime(2027, 6, 15)));
         primerPartido.SetMatchResult(3, 0);
@@ -160,6 +182,7 @@ public class SimulationServiceTests
         _service.SimulateGroupStage();
 
         var updated = _matchRepository.GetMatchById(primerPartido.IdMatch);
+
         Assert.AreEqual(3, updated.HomeGoals);
         Assert.AreEqual(0, updated.AwayGoals);
     }
@@ -168,9 +191,11 @@ public class SimulationServiceTests
     public void SimulateMatch_WithValidMatch_ShouldRegisterSimulationExecutedLog()
     {
         var match = BuildAndAddMatch("Uruguay", 1500, "Argentina", 1500);
+
         _service.SimulateMatch(match.IdMatch, Seed);
 
         var logs = _logRepository.GetAll();
+
         Assert.IsTrue(logs.Any(l => l.Category == "Simulation" && l.Action == "SimulationExecuted"));
     }
 
@@ -178,6 +203,7 @@ public class SimulationServiceTests
     public void SimulateGroupStage_ShouldAddCardIncidentsToMatches()
     {
         BuildGroupWithMatches();
+
         _service.SimulateGroupStage();
 
         foreach (var match in _matchRepository.GetAllMatches())

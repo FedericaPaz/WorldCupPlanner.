@@ -1,9 +1,7 @@
 ﻿using System.Text;
 using ClosedXML.Excel;
-using Domain.Enums;
 using IRepository;
 using IServices;
-using DTOs.Log;
 
 namespace Services;
 
@@ -14,21 +12,26 @@ public class ExportService : IExportService
     private const string CsvFormat = "CSV";
     private const string XlsxFormat = "XLSX";
 
-    private readonly IUserRepository _userRepository;
+    private readonly IUserReadRepository _userRepository;
     private readonly ILogService _logService;
     private readonly IFixtureRepository _fixtureRepository;
     private readonly IMatchRepository _matchRepository;
     private readonly ICrucesRepository _crucesRepository;
 
-    public ExportService(IUserRepository userRepository, ILogService logService, IFixtureRepository fixtureRepository, IMatchRepository matchRepository, ICrucesRepository crucesRepository)
+    public ExportService(
+        IUserReadRepository userRepository,
+        ILogService logService,
+        IFixtureRepository fixtureRepository,
+        IMatchRepository matchRepository,
+        ICrucesRepository crucesRepository)
     {
         if (userRepository is null) throw new ArgumentNullException(nameof(userRepository));
+        if (logService is null) throw new ArgumentNullException(nameof(logService));
         if (fixtureRepository is null) throw new ArgumentNullException(nameof(fixtureRepository));
         if (matchRepository is null) throw new ArgumentNullException(nameof(matchRepository));
         if (crucesRepository is null) throw new ArgumentNullException(nameof(crucesRepository));
 
         _userRepository = userRepository;
-        _log_service_check(logService);
         _logService = logService;
         _fixtureRepository = fixtureRepository;
         _matchRepository = matchRepository;
@@ -51,7 +54,6 @@ public class ExportService : IExportService
 
         return SaveWorkbook(FixtureExportName, "xlsx", ws =>
         {
-            // Header
             ws.Cell(1, 1).Value = "Fase";
             ws.Cell(1, 2).Value = "Grupo";
             ws.Cell(1, 3).Value = "Fecha";
@@ -67,9 +69,11 @@ public class ExportService : IExportService
             fixture.CargarPartidos(matches);
 
             var row = 2;
+
             foreach (var group in fixture.Groups)
             {
                 var orderedMatches = group.MatchesInGroup.OrderBy(m => m.DateMatch);
+
                 foreach (var match in orderedMatches)
                 {
                     ws.Cell(row, 1).Value = "Grupos";
@@ -80,18 +84,19 @@ public class ExportService : IExportService
                     ws.Cell(row, 6).Value = match.HomeGoals.HasValue ? match.HomeGoals.Value.ToString() : string.Empty;
                     ws.Cell(row, 7).Value = match.AwayTeam?.Name ?? string.Empty;
                     ws.Cell(row, 8).Value = match.AwayGoals.HasValue ? match.AwayGoals.Value.ToString() : string.Empty;
-                    ws.Cell(row, 9).Value = (match.HomeGoals.HasValue && match.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
+                    ws.Cell(row, 9).Value = match.HomeGoals.HasValue && match.AwayGoals.HasValue ? "Finalizado" : "Pendiente";
                     row++;
                 }
             }
 
-            // Append cruces/eliminatorias if exist
-            if (_crucesRepository != null && _crucesRepository.HasCruces())
+            if (_crucesRepository.HasCruces())
             {
                 var cruces = _crucesRepository.GetAllCruces();
+
                 foreach (var cruce in cruces)
                 {
                     var match = cruce.Match;
+
                     ws.Cell(row, 1).Value = cruce.Name;
                     ws.Cell(row, 2).Value = string.Empty;
                     ws.Cell(row, 3).Value = match.DateMatch;
@@ -100,7 +105,7 @@ public class ExportService : IExportService
                     ws.Cell(row, 6).Value = match.HomeGoals.HasValue ? match.HomeGoals.Value.ToString() : string.Empty;
                     ws.Cell(row, 7).Value = match.AwayTeam?.Name ?? string.Empty;
                     ws.Cell(row, 8).Value = match.AwayGoals.HasValue ? match.AwayGoals.Value.ToString() : string.Empty;
-                    ws.Cell(row, 9).Value = (match.HomeGoals.HasValue && match.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
+                    ws.Cell(row, 9).Value = match.HomeGoals.HasValue && match.AwayGoals.HasValue ? "Finalizado" : "Pendiente";
                     row++;
                 }
             }
@@ -129,6 +134,7 @@ public class ExportService : IExportService
             var category = EscapeCsv(log.Category);
             var action = EscapeCsv(log.Action);
             var detail = EscapeCsv(log.Detail);
+
             sb.AppendLine($"{timestamp},{user},{category},{action},{detail}");
         }
 
@@ -147,7 +153,6 @@ public class ExportService : IExportService
 
         return SaveWorkbook(LogsExportName, "xlsx", ws =>
         {
-            // Header
             ws.Cell(1, 1).Value = "Timestamp";
             ws.Cell(1, 2).Value = "UserEmail";
             ws.Cell(1, 3).Value = "Category";
@@ -155,6 +160,7 @@ public class ExportService : IExportService
             ws.Cell(1, 5).Value = "Detail";
 
             var row = 2;
+
             foreach (var log in logs)
             {
                 ws.Cell(row, 1).Value = log.Timestamp;
@@ -169,11 +175,6 @@ public class ExportService : IExportService
         });
     }
 
-    private void _log_service_check(ILogService logService)
-    {
-        if (logService is null) throw new ArgumentNullException(nameof(logService));
-    }
-
     private void ValidateCanExport(string userEmail)
     {
         var user = _userRepository.GetUser(userEmail)
@@ -186,14 +187,16 @@ public class ExportService : IExportService
     private static void ValidateDateRange(DateTime from, DateTime to)
     {
         if (from > to)
-        {
             throw new ArgumentException("La fecha desde no puede ser posterior a la fecha hasta.");
-        }
     }
 
     private void RegisterExport(string userEmail, string exportName, string format)
     {
-        _logService.Register(userEmail, "Export", "FileExported", $"El usuario {userEmail} exportó {exportName} en formato {format}.");
+        _logService.Register(
+            userEmail,
+            "Export",
+            "FileExported",
+            $"El usuario {userEmail} exportó {exportName} en formato {format}.");
     }
 
     private string BuildFixtureCsv()
@@ -208,6 +211,7 @@ public class ExportService : IExportService
         foreach (var group in fixture.Groups)
         {
             var orderedMatches = group.MatchesInGroup.OrderBy(m => m.DateMatch);
+
             foreach (var match in orderedMatches)
             {
                 var fase = "Grupos";
@@ -218,16 +222,16 @@ public class ExportService : IExportService
                 var away = EscapeCsv(match.AwayTeam?.Name ?? string.Empty);
                 var homeGoals = match.HomeGoals.HasValue ? match.HomeGoals.Value.ToString() : string.Empty;
                 var awayGoals = match.AwayGoals.HasValue ? match.AwayGoals.Value.ToString() : string.Empty;
-                var estado = (match.HomeGoals.HasValue && match.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
+                var estado = match.HomeGoals.HasValue && match.AwayGoals.HasValue ? "Finalizado" : "Pendiente";
 
                 sb.AppendLine($"{EscapeCsv(fase)},{grupo},{fecha},{estadio},{home},{homeGoals},{away},{awayGoals},{estado}");
             }
         }
 
-        // Append cruces/eliminatorias if exist
-        if (_crucesRepository != null && _crucesRepository.HasCruces())
+        if (_crucesRepository.HasCruces())
         {
             var cruces = _crucesRepository.GetAllCruces();
+
             foreach (var cruce in cruces)
             {
                 var match = cruce.Match;
@@ -239,7 +243,7 @@ public class ExportService : IExportService
                 var away = EscapeCsv(match.AwayTeam?.Name ?? string.Empty);
                 var homeGoals = match.HomeGoals.HasValue ? match.HomeGoals.Value.ToString() : string.Empty;
                 var awayGoals = match.AwayGoals.HasValue ? match.AwayGoals.Value.ToString() : string.Empty;
-                var estado = (match.HomeGoals.HasValue && match.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
+                var estado = match.HomeGoals.HasValue && match.AwayGoals.HasValue ? "Finalizado" : "Pendiente";
 
                 sb.AppendLine($"{EscapeCsv(fase)},{grupo},{fecha},{estadio},{home},{homeGoals},{away},{awayGoals},{estado}");
             }
@@ -251,10 +255,10 @@ public class ExportService : IExportService
     private static string EscapeCsv(string input)
     {
         if (input is null) return string.Empty;
+
         if (input.Contains(',') || input.Contains('"') || input.Contains('\n') || input.Contains('\r'))
-        {
             return '"' + input.Replace("\"", "\"\"") + '"';
-        }
+
         return input;
     }
 
@@ -262,9 +266,12 @@ public class ExportService : IExportService
     {
         var exportsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "exports");
         Directory.CreateDirectory(exportsPath);
+
         var filename = $"{baseName.ToLowerInvariant()}_{DateTime.Now:yyyyMMdd_HHmmss}.{ext}";
         var filePath = Path.Combine(exportsPath, filename);
+
         File.WriteAllText(filePath, content, Encoding.UTF8);
+
         return $"/exports/{filename}";
     }
 
@@ -272,15 +279,14 @@ public class ExportService : IExportService
     {
         var exportsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "exports");
         Directory.CreateDirectory(exportsPath);
+
         var filename = $"{baseName.ToLowerInvariant()}_{DateTime.Now:yyyyMMdd_HHmmss}.{ext}";
         var filePath = Path.Combine(exportsPath, filename);
 
-        using (var wb = new XLWorkbook())
-        {
-            var ws = wb.Worksheets.Add("Sheet1");
-            fill(ws);
-            wb.SaveAs(filePath);
-        }
+        using var wb = new XLWorkbook();
+        var ws = wb.Worksheets.Add("Sheet1");
+        fill(ws);
+        wb.SaveAs(filePath);
 
         return $"/exports/{filename}";
     }

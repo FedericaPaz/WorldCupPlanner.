@@ -2,11 +2,9 @@
 
 namespace IRepository;
 
-public interface IUserRepository
+public interface IUserRepository : IUserReadRepository
 {
     void AddUser(User user);
-    User? GetUser(string email);
     void UpdateUser(User user);
     void DeleteUser(User user);
-    List<User> GetAllUsers();
 }

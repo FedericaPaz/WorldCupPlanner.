@@ -4,7 +4,6 @@ using Domain.Interfaces;
 using IRepository;
 using Services;
 using ServicesTests.Stubs;
-using DomainTests.Stubs;
 using Services.Simulation;
 
 namespace ServicesTests;
@@ -12,8 +11,8 @@ namespace ServicesTests;
 [TestClass]
 public class CruceServiceTests
 {
-    private static readonly DateTime FechaCreacionClock  = new DateTime(2026, 1, 1);
-    private static readonly DateTime FechaPartido        = new DateTime(2026, 6, 25);
+    private static readonly DateTime FechaCreacionClock = new DateTime(2026, 1, 1);
+    private static readonly DateTime FechaPartido = new DateTime(2026, 6, 25);
     private static readonly DateTime FechaResultadoClock = new DateTime(2026, 6, 26);
 
     private CrucesRepositoryStub _stubCrucesRepository = null!;
@@ -42,7 +41,9 @@ public class CruceServiceTests
         _rankingService = new RankingServiceStub();
         _clock = new ClockStub(FechaCreacionClock);
         _config = new TournamentConfig();
-        var notificationStub = new NotificationServiceStub();
+        _notificationServiceStub = new NotificationServiceStub();
+
+        var engineFactory = new DefaultSimulationEngineFactory();
 
         _service = new CruceService(
             _stubCrucesRepository,
@@ -50,8 +51,8 @@ public class CruceServiceTests
             _config,
             _matchRepository,
             _stubFixtureRepository,
-            _clock,                                         
-            new DefaultSimulationEngineFactory());        
+            _clock,
+            engineFactory);
     }
 
     private Fixture CreateFixtureWithResults()
@@ -59,33 +60,43 @@ public class CruceServiceTests
         var config = new TournamentConfig();
         var fixture = new Fixture(config);
         fixture.InitializeGroups();
+
         var grupos = Create12GroupsWithTeams();
+
         foreach (var grupo in grupos)
         {
             var grupoFixture = fixture.Groups.First(x => x.GroupLetter == grupo.GroupLetter);
+
             foreach (var team in grupo.TeamsInGroup)
                 grupoFixture.AddTeamToGroup(team);
+
             foreach (var match in grupo.MatchesInGroup)
                 grupoFixture.AddMatchToGroup(match);
         }
+
         fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+
         return fixture;
     }
 
     private List<Group> Create12GroupsWithTeams()
     {
         var grupos = new List<Group>();
+
         for (char letra = 'A'; letra <= 'L'; letra++)
         {
             var grupo = new Group(letra);
+
             for (int i = 0; i < 4; i++)
             {
                 var equipo = new Team($"Equipo{letra}{i + 1}", new Confederation("UEFA"), 300 + i * 10);
                 grupo.AddTeamToGroup(equipo);
             }
+
             CreateResults(grupo);
             grupos.Add(grupo);
         }
+
         return grupos;
     }
 
@@ -103,6 +114,7 @@ public class CruceServiceTests
     private void CreateResults(Group grupo)
     {
         var teams = grupo.TeamsInGroup.ToList();
+
         grupo.AddMatchToGroup(CreateMatch(teams[0], teams[1], 2, 0, grupo.GroupLetter));
         grupo.AddMatchToGroup(CreateMatch(teams[0], teams[2], 2, 0, grupo.GroupLetter));
         grupo.AddMatchToGroup(CreateMatch(teams[0], teams[3], 2, 0, grupo.GroupLetter));
@@ -114,33 +126,44 @@ public class CruceServiceTests
     private Match CreateMatch(Team homeTeam, Team awayTeam, int homeGoals, int awayGoals, char groupLetter)
     {
         var match = new Match(
-            _nextId++, FechaPartido,
+            _nextId++,
+            FechaPartido,
             new Stadium("Centenario", "Montevideo", "Desc", 50000),
-            homeTeam, awayTeam, groupLetter,
+            homeTeam,
+            awayTeam,
+            groupLetter,
             new ClockStub(FechaCreacionClock));
 
         match.SetClock(new ClockStub(FechaResultadoClock));
         match.SetMatchResult(homeGoals, awayGoals);
+
         return match;
     }
 
     private List<Cruce> CrearCrucesDummy(int cantidad, TournamentPhase fase)
     {
         var cruces = new List<Cruce>();
+
         for (int i = 0; i < cantidad; i++)
         {
-            var local     = new Team($"Local{i}",     new Confederation("UEFA"),     500);
+            var local = new Team($"Local{i}", new Confederation("UEFA"), 500);
             var visitante = new Team($"Visitante{i}", new Confederation("CONMEBOL"), 501);
-            var partido   = new Match(
-                _nextId++, FechaPartido,
+
+            var partido = new Match(
+                _nextId++,
+                FechaPartido,
                 new Stadium("Estadio", "Ciudad", "Desc", 50000),
-                local, visitante, 'N',
+                local,
+                visitante,
+                'N',
                 new ClockStub(FechaCreacionClock));
 
             partido.SetClock(new ClockStub(FechaResultadoClock));
             partido.SetMatchResult(2, 0);
+
             cruces.Add(new Cruce($"C{i}", partido, fase));
         }
+
         return cruces;
     }
 
@@ -149,7 +172,9 @@ public class CruceServiceTests
     {
         var fixture = CreateFixtureWithResults();
         var estadios = CreateStadiums();
+
         _stubFixtureRepository.AddFixture(fixture);
+
         foreach (var e in estadios)
             _stubStadiumRepository.AddStadium(e);
 
@@ -163,6 +188,7 @@ public class CruceServiceTests
     public void GenerateRoundOf32_WhenNoFixtureExists_ThrowsException()
     {
         _stubFixtureRepository.AddFixture(null);
+
         Assert.ThrowsException<InvalidOperationException>(() => _service.GenerateRoundOf32());
     }
 
@@ -171,7 +197,9 @@ public class CruceServiceTests
     {
         var crucesActuales = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
         var estadios = CreateStadiums();
+
         _stubCrucesRepository.SetCruces(crucesActuales);
+
         foreach (var e in estadios)
             _stubStadiumRepository.AddStadium(e);
 
@@ -184,10 +212,14 @@ public class CruceServiceTests
     public void GenerateNextRound_UsesOnlyLatestPhase()
     {
         var cruces = new List<Cruce>();
+
         cruces.AddRange(CrearCrucesDummy(16, TournamentPhase.RoundOf32));
         cruces.AddRange(CrearCrucesDummy(8, TournamentPhase.RoundOf16));
+
         var estadios = CreateStadiums();
+
         _stubCrucesRepository.SetCruces(cruces);
+
         foreach (var e in estadios)
             _stubStadiumRepository.AddStadium(e);
 
@@ -200,6 +232,7 @@ public class CruceServiceTests
     public void GenerateNextRound_WhenNoCrucesExist_ThrowsException()
     {
         _stubCrucesRepository.SetCruces(new List<Cruce>());
+
         Assert.ThrowsException<InvalidOperationException>(() => _service.GenerateNextRound());
     }
 
@@ -207,7 +240,9 @@ public class CruceServiceTests
     public void GenerateNextRound_WhenCurrentPhaseIsFinal_ThrowsException()
     {
         var crucesFinal = CrearCrucesDummy(1, TournamentPhase.Final);
+
         _stubCrucesRepository.SetCruces(crucesFinal);
+
         Assert.ThrowsException<InvalidOperationException>(() => _service.GenerateNextRound());
     }
 
@@ -215,8 +250,11 @@ public class CruceServiceTests
     public void GetAllCruces_WhenCrucesExist_ReturnsMappedResponses()
     {
         var cruces = CrearCrucesDummy(16, TournamentPhase.RoundOf32);
+
         _stubCrucesRepository.SetCruces(cruces);
+
         var result = _service.GetAllCruces();
+
         Assert.AreEqual(16, result.Count);
     }
 
@@ -224,7 +262,9 @@ public class CruceServiceTests
     public void GetAllCruces_WhenNoCruces_ReturnsEmptyList()
     {
         _stubCrucesRepository.SetCruces(new List<Cruce>());
+
         var result = _service.GetAllCruces();
+
         Assert.AreEqual(0, result.Count);
     }
 
@@ -233,12 +273,14 @@ public class CruceServiceTests
     {
         var fixture = CreateFixtureWithResults();
         var estadios = CreateStadiums();
+
         _stubFixtureRepository.AddFixture(fixture);
+
         foreach (var e in estadios)
             _stubStadiumRepository.AddStadium(e);
 
         _service.GenerateRoundOf32();
-        
+
         Assert.IsNotNull(_stubCrucesRepository.AddedCruces);
     }
 
@@ -247,7 +289,9 @@ public class CruceServiceTests
     {
         var fixture = CreateFixtureWithResults();
         var estadios = CreateStadiums();
+
         _stubFixtureRepository.AddFixture(fixture);
+
         foreach (var e in estadios)
             _stubStadiumRepository.AddStadium(e);
 
@@ -255,15 +299,21 @@ public class CruceServiceTests
 
         var cruces = _stubCrucesRepository.AddedCruces;
         var todosEquipos = new HashSet<string>();
+
         foreach (var cruce in cruces)
         {
-            Assert.IsFalse(todosEquipos.Contains(cruce.Match.HomeTeam.Name),
+            Assert.IsFalse(
+                todosEquipos.Contains(cruce.Match.HomeTeam.Name),
                 $"Equipo {cruce.Match.HomeTeam.Name} aparece múltiples veces");
-            Assert.IsFalse(todosEquipos.Contains(cruce.Match.AwayTeam.Name),
+
+            Assert.IsFalse(
+                todosEquipos.Contains(cruce.Match.AwayTeam.Name),
                 $"Equipo {cruce.Match.AwayTeam.Name} aparece múltiples veces");
+
             todosEquipos.Add(cruce.Match.HomeTeam.Name);
             todosEquipos.Add(cruce.Match.AwayTeam.Name);
         }
+
         Assert.AreEqual(32, todosEquipos.Count);
     }
 
@@ -272,13 +322,16 @@ public class CruceServiceTests
     {
         var fixture = CreateFixtureWithResults();
         var estadios = CreateStadiums();
+
         _stubFixtureRepository.AddFixture(fixture);
+
         foreach (var e in estadios)
             _stubStadiumRepository.AddStadium(e);
 
         _service.GenerateRoundOf32();
 
         var cruces = _stubCrucesRepository.AddedCruces;
+
         Assert.AreEqual(8, cruces.Count(c => c.Name.StartsWith("A")), "8 cruces tipo A");
         Assert.AreEqual(8, cruces.Count(c => c.Name.StartsWith("B")), "8 cruces tipo B");
     }
@@ -288,7 +341,9 @@ public class CruceServiceTests
     {
         var fixture = CreateFixtureWithResults();
         var estadios = CreateStadiums();
+
         _stubFixtureRepository.AddFixture(fixture);
+
         foreach (var e in estadios)
             _stubStadiumRepository.AddStadium(e);
 

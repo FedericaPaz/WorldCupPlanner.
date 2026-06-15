@@ -17,6 +17,7 @@ public class SimulationService : ISimulationService
     private readonly IFixtureRepository _fixtureRepository;
     private readonly TournamentConfig _config;
     private readonly INotificationService _notificationService;
+    private readonly Services.Simulation.ISimulationEngineFactory _engineFactory;
 
     public string LastUsedEngineName { get; private set; } = string.Empty;
 
@@ -26,6 +27,7 @@ public class SimulationService : ISimulationService
         IRankingService rankingService,
         IFixtureRepository fixtureRepository,
         TournamentConfig config,
+        Services.Simulation.ISimulationEngineFactory engineFactory,
         INotificationService notificationService)
     {
         _logService = logService;
@@ -33,6 +35,7 @@ public class SimulationService : ISimulationService
         _rankingService = rankingService;
         _fixtureRepository = fixtureRepository;
         _config = config;
+        _engineFactory = engineFactory ?? throw new ArgumentNullException(nameof(engineFactory));
         _notificationService = notificationService ?? throw new ArgumentNullException(nameof(notificationService));
     }
 
@@ -41,19 +44,20 @@ public class SimulationService : ISimulationService
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
-        SimulateMatch(matchId, seed, fixture.CreateEngine());
+        var engine = _engineFactory.Create(fixture.SimulationEngineName);
+        SimulateMatch(matchId, seed, engine);
+
         _notificationService.NotifyJournalists("Se simuló el resultado de un partido.");
     }
 
-    private  void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
+    private void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
     {
         var match = _matchRepository.GetMatchById(matchId);
         var (home, away) = SimulateMatch(match, seed, engine);
-        var random = new Random(seed);
 
         var homeGoals = home;
         var awayGoals = away;
-        
+
         match.ClearCardIncidents();
         AddSimulatedCardIncidents(match, seed);
 
@@ -68,7 +72,7 @@ public class SimulationService : ISimulationService
         _matchRepository.UpdateMatch(match);
         _rankingService.UpdateRankingsAfterMatch(match);
     }
-    
+
     private (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed, ISimulationEngine engine)
     {
         EnsureValidEngine(engine);
@@ -88,7 +92,9 @@ public class SimulationService : ISimulationService
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
-        SimulateGroupStage(fixture.CreateEngine());
+        var engine = _engineFactory.Create(fixture.SimulationEngineName);
+        SimulateGroupStage(engine);
+
         _notificationService.NotifyJournalists("Se simularon los resultados de los partidos pendientes.");
     }
 
@@ -138,7 +144,7 @@ public class SimulationService : ISimulationService
             "SimulationExecuted",
             $"Se ejecutó una simulación con semilla {seed} usando el motor {engineName}.");
     }
-    
+
     private static void AddSimulatedCardIncidents(Match match, int seed)
     {
         var random = new Random(seed + match.IdMatch * 17);
@@ -148,7 +154,7 @@ public class SimulationService : ISimulationService
         AddIncidentIfNeeded(match, IncidentType.RedCard, match.HomeTeam, random.Next(0, MaxRedCards + 1));
         AddIncidentIfNeeded(match, IncidentType.RedCard, match.AwayTeam, random.Next(0, MaxRedCards + 1));
     }
-    
+
     private static void AddIncidentIfNeeded(Match match, IncidentType type, ITeam team, int quantity)
     {
         if (quantity > 0)
