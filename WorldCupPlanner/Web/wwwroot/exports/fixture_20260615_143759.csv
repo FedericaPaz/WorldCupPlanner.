@@ -1,0 +1,73 @@
+﻿Fase,Grupo,Fecha,Estadio,Equipo local,Goles local,Equipo visitante,Goles visitante,Estado
+Grupos,A,2026-06-20 14:00,Campeon del Signo,CAF_06,1,AFC_03,0,Finalizado
+Grupos,A,2026-06-20 14:00,Centenario,CONMEBOL_07,6,UEFA_07,1,Finalizado
+Grupos,A,2026-06-23 14:00,Esadio4,CAF_06,2,UEFA_07,1,Finalizado
+Grupos,A,2026-06-23 14:00,Estadio3,CONMEBOL_07,4,AFC_03,2,Finalizado
+Grupos,A,2026-06-26 14:00,Estadio5,CAF_06,5,CONMEBOL_07,5,Finalizado
+Grupos,A,2026-06-26 14:00,Campeon del Signo,UEFA_07,1,AFC_03,0,Finalizado
+Grupos,B,2026-06-20 18:00,Centenario,AFC_05,3,CONMEBOL_01,2,Finalizado
+Grupos,B,2026-06-20 18:00,Esadio4,UEFA_13,5,UEFA_12,1,Finalizado
+Grupos,B,2026-06-23 18:00,Estadio3,AFC_05,1,UEFA_12,0,Finalizado
+Grupos,B,2026-06-23 18:00,Estadio5,UEFA_13,2,CONMEBOL_01,1,Finalizado
+Grupos,B,2026-06-26 18:00,Campeon del Signo,AFC_05,1,UEFA_13,4,Finalizado
+Grupos,B,2026-06-26 18:00,Centenario,UEFA_12,6,CONMEBOL_01,1,Finalizado
+Grupos,C,2026-06-20 22:00,Esadio4,AFC_08,2,UEFA_15,1,Finalizado
+Grupos,C,2026-06-20 22:00,Estadio3,CAF_07,3,CONMEBOL_05,1,Finalizado
+Grupos,C,2026-06-23 22:00,Estadio5,AFC_08,5,CONMEBOL_05,1,Finalizado
+Grupos,C,2026-06-23 22:00,Campeon del Signo,CAF_07,1,UEFA_15,0,Finalizado
+Grupos,C,2026-06-26 22:00,Centenario,AFC_08,3,CAF_07,2,Finalizado
+Grupos,C,2026-06-26 22:00,Esadio4,CONMEBOL_05,5,UEFA_15,1,Finalizado
+Grupos,D,2026-06-20 14:00,Estadio3,AFC_06,6,OFC_01,0,Finalizado
+Grupos,D,2026-06-20 14:00,Estadio5,CAF_01,2,UEFA_03,1,Finalizado
+Grupos,D,2026-06-23 14:00,Campeon del Signo,AFC_06,4,UEFA_03,1,Finalizado
+Grupos,D,2026-06-23 14:00,Centenario,CAF_01,6,OFC_01,1,Finalizado
+Grupos,D,2026-06-26 14:00,Esadio4,AFC_06,1,CAF_01,0,Finalizado
+Grupos,D,2026-06-26 14:00,Estadio3,UEFA_03,3,OFC_01,3,Finalizado
+Grupos,E,2026-06-20 18:00,Estadio5,CONCACAF_07,5,CAF_05,1,Finalizado
+Grupos,E,2026-06-20 18:00,Campeon del Signo,CONMEBOL_04,0,AFC_07,0,Finalizado
+Grupos,E,2026-06-23 18:00,Centenario,CONCACAF_07,2,AFC_07,1,Finalizado
+Grupos,E,2026-06-23 18:00,Esadio4,CONMEBOL_04,4,CAF_05,4,Finalizado
+Grupos,E,2026-06-26 18:00,Estadio3,CONCACAF_07,6,CONMEBOL_04,0,Finalizado
+Grupos,E,2026-06-26 18:00,Estadio5,AFC_07,1,CAF_05,2,Finalizado
+Grupos,F,2026-06-20 22:00,Campeon del Signo,UEFA_11,3,CAF_02,1,Finalizado
+Grupos,F,2026-06-20 22:00,Centenario,CONCACAF_06,0,AFC_02,5,Finalizado
+Grupos,F,2026-06-23 22:00,Esadio4,UEFA_11,1,AFC_02,0,Finalizado
+Grupos,F,2026-06-23 22:00,Estadio3,CONCACAF_06,2,CAF_02,2,Finalizado
+Grupos,F,2026-06-26 22:00,Estadio5,UEFA_11,4,CONCACAF_06,1,Finalizado
+Grupos,F,2026-06-26 22:00,Campeon del Signo,AFC_02,5,CAF_02,6,Finalizado
+Grupos,G,2026-06-21 14:00,Centenario,CONCACAF_05,2,UEFA_09,1,Finalizado
+Grupos,G,2026-06-21 14:00,Esadio4,CAF_09,4,AFC_04,1,Finalizado
+Grupos,G,2026-06-24 14:00,Estadio3,CONCACAF_05,5,AFC_04,0,Finalizado
+Grupos,G,2026-06-24 14:00,Estadio5,CAF_09,1,UEFA_09,0,Finalizado
+Grupos,G,2026-06-27 14:00,Campeon del Signo,CONCACAF_05,3,CAF_09,1,Finalizado
+Grupos,G,2026-06-27 14:00,Centenario,AFC_04,5,UEFA_09,0,Finalizado
+Grupos,H,2026-06-21 18:00,Esadio4,UEFA_08,1,CAF_08,0,Finalizado
+Grupos,H,2026-06-21 18:00,Estadio3,UEFA_14,2,CONCACAF_04,1,Finalizado
+Grupos,H,2026-06-24 18:00,Estadio5,UEFA_08,4,CONCACAF_04,0,Finalizado
+Grupos,H,2026-06-24 18:00,Campeon del Signo,UEFA_14,6,CAF_08,5,Finalizado
+Grupos,H,2026-06-27 18:00,Centenario,UEFA_08,1,UEFA_14,1,Finalizado
+Grupos,H,2026-06-27 18:00,Esadio4,CONCACAF_04,3,CAF_08,1,Finalizado
+Grupos,I,2026-06-21 22:00,Estadio3,UEFA_10,5,AFC_01,0,Finalizado
+Grupos,I,2026-06-21 22:00,Estadio5,UEFA_05,1,CONCACAF_02,0,Finalizado
+Grupos,I,2026-06-24 22:00,Campeon del Signo,UEFA_10,3,CONCACAF_02,1,Finalizado
+Grupos,I,2026-06-24 22:00,Centenario,UEFA_05,4,AFC_01,0,Finalizado
+Grupos,I,2026-06-27 22:00,Esadio4,UEFA_10,6,UEFA_05,6,Finalizado
+Grupos,I,2026-06-27 22:00,Estadio3,CONCACAF_02,2,AFC_01,1,Finalizado
+Grupos,J,2026-06-21 14:00,Estadio5,CONMEBOL_06,4,UEFA_04,0,Finalizado
+Grupos,J,2026-06-21 14:00,Campeon del Signo,CAF_03,5,CONCACAF_03,4,Finalizado
+Grupos,J,2026-06-24 14:00,Centenario,CONMEBOL_06,0,CONCACAF_03,0,Finalizado
+Grupos,J,2026-06-24 14:00,Esadio4,CAF_03,3,UEFA_04,0,Finalizado
+Grupos,J,2026-06-27 14:00,Estadio3,CONMEBOL_06,5,CAF_03,0,Finalizado
+Grupos,J,2026-06-27 14:00,Estadio5,CONCACAF_03,6,UEFA_04,6,Finalizado
+Grupos,K,2026-06-21 18:00,Campeon del Signo,UEFA_16,2,CONCACAF_01,0,Finalizado
+Grupos,K,2026-06-21 18:00,Centenario,CONMEBOL_03,4,UEFA_02,0,Finalizado
+Grupos,K,2026-06-24 18:00,Esadio4,UEFA_16,6,UEFA_02,4,Finalizado
+Grupos,K,2026-06-24 18:00,Estadio3,CONMEBOL_03,2,CONCACAF_01,1,Finalizado
+Grupos,K,2026-06-27 18:00,Estadio5,UEFA_16,3,CONMEBOL_03,0,Finalizado
+Grupos,K,2026-06-27 18:00,Campeon del Signo,UEFA_02,5,CONCACAF_01,5,Finalizado
+Grupos,L,2026-06-21 22:00,Centenario,CONMEBOL_02,1,CAF_04,0,Finalizado
+Grupos,L,2026-06-21 22:00,Esadio4,UEFA_06,3,UEFA_01,0,Finalizado
+Grupos,L,2026-06-24 22:00,Estadio3,CONMEBOL_02,4,UEFA_01,0,Finalizado
+Grupos,L,2026-06-24 22:00,Estadio5,UEFA_06,6,CAF_04,4,Finalizado
+Grupos,L,2026-06-27 22:00,Campeon del Signo,CONMEBOL_02,2,UEFA_06,0,Finalizado
+Grupos,L,2026-06-27 22:00,Centenario,UEFA_01,3,CAF_04,3,Finalizado

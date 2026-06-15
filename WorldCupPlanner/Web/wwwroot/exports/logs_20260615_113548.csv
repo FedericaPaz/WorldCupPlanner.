@@ -1,0 +1,1530 @@
+﻿Timestamp,UserEmail,Category,Action,Detail
+2026-06-14T02:28:04.6492670,s@gmail.com,Fixture,Generación,Se elimino el fixture generado con:  12345
+2026-06-14T02:28:02.8391370,s@gmail.com,Fixture,Generación,Se generó el fixture del torneo con semilla 12345
+2026-06-14T02:27:28.2478290,s@gmail.com,Fixture,Generación,Se elimino el fixture generado con:  12345
+2026-06-14T00:08:56.0889910,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CAF_06 vs AFC_03
+2026-06-14T00:08:56.0844530,system,Ranking,RankingUpdated,CAF_06: 2452 -> 2452. AFC_03: 681 -> 681.
+2026-06-14T00:08:56.0336490,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 786007527 usando el motor Probabilístico.
+2026-06-14T00:08:24.6535830,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CONMEBOL_07 vs UEFA_07
+2026-06-14T00:08:24.6508540,system,Ranking,RankingUpdated,CONMEBOL_07: 1941 -> 1947. UEFA_07: 1350 -> 1344.
+2026-06-14T00:08:24.5811020,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 154639501 usando el motor Probabilístico.
+2026-06-14T00:08:14.4683840,s@gmail.com,Notification,NotificationRead,El usuario s@gmail.com marcó como leída la notificación a72d4498-0a0a-474d-ab5b-f70119c69f07.
+2026-06-14T00:08:13.5319670,s@gmail.com,Notification,NotificationRead,El usuario s@gmail.com marcó como leída la notificación 338743fb-0dc8-4f7f-9967-6277b3b9a510.
+2026-06-14T00:08:12.4606600,s@gmail.com,Notification,NotificationRead,El usuario s@gmail.com marcó como leída la notificación d63b5699-af8b-408e-b3a1-2277bcf4d3ec.
+2026-06-14T00:08:06.8810940,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido AFC_06 vs OFC_01
+2026-06-14T00:08:06.8770620,system,Ranking,RankingUpdated,AFC_06: 2413 -> 2413. OFC_01: 318 -> 318.
+2026-06-14T00:08:06.8179830,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 1971126057 usando el motor Probabilístico.
+2026-06-14T00:07:58.1702650,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CAF_06 vs AFC_03
+2026-06-14T00:07:58.1664520,system,Ranking,RankingUpdated,CAF_06: 2451 -> 2452. AFC_03: 682 -> 681.
+2026-06-14T00:07:58.1004700,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 353873505 usando el motor Probabilístico.
+2026-06-14T00:07:51.2420160,s@gmail.com,Partidos,Modificación,Se modificó el partido CAF_06 vs AFC_03
+2026-06-14T00:07:51.2208850,system,Ranking,RankingUpdated,CAF_06: 2450 -> 2451. AFC_03: 683 -> 682.
+2026-06-14T00:07:29.2174290,system,Ranking,RankingUpdated,UEFA_01: 697 -> 692. CAF_04: 373 -> 378.
+2026-06-14T00:07:29.2011890,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.1992060,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1956. UEFA_06: 1358 -> 1352.
+2026-06-14T00:07:29.1858800,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.1841180,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1361. CAF_04: 373 -> 370.
+2026-06-14T00:07:29.1707700,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.1685910,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1952. UEFA_01: 697 -> 695.
+2026-06-14T00:07:29.1542260,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.1498960,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1363. UEFA_01: 697 -> 692.
+2026-06-14T00:07:29.1353700,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.1334010,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1951. CAF_04: 373 -> 372.
+2026-06-14T00:07:29.1126330,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.1093490,system,Ranking,RankingUpdated,UEFA_02: 697 -> 695. CONCACAF_01: 573 -> 575.
+2026-06-14T00:07:29.0966550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.0945860,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1965. CONMEBOL_03: 1369 -> 1363.
+2026-06-14T00:07:29.0776460,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.0737150,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1373. CONCACAF_01: 573 -> 569.
+2026-06-14T00:07:29.0561010,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.0537410,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1961. UEFA_02: 697 -> 695.
+2026-06-14T00:07:29.0371690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.0350500,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1374. UEFA_02: 697 -> 692.
+2026-06-14T00:07:29.0161890,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:29.0138400,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1960. CONCACAF_01: 573 -> 572.
+2026-06-14T00:07:28.9909290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.9885660,system,Ranking,RankingUpdated,CONCACAF_03: 786 -> 785. UEFA_04: 737 -> 738.
+2026-06-14T00:07:28.9718760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.9700110,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1970. CAF_03: 1385 -> 1379.
+2026-06-14T00:07:28.9566830,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.9547410,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. UEFA_04: 737 -> 732.
+2026-06-14T00:07:28.9408380,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.9389530,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1951. CONCACAF_03: 786 -> 799.
+2026-06-14T00:07:28.9259200,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.9227420,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. CONCACAF_03: 786 -> 780.
+2026-06-14T00:07:28.9089470,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.9066010,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1966. UEFA_04: 737 -> 735.
+2026-06-14T00:07:28.8908720,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.8890190,system,Ranking,RankingUpdated,CONCACAF_02: 977 -> 985. AFC_01: 538 -> 530.
+2026-06-14T00:07:28.8756740,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.8731150,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2022. UEFA_05: 1560 -> 1567.
+2026-06-14T00:07:28.8605290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.8572100,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1563. AFC_01: 538 -> 535.
+2026-06-14T00:07:28.8437770,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.8412790,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2031. CONCACAF_02: 977 -> 975.
+2026-06-14T00:07:28.8256150,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.8233540,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1566. CONCACAF_02: 977 -> 971.
+2026-06-14T00:07:28.8092670,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.8066650,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2030. AFC_01: 538 -> 537.
+2026-06-14T00:07:28.7921030,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.7895920,system,Ranking,RankingUpdated,CONCACAF_04: 1130 -> 1143. CAF_08: 1038 -> 1025.
+2026-06-14T00:07:28.7774530,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.7628240,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2045. UEFA_14: 1620 -> 1627.
+2026-06-14T00:07:28.7385300,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.7359030,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1626. CAF_08: 1038 -> 1032.
+2026-06-14T00:07:28.7151690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.7132870,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CONCACAF_04: 1130 -> 1127.
+2026-06-14T00:07:28.6985660,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.6966310,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1627. CONCACAF_04: 1130 -> 1123.
+2026-06-14T00:07:28.6775810,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.6729770,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CAF_08: 1038 -> 1035.
+2026-06-14T00:07:28.6542690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.6504400,system,Ranking,RankingUpdated,AFC_04: 648 -> 661. UEFA_09: 529 -> 516.
+2026-06-14T00:07:28.6361090,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.6329790,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2226. CAF_09: 1698 -> 1691.
+2026-06-14T00:07:28.6159880,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.6139960,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. UEFA_09: 529 -> 527.
+2026-06-14T00:07:28.6027590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.6009910,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. AFC_04: 648 -> 647.
+2026-06-14T00:07:28.5888090,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.5869860,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. AFC_04: 648 -> 646.
+2026-06-14T00:07:28.5719450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.5698640,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. UEFA_09: 529 -> 528.
+2026-06-14T00:07:28.5539270,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.5522590,system,Ranking,RankingUpdated,AFC_02: 1142 -> 1119. CAF_02: 613 -> 636.
+2026-06-14T00:07:28.5398470,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.5381490,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2347. CONCACAF_06: 1724 -> 1718.
+2026-06-14T00:07:28.5264950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.5240170,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1711. CAF_02: 613 -> 626.
+2026-06-14T00:07:28.5107840,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.5087690,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2343. AFC_02: 1142 -> 1140.
+2026-06-14T00:07:28.4958960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.4941950,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1700. AFC_02: 1142 -> 1165.
+2026-06-14T00:07:28.4798300,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.4780460,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2342. CAF_02: 613 -> 612.
+2026-06-14T00:07:28.4641440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.4622570,system,Ranking,RankingUpdated,AFC_07: 1268 -> 1251. CAF_05: 1135 -> 1152.
+2026-06-14T00:07:28.4486980,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.4466970,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2383. CONMEBOL_04: 1739 -> 1733.
+2026-06-14T00:07:28.4337770,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.4321020,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1730. CAF_05: 1135 -> 1144.
+2026-06-14T00:07:28.4191020,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.4169470,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. AFC_07: 1268 -> 1266.
+2026-06-14T00:07:28.4040450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.4023570,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1732. AFC_07: 1268 -> 1275.
+2026-06-14T00:07:28.3879630,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.3861770,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. CAF_05: 1135 -> 1133.
+2026-06-14T00:07:28.3713910,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.3696380,system,Ranking,RankingUpdated,UEFA_03: 437 -> 435. OFC_01: 316 -> 318.
+2026-06-14T00:07:28.3564070,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.3547900,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2413. CAF_01: 1761 -> 1756.
+2026-06-14T00:07:28.3426810,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.3403830,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. OFC_01: 316 -> 315.
+2026-06-14T00:07:28.3308390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.3292860,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. UEFA_03: 437 -> 437.
+2026-06-14T00:07:28.3153160,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.3137040,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. UEFA_03: 437 -> 436.
+2026-06-14T00:07:28.2981230,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.2958740,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. OFC_01: 316 -> 316.
+2026-06-14T00:07:28.2826270,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.2809830,system,Ranking,RankingUpdated,CONMEBOL_05: 1175 -> 1180. UEFA_15: 458 -> 453.
+2026-06-14T00:07:28.2663430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.2648900,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2425. CAF_07: 1763 -> 1758.
+2026-06-14T00:07:28.2522090,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.2494590,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1764. UEFA_15: 458 -> 457.
+2026-06-14T00:07:28.2372760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.2353110,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2422. CONMEBOL_05: 1175 -> 1173.
+2026-06-14T00:07:28.2162880,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.2144500,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1769. CONMEBOL_05: 1175 -> 1169.
+2026-06-14T00:07:28.2002820,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.1982950,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2420. UEFA_15: 458 -> 458.
+2026-06-14T00:07:28.1837310,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.1817050,system,Ranking,RankingUpdated,UEFA_12: 676 -> 686. CONMEBOL_01: 387 -> 377.
+2026-06-14T00:07:28.1689620,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.1670070,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2427. UEFA_13: 1807 -> 1831.
+2026-06-14T00:07:28.1499430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.1479720,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1808. CONMEBOL_01: 387 -> 386.
+2026-06-14T00:07:28.1309220,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.1288970,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. UEFA_12: 676 -> 676.
+2026-06-14T00:07:28.1107640,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.1077840,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1809. UEFA_12: 676 -> 674.
+2026-06-14T00:07:28.0896900,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.0878180,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. CONMEBOL_01: 387 -> 387.
+2026-06-14T00:07:28.0764590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.0736980,system,Ranking,RankingUpdated,UEFA_07: 1345 -> 1350. AFC_03: 688 -> 683.
+2026-06-14T00:07:28.0580680,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.0556620,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2450. CONMEBOL_07: 1933 -> 1941.
+2026-06-14T00:07:28.0380400,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.0360270,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1935. AFC_03: 688 -> 686.
+2026-06-14T00:07:28.0177630,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:28.0155970,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2460. UEFA_07: 1345 -> 1343.
+2026-06-14T00:07:27.9973000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:27.9949970,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1939. UEFA_07: 1345 -> 1339.
+2026-06-14T00:07:27.9581010,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:27.9548870,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2459. AFC_03: 688 -> 688.
+2026-06-14T00:07:27.8817400,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-14T00:07:23.2825830,s@gmail.com,Fixture,Generación,Se generó el fixture del torneo con semilla 12345
+2026-06-14T00:07:18.6388180,s@gmail.com,Fixture,Generación,Se elimino el fixture generado con:  12345
+2026-06-14T00:06:37.6199710,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CONMEBOL_07 vs UEFA_07
+2026-06-14T00:06:37.6168450,system,Ranking,RankingUpdated,CONMEBOL_07: 1910 -> 1916. UEFA_07: 1314 -> 1308.
+2026-06-14T00:06:37.5264480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 954293069 usando el motor Probabilístico.
+2026-06-14T00:06:28.1498540,s@gmail.com,Partidos,Modificación,Se modificó el partido CAF_06 vs AFC_03
+2026-06-14T00:06:28.0938230,system,Ranking,RankingUpdated,CAF_06: 2461 -> 2432. AFC_03: 705 -> 734.
+2026-06-14T00:06:15.2859620,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CAF_06 vs AFC_03
+2026-06-14T00:06:15.2833180,system,Ranking,RankingUpdated,CAF_06: 2460 -> 2461. AFC_03: 706 -> 705.
+2026-06-14T00:06:14.8662210,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 920970697 usando el motor Probabilístico.
+2026-06-13T23:48:02.4286990,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CAF_06 vs AFC_03
+2026-06-13T23:48:02.4247770,system,Ranking,RankingUpdated,CAF_06: 2459 -> 2460. AFC_03: 707 -> 706.
+2026-06-13T23:48:02.3405150,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 717545255 usando el motor Probabilístico.
+2026-06-13T23:47:57.3273400,s@gmail.com,Notification,NotificationRead,El usuario s@gmail.com marcó como leída la notificación 27600e75-8cce-464b-b458-313a1cf5c15e.
+2026-06-13T23:47:44.4664270,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CONMEBOL_07 vs UEFA_07
+2026-06-13T23:47:44.4597720,system,Ranking,RankingUpdated,CONMEBOL_07: 1904 -> 1910. UEFA_07: 1320 -> 1314.
+2026-06-13T23:47:44.3728140,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 1197969738 usando el motor Probabilístico.
+2026-06-13T23:47:37.7481770,s@gmail.com,Partidos,Modificación,Se modificó el partido CAF_06 vs AFC_03
+2026-06-13T23:47:37.6865070,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2459. AFC_03: 708 -> 707.
+2026-06-13T23:47:21.6222580,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CAF_06 vs AFC_03
+2026-06-13T23:47:21.6197460,system,Ranking,RankingUpdated,CAF_06: 2457 -> 2458. AFC_03: 709 -> 708.
+2026-06-13T23:47:21.5974310,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 1218924699 usando el motor Probabilístico.
+2026-06-13T23:47:20.8478230,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CAF_06 vs AFC_03
+2026-06-13T23:47:20.8429870,system,Ranking,RankingUpdated,CAF_06: 2456 -> 2457. AFC_03: 710 -> 709.
+2026-06-13T23:47:20.7852080,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 1710119187 usando el motor Probabilístico.
+2026-06-13T23:47:19.4227720,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CAF_06 vs AFC_03
+2026-06-13T23:47:19.4176780,system,Ranking,RankingUpdated,CAF_06: 2455 -> 2456. AFC_03: 711 -> 710.
+2026-06-13T23:47:19.2986110,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 1704451941 usando el motor Probabilístico.
+2026-06-13T23:45:05.2406860,system,Ranking,RankingUpdated,UEFA_08: 2109 -> 2126. CONMEBOL_04: 1874 -> 1858.
+2026-06-13T23:45:05.2148090,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:45:05.2117390,system,Ranking,RankingUpdated,CONMEBOL_02: 1988 -> 2020. CONCACAF_07: 2365 -> 2334.
+2026-06-13T23:45:05.1825040,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:45:00.6850450,s@gmail.com,Cruces,Sorteo,Se realizó el sorteo de la siguiente ronda de cruces con semilla 13579
+2026-06-13T23:44:58.7592310,system,Ranking,RankingUpdated,CONMEBOL_04: 1839 -> 1874. CONCACAF_07: 2400 -> 2365.
+2026-06-13T23:44:58.7352300,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:58.7309660,system,Ranking,RankingUpdated,CONMEBOL_02: 2008 -> 1988. UEFA_08: 2089 -> 2109.
+2026-06-13T23:44:58.7005270,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:54.2106070,s@gmail.com,Cruces,Sorteo,Se realizó el sorteo de la siguiente ronda de cruces con semilla 13579
+2026-06-13T23:44:51.9410960,system,Ranking,RankingUpdated,UEFA_08: 2081 -> 2089. UEFA_06: 1420 -> 1412.
+2026-06-13T23:44:51.9162380,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:51.9110710,system,Ranking,RankingUpdated,UEFA_10: 2076 -> 2061. CONCACAF_07: 2386 -> 2400.
+2026-06-13T23:44:51.8881160,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:51.8844980,system,Ranking,RankingUpdated,CAF_01: 1791 -> 1774. CONMEBOL_02: 1991 -> 2008.
+2026-06-13T23:44:51.8579240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:51.8547120,system,Ranking,RankingUpdated,CONMEBOL_04: 1802 -> 1839. CAF_06: 2492 -> 2455.
+2026-06-13T23:44:51.8209770,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:46.7952890,s@gmail.com,Cruces,Sorteo,Se realizó el sorteo de la siguiente ronda de cruces con semilla 13579
+2026-06-13T23:44:44.0970460,system,Ranking,RankingUpdated,AFC_08: 2426 -> 2389. CONMEBOL_04: 1766 -> 1802.
+2026-06-13T23:44:44.0840680,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:44.0821530,system,Ranking,RankingUpdated,CONCACAF_07: 2361 -> 2386. AFC_05: 2459 -> 2435.
+2026-06-13T23:44:44.0698640,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:44.0681680,system,Ranking,RankingUpdated,CAF_03: 1401 -> 1378. UEFA_06: 1398 -> 1420.
+2026-06-13T23:44:44.0558900,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:44.0542680,system,Ranking,RankingUpdated,UEFA_10: 2044 -> 2076. AFC_06: 2414 -> 2383.
+2026-06-13T23:44:44.0421260,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:44.0399270,system,Ranking,RankingUpdated,CONCACAF_05: 2227 -> 2198. CONMEBOL_02: 1963 -> 1991.
+2026-06-13T23:44:44.0247430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:44.0230330,system,Ranking,RankingUpdated,CAF_06: 2473 -> 2492. UEFA_11: 2349 -> 2330.
+2026-06-13T23:44:44.0091450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:44.0070540,system,Ranking,RankingUpdated,UEFA_16: 1982 -> 1962. UEFA_08: 2061 -> 2081.
+2026-06-13T23:44:43.9900870,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:43.9875700,system,Ranking,RankingUpdated,CAF_01: 1763 -> 1791. CONMEBOL_06: 1972 -> 1945.
+2026-06-13T23:44:43.9536440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:41.5251820,s@gmail.com,Cruces,Sorteo,Se realizó el sorteo de la siguiente ronda de cruces con semilla 13579
+2026-06-13T23:44:39.0555270,system,Ranking,RankingUpdated,CONCACAF_07: 2353 -> 2361. CONCACAF_06: 1718 -> 1710.
+2026-06-13T23:44:39.0412650,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:39.0397490,system,Ranking,RankingUpdated,CAF_03: 1379 -> 1401. CONMEBOL_03: 1363 -> 1341.
+2026-06-13T23:44:39.0265650,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:39.0250300,system,Ranking,RankingUpdated,CAF_01: 1756 -> 1763. CONCACAF_02: 985 -> 979.
+2026-06-13T23:44:39.0121430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:39.0095190,system,Ranking,RankingUpdated,UEFA_06: 1367 -> 1398. CAF_09: 1691 -> 1661.
+2026-06-13T23:44:38.9941340,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.9920650,system,Ranking,RankingUpdated,CONMEBOL_04: 1763 -> 1766. UEFA_12: 686 -> 683.
+2026-06-13T23:44:38.9796160,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.9781550,system,Ranking,RankingUpdated,UEFA_11: 2347 -> 2349. CAF_08: 1054 -> 1052.
+2026-06-13T23:44:38.9645980,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.9631170,system,Ranking,RankingUpdated,UEFA_16: 1965 -> 1982. CAF_07: 1758 -> 1741.
+2026-06-13T23:44:38.9504910,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.9476770,system,Ranking,RankingUpdated,CONMEBOL_02: 1941 -> 1963. CONMEBOL_07: 1926 -> 1904.
+2026-06-13T23:44:38.9324340,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.9269420,system,Ranking,RankingUpdated,UEFA_10: 2037 -> 2044. AFC_07: 1281 -> 1274.
+2026-06-13T23:44:38.9124100,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.9094590,system,Ranking,RankingUpdated,CAF_06: 2465 -> 2473. UEFA_13: 1802 -> 1794.
+2026-06-13T23:44:38.8931680,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.8850940,system,Ranking,RankingUpdated,UEFA_08: 2060 -> 2061. AFC_01: 530 -> 529.
+2026-06-13T23:44:38.8602250,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.8570600,system,Ranking,RankingUpdated,AFC_05: 2457 -> 2459. CONMEBOL_05: 1180 -> 1178.
+2026-06-13T23:44:38.8296290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.8247060,system,Ranking,RankingUpdated,CONCACAF_05: 2226 -> 2227. UEFA_02: 710 -> 709.
+2026-06-13T23:44:38.7793390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.7623130,system,Ranking,RankingUpdated,AFC_08: 2425 -> 2426. CAF_02: 606 -> 605.
+2026-06-13T23:44:38.7177480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.7143790,system,Ranking,RankingUpdated,CONMEBOL_06: 1970 -> 1972. UEFA_01: 707 -> 705.
+2026-06-13T23:44:38.6960310,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:38.6932850,system,Ranking,RankingUpdated,AFC_06: 2413 -> 2414. AFC_03: 712 -> 711.
+2026-06-13T23:44:38.6277880,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:32.2573760,s@gmail.com,Cruces,Sorteo,Se realizó el sorteo de cruces de 32avos de final con semilla 13579
+2026-06-13T23:44:21.0619220,system,Ranking,RankingUpdated,UEFA_01: 697 -> 707. CAF_04: 373 -> 363.
+2026-06-13T23:44:21.0433130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:21.0404010,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1941. UEFA_06: 1358 -> 1367.
+2026-06-13T23:44:21.0236740,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:21.0216750,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1361. CAF_04: 373 -> 370.
+2026-06-13T23:44:21.0051800,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:21.0032130,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1952. UEFA_01: 697 -> 695.
+2026-06-13T23:44:20.9884180,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.9861370,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1363. UEFA_01: 697 -> 692.
+2026-06-13T23:44:20.9675760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.9651850,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1951. CAF_04: 373 -> 372.
+2026-06-13T23:44:20.9288580,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.9262050,system,Ranking,RankingUpdated,UEFA_02: 697 -> 710. CONCACAF_01: 573 -> 560.
+2026-06-13T23:44:20.9089410,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.9068140,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1965. CONMEBOL_03: 1369 -> 1363.
+2026-06-13T23:44:20.8931000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.8911030,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1373. CONCACAF_01: 573 -> 569.
+2026-06-13T23:44:20.8769350,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.8747450,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1961. UEFA_02: 697 -> 695.
+2026-06-13T23:44:20.8625940,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.8607180,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1374. UEFA_02: 697 -> 692.
+2026-06-13T23:44:20.8434240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.8409320,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1960. CONCACAF_01: 573 -> 572.
+2026-06-13T23:44:20.8237530,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.8219410,system,Ranking,RankingUpdated,CONCACAF_03: 786 -> 800. UEFA_04: 737 -> 723.
+2026-06-13T23:44:20.8081930,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.8056500,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1970. CAF_03: 1385 -> 1379.
+2026-06-13T23:44:20.7909240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.7891290,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. UEFA_04: 737 -> 732.
+2026-06-13T23:44:20.7782090,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.7758450,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1966. CONCACAF_03: 786 -> 784.
+2026-06-13T23:44:20.7609790,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.7584870,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. CONCACAF_03: 786 -> 780.
+2026-06-13T23:44:20.7404290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.7384820,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1966. UEFA_04: 737 -> 735.
+2026-06-13T23:44:20.7225430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.7207370,system,Ranking,RankingUpdated,CONCACAF_02: 977 -> 985. AFC_01: 538 -> 530.
+2026-06-13T23:44:20.7058090,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.7031420,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2037. UEFA_05: 1560 -> 1552.
+2026-06-13T23:44:20.6890730,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.6872130,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1533. AFC_01: 538 -> 565.
+2026-06-13T23:44:20.6721120,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.6703020,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2031. CONCACAF_02: 977 -> 975.
+2026-06-13T23:44:20.6556880,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.6539310,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1536. CONCACAF_02: 977 -> 1001.
+2026-06-13T23:44:20.6385900,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.6363260,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2030. AFC_01: 538 -> 537.
+2026-06-13T23:44:20.6221290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.6197940,system,Ranking,RankingUpdated,CONCACAF_04: 1130 -> 1113. CAF_08: 1038 -> 1054.
+2026-06-13T23:44:20.6037940,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.6009940,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2060. UEFA_14: 1620 -> 1612.
+2026-06-13T23:44:20.5831340,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.5807790,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1611. CAF_08: 1038 -> 1047.
+2026-06-13T23:44:20.5658430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.5639100,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CONCACAF_04: 1130 -> 1127.
+2026-06-13T23:44:20.5374600,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.5349380,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1612. CONCACAF_04: 1130 -> 1138.
+2026-06-13T23:44:20.5171440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.5145660,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CAF_08: 1038 -> 1035.
+2026-06-13T23:44:20.4961240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.4944410,system,Ranking,RankingUpdated,AFC_04: 648 -> 646. UEFA_09: 529 -> 531.
+2026-06-13T23:44:20.4830290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.4802450,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2226. CAF_09: 1698 -> 1691.
+2026-06-13T23:44:20.4663140,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.4645430,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. UEFA_09: 529 -> 527.
+2026-06-13T23:44:20.4521370,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.4496400,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. AFC_04: 648 -> 647.
+2026-06-13T23:44:20.4366660,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.4346220,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. AFC_04: 648 -> 646.
+2026-06-13T23:44:20.4164170,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.4136540,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. UEFA_09: 529 -> 528.
+2026-06-13T23:44:20.3950350,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.3928260,system,Ranking,RankingUpdated,AFC_02: 1142 -> 1149. CAF_02: 613 -> 606.
+2026-06-13T23:44:20.3799190,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.3778050,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2347. CONCACAF_06: 1724 -> 1718.
+2026-06-13T23:44:20.3634620,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.3617500,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1726. CAF_02: 613 -> 611.
+2026-06-13T23:44:20.3493940,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.3466220,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2343. AFC_02: 1142 -> 1140.
+2026-06-13T23:44:20.3325990,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.3295780,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1730. AFC_02: 1142 -> 1136.
+2026-06-13T23:44:20.3112200,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.3093010,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2312. CAF_02: 613 -> 642.
+2026-06-13T23:44:20.2902020,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.2874450,system,Ranking,RankingUpdated,AFC_07: 1268 -> 1281. CAF_05: 1135 -> 1122.
+2026-06-13T23:44:20.2635500,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.2596670,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2353. CONMEBOL_04: 1739 -> 1763.
+2026-06-13T23:44:20.2436940,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.2414930,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1745. CAF_05: 1135 -> 1129.
+2026-06-13T23:44:20.2219770,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.2190190,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. AFC_07: 1268 -> 1266.
+2026-06-13T23:44:20.2046590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.2027230,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1747. AFC_07: 1268 -> 1261.
+2026-06-13T23:44:20.1843620,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.1819750,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. CAF_05: 1135 -> 1133.
+2026-06-13T23:44:20.1662760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.1633040,system,Ranking,RankingUpdated,UEFA_03: 437 -> 450. OFC_01: 316 -> 303.
+2026-06-13T23:44:20.1447090,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.1425710,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2413. CAF_01: 1761 -> 1756.
+2026-06-13T23:44:20.1277380,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.1245960,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. OFC_01: 316 -> 315.
+2026-06-13T23:44:20.1119570,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.1094900,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. UEFA_03: 437 -> 437.
+2026-06-13T23:44:20.0938230,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.0917370,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. UEFA_03: 437 -> 436.
+2026-06-13T23:44:20.0731670,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.0710530,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. OFC_01: 316 -> 316.
+2026-06-13T23:44:20.0561170,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.0541010,system,Ranking,RankingUpdated,CONMEBOL_05: 1175 -> 1180. UEFA_15: 458 -> 453.
+2026-06-13T23:44:20.0375070,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.0349900,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2425. CAF_07: 1763 -> 1758.
+2026-06-13T23:44:20.0209500,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.0177000,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1764. UEFA_15: 458 -> 457.
+2026-06-13T23:44:20.0042840,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:20.0019440,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2422. CONMEBOL_05: 1175 -> 1173.
+2026-06-13T23:44:19.9870590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.9851610,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1769. CONMEBOL_05: 1175 -> 1169.
+2026-06-13T23:44:19.9696300,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.9674570,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2420. UEFA_15: 458 -> 458.
+2026-06-13T23:44:19.9552610,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.9526320,system,Ranking,RankingUpdated,UEFA_12: 676 -> 686. CONMEBOL_01: 387 -> 377.
+2026-06-13T23:44:19.9366690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.9336580,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2457. UEFA_13: 1807 -> 1802.
+2026-06-13T23:44:19.9202160,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.9177270,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1808. CONMEBOL_01: 387 -> 386.
+2026-06-13T23:44:19.9024920,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.8986080,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. UEFA_12: 676 -> 676.
+2026-06-13T23:44:19.8853280,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.8820520,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1779. UEFA_12: 676 -> 704.
+2026-06-13T23:44:19.8415460,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.8395130,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. CONMEBOL_01: 387 -> 387.
+2026-06-13T23:44:19.8209600,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.8190120,system,Ranking,RankingUpdated,UEFA_07: 1345 -> 1320. AFC_03: 688 -> 712.
+2026-06-13T23:44:19.7731220,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.7706990,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2465. CONMEBOL_07: 1933 -> 1926.
+2026-06-13T23:44:19.7491370,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.7468770,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1935. AFC_03: 688 -> 686.
+2026-06-13T23:44:19.7311840,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.7295360,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2460. UEFA_07: 1345 -> 1343.
+2026-06-13T23:44:19.7072470,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.7054130,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1924. UEFA_07: 1345 -> 1354.
+2026-06-13T23:44:19.6849630,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:19.6825080,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2459. AFC_03: 688 -> 688.
+2026-06-13T23:44:19.6083030,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T23:44:14.1821480,s@gmail.com,Fixture,Generación,Se regeneró el fixture del torneo con semilla 12345
+2026-06-13T20:54:37.0757870,s@gmail.com,Export,FileExported,El usuario s@gmail.com exportó Fixture en formato CSV.
+2026-06-13T20:54:36.2166620,s@gmail.com,Export,FileExported,El usuario s@gmail.com exportó Fixture en formato XLSX.
+2026-06-13T20:54:33.3959080,s@gmail.com,Export,FileExported,El usuario s@gmail.com exportó Logs en formato CSV.
+2026-06-13T20:54:26.2905520,s@gmail.com,Export,FileExported,El usuario s@gmail.com exportó Fixture en formato CSV.
+2026-06-13T20:54:17.8690820,s@gmail.com,Notification,NotificationRead,El usuario s@gmail.com marcó como leída la notificación 5699a5b2-80ae-4c5f-aec2-dbaa4054392d.
+2026-06-13T20:54:16.3233250,s@gmail.com,Notification,NotificationRead,El usuario s@gmail.com marcó como leída la notificación ab101e90-73cd-4aa0-99e1-88fc003656b1.
+2026-06-13T20:54:10.9097990,s@gmail.com,Notification,NotificationRead,El usuario s@gmail.com marcó como leída la notificación e55d8808-60a9-4f1e-91c9-2e696344ce33.
+2026-06-13T20:53:49.5704090,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CAF_06 vs AFC_03
+2026-06-13T20:53:49.5663760,system,Ranking,RankingUpdated,CAF_06: 2451 -> 2452. AFC_03: 682 -> 681.
+2026-06-13T20:53:49.5333880,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 691511805 usando el motor Probabilístico.
+2026-06-13T20:53:42.2294860,s@gmail.com,Partidos,Modificación,Se modificó el partido CAF_06 vs AFC_03
+2026-06-13T20:53:42.1939210,system,Ranking,RankingUpdated,CAF_06: 2450 -> 2451. AFC_03: 683 -> 682.
+2026-06-13T20:53:29.4340500,system,Ranking,RankingUpdated,UEFA_01: 697 -> 692. CAF_04: 373 -> 378.
+2026-06-13T20:53:29.4168000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:29.4129320,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1956. UEFA_06: 1358 -> 1352.
+2026-06-13T20:53:29.3872780,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:29.3846650,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1361. CAF_04: 373 -> 370.
+2026-06-13T20:53:29.3674480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:29.3640420,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1952. UEFA_01: 697 -> 695.
+2026-06-13T20:53:29.3391550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:29.3314040,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1363. UEFA_01: 697 -> 692.
+2026-06-13T20:53:29.2941950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:29.2897380,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1951. CAF_04: 373 -> 372.
+2026-06-13T20:53:29.2485440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:29.2413000,system,Ranking,RankingUpdated,UEFA_02: 697 -> 695. CONCACAF_01: 573 -> 575.
+2026-06-13T20:53:29.2042120,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:29.1975520,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1965. CONMEBOL_03: 1369 -> 1363.
+2026-06-13T20:53:29.0107850,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:29.0066050,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1373. CONCACAF_01: 573 -> 569.
+2026-06-13T20:53:28.9486100,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.9415020,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1961. UEFA_02: 697 -> 695.
+2026-06-13T20:53:28.8988250,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.8913700,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1374. UEFA_02: 697 -> 692.
+2026-06-13T20:53:28.8453270,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.8376630,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1960. CONCACAF_01: 573 -> 572.
+2026-06-13T20:53:28.7971280,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.7922110,system,Ranking,RankingUpdated,CONCACAF_03: 786 -> 785. UEFA_04: 737 -> 738.
+2026-06-13T20:53:28.7602760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.7538360,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1970. CAF_03: 1385 -> 1379.
+2026-06-13T20:53:28.7091460,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.7038170,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. UEFA_04: 737 -> 732.
+2026-06-13T20:53:28.6622600,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.6560930,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1951. CONCACAF_03: 786 -> 799.
+2026-06-13T20:53:28.6195500,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.6125260,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. CONCACAF_03: 786 -> 780.
+2026-06-13T20:53:28.5589690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.5525370,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1966. UEFA_04: 737 -> 735.
+2026-06-13T20:53:28.5020820,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.4952840,system,Ranking,RankingUpdated,CONCACAF_02: 977 -> 985. AFC_01: 538 -> 530.
+2026-06-13T20:53:28.4613750,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.4545690,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2022. UEFA_05: 1560 -> 1567.
+2026-06-13T20:53:28.3386340,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.3282660,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1563. AFC_01: 538 -> 535.
+2026-06-13T20:53:28.2996130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.2935750,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2031. CONCACAF_02: 977 -> 975.
+2026-06-13T20:53:28.2662400,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.2619480,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1566. CONCACAF_02: 977 -> 971.
+2026-06-13T20:53:28.2386450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.2359780,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2030. AFC_01: 538 -> 537.
+2026-06-13T20:53:28.1986240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.1943790,system,Ranking,RankingUpdated,CONCACAF_04: 1130 -> 1143. CAF_08: 1038 -> 1025.
+2026-06-13T20:53:28.1629700,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.1598980,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2045. UEFA_14: 1620 -> 1627.
+2026-06-13T20:53:28.1247710,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.1214360,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1626. CAF_08: 1038 -> 1032.
+2026-06-13T20:53:28.0960530,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.0939460,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CONCACAF_04: 1130 -> 1127.
+2026-06-13T20:53:28.0778940,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.0756550,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1627. CONCACAF_04: 1130 -> 1123.
+2026-06-13T20:53:28.0550190,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.0523620,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CAF_08: 1038 -> 1035.
+2026-06-13T20:53:28.0255810,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:28.0231820,system,Ranking,RankingUpdated,AFC_04: 648 -> 661. UEFA_09: 529 -> 516.
+2026-06-13T20:53:27.9964920,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.9943490,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2226. CAF_09: 1698 -> 1691.
+2026-06-13T20:53:27.9773080,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.9748560,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. UEFA_09: 529 -> 527.
+2026-06-13T20:53:27.9423690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.9279510,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. AFC_04: 648 -> 647.
+2026-06-13T20:53:27.8696040,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.8595510,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. AFC_04: 648 -> 646.
+2026-06-13T20:53:27.7826810,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.7779590,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. UEFA_09: 529 -> 528.
+2026-06-13T20:53:27.7352240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.7274690,system,Ranking,RankingUpdated,AFC_02: 1142 -> 1119. CAF_02: 613 -> 636.
+2026-06-13T20:53:27.6951550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.6908200,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2347. CONCACAF_06: 1724 -> 1718.
+2026-06-13T20:53:27.6486050,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.6453450,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1711. CAF_02: 613 -> 626.
+2026-06-13T20:53:27.6293190,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.6271720,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2343. AFC_02: 1142 -> 1140.
+2026-06-13T20:53:27.6097580,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.6046760,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1700. AFC_02: 1142 -> 1165.
+2026-06-13T20:53:27.5721300,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.5698450,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2342. CAF_02: 613 -> 612.
+2026-06-13T20:53:27.5450300,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.5411800,system,Ranking,RankingUpdated,AFC_07: 1268 -> 1251. CAF_05: 1135 -> 1152.
+2026-06-13T20:53:27.5117460,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.5083400,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2383. CONMEBOL_04: 1739 -> 1733.
+2026-06-13T20:53:27.4886330,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.4865730,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1730. CAF_05: 1135 -> 1144.
+2026-06-13T20:53:27.4580530,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.4530020,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. AFC_07: 1268 -> 1266.
+2026-06-13T20:53:27.4147440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.3694100,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1732. AFC_07: 1268 -> 1275.
+2026-06-13T20:53:27.3078480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.3003990,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. CAF_05: 1135 -> 1133.
+2026-06-13T20:53:27.2553020,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.2501770,system,Ranking,RankingUpdated,UEFA_03: 437 -> 435. OFC_01: 316 -> 318.
+2026-06-13T20:53:27.2258570,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.2229140,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2413. CAF_01: 1761 -> 1756.
+2026-06-13T20:53:27.2021830,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.2003370,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. OFC_01: 316 -> 315.
+2026-06-13T20:53:27.1855220,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.1824400,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. UEFA_03: 437 -> 437.
+2026-06-13T20:53:27.1628180,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.1594830,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. UEFA_03: 437 -> 436.
+2026-06-13T20:53:27.1214030,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.1177870,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. OFC_01: 316 -> 316.
+2026-06-13T20:53:27.0960160,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.0923520,system,Ranking,RankingUpdated,CONMEBOL_05: 1175 -> 1180. UEFA_15: 458 -> 453.
+2026-06-13T20:53:27.0656140,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.0627620,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2425. CAF_07: 1763 -> 1758.
+2026-06-13T20:53:27.0353260,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:27.0307390,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1764. UEFA_15: 458 -> 457.
+2026-06-13T20:53:26.9707070,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.9655900,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2422. CONMEBOL_05: 1175 -> 1173.
+2026-06-13T20:53:26.9349240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.9310580,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1769. CONMEBOL_05: 1175 -> 1169.
+2026-06-13T20:53:26.8937900,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.8887200,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2420. UEFA_15: 458 -> 458.
+2026-06-13T20:53:26.8587280,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.8555090,system,Ranking,RankingUpdated,UEFA_12: 676 -> 686. CONMEBOL_01: 387 -> 377.
+2026-06-13T20:53:26.8332710,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.8277600,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2427. UEFA_13: 1807 -> 1831.
+2026-06-13T20:53:26.7967450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.7913400,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1808. CONMEBOL_01: 387 -> 386.
+2026-06-13T20:53:26.7521180,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.7482130,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. UEFA_12: 676 -> 676.
+2026-06-13T20:53:26.7160200,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.7113660,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1809. UEFA_12: 676 -> 674.
+2026-06-13T20:53:26.6879800,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.6848380,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. CONMEBOL_01: 387 -> 387.
+2026-06-13T20:53:26.6680020,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.6655530,system,Ranking,RankingUpdated,UEFA_07: 1345 -> 1350. AFC_03: 688 -> 683.
+2026-06-13T20:53:26.6437830,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.6400270,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2450. CONMEBOL_07: 1933 -> 1941.
+2026-06-13T20:53:26.6192000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.6163640,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1935. AFC_03: 688 -> 686.
+2026-06-13T20:53:26.5856260,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.5813880,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2460. UEFA_07: 1345 -> 1343.
+2026-06-13T20:53:26.5527900,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.5495630,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1939. UEFA_07: 1345 -> 1339.
+2026-06-13T20:53:26.5114950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:26.5080850,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2459. AFC_03: 688 -> 688.
+2026-06-13T20:53:26.3894150,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T20:53:22.4856510,s@gmail.com,Fixture,Generación,Se generó el fixture del torneo con semilla 12345
+2026-06-13T20:53:21.1596560,s@gmail.com,Fixture,Generación,Se elimino el fixture generado con:  12345
+2026-06-13T20:52:32.0888970,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:32.0824920,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:32.0756330,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:32.0681270,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:32.0525600,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:32.0392590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:32.0297690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:32.0220530,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:32.0137060,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:32.0051290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9948390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9854650,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9782470,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9717820,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9617000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9542360,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9428580,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9345550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9257480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9173550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9098980,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.9020560,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8913680,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8804710,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8710770,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8624170,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8551710,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8460550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8355360,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8261590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8192480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8110650,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.8032800,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.7520370,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.7410810,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.7329970,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.7238390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.7147040,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.7034130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.6943630,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.6825310,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.6726510,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.6646250,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.6558230,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.6351440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.6242400,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.6112990,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.6015210,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.5679130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.5587050,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.5270990,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.5193590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.5097920,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.5006690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.4933310,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.4827620,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.4726590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.4535870,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.4324430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.4065200,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.3970030,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.3883390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.3675670,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.3578810,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.3442610,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.3288050,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.2742410,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.2581520,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.2428080,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.2259950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.1979400,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:31.1255700,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor CrucesSimulationService.
+2026-06-13T20:52:28.2929810,s@gmail.com,Fixture,Generación,Se generó el fixture del torneo con semilla 12345
+2026-06-13T20:52:24.9030710,s@gmail.com,Fixture,Generación,Se elimino el fixture generado con:  12345
+2026-06-13T20:51:48.2756720,s@gmail.com,Partidos,Modificación,Se simuló el resultado del partido CAF_06 vs AFC_03
+2026-06-13T20:51:48.1681130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 1007190718 usando el motor CrucesSimulationService.
+2026-06-13T20:51:25.9537510,s@gmail.com,Partidos,Modificación,Se modificó el partido CAF_06 vs AFC_03
+2026-06-13T19:58:07.5843990,s@gmail.com,Export,FileExported,El usuario s@gmail.com exportó Logs en formato XLSX.
+2026-06-13T19:58:02.5302100,s@gmail.com,Export,FileExported,El usuario s@gmail.com exportó Logs en formato CSV.
+2026-06-13T19:57:32.4541200,s@gmail.com,Export,FileExported,El usuario s@gmail.com exportó Fixture en formato XLSX.
+2026-06-13T19:57:17.0939860,s@gmail.com,Export,FileExported,El usuario s@gmail.com exportó Fixture en formato CSV.
+2026-06-13T19:45:22.1214180,system,Ranking,RankingUpdated,UEFA_01: 697 -> 692. CAF_04: 373 -> 378.
+2026-06-13T19:45:22.0854080,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:22.0719890,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1956. UEFA_06: 1358 -> 1352.
+2026-06-13T19:45:22.0168390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:22.0068440,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1361. CAF_04: 373 -> 370.
+2026-06-13T19:45:21.9783750,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.9763210,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1952. UEFA_01: 697 -> 695.
+2026-06-13T19:45:21.9588340,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.9563180,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1363. UEFA_01: 697 -> 692.
+2026-06-13T19:45:21.9347880,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.9317360,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1951. CAF_04: 373 -> 372.
+2026-06-13T19:45:21.9149840,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.9124290,system,Ranking,RankingUpdated,UEFA_02: 697 -> 695. CONCACAF_01: 573 -> 575.
+2026-06-13T19:45:21.8961420,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.8931110,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1965. CONMEBOL_03: 1369 -> 1363.
+2026-06-13T19:45:21.8749570,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.8726410,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1373. CONCACAF_01: 573 -> 569.
+2026-06-13T19:45:21.8589770,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.8569800,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1961. UEFA_02: 697 -> 695.
+2026-06-13T19:45:21.8067960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.8049220,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1374. UEFA_02: 697 -> 692.
+2026-06-13T19:45:21.7880720,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.7845550,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1960. CONCACAF_01: 573 -> 572.
+2026-06-13T19:45:21.7679150,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.7654560,system,Ranking,RankingUpdated,CONCACAF_03: 786 -> 785. UEFA_04: 737 -> 738.
+2026-06-13T19:45:21.7488850,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.7460290,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1970. CAF_03: 1385 -> 1379.
+2026-06-13T19:45:21.7310360,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.7283390,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. UEFA_04: 737 -> 731.
+2026-06-13T19:45:21.7106220,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.7069530,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1951. CONCACAF_03: 786 -> 799.
+2026-06-13T19:45:21.6861160,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.6829260,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. CONCACAF_03: 786 -> 780.
+2026-06-13T19:45:21.6646410,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.6625710,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1966. UEFA_04: 737 -> 735.
+2026-06-13T19:45:21.6449130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.6428530,system,Ranking,RankingUpdated,CONCACAF_02: 977 -> 985. AFC_01: 538 -> 530.
+2026-06-13T19:45:21.6266320,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.6243440,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2022. UEFA_05: 1560 -> 1567.
+2026-06-13T19:45:21.6064500,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.6044900,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1563. AFC_01: 538 -> 535.
+2026-06-13T19:45:21.5899380,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.5881650,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2031. CONCACAF_02: 977 -> 975.
+2026-06-13T19:45:21.5726510,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.5700400,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1566. CONCACAF_02: 977 -> 971.
+2026-06-13T19:45:21.5524390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.5483400,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2030. AFC_01: 538 -> 537.
+2026-06-13T19:45:21.5331840,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.5308060,system,Ranking,RankingUpdated,CONCACAF_04: 1130 -> 1143. CAF_08: 1038 -> 1025.
+2026-06-13T19:45:21.5159330,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.5141570,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2045. UEFA_14: 1620 -> 1627.
+2026-06-13T19:45:21.4996740,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.4978200,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1626. CAF_08: 1038 -> 1032.
+2026-06-13T19:45:21.4841710,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.4823870,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CONCACAF_04: 1130 -> 1127.
+2026-06-13T19:45:21.4670320,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.4649610,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1627. CONCACAF_04: 1130 -> 1123.
+2026-06-13T19:45:21.4484540,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.4467260,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CAF_08: 1038 -> 1035.
+2026-06-13T19:45:21.4306710,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.4288800,system,Ranking,RankingUpdated,AFC_04: 648 -> 661. UEFA_09: 529 -> 516.
+2026-06-13T19:45:21.4146530,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.4127960,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2226. CAF_09: 1698 -> 1691.
+2026-06-13T19:45:21.3968950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.3947250,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. UEFA_09: 529 -> 527.
+2026-06-13T19:45:21.3817100,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.3792050,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. AFC_04: 648 -> 647.
+2026-06-13T19:45:21.3648950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.3629560,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. AFC_04: 648 -> 646.
+2026-06-13T19:45:21.3420030,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.3400690,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. UEFA_09: 529 -> 528.
+2026-06-13T19:45:21.3215410,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.3182270,system,Ranking,RankingUpdated,AFC_02: 1142 -> 1119. CAF_02: 613 -> 636.
+2026-06-13T19:45:21.3011100,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.2988100,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2347. CONCACAF_06: 1724 -> 1718.
+2026-06-13T19:45:21.2848550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.2823740,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1711. CAF_02: 613 -> 626.
+2026-06-13T19:45:21.2678800,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.2641700,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2343. AFC_02: 1142 -> 1140.
+2026-06-13T19:45:21.2508620,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.2485420,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1700. AFC_02: 1142 -> 1166.
+2026-06-13T19:45:21.2319500,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.2302410,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2342. CAF_02: 613 -> 612.
+2026-06-13T19:45:21.2143940,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.2125120,system,Ranking,RankingUpdated,AFC_07: 1268 -> 1251. CAF_05: 1135 -> 1152.
+2026-06-13T19:45:21.1975950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.1952870,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2383. CONMEBOL_04: 1739 -> 1733.
+2026-06-13T19:45:21.1812710,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.1791880,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1730. CAF_05: 1135 -> 1144.
+2026-06-13T19:45:21.1633740,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.1610430,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. AFC_07: 1268 -> 1266.
+2026-06-13T19:45:21.1472390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.1454900,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1732. AFC_07: 1268 -> 1275.
+2026-06-13T19:45:21.1291480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.1269900,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. CAF_05: 1135 -> 1133.
+2026-06-13T19:45:21.1129090,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.1108640,system,Ranking,RankingUpdated,UEFA_03: 437 -> 435. OFC_01: 316 -> 318.
+2026-06-13T19:45:21.0990670,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.0974330,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2413. CAF_01: 1761 -> 1755.
+2026-06-13T19:45:21.0822850,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.0807350,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. OFC_01: 316 -> 315.
+2026-06-13T19:45:21.0646380,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.0629660,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. UEFA_03: 437 -> 437.
+2026-06-13T19:45:21.0524840,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.0498500,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. UEFA_03: 437 -> 436.
+2026-06-13T19:45:21.0323130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.0306670,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. OFC_01: 316 -> 316.
+2026-06-13T19:45:21.0209390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.0190730,system,Ranking,RankingUpdated,CONMEBOL_05: 1175 -> 1180. UEFA_15: 458 -> 453.
+2026-06-13T19:45:21.0082370,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:21.0063790,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2425. CAF_07: 1763 -> 1758.
+2026-06-13T19:45:20.9619800,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.9598710,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1764. UEFA_15: 458 -> 457.
+2026-06-13T19:45:20.9428890,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.9401140,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2422. CONMEBOL_05: 1175 -> 1173.
+2026-06-13T19:45:20.9175440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.9152330,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1769. CONMEBOL_05: 1175 -> 1169.
+2026-06-13T19:45:20.8849450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.8814670,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2420. UEFA_15: 458 -> 458.
+2026-06-13T19:45:20.8621410,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.8599760,system,Ranking,RankingUpdated,UEFA_12: 676 -> 686. CONMEBOL_01: 387 -> 377.
+2026-06-13T19:45:20.8459960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.8438530,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2427. UEFA_13: 1807 -> 1831.
+2026-06-13T19:45:20.8278180,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.8259750,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1808. CONMEBOL_01: 387 -> 386.
+2026-06-13T19:45:20.8097250,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.8075630,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. UEFA_12: 676 -> 676.
+2026-06-13T19:45:20.7926000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.7900720,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1809. UEFA_12: 676 -> 674.
+2026-06-13T19:45:20.7712670,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.7691300,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. CONMEBOL_01: 387 -> 387.
+2026-06-13T19:45:20.7556720,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.7531410,system,Ranking,RankingUpdated,UEFA_07: 1345 -> 1350. AFC_03: 688 -> 683.
+2026-06-13T19:45:20.7299930,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.6548260,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2450. CONMEBOL_07: 1933 -> 1941.
+2026-06-13T19:45:20.6386300,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.6369210,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1935. AFC_03: 688 -> 686.
+2026-06-13T19:45:20.6209310,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.6182040,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2460. UEFA_07: 1345 -> 1343.
+2026-06-13T19:45:20.5940180,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.5913260,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1939. UEFA_07: 1345 -> 1339.
+2026-06-13T19:45:20.5628480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:20.5586910,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2459. AFC_03: 688 -> 687.
+2026-06-13T19:45:20.4610180,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:45:17.1959420,s@gmail.com,Fixture,Generación,Se regeneró el fixture del torneo con semilla 12345
+2026-06-13T19:13:11.3866390,system,Ranking,RankingUpdated,UEFA_01: 697 -> 692. CAF_04: 373 -> 378.
+2026-06-13T19:13:11.3718980,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.3700660,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1956. UEFA_06: 1358 -> 1352.
+2026-06-13T19:13:11.3544810,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.3524050,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1361. CAF_04: 373 -> 370.
+2026-06-13T19:13:11.3376980,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.3354320,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1952. UEFA_01: 697 -> 695.
+2026-06-13T19:13:11.3221100,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.3193760,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1363. UEFA_01: 697 -> 692.
+2026-06-13T19:13:11.3028330,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.3009450,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1951. CAF_04: 373 -> 372.
+2026-06-13T19:13:11.2840760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.2812640,system,Ranking,RankingUpdated,UEFA_02: 697 -> 695. CONCACAF_01: 573 -> 575.
+2026-06-13T19:13:11.2671060,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.2646720,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1965. CONMEBOL_03: 1369 -> 1363.
+2026-06-13T19:13:11.2477170,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.2457810,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1373. CONCACAF_01: 573 -> 569.
+2026-06-13T19:13:11.2286520,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.2259440,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1961. UEFA_02: 697 -> 695.
+2026-06-13T19:13:11.2124820,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.2096520,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1374. UEFA_02: 697 -> 692.
+2026-06-13T19:13:11.1936530,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.1884870,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1960. CONCACAF_01: 573 -> 572.
+2026-06-13T19:13:11.1715030,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.1696440,system,Ranking,RankingUpdated,CONCACAF_03: 786 -> 785. UEFA_04: 737 -> 738.
+2026-06-13T19:13:11.1552700,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.1534430,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1970. CAF_03: 1385 -> 1379.
+2026-06-13T19:13:11.1385950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.1364350,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. UEFA_04: 737 -> 732.
+2026-06-13T19:13:11.1256370,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.1230770,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1951. CONCACAF_03: 786 -> 799.
+2026-06-13T19:13:11.1092830,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.1063500,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. CONCACAF_03: 786 -> 780.
+2026-06-13T19:13:11.0879520,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.0862970,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1966. UEFA_04: 737 -> 735.
+2026-06-13T19:13:11.0708250,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.0691940,system,Ranking,RankingUpdated,CONCACAF_02: 977 -> 985. AFC_01: 538 -> 530.
+2026-06-13T19:13:11.0530990,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.0512880,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2022. UEFA_05: 1560 -> 1567.
+2026-06-13T19:13:11.0371330,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:11.0336620,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1563. AFC_01: 538 -> 535.
+2026-06-13T19:13:10.9982570,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.9949440,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2031. CONCACAF_02: 977 -> 975.
+2026-06-13T19:13:10.9665260,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.9611230,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1566. CONCACAF_02: 977 -> 971.
+2026-06-13T19:13:10.9068770,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.9033290,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2030. AFC_01: 538 -> 537.
+2026-06-13T19:13:10.8808840,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.8787210,system,Ranking,RankingUpdated,CONCACAF_04: 1130 -> 1143. CAF_08: 1038 -> 1025.
+2026-06-13T19:13:10.8597330,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.8573400,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2045. UEFA_14: 1620 -> 1627.
+2026-06-13T19:13:10.8446610,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.8424140,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1626. CAF_08: 1038 -> 1032.
+2026-06-13T19:13:10.8283760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.8261000,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CONCACAF_04: 1130 -> 1127.
+2026-06-13T19:13:10.8116760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.8080150,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1627. CONCACAF_04: 1130 -> 1123.
+2026-06-13T19:13:10.7896900,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.7878110,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CAF_08: 1038 -> 1035.
+2026-06-13T19:13:10.7724040,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.7707030,system,Ranking,RankingUpdated,AFC_04: 648 -> 661. UEFA_09: 529 -> 516.
+2026-06-13T19:13:10.7578080,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.7555300,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2226. CAF_09: 1698 -> 1691.
+2026-06-13T19:13:10.7437720,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.7419740,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. UEFA_09: 529 -> 527.
+2026-06-13T19:13:10.7301950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.7280290,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. AFC_04: 648 -> 647.
+2026-06-13T19:13:10.7169660,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.7148040,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. AFC_04: 648 -> 646.
+2026-06-13T19:13:10.7001870,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.6984680,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. UEFA_09: 529 -> 528.
+2026-06-13T19:13:10.6822310,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.6788880,system,Ranking,RankingUpdated,AFC_02: 1142 -> 1119. CAF_02: 613 -> 636.
+2026-06-13T19:13:10.6640740,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.6617480,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2347. CONCACAF_06: 1724 -> 1718.
+2026-06-13T19:13:10.6503720,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.6479960,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1711. CAF_02: 613 -> 626.
+2026-06-13T19:13:10.6346640,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.6326130,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2343. AFC_02: 1142 -> 1140.
+2026-06-13T19:13:10.6187670,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.6167720,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1700. AFC_02: 1142 -> 1165.
+2026-06-13T19:13:10.6020790,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.6000880,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2342. CAF_02: 613 -> 612.
+2026-06-13T19:13:10.5861050,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.5842450,system,Ranking,RankingUpdated,AFC_07: 1268 -> 1251. CAF_05: 1135 -> 1152.
+2026-06-13T19:13:10.5703760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.5685260,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2383. CONMEBOL_04: 1739 -> 1733.
+2026-06-13T19:13:10.5547710,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.5532330,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1730. CAF_05: 1135 -> 1144.
+2026-06-13T19:13:10.5421740,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.5391820,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. AFC_07: 1268 -> 1266.
+2026-06-13T19:13:10.5275480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.5249920,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1732. AFC_07: 1268 -> 1275.
+2026-06-13T19:13:10.5069150,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.5041620,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. CAF_05: 1135 -> 1133.
+2026-06-13T19:13:10.4824430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.4805420,system,Ranking,RankingUpdated,UEFA_03: 437 -> 435. OFC_01: 316 -> 318.
+2026-06-13T19:13:10.4656110,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.4637690,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2413. CAF_01: 1761 -> 1756.
+2026-06-13T19:13:10.4481930,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.4455290,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. OFC_01: 316 -> 315.
+2026-06-13T19:13:10.4343300,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.4322520,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. UEFA_03: 437 -> 437.
+2026-06-13T19:13:10.4214320,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.4199770,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. UEFA_03: 437 -> 436.
+2026-06-13T19:13:10.4057230,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.4041250,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. OFC_01: 316 -> 316.
+2026-06-13T19:13:10.3942470,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.3925420,system,Ranking,RankingUpdated,CONMEBOL_05: 1175 -> 1180. UEFA_15: 458 -> 453.
+2026-06-13T19:13:10.3738790,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.3699050,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2425. CAF_07: 1763 -> 1758.
+2026-06-13T19:13:10.3531200,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.3514010,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1764. UEFA_15: 458 -> 457.
+2026-06-13T19:13:10.3371990,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.3354580,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2422. CONMEBOL_05: 1175 -> 1173.
+2026-06-13T19:13:10.3241910,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.3214120,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1769. CONMEBOL_05: 1175 -> 1169.
+2026-06-13T19:13:10.3088300,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.3065410,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2420. UEFA_15: 458 -> 458.
+2026-06-13T19:13:10.2938720,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.2916430,system,Ranking,RankingUpdated,UEFA_12: 676 -> 686. CONMEBOL_01: 387 -> 377.
+2026-06-13T19:13:10.2367190,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.2347720,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2427. UEFA_13: 1807 -> 1831.
+2026-06-13T19:13:10.2206560,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.2190700,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1808. CONMEBOL_01: 387 -> 386.
+2026-06-13T19:13:10.2047690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.2026810,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. UEFA_12: 676 -> 676.
+2026-06-13T19:13:10.1918830,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.1893850,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1809. UEFA_12: 676 -> 674.
+2026-06-13T19:13:10.1414640,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.1338390,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. CONMEBOL_01: 387 -> 387.
+2026-06-13T19:13:10.1204420,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.1179370,system,Ranking,RankingUpdated,UEFA_07: 1345 -> 1350. AFC_03: 688 -> 683.
+2026-06-13T19:13:10.1002370,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.0976910,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2450. CONMEBOL_07: 1933 -> 1941.
+2026-06-13T19:13:10.0826560,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.0785950,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1935. AFC_03: 688 -> 686.
+2026-06-13T19:13:10.0632290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.0606870,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2460. UEFA_07: 1345 -> 1343.
+2026-06-13T19:13:10.0421340,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.0400220,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1939. UEFA_07: 1345 -> 1339.
+2026-06-13T19:13:10.0213970,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:10.0189360,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2459. AFC_03: 688 -> 688.
+2026-06-13T19:13:09.9803910,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:13:07.8516820,s@gmail.com,Fixture,Generación,Se generó el fixture del torneo con semilla 12345
+2026-06-13T19:13:03.7700520,s@gmail.com,Fixture,Generación,Se elimino el fixture generado con:  12345
+2026-06-13T19:12:10.9373440,nuevacuenta@gmail.com,Export,FileExported,El usuario nuevacuenta@gmail.com exportó Fixture en formato XLSX.
+2026-06-13T19:12:01.2719950,nuevacuenta@gmail.com,Export,FileExported,El usuario nuevacuenta@gmail.com exportó Fixture en formato CSV.
+2026-06-13T19:11:23.8862620,system,Ranking,RankingUpdated,CAF_01: 1756 -> 1777. CAF_09: 1691 -> 1671.
+2026-06-13T19:11:23.8647500,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.8600500,system,Ranking,RankingUpdated,UEFA_14: 1627 -> 1653. CAF_07: 1758 -> 1733.
+2026-06-13T19:11:23.8357000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.8318670,system,Ranking,RankingUpdated,CAF_06: 2450 -> 2453. CONMEBOL_03: 1363 -> 1360.
+2026-06-13T19:11:23.8083670,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.8056950,system,Ranking,RankingUpdated,UEFA_05: 1567 -> 1584. UEFA_06: 1352 -> 1335.
+2026-06-13T19:11:23.7845710,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.7818520,system,Ranking,RankingUpdated,CONMEBOL_07: 1941 -> 1951. CAF_03: 1379 -> 1369.
+2026-06-13T19:11:23.7600560,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.7567830,system,Ranking,RankingUpdated,UEFA_08: 2045 -> 2047. CAF_02: 636 -> 634.
+2026-06-13T19:11:23.7342110,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.7316320,system,Ranking,RankingUpdated,CONMEBOL_06: 1970 -> 2003. AFC_05: 2427 -> 2394.
+2026-06-13T19:11:23.7095820,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.7039060,system,Ranking,RankingUpdated,UEFA_10: 2022 -> 2027. CAF_05: 1152 -> 1147.
+2026-06-13T19:11:23.6763980,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.6732150,system,Ranking,RankingUpdated,CONMEBOL_02: 1956 -> 1915. CONCACAF_02: 985 -> 1025.
+2026-06-13T19:11:23.6508880,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.6485890,system,Ranking,RankingUpdated,AFC_06: 2413 -> 2414. UEFA_12: 686 -> 685.
+2026-06-13T19:11:23.6201620,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.6167090,system,Ranking,RankingUpdated,AFC_08: 2425 -> 2428. UEFA_07: 1350 -> 1347.
+2026-06-13T19:11:23.5878750,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.5852960,system,Ranking,RankingUpdated,UEFA_16: 1965 -> 1971. CONCACAF_04: 1143 -> 1137.
+2026-06-13T19:11:23.5644720,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.5624820,system,Ranking,RankingUpdated,CONCACAF_05: 2226 -> 2229. AFC_02: 1119 -> 1116.
+2026-06-13T19:11:23.5393560,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.5368820,system,Ranking,RankingUpdated,CONCACAF_07: 2383 -> 2384. AFC_04: 661 -> 660.
+2026-06-13T19:11:23.5167590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.5137200,system,Ranking,RankingUpdated,UEFA_13: 1831 -> 1835. CONCACAF_03: 785 -> 781.
+2026-06-13T19:11:23.4860190,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:11:23.4814150,system,Ranking,RankingUpdated,UEFA_11: 2347 -> 2350. CONMEBOL_05: 1180 -> 1177.
+2026-06-13T19:11:23.1602020,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:54.2861750,nuevacuenta@gmail.com,Importación,Error,La importación del archivo ranking-fuera-de-rango.csv finalizó con 1 errores
+2026-06-13T19:05:48.4161180,nuevacuenta@gmail.com,Cruces,Sorteo,Se realizó el sorteo de cruces de 32avos de final con semilla 13579
+2026-06-13T19:05:46.1023090,system,Ranking,RankingUpdated,UEFA_01: 697 -> 692. CAF_04: 373 -> 378.
+2026-06-13T19:05:46.0889130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:46.0870060,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1956. UEFA_06: 1358 -> 1352.
+2026-06-13T19:05:46.0735980,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:46.0712330,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1361. CAF_04: 373 -> 370.
+2026-06-13T19:05:46.0573130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:46.0550820,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1952. UEFA_01: 697 -> 695.
+2026-06-13T19:05:46.0417920,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:46.0398550,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1363. UEFA_01: 697 -> 692.
+2026-06-13T19:05:46.0233230,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:46.0212590,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1951. CAF_04: 373 -> 372.
+2026-06-13T19:05:46.0024350,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:46.0002040,system,Ranking,RankingUpdated,UEFA_02: 697 -> 695. CONCACAF_01: 573 -> 575.
+2026-06-13T19:05:45.9870860,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.9842580,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1965. CONMEBOL_03: 1369 -> 1363.
+2026-06-13T19:05:45.9678450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.9653690,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1373. CONCACAF_01: 573 -> 569.
+2026-06-13T19:05:45.9512600,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.9489570,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1961. UEFA_02: 697 -> 695.
+2026-06-13T19:05:45.9350320,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.9320960,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1374. UEFA_02: 697 -> 692.
+2026-06-13T19:05:45.9151120,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.9122220,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1960. CONCACAF_01: 573 -> 572.
+2026-06-13T19:05:45.8884000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.8860650,system,Ranking,RankingUpdated,CONCACAF_03: 786 -> 785. UEFA_04: 737 -> 738.
+2026-06-13T19:05:45.8737700,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.8718350,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1970. CAF_03: 1385 -> 1379.
+2026-06-13T19:05:45.8579830,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.8559300,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. UEFA_04: 737 -> 732.
+2026-06-13T19:05:45.8412240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.8393230,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1951. CONCACAF_03: 786 -> 799.
+2026-06-13T19:05:45.8234310,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.8201710,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. CONCACAF_03: 786 -> 780.
+2026-06-13T19:05:45.8023960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.7997780,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1966. UEFA_04: 737 -> 735.
+2026-06-13T19:05:45.7842030,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.7822350,system,Ranking,RankingUpdated,CONCACAF_02: 977 -> 985. AFC_01: 538 -> 530.
+2026-06-13T19:05:45.7687340,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.7668160,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2022. UEFA_05: 1560 -> 1567.
+2026-06-13T19:05:45.7518510,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.7499000,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1563. AFC_01: 538 -> 535.
+2026-06-13T19:05:45.7362700,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.7328300,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2031. CONCACAF_02: 977 -> 975.
+2026-06-13T19:05:45.7196430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.7175490,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1566. CONCACAF_02: 977 -> 971.
+2026-06-13T19:05:45.6992030,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.6971890,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2030. AFC_01: 538 -> 537.
+2026-06-13T19:05:45.6814870,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.6796240,system,Ranking,RankingUpdated,CONCACAF_04: 1130 -> 1143. CAF_08: 1038 -> 1025.
+2026-06-13T19:05:45.6639510,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.6606990,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2045. UEFA_14: 1620 -> 1627.
+2026-06-13T19:05:45.6474610,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.6449890,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1626. CAF_08: 1038 -> 1032.
+2026-06-13T19:05:45.6303410,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.6277320,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CONCACAF_04: 1130 -> 1127.
+2026-06-13T19:05:45.6149040,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.6129790,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1627. CONCACAF_04: 1130 -> 1123.
+2026-06-13T19:05:45.5949450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.5930010,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CAF_08: 1038 -> 1035.
+2026-06-13T19:05:45.5765770,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.5746890,system,Ranking,RankingUpdated,AFC_04: 648 -> 661. UEFA_09: 529 -> 516.
+2026-06-13T19:05:45.5601480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.5583340,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2226. CAF_09: 1698 -> 1691.
+2026-06-13T19:05:45.5463210,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.5438810,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. UEFA_09: 529 -> 527.
+2026-06-13T19:05:45.5316260,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.5294740,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. AFC_04: 648 -> 647.
+2026-06-13T19:05:45.5188000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.5163830,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. AFC_04: 648 -> 646.
+2026-06-13T19:05:45.5005920,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.4985080,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. UEFA_09: 529 -> 528.
+2026-06-13T19:05:45.4772780,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.4749240,system,Ranking,RankingUpdated,AFC_02: 1142 -> 1119. CAF_02: 613 -> 636.
+2026-06-13T19:05:45.4584480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.4563330,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2347. CONCACAF_06: 1724 -> 1718.
+2026-06-13T19:05:45.4425000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.4405270,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1711. CAF_02: 613 -> 626.
+2026-06-13T19:05:45.4264610,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.4244660,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2343. AFC_02: 1142 -> 1140.
+2026-06-13T19:05:45.4113390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.4093780,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1700. AFC_02: 1142 -> 1165.
+2026-06-13T19:05:45.3898740,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.3876350,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2342. CAF_02: 613 -> 612.
+2026-06-13T19:05:45.3647480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.3616530,system,Ranking,RankingUpdated,AFC_07: 1268 -> 1251. CAF_05: 1135 -> 1152.
+2026-06-13T19:05:45.3476560,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.3457170,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2383. CONMEBOL_04: 1739 -> 1733.
+2026-06-13T19:05:45.3323420,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.3302760,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1730. CAF_05: 1135 -> 1144.
+2026-06-13T19:05:45.3178120,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.3159300,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. AFC_07: 1268 -> 1266.
+2026-06-13T19:05:45.3046550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.3030160,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1732. AFC_07: 1268 -> 1275.
+2026-06-13T19:05:45.2889350,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.2873730,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. CAF_05: 1135 -> 1133.
+2026-06-13T19:05:45.2729180,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.2710270,system,Ranking,RankingUpdated,UEFA_03: 437 -> 435. OFC_01: 316 -> 318.
+2026-06-13T19:05:45.2587640,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.2567210,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2413. CAF_01: 1761 -> 1756.
+2026-06-13T19:05:45.2423240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.2401430,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. OFC_01: 316 -> 315.
+2026-06-13T19:05:45.2067960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.2050190,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. UEFA_03: 437 -> 437.
+2026-06-13T19:05:45.1920370,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.1895950,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. UEFA_03: 437 -> 436.
+2026-06-13T19:05:45.1734450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.1714820,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. OFC_01: 316 -> 316.
+2026-06-13T19:05:45.1585290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.1566510,system,Ranking,RankingUpdated,CONMEBOL_05: 1175 -> 1180. UEFA_15: 458 -> 453.
+2026-06-13T19:05:45.1418830,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.1403010,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2425. CAF_07: 1763 -> 1758.
+2026-06-13T19:05:45.1242400,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.1223890,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1764. UEFA_15: 458 -> 457.
+2026-06-13T19:05:45.1091840,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.1075390,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2422. CONMEBOL_05: 1175 -> 1173.
+2026-06-13T19:05:45.0931640,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.0914830,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1769. CONMEBOL_05: 1175 -> 1169.
+2026-06-13T19:05:45.0754300,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.0735940,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2420. UEFA_15: 458 -> 458.
+2026-06-13T19:05:45.0578860,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.0562840,system,Ranking,RankingUpdated,UEFA_12: 676 -> 686. CONMEBOL_01: 387 -> 377.
+2026-06-13T19:05:45.0358790,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.0341720,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2427. UEFA_13: 1807 -> 1831.
+2026-06-13T19:05:45.0183680,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:45.0161320,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1808. CONMEBOL_01: 387 -> 386.
+2026-06-13T19:05:44.9979150,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:44.9935270,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. UEFA_12: 676 -> 676.
+2026-06-13T19:05:44.9795440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:44.9762220,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1809. UEFA_12: 676 -> 674.
+2026-06-13T19:05:44.9578960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:44.9558180,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. CONMEBOL_01: 387 -> 387.
+2026-06-13T19:05:44.9403510,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:44.9376510,system,Ranking,RankingUpdated,UEFA_07: 1345 -> 1350. AFC_03: 688 -> 683.
+2026-06-13T19:05:44.9213260,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:44.9194500,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2450. CONMEBOL_07: 1933 -> 1941.
+2026-06-13T19:05:44.9027350,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:44.9004590,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1935. AFC_03: 688 -> 686.
+2026-06-13T19:05:44.8839590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:44.8815350,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2460. UEFA_07: 1345 -> 1343.
+2026-06-13T19:05:44.8597980,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:44.8573570,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1939. UEFA_07: 1345 -> 1339.
+2026-06-13T19:05:44.8269580,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:44.8246750,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2459. AFC_03: 688 -> 688.
+2026-06-13T19:05:44.7076100,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T19:05:41.3895930,nuevacuenta@gmail.com,Fixture,Generación,Se generó el fixture del torneo con semilla 12345
+2026-06-13T19:05:37.3475020,nuevacuenta@gmail.com,Equipos,Generación automática,Se generaron automáticamente los equipos faltantes con semilla 67890
+2026-06-13T19:05:36.1413050,nuevacuenta@gmail.com,Equipos,Eliminación,Se eliminó el equipo OFC_01
+2026-06-13T19:05:35.2583060,nuevacuenta@gmail.com,Equipos,Eliminación,Se eliminó el equipo UEFA_02
+2026-06-13T19:05:32.6027430,nuevacuenta@gmail.com,Equipos,Generación automática,Se generaron automáticamente los equipos faltantes con semilla 67890
+2026-06-13T19:05:29.9064990,nuevacuenta@gmail.com,Equipos,Generación automática,Se generaron automáticamente los equipos faltantes con semilla 67890
+2026-06-13T19:05:20.6399080,nuevacuenta@gmail.com,Estadios,Alta,Se creó el estadio Estadio5
+2026-06-13T15:29:50.3911280,sashayeye270205@gmail.com,Importación,Error,La importación del archivo confederacion-invalida.csv finalizó con 1 errores
+2026-06-13T15:29:45.4937030,sashayeye270205@gmail.com,Importación,Error,La importación del archivo encabezado-invalido.csv finalizó con 1 errores
+2026-06-13T15:29:30.1767430,sashayeye270205@gmail.com,Importación,Error,La importación del archivo encabezado-invalido.csv finalizó con 1 errores
+2026-06-13T15:29:22.0753090,sashayeye270205@gmail.com,Importación,Error,La importación del archivo nombre-duplicado.csv finalizó con 1 errores
+2026-06-13T15:29:12.6726800,sashayeye270205@gmail.com,Importación,Error,La importación del archivo ranking-fuera-de-rango.csv finalizó con 1 errores
+2026-06-13T15:26:31.4009130,system,Ranking,RankingUpdated,CONMEBOL_06: 2082 -> 2061. UEFA_08: 2128 -> 2149.
+2026-06-13T15:26:31.3814230,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:31.3789720,system,Ranking,RankingUpdated,CAF_06: 2441 -> 2408. UEFA_16: 1999 -> 2031.
+2026-06-13T15:26:31.3582990,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:26.0373450,sashayeye270205@gmail.com,Cruces,Sorteo,Se realizó el sorteo de la siguiente ronda de cruces con semilla 13579
+2026-06-13T15:26:23.8379520,system,Ranking,RankingUpdated,UEFA_08: 2108 -> 2128. UEFA_16: 2019 -> 1999.
+2026-06-13T15:26:23.8243270,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:23.8227950,system,Ranking,RankingUpdated,CAF_06: 2474 -> 2441. CONMEBOL_06: 2050 -> 2082.
+2026-06-13T15:26:23.8034970,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:20.6145710,sashayeye270205@gmail.com,Cruces,Sorteo,Se realizó el sorteo de la siguiente ronda de cruces con semilla 13579
+2026-06-13T15:26:18.4203870,system,Ranking,RankingUpdated,CONMEBOL_06: 2036 -> 2050. UEFA_14: 1674 -> 1661.
+2026-06-13T15:26:18.4043660,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:18.4021190,system,Ranking,RankingUpdated,UEFA_11: 2352 -> 2321. UEFA_16: 1988 -> 2019.
+2026-06-13T15:26:18.3869750,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:18.3845810,system,Ranking,RankingUpdated,CAF_06: 2457 -> 2474. CONCACAF_05: 2246 -> 2229.
+2026-06-13T15:26:18.3635580,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:18.3597590,system,Ranking,RankingUpdated,CONCACAF_07: 2396 -> 2366. UEFA_08: 2078 -> 2108.
+2026-06-13T15:26:18.3018540,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:14.4120910,sashayeye270205@gmail.com,Cruces,Sorteo,Se realizó el sorteo de la siguiente ronda de cruces con semilla 13579
+2026-06-13T15:26:11.8702790,system,Ranking,RankingUpdated,CONCACAF_07: 2384 -> 2396. CONMEBOL_07: 1951 -> 1939.
+2026-06-13T15:26:11.8505680,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:11.8479600,system,Ranking,RankingUpdated,CAF_01: 1777 -> 1759. UEFA_16: 1971 -> 1988.
+2026-06-13T15:26:11.8286820,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:11.8258120,system,Ranking,RankingUpdated,UEFA_14: 1653 -> 1674. UEFA_05: 1584 -> 1564.
+2026-06-13T15:26:11.8088990,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:11.8063830,system,Ranking,RankingUpdated,CONCACAF_02: 1025 -> 1023. UEFA_11: 2350 -> 2352.
+2026-06-13T15:26:11.7887570,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:11.7865000,system,Ranking,RankingUpdated,CONCACAF_05: 2229 -> 2246. UEFA_10: 2027 -> 2010.
+2026-06-13T15:26:11.7675770,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:11.7648930,system,Ranking,RankingUpdated,AFC_06: 2413 -> 2382. UEFA_08: 2047 -> 2078.
+2026-06-13T15:26:11.7459570,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:11.7424160,system,Ranking,RankingUpdated,CONMEBOL_06: 2003 -> 2036. AFC_08: 2426 -> 2394.
+2026-06-13T15:26:11.7213560,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:26:11.7186240,system,Ranking,RankingUpdated,CAF_06: 2453 -> 2457. UEFA_07: 1383 -> 1380.
+2026-06-13T15:26:11.6903040,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:47.3296620,sashayeye270205@gmail.com,Cruces,Sorteo,Se realizó el sorteo de la siguiente ronda de cruces con semilla 13579
+2026-06-13T15:25:45.0936820,system,Ranking,RankingUpdated,CAF_01: 1756 -> 1777. CAF_09: 1691 -> 1671.
+2026-06-13T15:25:45.0792490,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:45.0753900,system,Ranking,RankingUpdated,UEFA_14: 1627 -> 1653. CAF_07: 1758 -> 1733.
+2026-06-13T15:25:45.0575580,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:45.0557060,system,Ranking,RankingUpdated,CAF_06: 2450 -> 2453. CONMEBOL_03: 1363 -> 1360.
+2026-06-13T15:25:45.0436530,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:45.0421350,system,Ranking,RankingUpdated,UEFA_05: 1567 -> 1584. UEFA_06: 1352 -> 1335.
+2026-06-13T15:25:45.0286720,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:45.0267150,system,Ranking,RankingUpdated,CONMEBOL_07: 1941 -> 1951. CAF_03: 1379 -> 1369.
+2026-06-13T15:25:45.0159340,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:45.0144340,system,Ranking,RankingUpdated,UEFA_08: 2045 -> 2047. CAF_02: 636 -> 634.
+2026-06-13T15:25:45.0019230,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:44.9999360,system,Ranking,RankingUpdated,CONMEBOL_06: 1970 -> 2003. AFC_05: 2427 -> 2394.
+2026-06-13T15:25:44.9849580,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:44.9819340,system,Ranking,RankingUpdated,UEFA_10: 2022 -> 2027. CAF_05: 1152 -> 1147.
+2026-06-13T15:25:44.9715430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:44.9695260,system,Ranking,RankingUpdated,CONMEBOL_02: 1956 -> 1915. CONCACAF_02: 985 -> 1025.
+2026-06-13T15:25:44.9464060,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:44.9438110,system,Ranking,RankingUpdated,AFC_06: 2413 -> 2413. UEFA_03: 451 -> 451.
+2026-06-13T15:25:44.9235250,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:44.9192740,system,Ranking,RankingUpdated,AFC_08: 2425 -> 2426. UEFA_01: 707 -> 706.
+2026-06-13T15:25:44.8863310,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:44.8798840,system,Ranking,RankingUpdated,UEFA_16: 1965 -> 1971. CONCACAF_04: 1143 -> 1137.
+2026-06-13T15:25:44.8598170,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:44.8550830,system,Ranking,RankingUpdated,CONCACAF_05: 2226 -> 2229. AFC_02: 1119 -> 1116.
+2026-06-13T15:25:44.8407840,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:44.8389790,system,Ranking,RankingUpdated,CONCACAF_07: 2383 -> 2384. AFC_04: 661 -> 660.
+2026-06-13T15:25:44.8217760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:44.8197110,system,Ranking,RankingUpdated,UEFA_13: 1831 -> 1797. UEFA_07: 1350 -> 1383.
+2026-06-13T15:25:44.8015230,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:44.7960600,system,Ranking,RankingUpdated,UEFA_11: 2347 -> 2350. CONMEBOL_05: 1179 -> 1176.
+2026-06-13T15:25:44.7510060,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:41.4984810,sashayeye270205@gmail.com,Cruces,Sorteo,Se realizó el sorteo de cruces de 32avos de final con semilla 13579
+2026-06-13T15:25:38.6743350,system,Ranking,RankingUpdated,AFC_03: 688 -> 684. UEFA_15: 458 -> 462.
+2026-06-13T15:25:38.6589260,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.6567930,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1956. UEFA_06: 1358 -> 1352.
+2026-06-13T15:25:38.6403690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.6380530,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1361. UEFA_15: 458 -> 455.
+2026-06-13T15:25:38.6226920,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.6203740,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1952. AFC_03: 688 -> 686.
+2026-06-13T15:25:38.6044420,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.6009870,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1363. AFC_03: 688 -> 683.
+2026-06-13T15:25:38.5755530,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.5727110,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1951. UEFA_15: 458 -> 457.
+2026-06-13T15:25:38.5468970,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.5443280,system,Ranking,RankingUpdated,UEFA_01: 697 -> 707. CAF_04: 373 -> 363.
+2026-06-13T15:25:38.5321780,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.5300150,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1965. CONMEBOL_03: 1369 -> 1363.
+2026-06-13T15:25:38.5166360,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.5148360,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1372. CAF_04: 373 -> 370.
+2026-06-13T15:25:38.5005090,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.4985980,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1961. UEFA_01: 697 -> 695.
+2026-06-13T15:25:38.4846420,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.4823800,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1374. UEFA_01: 697 -> 692.
+2026-06-13T15:25:38.4685550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.4668020,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1960. CAF_04: 373 -> 372.
+2026-06-13T15:25:38.4501600,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.4479720,system,Ranking,RankingUpdated,CONCACAF_03: 786 -> 785. UEFA_04: 737 -> 738.
+2026-06-13T15:25:38.4319970,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.4300040,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1970. CAF_03: 1385 -> 1379.
+2026-06-13T15:25:38.4139500,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.4101180,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. UEFA_04: 737 -> 732.
+2026-06-13T15:25:38.3982650,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.3961370,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1951. CONCACAF_03: 786 -> 799.
+2026-06-13T15:25:38.3801000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.3767460,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. CONCACAF_03: 786 -> 780.
+2026-06-13T15:25:38.3539260,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.3516540,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1966. UEFA_04: 737 -> 735.
+2026-06-13T15:25:38.3348140,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.3328460,system,Ranking,RankingUpdated,CONCACAF_02: 977 -> 985. AFC_01: 538 -> 530.
+2026-06-13T15:25:38.3169270,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.3146430,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2022. UEFA_05: 1560 -> 1567.
+2026-06-13T15:25:38.2997550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.2977630,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1563. AFC_01: 538 -> 535.
+2026-06-13T15:25:38.2811420,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.2779600,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2031. CONCACAF_02: 977 -> 975.
+2026-06-13T15:25:38.2619760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.2591740,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1566. CONCACAF_02: 977 -> 971.
+2026-06-13T15:25:38.2374630,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.2350610,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2030. AFC_01: 538 -> 537.
+2026-06-13T15:25:38.2175650,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.2155300,system,Ranking,RankingUpdated,CONCACAF_04: 1130 -> 1143. CAF_08: 1038 -> 1025.
+2026-06-13T15:25:38.2014870,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.1984350,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2045. UEFA_14: 1620 -> 1627.
+2026-06-13T15:25:38.1842880,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.1822440,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1626. CAF_08: 1038 -> 1032.
+2026-06-13T15:25:38.1681370,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.1658070,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CONCACAF_04: 1130 -> 1127.
+2026-06-13T15:25:38.1512880,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.1489770,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1627. CONCACAF_04: 1130 -> 1123.
+2026-06-13T15:25:38.1267210,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.1237080,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CAF_08: 1038 -> 1035.
+2026-06-13T15:25:38.1006630,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.0985500,system,Ranking,RankingUpdated,AFC_04: 648 -> 661. UEFA_09: 529 -> 516.
+2026-06-13T15:25:38.0718190,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.0687040,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2226. CAF_09: 1698 -> 1691.
+2026-06-13T15:25:38.0530440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.0504480,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. UEFA_09: 529 -> 527.
+2026-06-13T15:25:38.0358920,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.0326570,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. AFC_04: 648 -> 647.
+2026-06-13T15:25:38.0028410,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:38.0010830,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. AFC_04: 648 -> 646.
+2026-06-13T15:25:37.9860690,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.9842940,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. UEFA_09: 529 -> 528.
+2026-06-13T15:25:37.9686330,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.9669070,system,Ranking,RankingUpdated,AFC_02: 1142 -> 1119. CAF_02: 613 -> 636.
+2026-06-13T15:25:37.9532110,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.9512800,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2347. CONCACAF_06: 1724 -> 1718.
+2026-06-13T15:25:37.9381230,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.9363770,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1711. CAF_02: 613 -> 626.
+2026-06-13T15:25:37.9191100,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.9166970,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2343. AFC_02: 1142 -> 1140.
+2026-06-13T15:25:37.9030860,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.9014970,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1700. AFC_02: 1142 -> 1165.
+2026-06-13T15:25:37.8828580,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.8802170,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2342. CAF_02: 613 -> 612.
+2026-06-13T15:25:37.8586000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.8565380,system,Ranking,RankingUpdated,AFC_07: 1268 -> 1251. CAF_05: 1135 -> 1152.
+2026-06-13T15:25:37.8377210,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.8357630,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2383. CONMEBOL_04: 1739 -> 1733.
+2026-06-13T15:25:37.8207940,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.8190160,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1730. CAF_05: 1135 -> 1144.
+2026-06-13T15:25:37.8042010,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.8011600,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. AFC_07: 1268 -> 1266.
+2026-06-13T15:25:37.7888810,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.7869800,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1732. AFC_07: 1268 -> 1275.
+2026-06-13T15:25:37.7721590,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.7706090,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. CAF_05: 1135 -> 1133.
+2026-06-13T15:25:37.7565730,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.7547250,system,Ranking,RankingUpdated,CONCACAF_01: 573 -> 569. UEFA_02: 316 -> 320.
+2026-06-13T15:25:37.7386370,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.7363590,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2413. CAF_01: 1761 -> 1756.
+2026-06-13T15:25:37.7183850,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.7164560,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. UEFA_02: 316 -> 315.
+2026-06-13T15:25:37.6980450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.6939220,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. CONCACAF_01: 573 -> 573.
+2026-06-13T15:25:37.6772440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.6745730,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1763. CONCACAF_01: 573 -> 571.
+2026-06-13T15:25:37.6553350,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.6536140,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. UEFA_02: 316 -> 316.
+2026-06-13T15:25:37.6421170,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.6404490,system,Ranking,RankingUpdated,CONMEBOL_05: 1175 -> 1179. OFC_01: 332 -> 328.
+2026-06-13T15:25:37.6272670,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.6254650,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2425. CAF_07: 1763 -> 1758.
+2026-06-13T15:25:37.6096290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.6078800,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1764. OFC_01: 332 -> 331.
+2026-06-13T15:25:37.5918480,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.5881240,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2422. CONMEBOL_05: 1175 -> 1173.
+2026-06-13T15:25:37.5699820,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.5679180,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1769. CONMEBOL_05: 1175 -> 1169.
+2026-06-13T15:25:37.3108790,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.3079760,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2420. OFC_01: 332 -> 332.
+2026-06-13T15:25:37.2963430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.2927660,system,Ranking,RankingUpdated,UEFA_03: 437 -> 451. CONMEBOL_01: 387 -> 373.
+2026-06-13T15:25:37.2583910,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.2558120,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2427. UEFA_13: 1807 -> 1831.
+2026-06-13T15:25:37.2352840,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.2311730,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1808. CONMEBOL_01: 387 -> 386.
+2026-06-13T15:25:37.2048470,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.2019810,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. UEFA_03: 437 -> 437.
+2026-06-13T15:25:37.1854200,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.1830270,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1808. UEFA_03: 437 -> 436.
+2026-06-13T15:25:37.1581240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.1550740,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. CONMEBOL_01: 387 -> 387.
+2026-06-13T15:25:37.1379440,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.1357450,system,Ranking,RankingUpdated,UEFA_07: 1345 -> 1350. UEFA_12: 676 -> 671.
+2026-06-13T15:25:37.1188550,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.1155380,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2450. CONMEBOL_07: 1933 -> 1941.
+2026-06-13T15:25:37.0885710,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.0862100,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1935. UEFA_12: 676 -> 674.
+2026-06-13T15:25:37.0618080,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.0586530,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2460. UEFA_07: 1345 -> 1343.
+2026-06-13T15:25:37.0297060,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:37.0255900,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1939. UEFA_07: 1345 -> 1339.
+2026-06-13T15:25:36.9877390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:36.9850710,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2458. UEFA_12: 676 -> 676.
+2026-06-13T15:25:36.8543290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T15:25:13.2847450,sashayeye270205@gmail.com,Fixture,Generación,Se generó el fixture del torneo con semilla 12345
+2026-06-13T14:54:34.9134450,sashayeye270205@gmail.com,Fixture,Generación,Se elimino el fixture generado con:  12345
+2026-06-13T14:38:41.3205190,sashayeye270205@gmail.com,Cruces,Sorteo,Se realizó el sorteo de la siguiente ronda de cruces con semilla 13579
+2026-06-13T14:38:38.3073090,system,Ranking,RankingUpdated,CAF_01: 1756 -> 1777. CAF_09: 1691 -> 1671.
+2026-06-13T14:38:38.2918180,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.2897650,system,Ranking,RankingUpdated,UEFA_14: 1627 -> 1653. CAF_07: 1758 -> 1733.
+2026-06-13T14:38:38.2687220,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.2669510,system,Ranking,RankingUpdated,CAF_06: 2450 -> 2453. CONMEBOL_03: 1363 -> 1360.
+2026-06-13T14:38:38.2538120,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.2516680,system,Ranking,RankingUpdated,UEFA_05: 1567 -> 1584. UEFA_06: 1352 -> 1335.
+2026-06-13T14:38:38.2385950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.2366730,system,Ranking,RankingUpdated,CONMEBOL_07: 1941 -> 1951. CAF_03: 1379 -> 1369.
+2026-06-13T14:38:38.2203310,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.2188380,system,Ranking,RankingUpdated,UEFA_08: 2045 -> 2047. CAF_02: 636 -> 634.
+2026-06-13T14:38:38.2065290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.2047710,system,Ranking,RankingUpdated,CONMEBOL_06: 1970 -> 2003. AFC_05: 2427 -> 2394.
+2026-06-13T14:38:38.1913920,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.1893940,system,Ranking,RankingUpdated,UEFA_10: 2022 -> 2027. CAF_05: 1152 -> 1147.
+2026-06-13T14:38:38.1753960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.1738510,system,Ranking,RankingUpdated,CONMEBOL_02: 1956 -> 1915. CONCACAF_02: 985 -> 1025.
+2026-06-13T14:38:38.1593200,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.1573060,system,Ranking,RankingUpdated,AFC_06: 2413 -> 2413. UEFA_03: 451 -> 451.
+2026-06-13T14:38:38.1335610,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.1304700,system,Ranking,RankingUpdated,AFC_08: 2425 -> 2426. UEFA_01: 707 -> 706.
+2026-06-13T14:38:38.1092490,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.1050190,system,Ranking,RankingUpdated,UEFA_16: 1965 -> 1971. CONCACAF_04: 1143 -> 1137.
+2026-06-13T14:38:38.0747960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.0688650,system,Ranking,RankingUpdated,CONCACAF_05: 2226 -> 2229. AFC_02: 1119 -> 1116.
+2026-06-13T14:38:38.0483460,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.0460540,system,Ranking,RankingUpdated,CONCACAF_07: 2383 -> 2384. AFC_04: 661 -> 660.
+2026-06-13T14:38:38.0274010,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:38.0245570,system,Ranking,RankingUpdated,UEFA_13: 1831 -> 1797. UEFA_07: 1350 -> 1383.
+2026-06-13T14:38:37.9900750,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:37.9821760,system,Ranking,RankingUpdated,UEFA_11: 2347 -> 2350. CONMEBOL_05: 1179 -> 1176.
+2026-06-13T14:38:37.9323870,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:34.9368690,sashayeye270205@gmail.com,Cruces,Sorteo,Se realizó el sorteo de cruces de 32avos de final con semilla 13579
+2026-06-13T14:38:31.0811200,system,Ranking,RankingUpdated,AFC_03: 688 -> 684. UEFA_15: 458 -> 462.
+2026-06-13T14:38:31.0574600,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:31.0519770,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1956. UEFA_06: 1358 -> 1352.
+2026-06-13T14:38:31.0009190,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.9953730,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1361. UEFA_15: 458 -> 455.
+2026-06-13T14:38:30.9648290,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.9620550,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1952. AFC_03: 688 -> 686.
+2026-06-13T14:38:30.9484700,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.9465480,system,Ranking,RankingUpdated,UEFA_06: 1358 -> 1363. AFC_03: 688 -> 683.
+2026-06-13T14:38:30.9178280,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.9145190,system,Ranking,RankingUpdated,CONMEBOL_02: 1950 -> 1951. UEFA_15: 458 -> 457.
+2026-06-13T14:38:30.8665200,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.8644560,system,Ranking,RankingUpdated,UEFA_01: 697 -> 707. CAF_04: 373 -> 363.
+2026-06-13T14:38:30.8440010,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.8405050,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1965. CONMEBOL_03: 1369 -> 1363.
+2026-06-13T14:38:30.8198660,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.8168450,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1372. CAF_04: 373 -> 370.
+2026-06-13T14:38:30.7954540,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.7927840,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1961. UEFA_01: 697 -> 695.
+2026-06-13T14:38:30.7681130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.7634610,system,Ranking,RankingUpdated,CONMEBOL_03: 1369 -> 1374. UEFA_01: 697 -> 692.
+2026-06-13T14:38:30.7419230,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.7390920,system,Ranking,RankingUpdated,UEFA_16: 1959 -> 1960. CAF_04: 373 -> 372.
+2026-06-13T14:38:30.7226470,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.7207750,system,Ranking,RankingUpdated,CONCACAF_03: 786 -> 785. UEFA_04: 737 -> 738.
+2026-06-13T14:38:30.7056800,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.7034910,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1970. CAF_03: 1385 -> 1379.
+2026-06-13T14:38:30.6890650,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.6867330,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. UEFA_04: 737 -> 732.
+2026-06-13T14:38:30.6724630,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.6697300,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1951. CONCACAF_03: 786 -> 799.
+2026-06-13T14:38:30.6534140,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.6514810,system,Ranking,RankingUpdated,CAF_03: 1385 -> 1391. CONCACAF_03: 786 -> 780.
+2026-06-13T14:38:30.6347760,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.6330130,system,Ranking,RankingUpdated,CONMEBOL_06: 1964 -> 1966. UEFA_04: 737 -> 735.
+2026-06-13T14:38:30.6168180,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.6145310,system,Ranking,RankingUpdated,CONCACAF_02: 977 -> 985. AFC_01: 538 -> 530.
+2026-06-13T14:38:30.5989000,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.5952450,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2022. UEFA_05: 1560 -> 1567.
+2026-06-13T14:38:30.5754200,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.5733720,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1563. AFC_01: 538 -> 535.
+2026-06-13T14:38:30.5546390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.5516590,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2031. CONCACAF_02: 977 -> 975.
+2026-06-13T14:38:30.5340380,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.5307500,system,Ranking,RankingUpdated,UEFA_05: 1560 -> 1566. CONCACAF_02: 977 -> 971.
+2026-06-13T14:38:30.5110180,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.5091980,system,Ranking,RankingUpdated,UEFA_10: 2029 -> 2030. AFC_01: 538 -> 537.
+2026-06-13T14:38:30.4932930,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.4915370,system,Ranking,RankingUpdated,CONCACAF_04: 1130 -> 1143. CAF_08: 1038 -> 1025.
+2026-06-13T14:38:30.4754110,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.4736380,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2045. UEFA_14: 1620 -> 1627.
+2026-06-13T14:38:30.4593450,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.4571110,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1626. CAF_08: 1038 -> 1032.
+2026-06-13T14:38:30.4379390,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.4351430,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CONCACAF_04: 1130 -> 1127.
+2026-06-13T14:38:30.4198960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.4166200,system,Ranking,RankingUpdated,UEFA_14: 1620 -> 1627. CONCACAF_04: 1130 -> 1123.
+2026-06-13T14:38:30.3920600,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.3894200,system,Ranking,RankingUpdated,UEFA_08: 2052 -> 2055. CAF_08: 1038 -> 1035.
+2026-06-13T14:38:30.3568970,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.3536090,system,Ranking,RankingUpdated,AFC_04: 648 -> 661. UEFA_09: 529 -> 516.
+2026-06-13T14:38:30.3346160,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.3327890,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2226. CAF_09: 1698 -> 1691.
+2026-06-13T14:38:30.3153350,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.3114470,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. UEFA_09: 529 -> 527.
+2026-06-13T14:38:30.3003860,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.2979360,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. AFC_04: 648 -> 647.
+2026-06-13T14:38:30.2846330,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.2801040,system,Ranking,RankingUpdated,CAF_09: 1698 -> 1700. AFC_04: 648 -> 646.
+2026-06-13T14:38:30.2568540,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.2533960,system,Ranking,RankingUpdated,CONCACAF_05: 2219 -> 2220. UEFA_09: 529 -> 528.
+2026-06-13T14:38:30.2282520,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.2250230,system,Ranking,RankingUpdated,AFC_02: 1142 -> 1119. CAF_02: 613 -> 636.
+2026-06-13T14:38:30.2024280,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.1998600,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2347. CONCACAF_06: 1724 -> 1718.
+2026-06-13T14:38:30.1701630,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.1674110,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1711. CAF_02: 613 -> 626.
+2026-06-13T14:38:30.1503250,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.1451260,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2343. AFC_02: 1142 -> 1140.
+2026-06-13T14:38:30.1298070,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.1266490,system,Ranking,RankingUpdated,CONCACAF_06: 1724 -> 1700. AFC_02: 1142 -> 1165.
+2026-06-13T14:38:30.1034190,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.1018200,system,Ranking,RankingUpdated,UEFA_11: 2341 -> 2342. CAF_02: 613 -> 612.
+2026-06-13T14:38:30.0843430,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.0817220,system,Ranking,RankingUpdated,AFC_07: 1268 -> 1251. CAF_05: 1135 -> 1152.
+2026-06-13T14:38:30.0602520,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.0578930,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2383. CONMEBOL_04: 1739 -> 1733.
+2026-06-13T14:38:30.0404960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.0377900,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1730. CAF_05: 1135 -> 1144.
+2026-06-13T14:38:30.0199750,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:30.0178740,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. AFC_07: 1268 -> 1266.
+2026-06-13T14:38:29.9990580,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.9969190,system,Ranking,RankingUpdated,CONMEBOL_04: 1739 -> 1732. AFC_07: 1268 -> 1275.
+2026-06-13T14:38:29.9758490,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.9732110,system,Ranking,RankingUpdated,CONCACAF_07: 2377 -> 2379. CAF_05: 1135 -> 1133.
+2026-06-13T14:38:29.9575620,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.9557330,system,Ranking,RankingUpdated,CONCACAF_01: 573 -> 569. UEFA_02: 316 -> 320.
+2026-06-13T14:38:29.9399080,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.9376130,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2413. CAF_01: 1761 -> 1756.
+2026-06-13T14:38:29.9247950,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.9229740,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1762. UEFA_02: 316 -> 315.
+2026-06-13T14:38:29.9062410,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.9023610,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. CONCACAF_01: 573 -> 573.
+2026-06-13T14:38:29.8909270,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.8886500,system,Ranking,RankingUpdated,CAF_01: 1761 -> 1763. CONCACAF_01: 573 -> 571.
+2026-06-13T14:38:29.8721090,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.8697880,system,Ranking,RankingUpdated,AFC_06: 2407 -> 2407. UEFA_02: 316 -> 316.
+2026-06-13T14:38:29.8596210,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.8574410,system,Ranking,RankingUpdated,CONMEBOL_05: 1175 -> 1179. OFC_01: 332 -> 328.
+2026-06-13T14:38:29.8369930,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.8338250,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2425. CAF_07: 1763 -> 1758.
+2026-06-13T14:38:29.8085970,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.8061110,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1764. OFC_01: 332 -> 331.
+2026-06-13T14:38:29.7929060,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.7912980,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2422. CONMEBOL_05: 1175 -> 1173.
+2026-06-13T14:38:29.7737620,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.7715320,system,Ranking,RankingUpdated,CAF_07: 1763 -> 1769. CONMEBOL_05: 1175 -> 1169.
+2026-06-13T14:38:29.7544210,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.7521530,system,Ranking,RankingUpdated,AFC_08: 2420 -> 2420. OFC_01: 332 -> 332.
+2026-06-13T14:38:29.7382740,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.7363860,system,Ranking,RankingUpdated,UEFA_03: 437 -> 451. CONMEBOL_01: 387 -> 373.
+2026-06-13T14:38:29.7173110,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.7152870,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2427. UEFA_13: 1807 -> 1831.
+2026-06-13T14:38:29.7013260,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.6993710,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1808. CONMEBOL_01: 387 -> 386.
+2026-06-13T14:38:29.6760170,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.6739870,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. UEFA_03: 437 -> 437.
+2026-06-13T14:38:29.6635100,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.6607900,system,Ranking,RankingUpdated,UEFA_13: 1807 -> 1808. UEFA_03: 437 -> 436.
+2026-06-13T14:38:29.6413510,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.6397350,system,Ranking,RankingUpdated,AFC_05: 2451 -> 2451. CONMEBOL_01: 387 -> 387.
+2026-06-13T14:38:29.6278240,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.6250530,system,Ranking,RankingUpdated,UEFA_07: 1345 -> 1350. UEFA_12: 676 -> 671.
+2026-06-13T14:38:29.5856170,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.5840020,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2450. CONMEBOL_07: 1933 -> 1941.
+2026-06-13T14:38:29.5627130,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.5604900,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1935. UEFA_12: 676 -> 674.
+2026-06-13T14:38:29.5393140,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.5378670,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2460. UEFA_07: 1345 -> 1343.
+2026-06-13T14:38:29.5030670,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.5012710,system,Ranking,RankingUpdated,CONMEBOL_07: 1933 -> 1939. UEFA_07: 1345 -> 1339.
+2026-06-13T14:38:29.4550960,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:29.4531910,system,Ranking,RankingUpdated,CAF_06: 2458 -> 2458. UEFA_12: 676 -> 676.
+2026-06-13T14:38:29.2908720,system,Simulation,SimulationExecuted,Se ejecutó una simulación con semilla 24680 usando el motor Probabilístico.
+2026-06-13T14:38:23.6766630,sashayeye270205@gmail.com,Fixture,Generación,Se generó el fixture del torneo con semilla 12345
+2026-06-13T14:38:13.7027380,sashayeye270205@gmail.com,Fixture,Generación,Se elimino el fixture generado con:  12345
+2026-06-13T14:37:40.2931730,sashayeye270205@gmail.com,Fixture,Generación,Se generó el fixture del torneo con semilla 12345
+2026-06-13T14:37:35.0604440,sashayeye270205@gmail.com,Equipos,Generación automática,Se generaron automáticamente los equipos faltantes con semilla 67890
+2026-06-13T14:37:30.3328120,sashayeye270205@gmail.com,Estadios,Alta,Se creó el estadio Esadio4
+2026-06-13T14:37:21.0639350,sashayeye270205@gmail.com,Estadios,Alta,Se creó el estadio Estadio3
+2026-06-13T14:37:12.2573940,sashayeye270205@gmail.com,Estadios,Alta,Se creó el estadio Campeon del Signo
+2026-06-13T14:36:59.0672260,sashayeye270205@gmail.com,Estadios,Alta,Se creó el estadio Centenario
