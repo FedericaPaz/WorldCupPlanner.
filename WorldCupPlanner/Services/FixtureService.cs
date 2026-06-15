@@ -110,16 +110,16 @@ public class FixtureService : IFixtureService
 
     public void DeleteFixture(Fixture fixture)
     {
+        _crucesRepository.RemoveCruces();
+        _matchRepository.ClearMatches();
+        _fixtureRepository.RemoveFixture(fixture);
+
         var teams = _teamRepository.GetAll();
         foreach (var team in teams)
         {
             team.ResetRankingToFifa();
             _teamRepository.Update(team);
         }
-
-        _crucesRepository.RemoveCruces();
-        _matchRepository.ClearMatches();
-        _fixtureRepository.RemoveFixture(fixture);
     }
 
     private Fixture GenerateGroupsStageFixture()
