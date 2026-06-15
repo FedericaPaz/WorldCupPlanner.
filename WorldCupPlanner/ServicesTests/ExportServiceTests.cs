@@ -25,7 +25,17 @@ public class ExportServiceTests
         _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
 
-        _service = new ExportService(_userRepository, _logService);
+        // use stubs for fixture and matches
+        var fixtureRepo = new FixtureRepositoryStub();
+        var matchRepo = new MatchRepositoryStub();
+        var crucesRepo = new CrucesRepositoryStub();
+
+        // provide an initialized (empty) fixture to avoid nulls
+        var fixture = new Fixture(new TournamentConfig());
+        fixture.InitializeGroups();
+        fixtureRepo.AddFixture(fixture);
+
+        _service = new ExportService(_userRepository, _logService, fixtureRepo, matchRepo, crucesRepo);
     }
 
     [TestCleanup]
