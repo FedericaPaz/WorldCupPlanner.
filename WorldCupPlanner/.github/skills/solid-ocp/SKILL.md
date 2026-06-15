@@ -1,7 +1,6 @@
 ---
 name: solid-ocp-domain
-description: >
-naliza la aplicación del principio Open/Closed Principle (OCP) en las entidades del dominio. Identifica comportamientos que requieren modificar clases existentes para agregar nuevas funcionalidades y propone mecanismos de extensión sin alterar el comportamiento actual.
+description: Analiza la aplicación del principio Open/Closed Principle (OCP) en las entidades del dominio.
 ---
 # SOLID - Open/Closed Principle (OCP) en el Dominio
 
