@@ -90,19 +90,25 @@ public class FixtureService : IFixtureService
 
     public void GenerateFixture(string simulationEngineName = "Probabilistico")
     {
+        _crucesRepository.RemoveCruces();
+        _matchRepository.ClearMatches();
+    
+        if (_fixtureRepository.ContainsFixture())
+            _fixtureRepository.RemoveFixture(_fixtureRepository.GetFixture());
+
+        var teams = _teamRepository.GetAll();
+        foreach (var team in teams)
+        {
+            team.ResetRankingToFifa();
+            _teamRepository.Update(team);
+        }
+
         _nextMatchId = _matchRepository.GetNextId();
         var fixture = GenerateGroupsStageFixture();
-        fixture.ResetRankings();
-
-        foreach (var team in fixture.Groups.SelectMany(g => g.TeamsInGroup))
-            _teamRepository.Update(team);
-
-        _matchRepository.ClearMatches();
-        _crucesRepository.RemoveCruces();
 
         foreach (var grupo in fixture.Groups)
-            foreach (var partido in grupo.MatchesInGroup)
-                _matchRepository.AddMatch(partido);
+        foreach (var partido in grupo.MatchesInGroup)
+            _matchRepository.AddMatch(partido);
 
         fixture.SetSimulationEngine(simulationEngineName);
         _fixtureRepository.AddFixture(fixture);
