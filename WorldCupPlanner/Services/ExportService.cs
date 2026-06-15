@@ -16,13 +16,23 @@ public class ExportService : IExportService
 
     private readonly IUserRepository _userRepository;
     private readonly ILogService _logService;
+    private readonly IFixtureRepository _fixtureRepository;
+    private readonly IMatchRepository _matchRepository;
+    private readonly ICrucesRepository _crucesRepository;
 
-    public ExportService(IUserRepository userRepository, ILogService logService)
+    public ExportService(IUserRepository userRepository, ILogService logService, IFixtureRepository fixtureRepository, IMatchRepository matchRepository, ICrucesRepository crucesRepository)
     {
         if (userRepository is null) throw new ArgumentNullException(nameof(userRepository));
+        if (fixtureRepository is null) throw new ArgumentNullException(nameof(fixtureRepository));
+        if (matchRepository is null) throw new ArgumentNullException(nameof(matchRepository));
+        if (crucesRepository is null) throw new ArgumentNullException(nameof(crucesRepository));
+
         _userRepository = userRepository;
         _log_service_check(logService);
         _logService = logService;
+        _fixtureRepository = fixtureRepository;
+        _matchRepository = matchRepository;
+        _crucesRepository = crucesRepository;
     }
 
     public string ExportFixtureToCsv(string userEmail)
@@ -41,11 +51,60 @@ public class ExportService : IExportService
 
         return SaveWorkbook(FixtureExportName, "xlsx", ws =>
         {
-            // Minimal fixture content: header + generated timestamp
-            ws.Cell(1, 1).Value = "GeneratedAt";
-            ws.Cell(1, 2).Value = "Description";
-            ws.Cell(2, 1).Value = DateTime.Now.ToString("o");
-            ws.Cell(2, 2).Value = "Fixture export";
+            // Header
+            ws.Cell(1, 1).Value = "Fase";
+            ws.Cell(1, 2).Value = "Grupo";
+            ws.Cell(1, 3).Value = "Fecha";
+            ws.Cell(1, 4).Value = "Estadio";
+            ws.Cell(1, 5).Value = "Equipo local";
+            ws.Cell(1, 6).Value = "Goles local";
+            ws.Cell(1, 7).Value = "Equipo visitante";
+            ws.Cell(1, 8).Value = "Goles visitante";
+            ws.Cell(1, 9).Value = "Estado";
+
+            var fixture = _fixtureRepository.GetFixture();
+            var matches = _matchRepository.GetAllMatches();
+            fixture.CargarPartidos(matches);
+
+            var row = 2;
+            foreach (var group in fixture.Groups)
+            {
+                var orderedMatches = group.MatchesInGroup.OrderBy(m => m.DateMatch);
+                foreach (var match in orderedMatches)
+                {
+                    ws.Cell(row, 1).Value = "Grupos";
+                    ws.Cell(row, 2).Value = group.GroupLetter.ToString();
+                    ws.Cell(row, 3).Value = match.DateMatch;
+                    ws.Cell(row, 4).Value = match.Stadium?.StadiumName ?? string.Empty;
+                    ws.Cell(row, 5).Value = match.HomeTeam?.Name ?? string.Empty;
+                    ws.Cell(row, 6).Value = match.HomeGoals.HasValue ? match.HomeGoals.Value.ToString() : string.Empty;
+                    ws.Cell(row, 7).Value = match.AwayTeam?.Name ?? string.Empty;
+                    ws.Cell(row, 8).Value = match.AwayGoals.HasValue ? match.AwayGoals.Value.ToString() : string.Empty;
+                    ws.Cell(row, 9).Value = (match.HomeGoals.HasValue && match.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
+                    row++;
+                }
+            }
+
+            // Append cruces/eliminatorias if exist
+            if (_crucesRepository != null && _crucesRepository.HasCruces())
+            {
+                var cruces = _crucesRepository.GetAllCruces();
+                foreach (var cruce in cruces)
+                {
+                    var match = cruce.Match;
+                    ws.Cell(row, 1).Value = cruce.Name;
+                    ws.Cell(row, 2).Value = string.Empty;
+                    ws.Cell(row, 3).Value = match.DateMatch;
+                    ws.Cell(row, 4).Value = match.Stadium?.StadiumName ?? string.Empty;
+                    ws.Cell(row, 5).Value = match.HomeTeam?.Name ?? string.Empty;
+                    ws.Cell(row, 6).Value = match.HomeGoals.HasValue ? match.HomeGoals.Value.ToString() : string.Empty;
+                    ws.Cell(row, 7).Value = match.AwayTeam?.Name ?? string.Empty;
+                    ws.Cell(row, 8).Value = match.AwayGoals.HasValue ? match.AwayGoals.Value.ToString() : string.Empty;
+                    ws.Cell(row, 9).Value = (match.HomeGoals.HasValue && match.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
+                    row++;
+                }
+            }
+
             ws.Columns().AdjustToContents();
         });
     }
@@ -139,9 +198,53 @@ public class ExportService : IExportService
 
     private string BuildFixtureCsv()
     {
+        var fixture = _fixtureRepository.GetFixture();
+        var matches = _matchRepository.GetAllMatches();
+        fixture.CargarPartidos(matches);
+
         var sb = new StringBuilder();
-        sb.AppendLine("GeneratedAt,Description");
-        sb.AppendLine($"{DateTime.Now:o},\"Fixture export\"");
+        sb.AppendLine("Fase,Grupo,Fecha,Estadio,Equipo local,Goles local,Equipo visitante,Goles visitante,Estado");
+
+        foreach (var group in fixture.Groups)
+        {
+            var orderedMatches = group.MatchesInGroup.OrderBy(m => m.DateMatch);
+            foreach (var match in orderedMatches)
+            {
+                var fase = "Grupos";
+                var grupo = group.GroupLetter.ToString();
+                var fecha = match.DateMatch.ToString("yyyy-MM-dd HH:mm");
+                var estadio = EscapeCsv(match.Stadium?.StadiumName ?? string.Empty);
+                var home = EscapeCsv(match.HomeTeam?.Name ?? string.Empty);
+                var away = EscapeCsv(match.AwayTeam?.Name ?? string.Empty);
+                var homeGoals = match.HomeGoals.HasValue ? match.HomeGoals.Value.ToString() : string.Empty;
+                var awayGoals = match.AwayGoals.HasValue ? match.AwayGoals.Value.ToString() : string.Empty;
+                var estado = (match.HomeGoals.HasValue && match.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
+
+                sb.AppendLine($"{EscapeCsv(fase)},{grupo},{fecha},{estadio},{home},{homeGoals},{away},{awayGoals},{estado}");
+            }
+        }
+
+        // Append cruces/eliminatorias if exist
+        if (_crucesRepository != null && _crucesRepository.HasCruces())
+        {
+            var cruces = _crucesRepository.GetAllCruces();
+            foreach (var cruce in cruces)
+            {
+                var match = cruce.Match;
+                var fase = cruce.Name;
+                var grupo = string.Empty;
+                var fecha = match.DateMatch.ToString("yyyy-MM-dd HH:mm");
+                var estadio = EscapeCsv(match.Stadium?.StadiumName ?? string.Empty);
+                var home = EscapeCsv(match.HomeTeam?.Name ?? string.Empty);
+                var away = EscapeCsv(match.AwayTeam?.Name ?? string.Empty);
+                var homeGoals = match.HomeGoals.HasValue ? match.HomeGoals.Value.ToString() : string.Empty;
+                var awayGoals = match.AwayGoals.HasValue ? match.AwayGoals.Value.ToString() : string.Empty;
+                var estado = (match.HomeGoals.HasValue && match.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
+
+                sb.AppendLine($"{EscapeCsv(fase)},{grupo},{fecha},{estadio},{home},{homeGoals},{away},{awayGoals},{estado}");
+            }
+        }
+
         return sb.ToString();
     }
 
