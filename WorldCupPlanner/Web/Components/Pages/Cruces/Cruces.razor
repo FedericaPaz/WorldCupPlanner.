@@ -1,9 +1,12 @@
 ﻿@page "/cruces"
 @using DTOs.Cruces
+@using global::Services
 @using IServices
+@using IServices.CrucesInterface
 @using IServices.MatchInterfaces
 @using Web.Services
-@inject ICruceService CruceService
+@inject ICruceQueryService CruceQueryService
+@inject ICruceEditService CruceEditService
 @inject IFixtureService FixtureService
 @inject IMatchQueryService MatchService
 @inject ILogService LogService
@@ -356,7 +359,7 @@
     {
         try
         {
-            _todosLosCruces = CruceService.GetAllCruces();
+            _todosLosCruces = CruceQueryService.GetAllCruces();
             _hayCruces = _todosLosCruces.Any();
             _mensajeError = null;
             _mensajeExito = null;
@@ -383,7 +386,7 @@
             _mensajeExito = null;
             StateHasChanged();
 
-            CruceService.GenerateRoundOf32();
+            CruceEditService.GenerateRoundOf32();
             
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -415,7 +418,7 @@
             _mensajeExito = null;
             StateHasChanged();
 
-            CruceService.GenerateNextRound();
+            CruceEditService.GenerateNextRound();
 
             LogService.Register(
                 GetCurrentUserEmail(),

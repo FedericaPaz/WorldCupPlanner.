@@ -3,13 +3,14 @@ using Domain.Enums;
 using Domain.Interfaces;
 using DTOs.Cruces;
 using IRepository;
+using IServices.CrucesInterface;
 using IServices;
 using Services.Mappers;
 using Services.Simulation;
 
 namespace Services;
 
-public class CruceService : ICruceService
+public class CruceService : ICruceEditService, ICruceQueryService
 {
     private const int StartHour = 14;
     private const int HoursBetweenMatches = 4;

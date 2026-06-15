@@ -1,14 +1,11 @@
 ﻿using Domain.Interfaces;
-using DTOs.Cruces;
 
-namespace IServices;
+namespace IServices.CrucesInterface;
 
-public interface ICruceService
+public interface ICruceEditService
 {
     void GenerateRoundOf32();
     void GenerateNextRound();
-    List<CruceResponse> GetAllCruces();
-
     void SimulateCruces();
     void SimulateCruces(ISimulationEngine engine);
 }

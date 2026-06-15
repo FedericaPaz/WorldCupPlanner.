@@ -5,6 +5,7 @@ using Domain.Import.Interfaces;
 using Domain.Interfaces;
 using IRepository;
 using IServices;
+using IServices.CrucesInterface;
 using IServices.MatchInterfaces;
 using IServices.TeamInterfaces;
 using Microsoft.EntityFrameworkCore;
@@ -58,7 +59,8 @@ builder.Services.AddScoped<IConfigService, ConfigService>();
 builder.Services.AddScoped<ISimulationService, SimulationService>();
 
 builder.Services.AddScoped<ICrucesRepository, CrucesRepository>();
-builder.Services.AddScoped<ICruceService, CruceService>();
+builder.Services.AddScoped<ICruceQueryService, CruceService>();
+builder.Services.AddScoped<ICruceEditService, CruceService>();
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
