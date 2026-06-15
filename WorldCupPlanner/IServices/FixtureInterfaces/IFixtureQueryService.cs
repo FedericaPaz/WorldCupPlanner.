@@ -1,14 +1,12 @@
 ﻿using DTOs.Fixture;
 using Domain.Entities;
 
-namespace IServices;
+namespace IServices.FixtureInterfaces;
 
-public interface IFixtureService
+public interface IFixtureQueryService
 {
     FixtureResponse GetFixture();
     bool HasFixture();
     List<StandingResponse> GetStandingsForGroup(char groupLetter);
-    void GenerateFixture(string simulationEngineName = "Probabilístico");
     Fixture GetFixtureEntity();
-    void DeleteFixture(Fixture fixture);
 }

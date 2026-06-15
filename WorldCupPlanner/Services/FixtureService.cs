@@ -4,11 +4,12 @@ using Domain.Interfaces;
 using DTOs.Fixture;
 using IRepository;
 using IServices;
+using IServices.FixtureInterfaces;
 using Services.Mappers;
 
 namespace Services;
 
-public class FixtureService : IFixtureService
+public class FixtureService : IFixtureEditService, IFixtureQueryService
 {
     private readonly IFixtureRepository _fixtureRepository;
     private readonly ITeamRepository _teamRepository;
@@ -279,5 +280,22 @@ public class FixtureService : IFixtureService
         var lower = name.ToLowerInvariant();
         var normalized = string.Concat(lower.Where(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c)));
         return string.Join(" ", normalized.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+    }
+    
+    public void DeleteFixture()
+    {
+        var fixture = _fixtureRepository.GetFixture()
+                      ?? throw new InvalidOperationException("No hay fixture generado.");
+    
+        _crucesRepository.RemoveCruces();
+        _matchRepository.ClearMatches();
+        _fixtureRepository.RemoveFixture(fixture);
+
+        var teams = _teamRepository.GetAll();
+        foreach (var team in teams)
+        {
+            team.ResetRankingToFifa();
+            _teamRepository.Update(team);
+        }
     }
 }

@@ -2,13 +2,14 @@
 @using DTOs.Match
 @using IServices
 @using IServices.CrucesInterface
+@using IServices.FixtureInterfaces
 @using IServices.MatchInterfaces
 @using Web.Services
 @inject IMatchQueryService MatchService
 @inject ICruceEditService CruceService
 @inject ISimulationService SimulationService
 @inject SessionService SessionService
-@inject IFixtureService FixtureService
+@inject IFixtureQueryService FixtureService
 @inject NavigationManager Navigation
 
 <div class="matches-page">

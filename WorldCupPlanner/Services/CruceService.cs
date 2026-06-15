@@ -5,6 +5,7 @@ using DTOs.Cruces;
 using IRepository;
 using IServices.CrucesInterface;
 using IServices;
+using IServices.FixtureInterfaces;
 using Services.Mappers;
 using Services.Simulation;
 
@@ -16,7 +17,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
     private const int HoursBetweenMatches = 4;
 
     private readonly ICrucesRepository _repository;
-    private readonly IFixtureService _fixtureService;
+    private readonly IFixtureQueryService _fixtureService;
     private readonly IStadiumRepository _stadiumRepository;
     private readonly ISimulationService _simulationService;
     private readonly TournamentConfig _config;
@@ -29,7 +30,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
 
     public CruceService(
         ICrucesRepository repository,
-        IFixtureService fixtureService,
+        IFixtureQueryService fixtureService,
         IStadiumRepository stadiumRepository,
         ISimulationService simulationService,
         TournamentConfig config,

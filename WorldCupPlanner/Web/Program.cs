@@ -6,6 +6,7 @@ using Domain.Interfaces;
 using IRepository;
 using IServices;
 using IServices.CrucesInterface;
+using IServices.FixtureInterfaces;
 using IServices.MatchInterfaces;
 using IServices.TeamInterfaces;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +42,8 @@ builder.Services.AddScoped<IMatchCreateService, MatchService>();
 builder.Services.AddSingleton<IDateTimeMatch, SystemDateTimeMatch>();
 
 builder.Services.AddScoped<IFixtureRepository, FixtureRepository>();
-builder.Services.AddScoped<IFixtureService, FixtureService>();
+builder.Services.AddScoped<IFixtureQueryService, FixtureService>();
+builder.Services.AddScoped<IFixtureEditService, FixtureService>();
 
 builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 

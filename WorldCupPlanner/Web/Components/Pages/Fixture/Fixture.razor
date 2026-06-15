@@ -1,10 +1,12 @@
 ﻿@page "/fixture"
 @using DTOs.Fixture
 @using IServices
+@using IServices.FixtureInterfaces
 @using IServices.MatchInterfaces
 @using IServices.TeamInterfaces
 @using Web.Services
-@inject IFixtureService FixtureService
+@inject IFixtureEditService FixtureEditService
+@inject IFixtureQueryService FixtureQueryService
 @inject ITeamQueryService TeamService
 @inject IStadiumService StadiumService
 @inject NavigationManager Navigation
@@ -24,7 +26,7 @@
         <p class="mt-3">Generando fixture...</p>
     </div>
 }
-else if (!FixtureService.HasFixture())
+else if (!FixtureQueryService.HasFixture())
 {
     <div class="container">
         <div class="text-center py-5">
@@ -82,7 +84,7 @@ else if (!FixtureService.HasFixture())
 }
 else
 {
-    var fixture = FixtureService.GetFixture();
+    var fixture = FixtureQueryService.GetFixture();
 
     <div class="container">
         <div class="mb-3">
@@ -236,7 +238,7 @@ else
 
         try
         {
-            FixtureService.GenerateFixture(_selectedEngine);
+            FixtureEditService.GenerateFixture(_selectedEngine);
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -274,7 +276,7 @@ else
         {
             await Task.Delay(500);
 
-            FixtureService.DeleteFixture(FixtureService.GetFixtureEntity());
+            FixtureEditService.DeleteFixture();
 
             LogService.Register(
                 GetCurrentUserEmail(),
@@ -314,7 +316,7 @@ else
         {
             await Task.Delay(500);
 
-            FixtureService.GenerateFixture(_selectedEngine);
+            FixtureEditService.GenerateFixture(_selectedEngine);
 
             LogService.Register(
                 GetCurrentUserEmail(),
