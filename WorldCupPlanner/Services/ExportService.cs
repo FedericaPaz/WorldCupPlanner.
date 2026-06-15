@@ -1,9 +1,8 @@
 ﻿using System.Text;
 using ClosedXML.Excel;
-using Domain.Enums;
 using IRepository;
 using IServices;
-using DTOs.Log;
+using IServices.UserInterfaces;
 
 namespace Services;
 
@@ -14,20 +13,20 @@ public class ExportService : IExportService
     private const string CsvFormat = "CSV";
     private const string XlsxFormat = "XLSX";
 
-    private readonly IUserRepository _userRepository;
+    private readonly IUserQueryService _userQueryService;
     private readonly ILogService _logService;
     private readonly IFixtureRepository _fixtureRepository;
     private readonly IMatchRepository _matchRepository;
     private readonly ICrucesRepository _crucesRepository;
 
-    public ExportService(IUserRepository userRepository, ILogService logService, IFixtureRepository fixtureRepository, IMatchRepository matchRepository, ICrucesRepository crucesRepository)
+    public ExportService(IUserQueryService userQueryService, ILogService logService, IFixtureRepository fixtureRepository, IMatchRepository matchRepository, ICrucesRepository crucesRepository)
     {
-        if (userRepository is null) throw new ArgumentNullException(nameof(userRepository));
+        if (userQueryService is null) throw new ArgumentNullException(nameof(userQueryService));
         if (fixtureRepository is null) throw new ArgumentNullException(nameof(fixtureRepository));
         if (matchRepository is null) throw new ArgumentNullException(nameof(matchRepository));
         if (crucesRepository is null) throw new ArgumentNullException(nameof(crucesRepository));
 
-        _userRepository = userRepository;
+        _userQueryService = userQueryService;
         _log_service_check(logService);
         _logService = logService;
         _fixtureRepository = fixtureRepository;
@@ -147,7 +146,6 @@ public class ExportService : IExportService
 
         return SaveWorkbook(LogsExportName, "xlsx", ws =>
         {
-            // Header
             ws.Cell(1, 1).Value = "Timestamp";
             ws.Cell(1, 2).Value = "UserEmail";
             ws.Cell(1, 3).Value = "Category";
@@ -176,10 +174,7 @@ public class ExportService : IExportService
 
     private void ValidateCanExport(string userEmail)
     {
-        var user = _userRepository.GetUser(userEmail)
-                   ?? throw new InvalidOperationException("El usuario no existe.");
-
-        if (!user.CanExport())
+        if (!_userQueryService.CanExport(userEmail))
             throw new UnauthorizedAccessException("El usuario no tiene permisos para exportar.");
     }
 
@@ -224,7 +219,6 @@ public class ExportService : IExportService
             }
         }
 
-        // Append cruces/eliminatorias if exist
         if (_crucesRepository != null && _crucesRepository.HasCruces())
         {
             var cruces = _crucesRepository.GetAllCruces();

@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using IServices.UserInterfaces;
 using Repository;
 using Services;
 using ServicesTests.Stubs;
@@ -15,35 +16,38 @@ public class ExportServiceTests
     private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
     private ExportService _service = null!;
+    private IUserQueryService _userQueryService = null!;
+
+    private UserQueryServiceStub _userQueryServiceStub = null!;
 
     [TestInitialize]
     public void Setup()
     {
-        _context = DbContextFactory.CreateInMemoryContext();
-
-        _userRepository = new UserRepository(_context);
+        _userQueryServiceStub = new UserQueryServiceStub();
         _logRepository = new LogRepositoryStub();
         _logService = new LogService(_logRepository);
 
-        // use stubs for fixture and matches
         var fixtureRepo = new FixtureRepositoryStub();
         var matchRepo = new MatchRepositoryStub();
         var crucesRepo = new CrucesRepositoryStub();
 
-        // provide an initialized (empty) fixture to avoid nulls
         var fixture = new Fixture(new TournamentConfig());
         fixture.InitializeGroups();
         fixtureRepo.AddFixture(fixture);
 
-        _service = new ExportService(_userRepository, _logService, fixtureRepo, matchRepo, crucesRepo);
+        _service = new ExportService(
+            _userQueryServiceStub,
+            _logService,
+            fixtureRepo,
+            matchRepo,
+            crucesRepo);
     }
 
-    [TestCleanup]
-    public void Cleanup()
+    private void AddUser(string email, UserRole role)
     {
-        _context.Dispose();
+        _userQueryServiceStub.AddUser(email, role);
     }
-
+    
     [TestMethod]
     public void ExportFixtureToCsv_WhenUserIsAdministrator_ShouldReturnBytes()
     {
@@ -125,12 +129,5 @@ public class ExportServiceTests
         Assert.AreEqual("admin@test.com", logs[0].UserEmail);
         Assert.AreEqual("Export", logs[0].Category);
         Assert.AreEqual("FileExported", logs[0].Action);
-    }
-
-    private void AddUser(string email, UserRole role)
-    {
-        var user = new User("Admin", "Sistema", email, new DateTime(1990, 1, 1), "Aa123456!", new List<UserRole> { role });
-
-        _userRepository.AddUser(user);
     }
 }

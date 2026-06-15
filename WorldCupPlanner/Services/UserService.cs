@@ -141,6 +141,12 @@ public class UserService : IUserEditService, IUserQueryService
         user.UpdateData(firstName, lastName, birthDate, roles);
         _userRepository.UpdateUser(user);
     }
+    
+    public bool CanExport(string email)
+    {
+        var user = _userRepository.GetUser(email);
+        return user?.CanExport() ?? false;
+    }
 
     private void ValidateEmailNotEmpty(string email)
     {
