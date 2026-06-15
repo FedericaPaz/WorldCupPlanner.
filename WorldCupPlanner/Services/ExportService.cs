@@ -176,10 +176,7 @@ public class ExportService : IExportService
 
     private void ValidateCanExport(string userEmail)
     {
-        var user = _userRepository.GetUser(userEmail)
-                   ?? throw new InvalidOperationException("El usuario no existe.");
-
-        if (!user.CanExport())
+        if (!_userQueryService.CanExport(userEmail))
             throw new UnauthorizedAccessException("El usuario no tiene permisos para exportar.");
     }
 
