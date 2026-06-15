@@ -45,7 +45,7 @@ public class SimulationService : ISimulationService
         _notificationService.NotifyJournalists("Se simuló el resultado de un partido.");
     }
 
-    public void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
+    private  void SimulateMatch(int matchId, int seed, ISimulationEngine engine)
     {
         var match = _matchRepository.GetMatchById(matchId);
         var (home, away) = SimulateMatch(match, seed, engine);
@@ -68,8 +68,8 @@ public class SimulationService : ISimulationService
         _matchRepository.UpdateMatch(match);
         _rankingService.UpdateRankingsAfterMatch(match);
     }
-
-    public (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed, ISimulationEngine engine)
+    
+    private (int homeGoals, int awayGoals) SimulateMatch(Match match, int seed, ISimulationEngine engine)
     {
         EnsureValidEngine(engine);
 
@@ -92,7 +92,7 @@ public class SimulationService : ISimulationService
         _notificationService.NotifyJournalists("Se simularon los resultados de los partidos pendientes.");
     }
 
-    public void SimulateGroupStage(ISimulationEngine engine)
+    private void SimulateGroupStage(ISimulationEngine engine)
     {
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
@@ -101,21 +101,13 @@ public class SimulationService : ISimulationService
         SimulateGroupStage(fixture.Groups.ToList(), _config.SemillaSimulation, engine);
     }
 
-    public void SimulateGroupStage(List<Group> groups, int seed, ISimulationEngine engine)
+    private void SimulateGroupStage(List<Group> groups, int seed, ISimulationEngine engine)
     {
         EnsureValidEngine(engine);
 
         foreach (var group in groups)
             foreach (var match in group.GetPendingMatches())
                 SimulateAndSetResult(match, seed, engine, false);
-    }
-
-    public void SimulateCruces(List<Cruce> cruces, int seed, ISimulationEngine engine)
-    {
-        EnsureValidEngine(engine);
-
-        foreach (var cruce in cruces.Where(c => c.GetWinner() == null))
-            SimulateAndSetResult(cruce.Match, seed, engine, true);
     }
 
     private void SimulateAndSetResult(Match match, int seed, ISimulationEngine engine, bool resolverEmpates)

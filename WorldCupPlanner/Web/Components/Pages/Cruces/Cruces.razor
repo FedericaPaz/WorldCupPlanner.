@@ -1,13 +1,14 @@
 ﻿@page "/cruces"
 @using DTOs.Cruces
-@using global::Services
 @using IServices
 @using IServices.CrucesInterface
+@using IServices.FixtureInterfaces
 @using IServices.MatchInterfaces
 @using Web.Services
 @inject ICruceQueryService CruceQueryService
 @inject ICruceEditService CruceEditService
-@inject IFixtureService FixtureService
+@inject IFixtureQueryService FixtureQueryService
+
 @inject IMatchQueryService MatchService
 @inject ILogService LogService
 @inject SessionService SessionService
@@ -64,7 +65,7 @@
         </div>
     }
 
-    @if (!FixtureService.HasFixture())
+    @if (!FixtureQueryService.HasFixture())
     {
         <div class="empty-state">
             <div class="empty-icon">

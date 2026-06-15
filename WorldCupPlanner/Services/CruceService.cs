@@ -17,9 +17,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
     private const int HoursBetweenMatches = 4;
 
     private readonly ICrucesRepository _repository;
-    private readonly IFixtureQueryService _fixtureService;
     private readonly IStadiumRepository _stadiumRepository;
-    private readonly ISimulationService _simulationService;
     private readonly TournamentConfig _config;
     private readonly IMatchRepository _matchRepository;
     private readonly IFixtureRepository _fixtureRepository;
@@ -30,9 +28,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
 
     public CruceService(
         ICrucesRepository repository,
-        IFixtureQueryService fixtureService,
         IStadiumRepository stadiumRepository,
-        ISimulationService simulationService,
         TournamentConfig config,
         IMatchRepository matchRepository,
         IFixtureRepository fixtureRepository,
@@ -40,9 +36,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
         ISimulationEngineFactory engineFactory)
     {
         _repository = repository;
-        _fixtureService = fixtureService;
         _stadiumRepository = stadiumRepository;
-        _simulationService = simulationService;
         _config = config;
         _matchRepository = matchRepository;
         _fixtureRepository = fixtureRepository;
@@ -54,7 +48,10 @@ public class CruceService : ICruceEditService, ICruceQueryService
     {
         try
         {
-            Fixture fixture = _fixtureService.GetFixtureEntity();
+            var fixture = _fixtureRepository.GetFixture()
+                          ?? throw new InvalidOperationException("No hay fixture generado.");
+        
+            fixture.CargarPartidos(_matchRepository.GetAllMatches());
 
             if (!fixture.CanAdvanceToPhase(TournamentPhase.RoundOf32))
                 throw new InvalidOperationException("Todos los partidos de la fase de grupos deben estar jugados antes de generar los cruces.");
@@ -74,12 +71,6 @@ public class CruceService : ICruceEditService, ICruceQueryService
         {
             Console.WriteLine("=== ERROR EN GenerateRoundOf32 ===");
             Console.WriteLine(ex.Message);
-            Console.WriteLine(ex.StackTrace);
-            if (ex.InnerException != null)
-            {
-                Console.WriteLine("Inner: " + ex.InnerException.Message);
-                Console.WriteLine(ex.InnerException.StackTrace);
-            }
             throw;
         }
     }
@@ -119,11 +110,31 @@ public class CruceService : ICruceEditService, ICruceQueryService
         ISimulationEngine engine = _engineFactory.Create(fixture.SimulationEngineName);
         SimulateCruces(engine);
     }
-
+    
     public void SimulateCruces(ISimulationEngine engine)
     {
         var cruces = _repository.GetAllCruces();
-        _simulationService.SimulateCruces(cruces, _config.SemillaSimulation, engine);
+        foreach (var cruce in cruces.Where(c => c.GetWinner() == null))
+        {
+            var match = cruce.Match;
+            var (homeGoals, awayGoals) = CalculateResult(match, _config.SemillaSimulation, engine);
+
+            if (homeGoals == awayGoals)
+            {
+                var tiebreaker = new Random(_config.SemillaSimulation + match.IdMatch * 31 + 1);
+                if (tiebreaker.NextDouble() > 0.5) homeGoals++;
+                else awayGoals++;
+            }
+
+            match.SimulateResult(homeGoals, awayGoals);
+            _matchRepository.UpdateMatch(match);
+        }
+    }
+    
+    private (int homeGoals, int awayGoals) CalculateResult(Match match, int seed, ISimulationEngine engine)
+    {
+        var matchSeed = seed + match.IdMatch;
+        return engine.SimulateMatch(match.HomeTeam.CurrentRanking, match.AwayTeam.CurrentRanking, matchSeed);
     }
 
     private List<Cruce> GenerateRoundOf32Internal(Fixture fixture, List<Stadium> estadios, int semilla, int startMatchId)
