@@ -1,7 +1,7 @@
 using Domain.Interfaces;
 using DTOs.Match;
 
-namespace IServices;
+namespace IServices.MatchInterfaces;
 
 public interface IMatchService
 {
