@@ -20,8 +20,12 @@ public class AuthService : IAuthService
     {
         if (request is null)
             throw new ArgumentNullException(nameof(request));
+        
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
 
-        var user = _userRepository.GetUser(request.Email);
+        var normalizedEmail = request.Email.ToLower();
+        var user = _userRepository.GetUser(normalizedEmail);
 
         if (user is null)
             throw new InvalidOperationException("Credenciales Inválidas.");

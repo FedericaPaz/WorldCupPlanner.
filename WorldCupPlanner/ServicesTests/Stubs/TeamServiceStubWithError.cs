@@ -1,41 +1,39 @@
+using Domain.Entities;
 using DTOs.Team;
+using IRepository;
 using IServices;
+using IServices.TeamInterfaces;
 
 namespace ServicesTests.Stubs;
 
-public class TeamServiceStubWithError : ITeamService
+public class TeamRepositoryStubWithError : ITeamRepository
 {
-    public void Add(TeamDTO team)
+    public void Add(Team team)
     {
         throw new InvalidOperationException("Error al agregar equipo");
     }
 
-    public TeamDTO? Get(string name)
+    public Team? Get(string name)
+    {
+        return null;
+    }
+
+    public void Update(Team team)
     {
         throw new NotImplementedException();
     }
 
-    public List<TeamDTO> GetAll()
+    public void Delete(Team team)
     {
         throw new NotImplementedException();
     }
 
-    public void Update(string currentName, TeamDTO request)
+    public List<Team> GetAll()
     {
-        throw new NotImplementedException();
+        return new List<Team>();
     }
 
-    public void Delete(string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    public List<ConfederationDTO> GetAllConfederations()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void GenerateMissingTeams()
+    public void Clear()
     {
         throw new NotImplementedException();
     }

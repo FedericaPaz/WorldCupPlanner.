@@ -69,11 +69,8 @@ public class MatchServiceTests
             _teamRepository,
             _stadiumRepository,
             _clock,
-            _fixtureRepository,
             _notificationService,
             _rankingService,
-            new DefaultSimulationEngineFactory(),
-            _simulationService,                 
             _config);                            
     }
 

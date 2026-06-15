@@ -2,10 +2,11 @@
 using IRepository;
 using Domain.Entities;
 using DTOs.Team;
+using IServices.TeamInterfaces;
 
 namespace ServicesTests.Stubs;
 
-public class TeamServiceStub(ITeamRepository teamRepository) : ITeamService
+public class TeamServiceStub(ITeamRepository teamRepository) : ITeamQueryService, ITeamEditService
 {
     public void Add(TeamDTO request)
     {

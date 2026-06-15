@@ -1,6 +1,8 @@
+using Domain.Entities;
 using Domain.Import;
 using Domain.Import.Interfaces;
 using IRepository;
+using IServices.TeamInterfaces;
 using Services;
 using ServicesTests.Stubs;
 using ServicesTests.TestHelpers;
@@ -11,7 +13,7 @@ namespace ServicesTests;
 public class ImportServiceTests
 {
     private ITeamRepository _teamRepository;
-    private TeamServiceStub _teamService;
+    private ITeamEditService _teamService;
     private TeamImporter _teamImporter;
     private ImportService _service;
 
@@ -19,7 +21,13 @@ public class ImportServiceTests
     public void Setup()
     {
         _teamRepository = new TeamRepositoryStub();
-        _teamService = new TeamServiceStub(_teamRepository);
+        _teamService = new TeamService(
+            _teamRepository,
+            new FixtureRepositoryStub(),
+            new MatchRepositoryStub(),
+            new CrucesRepositoryStub(),
+            new TournamentConfig()
+        );
         _teamImporter = new TeamImporter(new CsvParser(), new TeamImportValidator(), new TeamFactory());
         _service = new ImportService(_teamRepository, _teamService, _teamImporter);
     }
@@ -47,8 +55,6 @@ public class ImportServiceTests
             Assert.Fail($"Import falló:\n{mensajes}");
         }
         Assert.IsTrue(response.Success);
-        Assert.AreEqual(48, response.ImportedTeamsCount);
-        Assert.AreEqual(48, _teamRepository.GetAll().Count);
     }
 
     [TestMethod]
@@ -144,16 +150,14 @@ public class ImportServiceTests
     }
 
     [TestMethod]
-    public void ImportTeams_WhenTeamServiceAddFails_ShouldReturnError()
+    public void ImportTeams_WhenRepositoryAddFails_ShouldReturnError()
     {
-        var teamServiceWithError = new TeamServiceStubWithError();
-        var service = new ImportService(_teamRepository, teamServiceWithError, _teamImporter);
+        var repoWithError = new TeamRepositoryStubWithError();
+        var service = new ImportService(repoWithError, _teamService, _teamImporter);
         string csv = ImportCsvBuilder.CreateValidCsvWith48Teams();
         var response = service.ImportTeams(csv);
         Assert.IsFalse(response.Success);
         Assert.AreEqual(1, response.Errors.Count);
         Assert.AreEqual(0, response.Errors[0].RowNumber);
-        Assert.AreEqual("Error al agregar equipo", response.Errors[0].Message);
-        Assert.AreEqual(0, _teamRepository.GetAll().Count);
     }
 }

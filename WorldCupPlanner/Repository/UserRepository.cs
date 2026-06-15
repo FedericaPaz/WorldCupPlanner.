@@ -18,7 +18,7 @@ public class UserRepository : IUserRepository
         if (user is null)
             throw new ArgumentNullException(nameof(user));
 
-        if (_context.Users.Any(u => u.Email == user.Email))
+        if (_context.Users.Any(u => u.Email.ToLower() == user.Email.ToLower()))
             throw new ArgumentException($"Ya existe un usuario con el email {user.Email}.");
 
         _context.Users.Add(user);
@@ -29,7 +29,7 @@ public class UserRepository : IUserRepository
     {
         return _context.Users
             .AsNoTracking()
-            .FirstOrDefault(u => u.Email == email);
+            .FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
     }
 
     public void UpdateUser(User user)

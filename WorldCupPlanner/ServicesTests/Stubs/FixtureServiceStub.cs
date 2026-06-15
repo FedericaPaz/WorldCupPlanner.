@@ -2,10 +2,11 @@
 using DTOs.Fixture;
 using IRepository;
 using IServices;
+using IServices.FixtureInterfaces;
 
 namespace ServicesTests.Stubs;
 
-public class FixtureServiceStub : IFixtureService
+public class FixtureServiceStub : IFixtureEditService, IFixtureQueryService
 {
     private readonly IFixtureRepository _repository;
     public string LastEngineUsed { get; private set; } = string.Empty;
@@ -18,6 +19,11 @@ public class FixtureServiceStub : IFixtureService
     public void GenerateFixture(string simulationEngineName = "Probabilístico")
     {
         LastEngineUsed = simulationEngineName;
+    }
+
+    public void DeleteFixture()
+    {
+        throw new NotImplementedException();
     }
 
     public Fixture GetFixtureEntity()

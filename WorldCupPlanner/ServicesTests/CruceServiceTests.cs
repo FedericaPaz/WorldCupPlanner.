@@ -46,9 +46,7 @@ public class CruceServiceTests
 
         _service = new CruceService(
             _stubCrucesRepository,
-            new FixtureServiceStub(_stubFixtureRepository),
             _stubStadiumRepository,
-            new SimulationService(_logService, _matchRepository, _rankingService, _stubFixtureRepository, _config, notificationStub),
             _config,
             _matchRepository,
             _stubFixtureRepository,

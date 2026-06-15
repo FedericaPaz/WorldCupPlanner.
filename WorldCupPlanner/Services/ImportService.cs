@@ -54,13 +54,22 @@ public class ImportService : IImportService
     private void SaveImportedTeams(IReadOnlyList<Team> teams)
     {
         if (teams.Count != 48)
-            throw new InvalidOperationException($"El CSV debe contener exactamente 48 equipos. Se encontraron {teams.Count}.");
+            throw new InvalidOperationException($"El CSV debe contener exactamente 48 equipos.");
+
+        var porConfederacion = teams.GroupBy(t => t.Confederation.Name);
+        foreach (var grupo in porConfederacion)
+        {
+            var conf = new Confederation(grupo.Key);
+            if (grupo.Count() > conf.MaxTeams)
+                throw new InvalidOperationException(
+                    $"La confederación '{grupo.Key}' excede su límite de {conf.MaxTeams} equipos. Se encontraron {grupo.Count()}.");
+        }
 
         _teamRepository.Clear();
         try
         {
             foreach (Team team in teams)
-                _teamService.Add(TeamXMappers.FromEntity(team));
+                _teamRepository.Add(team);
         }
         catch
         {
