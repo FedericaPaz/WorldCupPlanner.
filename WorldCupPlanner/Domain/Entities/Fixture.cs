@@ -75,9 +75,9 @@ public class Fixture
 
         foreach (var group in _groups)
         {
-            if (group.TeamsInGroup.Count != TeamsPerGroup)
+            if (!group.HasExpectedTeams())
                 return false;
-            if (group.MatchesInGroup.Count != MatchesPerGroup)
+            if (!group.HasExpectedMatches())
                 return false;
         }
         return true;
@@ -146,8 +146,8 @@ public class Fixture
     public Dictionary<string, char> GetTeamToGroupMap()
     {
         return _groups
-            .SelectMany(g => g.TeamsInGroup.Select(t => (t.Name, g.GroupLetter)))
-            .ToDictionary(x => x.Name, x => x.GroupLetter);
+            .SelectMany(g => g.GetTeamNames().Select(name => (name, g.GroupLetter)))
+            .ToDictionary(x => x.name, x => x.GroupLetter);
     }
 
     public List<Team> GetPrimeros()

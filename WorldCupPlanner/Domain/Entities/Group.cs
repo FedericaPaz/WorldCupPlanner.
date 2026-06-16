@@ -164,11 +164,13 @@ public class Group
         foreach (var match in _matchesInGroup.Where(m => m.HomeGoals.HasValue && m.AwayGoals.HasValue))
         {
             if (match.HomeTeam == null || match.AwayTeam == null) continue;
-            if (!standings.ContainsKey(match.HomeTeam.Name)) continue;
-            if (!standings.ContainsKey(match.AwayTeam.Name)) continue;
+            var homeName = match.GetHomeTeamName();
+            var awayName = match.GetAwayTeamName();
+            if (!standings.ContainsKey(homeName)) continue;
+            if (!standings.ContainsKey(awayName)) continue;
 
-            standings[match.HomeTeam.Name].AddMatchResult(match.HomeGoals!.Value, match.AwayGoals!.Value);
-            standings[match.AwayTeam.Name].AddMatchResult(match.AwayGoals!.Value, match.HomeGoals!.Value);
+            standings[homeName].AddMatchResult(match.HomeGoals!.Value, match.AwayGoals!.Value);
+            standings[awayName].AddMatchResult(match.AwayGoals!.Value, match.HomeGoals!.Value);
         }
 
         return standings.Values
@@ -195,9 +197,13 @@ public class Group
 
     public bool CanAddTeam(Team team)
     {
-        if (team.Confederation.Name == ConfederationUefa)
-            return _teamsInGroup.Count(t => t.Confederation.Name == ConfederationUefa) < MaxUefaTeamsPerGroup;
+        if (team.GetConfederationName() == ConfederationUefa)
+            return _teamsInGroup.Count(t => t.GetConfederationName() == ConfederationUefa) < MaxUefaTeamsPerGroup;
 
-        return _teamsInGroup.All(t => t.Confederation.Name != team.Confederation.Name);
+        return _teamsInGroup.All(t => t.GetConfederationName() != team.GetConfederationName());
     }
+
+    public bool HasExpectedTeams() => _teamsInGroup.Count == MaxTeams;
+    public bool HasExpectedMatches() => _matchesInGroup.Count == MaxMatches;
+    public IEnumerable<string> GetTeamNames() => _teamsInGroup.Select(t => t.Name);
 }
