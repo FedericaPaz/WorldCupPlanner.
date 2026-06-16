@@ -43,12 +43,14 @@
 
             <div class="format-box">
                 <p><strong>Encabezados requeridos:</strong></p>
-                <code>Nombre,Confederación,RankingFIFA</code>
+                <code>Nombre,Confederación,RankingFIFA,Bandera</code>
 
                 <p class="mt">
                     El archivo debe contener exactamente 48 equipos.
                 </p>
-                
+                <p class="mt text-muted" style="font-size: 0.85rem;">
+                    * El campo de bandera debe estar vacío o contener una cadena Base64 válida sin saltos de línea
+                </p>
             </div>
         </div>
     </div>
@@ -103,14 +105,12 @@
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         var file = e.File;
-
         _fileName = file.Name;
-
-        using var stream = file.OpenReadStream();
+        
+        using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024 * 10); 
         using var reader = new StreamReader(stream);
 
         _csvContent = await reader.ReadToEndAsync();
-
         _successMessage = string.Empty;
         _errors.Clear();
     }

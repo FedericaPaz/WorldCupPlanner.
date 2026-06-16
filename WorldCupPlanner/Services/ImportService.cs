@@ -26,22 +26,16 @@ public class ImportService : IImportService
     public ImportResponse ImportTeams(string csvContent)
     {
         ImportResult result = _teamImporter.Import(csvContent);
-        
+
         if (!result.Success) return ImportMapper.ToResponse(result);
+
         try
         {
             SaveImportedTeams(result.Teams);
         }
         catch (Exception ex)
         {
-            return new ImportResponse
-            {
-                Success = false,
-                Errors = new List<ImportErrorResponse>
-                {
-                    new ImportErrorResponse { RowNumber = 0, Message = ex.Message }
-                }
-            };
+            return new ImportResponse { Success = false, Errors = new List<ImportErrorResponse> { new ImportErrorResponse { RowNumber = 0, Message = ex.Message } } };
         }
         return ImportMapper.ToResponse(result);
     }

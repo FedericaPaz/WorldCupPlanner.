@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Domain.Calculators;
 using Domain.Entities;
 using Domain.Import;
 using Domain.Import.Interfaces;
@@ -99,6 +100,8 @@ builder.Services.AddScoped<ISimulationEngineFactory, DefaultSimulationEngineFact
 
 Fixture.RegisterEngine("Aleatorio puro", () => new PureRandomSimulationEngine());
 Fixture.RegisterEngine("Probabilístico", () => new ProbabilisticSimulationEngine());
+
+builder.Services.AddScoped<IRankingCalculator, RankingCalculator>();
 
 var app = builder.Build();
 

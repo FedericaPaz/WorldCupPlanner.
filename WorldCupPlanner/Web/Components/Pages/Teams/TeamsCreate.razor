@@ -67,7 +67,7 @@
 
                 @if (!string.IsNullOrWhiteSpace(_request.FlagBase64))
                 {
-                    <img src="@_request.FlagBase64"
+                    <img src="@($"data:{_flagContentType};base64,{_request.FlagBase64}")"
                          alt="Bandera del equipo"
                          style="max-width: 120px; margin-top: 10px;" />
                 }
@@ -96,6 +96,7 @@
 
     private List<ConfederationDTO> _confederations = new();
     private string? _errorMessage;
+    private string? _flagContentType;
 
     protected override void OnInitialized()
     {
@@ -132,7 +133,9 @@
         await using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024);
         using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
-        string base64 = Convert.ToBase64String(memoryStream.ToArray());
-        _request.FlagBase64 = $"data:{file.ContentType};base64,{base64}";
+
+        _flagContentType = file.ContentType;
+        string rawBase64 = Convert.ToBase64String(memoryStream.ToArray());
+        _request.FlagBase64 = rawBase64.Replace("\r", "").Replace("\n", "").Trim();
     }
 }

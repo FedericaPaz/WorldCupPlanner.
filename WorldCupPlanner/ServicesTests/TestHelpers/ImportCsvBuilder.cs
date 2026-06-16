@@ -4,8 +4,8 @@ public class ImportCsvBuilder
 {
     public static string CreateValidCsvWith48Teams()
     {
-        var lines = new List<string> { "Nombre,Confederación,RankingFIFA" };
-    
+        var lines = new List<string> { "Nombre,Confederación,RankingFIFA,Bandera" };
+
         var confederaciones = new (string nombre, int cupo)[]
         {
             ("UEFA", 16),
@@ -20,7 +20,7 @@ public class ImportCsvBuilder
         int equipoNum = 1;
         foreach (var (nombre, cupo) in confederaciones)
             for (int i = 0; i < cupo; i++)
-                lines.Add($"Equipo{equipoNum++},{nombre},{ranking++}");
+                lines.Add($"Equipo{equipoNum++},{nombre},{ranking++},");
 
         return string.Join(Environment.NewLine, lines);
     }

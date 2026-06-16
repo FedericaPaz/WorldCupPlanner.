@@ -37,8 +37,7 @@ public class Team : ITeam
         : this(name, confederation, fifaRanking, flagBase64, new RankingCalculator())
     {
     }
-
-    // Constructor for dependency injection of the ranking calculator
+    
     public Team(string name, Confederation confederation, int fifaRanking, string flagBase64, IRankingCalculator rankingCalculator)
     {
         ValidateName(name);

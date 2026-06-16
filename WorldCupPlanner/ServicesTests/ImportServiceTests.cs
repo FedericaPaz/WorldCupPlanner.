@@ -1,11 +1,22 @@
 using Domain.Import;
 using Domain.Import.Interfaces;
+using Domain.Interfaces;
 using IRepository;
 using Services;
 using ServicesTests.Stubs;
 using ServicesTests.TestHelpers;
+using System;
+using System.Linq;
 
 namespace ServicesTests;
+
+internal class RankingCalculatorStub : IRankingCalculator
+{
+    public int CalculateNewRanking(int currentRanking, int opponentRanking, double result, Domain.Enums.TournamentPhase phase)
+    {
+        return currentRanking;
+    }
+}
 
 [TestClass]
 public class ImportServiceTests
@@ -18,16 +29,17 @@ public class ImportServiceTests
     public void Setup()
     {
         _teamRepository = new TeamRepositoryStub();
-        _teamImporter = new TeamImporter(new CsvParser(), new TeamImportValidator(), new TeamFactory());
+        var calculatorStub = new RankingCalculatorStub();
+        _teamImporter = new TeamImporter(new CsvParser(), new TeamImportValidator(), new TeamFactory(calculatorStub));
         _service = new ImportService(_teamRepository, _teamImporter);
     }
-
+    
     [TestMethod]
     public void ImportTeams_WithInvalidCsv_ShouldNotSaveTeams()
     {
         string csv = """
-                     Nombre,Confederacion,RankingFIFA
-                     Uruguay,CONMEBOL,1800
+                     Nombre,Confederacion,RankingFIFA,Bandera
+                     Uruguay,CONMEBOL,1800,flag-uy
                      """;
         var response = _service.ImportTeams(csv);
         Assert.IsFalse(response.Success);
@@ -58,8 +70,8 @@ public class ImportServiceTests
     public void ImportTeams_WithInvalidCsv_ShouldReturnErrors()
     {
         string csv = """
-                     Nombre,Confederacion,RankingFIFA
-                     Uruguay,CONMEBOL,1800
+                     Nombre,Confederacion,RankingFIFA,Bandera
+                     Uruguay,CONMEBOL,1800,flag-uy
                      """;
         var response = _service.ImportTeams(csv);
         Assert.IsFalse(response.Success);
@@ -123,7 +135,7 @@ public class ImportServiceTests
     public void ImportTeams_WithValidCsvButMoreThan48Teams_ShouldReturnError()
     {
         string csv = ImportCsvBuilder.CreateValidCsvWith48Teams();
-        string extraTeam = Environment.NewLine + "Equipo Extra,CONMEBOL,1200";
+        string extraTeam = Environment.NewLine + "Equipo Extra,CONMEBOL,1200,";
         csv += extraTeam;
         var response = _service.ImportTeams(csv);
         Assert.IsFalse(response.Success);
