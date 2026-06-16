@@ -75,10 +75,7 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
 
         match.ClearAllIncidents();
         AddCardIncidents(match, request);
-        match.UpdateMatchResult(request.homeGoals, request.awayGoals);
-
-        _matchRepository.UpdateMatch(match);
-        UpdateRankingsAfterMatch(match);
+        PersistMatchResult(match, request.homeGoals, request.awayGoals);
 
         _notificationService.NotifyJournalists(
             $"Se cargó el resultado de {match.HomeTeam.Name} vs {match.AwayTeam.Name}: {request.homeGoals}-{request.awayGoals}");
@@ -138,21 +135,7 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
     private void SimulateMatchInternal(int matchId, int seed, ISimulationEngine engine)
     {
         var match = _matchRepository.GetMatchById(matchId);
-        var (homeGoals, awayGoals) = RunEngine(match, seed, engine);
-
-        match.ClearCardIncidents();
-        AddSimulatedCardIncidents(match, seed);
-
-        if (homeGoals == awayGoals)
-        {
-            var tiebreaker = new Random(seed + match.IdMatch * 31 + 1);
-            if (tiebreaker.NextDouble() > 0.5) homeGoals++;
-            else awayGoals++;
-        }
-
-        match.SimulateResult(homeGoals, awayGoals);
-        _matchRepository.UpdateMatch(match);
-        UpdateRankingsAfterMatch(match);
+        SimulateWithEngine(match, seed, engine, resolveTie: true);
     }
 
     private void SimulateGroupStageInternal(ISimulationEngine engine)
@@ -171,14 +154,24 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
     private void SimulateAndSetResult(Match match, int seed, ISimulationEngine engine)
     {
         if (match.HomeGoals.HasValue && match.AwayGoals.HasValue) return;
+        SimulateWithEngine(match, seed, engine, resolveTie: false);
+    }
 
+    private void SimulateWithEngine(Match match, int seed, ISimulationEngine engine, bool resolveTie)
+    {
         var (homeGoals, awayGoals) = RunEngine(match, seed, engine);
 
         match.ClearCardIncidents();
         AddSimulatedCardIncidents(match, seed);
-        match.SimulateResult(homeGoals, awayGoals);
-        _matchRepository.UpdateMatch(match);
-        UpdateRankingsAfterMatch(match);
+
+        if (resolveTie && homeGoals == awayGoals)
+        {
+            var tiebreaker = new Random(seed + match.IdMatch * 31 + 1);
+            if (tiebreaker.NextDouble() > 0.5) homeGoals++;
+            else awayGoals++;
+        }
+
+        PersistMatchResult(match, homeGoals, awayGoals);
     }
 
     private (int homeGoals, int awayGoals) RunEngine(Match match, int seed, ISimulationEngine engine)
@@ -211,6 +204,13 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
     {
         if (engine == null)
             throw new ArgumentNullException(nameof(engine), "El motor de simulación es obligatorio.");
+    }
+
+    private void PersistMatchResult(Match match, int homeGoals, int awayGoals)
+    {
+        match.SimulateResult(homeGoals, awayGoals);
+        _matchRepository.UpdateMatch(match);
+        UpdateRankingsAfterMatch(match);
     }
 
     private void UpdateRankingsAfterMatch(Match match)
