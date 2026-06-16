@@ -6,7 +6,7 @@ using IRepository;
 using IServices.CrucesInterface;
 using IServices;
 using Services.Mappers;
-using Services.Simulation;
+using ISimulationEngineFactory = IServices.ISimulationEngineFactory;
 
 namespace Services;
 
@@ -115,7 +115,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
         ISimulationEngine engine = _engineFactory.Create(fixture.SimulationEngineName);
         SimulateCruces(engine);
     }
-    
+
     public void SimulateCruces(ISimulationEngine engine)
     {
         var cruces = _repository.GetAllCruces();
