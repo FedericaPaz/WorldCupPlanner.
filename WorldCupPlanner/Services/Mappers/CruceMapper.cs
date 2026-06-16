@@ -10,10 +10,10 @@ public static class CruceMapper
         return new CruceResponse
         {
             Name = cruce.Name,
-            HomeTeam = cruce.Match.HomeTeam.Name,
-            AwayTeam = cruce.Match.AwayTeam.Name,
-            HomeGoals = cruce.Match.HomeGoals,
-            AwayGoals = cruce.Match.AwayGoals,
+            HomeTeam = cruce.GetHomeTeamName(),
+            AwayTeam = cruce.GetAwayTeamName(),
+            HomeGoals = cruce.GetHomeGoals(),
+            AwayGoals = cruce.GetAwayGoals(),
             Phase = (TournamentPhaseDTOs)cruce.Phase
         };
     }

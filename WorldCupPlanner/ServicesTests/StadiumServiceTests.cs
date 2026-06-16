@@ -1,7 +1,9 @@
+using Domain.Entities;
 using DTOs.Stadium;
+using DomainTests.Stubs;
 using IRepository;
-using Repository;
 using Services;
+using Services.Mappers;
 using ServicesTests.Stubs;
 
 namespace ServicesTests;
@@ -157,5 +159,32 @@ public class StadiumServiceTests
     public void GetStadium_WithEmptyName_ShouldThrowException()
     {
         Assert.ThrowsException<ArgumentException>(() => _service.GetStadium(string.Empty));
+    }
+
+    [TestMethod]
+    public void DeleteStadium_WhenStadiumHasAssignedMatches_ShouldThrowException()
+    {
+        var dto = CreateRequest("Campeon del Siglo", "Montevideo", "Estadio de Peniarol", 40700);
+        _service.AddStadium(dto);
+
+        var clock = new DateTimeMatchStub(new DateTime(2025, 1, 1));
+        var stadium = dto.ToEntity();
+        var homeTeam = new Team("Uruguay", new Confederation("CONMEBOL"), 1800);
+        var awayTeam = new Team("Argentina", new Confederation("CONMEBOL"), 1700);
+        var match = new Match(1, new DateTime(2026, 6, 1), stadium, homeTeam, awayTeam, 'A', clock);
+        _matchrepository.AddMatch(match);
+
+        Assert.ThrowsException<InvalidOperationException>(() => _service.DeleteStadium(dto.stadiumName));
+    }
+
+    [TestMethod]
+    public void GetAllStadiums_WithStadiums_ShouldReturnAll()
+    {
+        _service.AddStadium(CreateRequest("Estadio A", "Ciudad A", null, 40000));
+        _service.AddStadium(CreateRequest("Estadio B", "Ciudad B", null, 50000));
+
+        var result = _service.GetAllStadiums();
+
+        Assert.AreEqual(2, result.Count);
     }
 }

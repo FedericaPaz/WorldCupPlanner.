@@ -30,7 +30,7 @@ public class StadiumService : IStadiumService
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Nombre requerido.");
 
-        if (_matchRepository.GetAllMatches().Any(m => m.Stadium.StadiumName == name))
+        if (_matchRepository.GetAllMatches().Any(m => m.GetStadiumName() == name))
             throw new InvalidOperationException(
                 "No se puede eliminar el estadio porque tiene partidos asignados. Eliminá el fixture primero.");
 

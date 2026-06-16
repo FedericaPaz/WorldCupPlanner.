@@ -1,6 +1,5 @@
 using Domain.Entities;
 using Domain.Enums;
-using Domain.Interfaces;
 using DTOs.Match;
 
 namespace Services.Mappers;
@@ -13,27 +12,27 @@ public static class MatchMapper
         {
             idMatch = match.IdMatch,
             dateMatch = match.DateMatch,
-            stadiumName = match.Stadium.StadiumName,
-            homeTeamName = match.HomeTeam.Name,
-            awayTeamName = match.AwayTeam.Name,
+            stadiumName = match.GetStadiumName(),
+            homeTeamName = match.GetHomeTeamName(),
+            awayTeamName = match.GetAwayTeamName(),
             group = match.Group,
             homeGoals = match.HomeGoals,
             awayGoals = match.AwayGoals,
             winnerName = match.WinnerMatch?.Name,
             isLocked = match.IsLocked,
             phase = match.Group == 'N' ? "Eliminatoria" : "Grupos",
-            homeYellowCards = GetIncidentQuantity(match, match.HomeTeam, IncidentType.YellowCard),
-            awayYellowCards = GetIncidentQuantity(match, match.AwayTeam, IncidentType.YellowCard),
-            homeRedCards = GetIncidentQuantity(match, match.HomeTeam, IncidentType.RedCard),
-            awayRedCards = GetIncidentQuantity(match, match.AwayTeam, IncidentType.RedCard)
+            homeYellowCards = GetIncidentQuantity(match, match.GetHomeTeamName(), IncidentType.YellowCard),
+            awayYellowCards = GetIncidentQuantity(match, match.GetAwayTeamName(), IncidentType.YellowCard),
+            homeRedCards = GetIncidentQuantity(match, match.GetHomeTeamName(), IncidentType.RedCard),
+            awayRedCards = GetIncidentQuantity(match, match.GetAwayTeamName(), IncidentType.RedCard)
         };
     }
 
-    private static int GetIncidentQuantity(Match match, ITeam team, IncidentType type)
+    private static int GetIncidentQuantity(Match match, string teamName, IncidentType type)
     {
         return match.Incidents
             .Where(incident =>
-                incident.Team.Name == team.Name &&
+                incident.TeamName == teamName &&
                 incident.Type == type)
             .Sum(incident => incident.Quantity);
     }

@@ -36,7 +36,7 @@ public class TeamService : ITeamQueryService, ITeamEditService
             throw new ArgumentException($"Ya existe un equipo con el nombre '{request.Name}'.");
 
         var confederation = new Confederation(request.ConfederationName);
-        var currentCount = _repository.GetAll().Count(t => t.Confederation.Name == confederation.Name);
+        var currentCount = _repository.GetAll().Count(t => t.GetConfederationName() == confederation.Name);
 
         if (!confederation.CanAddTeam(currentCount))
             throw new InvalidOperationException($"La confederación '{confederation.Name}' alcanzó su límite de {confederation.MaxTeams} equipos.");
@@ -72,7 +72,7 @@ public class TeamService : ITeamQueryService, ITeamEditService
 
         if (!newConf.Equals(oldConf))
         {
-            var currentCount = _repository.GetAll().Count(t => t.Confederation.Name == newConf.Name);
+            var currentCount = _repository.GetAll().Count(t => t.GetConfederationName() == newConf.Name);
             if (!newConf.CanAddTeam(currentCount))
                 throw new InvalidOperationException($"La confederación '{newConf.Name}' alcanzó su límite de {newConf.MaxTeams} equipos.");
         }
@@ -134,6 +134,6 @@ public class TeamService : ITeamQueryService, ITeamEditService
     private int CountConfederation(string confederationName)
     {
         return _repository.GetAll()
-            .Count(t => t.Confederation.Name == confederationName);
+            .Count(t => t.GetConfederationName() == confederationName);
     }
 }

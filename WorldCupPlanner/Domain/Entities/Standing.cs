@@ -127,12 +127,5 @@ public class Standing
         Losses++;
     }
     
-    public int CompareTo(Standing other)
-    {
-        if (PointsInGroup != other.PointsInGroup)
-            return PointsInGroup.CompareTo(other.PointsInGroup);
-        if (GoalDifference != other.GoalDifference)
-            return GoalDifference.CompareTo(other.GoalDifference);
-        return GoalsFor.CompareTo(other.GoalsFor);
-    }
+    public string GetTeamName() => _team.Name;
 }

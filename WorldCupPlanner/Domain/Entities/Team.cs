@@ -107,4 +107,6 @@ public class Team : ITeam
     {
         _flagBase64 = flagBase64 ?? string.Empty;
     }
+
+    public string GetConfederationName() => _confederation.Name;
 }

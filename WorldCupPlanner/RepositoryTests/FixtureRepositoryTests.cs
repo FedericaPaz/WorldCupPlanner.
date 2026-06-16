@@ -96,6 +96,12 @@ public class FixtureRepositoryTests
     }
     
     [TestMethod]
+    public void RemoveFixture_WithNullFixture_ShouldThrowArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => _repository.RemoveFixture(null));
+    }
+
+    [TestMethod]
     public void AddFixture_OverwritesPreviousFixture()
     {
         var config1 = new TournamentConfig();

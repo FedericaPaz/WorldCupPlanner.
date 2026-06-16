@@ -78,7 +78,7 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         PersistMatchResult(match, request.homeGoals, request.awayGoals);
 
         _notificationService.NotifyJournalists(
-            $"Se cargó el resultado de {match.HomeTeam.Name} vs {match.AwayTeam.Name}: {request.homeGoals}-{request.awayGoals}");
+            $"Se cargó el resultado de {match.GetHomeTeamName()} vs {match.GetAwayTeamName()}: {request.homeGoals}-{request.awayGoals}");
     }
 
     public void UpdateMatchDate(int matchId, DateTime date)
@@ -179,7 +179,7 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         EnsureValidEngine(engine);
         LastUsedEngineName = engine.Name;
         var matchSeed = seed + match.IdMatch;
-        var result = engine.SimulateMatch(match.HomeTeam.CurrentRanking, match.AwayTeam.CurrentRanking, matchSeed);
+        var result = engine.SimulateMatch(match.GetHomeRanking(), match.GetAwayRanking(), matchSeed);
         RegisterSimulation(seed, engine.Name);
         return result;
     }
@@ -218,36 +218,27 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         if (!match.HomeGoals.HasValue || !match.AwayGoals.HasValue)
             throw new InvalidOperationException("El partido no tiene resultado.");
 
-        var homeTeam = match.HomeTeam;
-        var awayTeam = match.AwayTeam;
         var fase = match.GetTournamentPhase();
+        int prevHome = match.GetHomeRanking();
+        int prevAway = match.GetAwayRanking();
 
-        int prevHome = homeTeam.CurrentRanking;
-        int prevAway = awayTeam.CurrentRanking;
+        match.RecalcularRankings(fase);
 
-        homeTeam.RecalcularRanking(awayTeam.CurrentRanking, match.GetResultForHomeTeam(), fase);
-        awayTeam.RecalcularRanking(homeTeam.CurrentRanking, match.GetResultForAwayTeam(), fase);
-
-        _teamRepository.Update(homeTeam);
-        _teamRepository.Update(awayTeam);
+        _teamRepository.Update(match.HomeTeam);
+        _teamRepository.Update(match.AwayTeam);
 
         _logService.Register(
             "system", "Ranking", "RankingUpdated",
-            $"{homeTeam.Name}: {prevHome} -> {homeTeam.CurrentRanking}. " +
-            $"{awayTeam.Name}: {prevAway} -> {awayTeam.CurrentRanking}.");
+            $"{match.GetHomeTeamName()}: {prevHome} -> {match.GetHomeRanking()}. " +
+            $"{match.GetAwayTeamName()}: {prevAway} -> {match.GetAwayRanking()}.");
     }
 
     private void RevertRankingsAfterMatch(Match match)
     {
-        var homeTeam = match.HomeTeam;
-        var awayTeam = match.AwayTeam;
         var fase = match.GetTournamentPhase();
-
-        homeTeam.RecalcularRanking(awayTeam.CurrentRanking, match.GetResultForAwayTeam(), fase);
-        awayTeam.RecalcularRanking(homeTeam.CurrentRanking, match.GetResultForHomeTeam(), fase);
-
-        _teamRepository.Update(homeTeam);
-        _teamRepository.Update(awayTeam);
+        match.RevertRankings(fase);
+        _teamRepository.Update(match.HomeTeam);
+        _teamRepository.Update(match.AwayTeam);
     }
 
     private static void EnsureValidRequest(MatchRequest request)

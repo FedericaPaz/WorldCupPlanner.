@@ -155,4 +155,14 @@ public class ImportServiceTests
         Assert.AreEqual(1, response.Errors.Count);
         Assert.AreEqual(0, response.Errors[0].RowNumber);
     }
+
+    [TestMethod]
+    public void ImportTeams_WhenConfederationExceedsLimit_ShouldReturnError()
+    {
+        string csv = ImportCsvBuilder.CreateCsvWithExcessiveConmebol();
+        var response = _service.ImportTeams(csv);
+        Assert.IsFalse(response.Success);
+        Assert.AreEqual(1, response.Errors.Count);
+        StringAssert.Contains(response.Errors[0].Message, "CONMEBOL");
+    }
 }
