@@ -1,19 +1,10 @@
 ﻿@page "/fixture"
 @using DTOs.Fixture
-@using IServices
-@using IServices.FixtureInterfaces
-@using IServices.MatchInterfaces
-@using IServices.TeamInterfaces
+@using IServices.PageFacades
 @using Web.Services
-@inject IFixtureEditService FixtureEditService
-@inject IFixtureQueryService FixtureQueryService
-@inject ITeamQueryService TeamService
-@inject IStadiumService StadiumService
+@inject IFixturePageFacade FixtureFacade
 @inject NavigationManager Navigation
-@inject ILogService LogService
 @inject SessionService SessionService
-@inject IConfigService ConfigService
-@inject IMatchQueryService MatchService
 
 <h3 class="text-center my-4">Fixture - Fase de Grupos</h3>
 
@@ -26,7 +17,7 @@
         <p class="mt-3">Generando fixture...</p>
     </div>
 }
-else if (!FixtureQueryService.HasFixture())
+else if (!FixtureFacade.HasFixture())
 {
     <div class="container">
         <div class="text-center py-5">
@@ -84,7 +75,7 @@ else if (!FixtureQueryService.HasFixture())
 }
 else
 {
-    var fixture = FixtureQueryService.GetFixture();
+    var fixture = FixtureFacade.GetFixture();
 
     <div class="container">
         <div class="mb-3">
@@ -218,34 +209,23 @@ else
             Navigation.NavigateTo("/");
             return;
         }
-        
-        _matchesHaveBeenPlayed = MatchService.MatchesHaveBeenPlayed();
 
-        _teamCount = TeamService.GetAll().Count;
-        _stadiumCount = StadiumService.GetAllStadiums().Count;
+        _matchesHaveBeenPlayed = FixtureFacade.MatchesHaveBeenPlayed();
+        _teamCount = FixtureFacade.GetTeamCount();
+        _stadiumCount = FixtureFacade.GetStadiumCount();
         _canGenerate = _teamCount >= 48 && _stadiumCount >= 4;
     }
 
     private void GenerateInitialFixture()
     {
-        if (!SessionService.IsEditor())
-        {
-            return;
-        }
+        if (!SessionService.IsEditor()) return;
 
         _isGenerating = true;
         _error = null;
 
         try
         {
-            FixtureEditService.GenerateFixture(_selectedEngine);
-
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Fixture",
-                "Generación",
-                $"Se generó el fixture del torneo con semilla {ConfigService.GetConfig().SemillaFixture}"
-            );
+            FixtureFacade.GenerateFixture(_selectedEngine, GetCurrentUserEmail());
         }
         catch (Exception ex)
         {
@@ -258,32 +238,18 @@ else
         }
     }
 
-
     private async Task EliminarFixture()
     {
-        if (!SessionService.IsEditor())
-        {
-            return;
-        }
-        if (_isReloading)
-        {
-            return;
-        }
+        if (!SessionService.IsEditor() || _isReloading) return;
+
         _isReloading = true;
         _error = null;
         StateHasChanged();
+
         try
         {
             await Task.Delay(500);
-
-            FixtureEditService.DeleteFixture();
-
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Fixture",
-                "Generación",
-                $"Se elimino el fixture generado con:  {ConfigService.GetConfig().SemillaFixture}"
-            );
+            FixtureFacade.DeleteFixture(GetCurrentUserEmail());
         }
         catch (Exception ex)
         {
@@ -295,18 +261,10 @@ else
             StateHasChanged();
         }
     }
-    
+
     private async Task RegenerateFixture()
     {
-        if (!SessionService.IsEditor())
-        {
-            return;
-        }
-
-        if (_isReloading)
-        {
-            return;
-        }
+        if (!SessionService.IsEditor() || _isReloading) return;
 
         _isReloading = true;
         _error = null;
@@ -315,16 +273,7 @@ else
         try
         {
             await Task.Delay(500);
-
-            FixtureEditService.GenerateFixture(_selectedEngine);
-
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Fixture",
-                "Generación",
-                $"Se regeneró el fixture del torneo con semilla {ConfigService.GetConfig().SemillaFixture}"
-            );
-
+            FixtureFacade.RegenerateFixture(_selectedEngine, GetCurrentUserEmail());
             _showRegenerateOptions = false;
         }
         catch (Exception ex)
@@ -350,16 +299,9 @@ else
         StateHasChanged();
     }
 
-    private string GetCurrentUserEmail()
-    {
-        if (!SessionService.IsUserActive())
-        {
-            return "Sistema";
-        }
+    private string GetCurrentUserEmail() =>
+        SessionService.IsUserActive() ? SessionService.GetCurrentUser()!.Email : "Sistema";
 
-        return SessionService.GetCurrentUser()!.Email;
-    }
-    
     private void MostrarOpcionesRegenerar()
     {
         _showRegenerateOptions = true;

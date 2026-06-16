@@ -1,16 +1,11 @@
 @page "/matches/edit/{Id:int}"
 @using DTOs.Match
 @using DTOs.Stadium
-@using Services
-@using IServices
-@using IServices.MatchInterfaces
-@inject IMatchQueryService MatchQueryService   
-@inject IMatchEditService MatchEditService    
-@inject IStadiumService StadiumService
+@using IServices.PageFacades
+@using Web.Services
+@inject IMatchEditPageFacade MatchFacade
 @inject NavigationManager Navigation
 @inject SessionService SessionService
-@inject ILogService LogService
-@inject ISimulationService SimulationService
 
 <div class="edit-match-page">
     <button class="back-link" @onclick="GoBack">← Volver a partidos</button>
@@ -143,9 +138,8 @@
     {
         try
         {
-            _match = MatchQueryService.GetMatchById(Id);
-
-            _stadiums = StadiumService.GetAllStadiums();
+            _match = MatchFacade.GetMatchById(Id);
+            _stadiums = MatchFacade.GetAllStadiums();
 
             _dateTime = _match.dateMatch;
             _stadiumName = _match.stadiumName;
@@ -175,34 +169,25 @@
 
             if (_dateTime != _match.dateMatch)
             {
-                MatchEditService.UpdateMatchDate(_match.idMatch, _dateTime);
+                MatchFacade.UpdateMatchDate(_match.idMatch, _dateTime);
                 wasModified = true;
             }
 
             if (_stadiumName != _match.stadiumName)
             {
-                MatchEditService.UpdateMatchStadium(_match.idMatch, _stadiumName);
+                MatchFacade.UpdateMatchStadium(_match.idMatch, _stadiumName);
                 wasModified = true;
             }
 
-            int currentHomeGoals = _match.homeGoals ?? 0;
-            int currentAwayGoals = _match.awayGoals ?? 0;
+            bool goalsChanged = _homeGoals != (_match.homeGoals ?? 0) || _awayGoals != (_match.awayGoals ?? 0);
+            bool cardsChanged = _homeYellowCards != _match.homeYellowCards ||
+                                _awayYellowCards != _match.awayYellowCards ||
+                                _homeRedCards != _match.homeRedCards ||
+                                _awayRedCards != _match.awayRedCards;
 
-            bool goalsChanged =
-                _homeGoals != currentHomeGoals ||
-                _awayGoals != currentAwayGoals;
-
-            bool cardsChanged =
-                _homeYellowCards != _match.homeYellowCards ||
-                _awayYellowCards != _match.awayYellowCards ||
-                _homeRedCards != _match.homeRedCards ||
-                _awayRedCards != _match.awayRedCards;
-            
-            bool resultChanged = goalsChanged || cardsChanged;
-
-            if (resultChanged)
+            if (goalsChanged || cardsChanged)
             {
-                var request = new MatchResultRequest
+                MatchFacade.SetMatchResult(_match.idMatch, new MatchResultRequest
                 {
                     homeGoals = _homeGoals,
                     awayGoals = _awayGoals,
@@ -210,21 +195,14 @@
                     awayYellowCards = _awayYellowCards,
                     homeRedCards = _homeRedCards,
                     awayRedCards = _awayRedCards
-                };
-
-                MatchEditService.SetMatchResult(_match.idMatch, request);
-
+                });
                 wasModified = true;
             }
 
             if (wasModified)
             {
-                LogService.Register(
-                    GetCurrentUserEmail(),
-                    "Partidos",
-                    "Modificación",
-                    $"Se modificó el partido {_match.homeTeamName} vs {_match.awayTeamName}"
-                );
+                MatchFacade.RegisterLog(GetCurrentUserEmail(), "Partidos", "Modificación",
+                    $"Se modificó el partido {_match.homeTeamName} vs {_match.awayTeamName}");
             }
 
             Navigation.NavigateTo("/matches");
@@ -239,18 +217,9 @@
     {
         try
         {
-            if (_match is null)
-                return;
+            if (_match is null) return;
 
-            var randomSeed = new Random().Next(); 
-            SimulationService.SimulateMatch(_match.idMatch, randomSeed);
-
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Partidos",
-                "Modificación",
-                $"Se simuló el resultado del partido {_match.homeTeamName} vs {_match.awayTeamName}"
-            );
+            MatchFacade.SimulateMatch(_match.idMatch, new Random().Next(), GetCurrentUserEmail());
 
             LoadData();
             StateHasChanged();
@@ -262,18 +231,8 @@
         }
     }
 
-    private void GoBack()
-    {
-        Navigation.NavigateTo("/matches");
-    }
+    private void GoBack() => Navigation.NavigateTo("/matches");
 
-    private string GetCurrentUserEmail()
-    {
-        if (!SessionService.IsUserActive())
-        {
-            return "Sistema";
-        }
-
-        return SessionService.GetCurrentUser().Email;
-    }
+    private string GetCurrentUserEmail() =>
+        SessionService.IsUserActive() ? SessionService.GetCurrentUser().Email : "Sistema";
 }

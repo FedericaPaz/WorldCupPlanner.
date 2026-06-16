@@ -1,13 +1,9 @@
 ﻿@page "/teams/edit/{Name}"
 @using DTOs.Team
-@using IServices
-@using IServices.TeamInterfaces
+@using IServices.PageFacades
 @using Web.Services
-@using Microsoft.AspNetCore.Components.Forms
 
-@inject ITeamEditService TeamEditService
-@inject ITeamQueryService TeamQueryService
-@inject ILogService LogService
+@inject ITeamPageFacade TeamFacade
 @inject SessionService SessionService
 @inject NavigationManager Navigation
 
@@ -70,10 +66,9 @@
                                  ParsingErrorMessage="El campo {0} debe ser un número." />
                     <ValidationMessage For="@(() => _request.FifaRanking)" />
                 </div>
-                
+
                 <div class="form-section">
                     <label>Bandera</label>
-
                     <InputFile OnChange="LoadFlag" accept="image/*" />
 
                     @if (!string.IsNullOrWhiteSpace(_request.FlagBase64))
@@ -113,10 +108,10 @@
             return;
         }
 
-        _confederations = TeamQueryService.GetAllConfederations();
+        _confederations = TeamFacade.GetAllConfederations();
 
         var currentName = Uri.UnescapeDataString(Name ?? string.Empty);
-        var team = TeamQueryService.Get(currentName);
+        var team = TeamFacade.Get(currentName);
 
         if (team is null)
         {
@@ -138,18 +133,8 @@
         try
         {
             _errorMessage = null;
-
             var currentName = Uri.UnescapeDataString(Name ?? string.Empty);
-
-            TeamEditService.Update(currentName, _request!);
-
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Equipos",
-                "Edición",
-                $"Se editó el equipo {currentName}"
-            );
-
+            TeamFacade.Update(currentName, _request!, GetCurrentUserEmail());
             Navigation.NavigateTo("/teams");
         }
         catch (Exception ex)
@@ -158,32 +143,18 @@
         }
     }
 
-    private void GoBack()
-    {
-        Navigation.NavigateTo("/teams");
-    }
+    private void GoBack() => Navigation.NavigateTo("/teams");
 
-    private string GetCurrentUserEmail()
-    {
-        if (!SessionService.IsUserActive())
-        {
-            return "Sistema";
-        }
+    private string GetCurrentUserEmail() =>
+        SessionService.IsUserActive() ? SessionService.GetCurrentUser()!.Email : "Sistema";
 
-        return SessionService.GetCurrentUser().Email;
-    }
-    
     private async Task LoadFlag(InputFileChangeEventArgs e)
     {
         var file = e.File;
-
         await using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024);
         using var memoryStream = new MemoryStream();
-
         await stream.CopyToAsync(memoryStream);
-
         string base64 = Convert.ToBase64String(memoryStream.ToArray());
-
         _request!.FlagBase64 = $"data:{file.ContentType};base64,{base64}";
     }
 }
