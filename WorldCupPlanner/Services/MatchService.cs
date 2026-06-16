@@ -75,10 +75,7 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
 
         match.ClearAllIncidents();
         AddCardIncidents(match, request);
-        match.UpdateMatchResult(request.homeGoals, request.awayGoals);
-
-        _matchRepository.UpdateMatch(match);
-        UpdateRankingsAfterMatch(match);
+        PersistMatchResult(match, request.homeGoals, request.awayGoals);
 
         _notificationService.NotifyJournalists(
             $"Se cargó el resultado de {match.HomeTeam.Name} vs {match.AwayTeam.Name}: {request.homeGoals}-{request.awayGoals}");
@@ -150,9 +147,7 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
             else awayGoals++;
         }
 
-        match.SimulateResult(homeGoals, awayGoals);
-        _matchRepository.UpdateMatch(match);
-        UpdateRankingsAfterMatch(match);
+        PersistMatchResult(match, homeGoals, awayGoals);
     }
 
     private void SimulateGroupStageInternal(ISimulationEngine engine)
@@ -176,9 +171,7 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
 
         match.ClearCardIncidents();
         AddSimulatedCardIncidents(match, seed);
-        match.SimulateResult(homeGoals, awayGoals);
-        _matchRepository.UpdateMatch(match);
-        UpdateRankingsAfterMatch(match);
+        PersistMatchResult(match, homeGoals, awayGoals);
     }
 
     private (int homeGoals, int awayGoals) RunEngine(Match match, int seed, ISimulationEngine engine)
@@ -211,6 +204,13 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
     {
         if (engine == null)
             throw new ArgumentNullException(nameof(engine), "El motor de simulación es obligatorio.");
+    }
+
+    private void PersistMatchResult(Match match, int homeGoals, int awayGoals)
+    {
+        match.SimulateResult(homeGoals, awayGoals);
+        _matchRepository.UpdateMatch(match);
+        UpdateRankingsAfterMatch(match);
     }
 
     private void UpdateRankingsAfterMatch(Match match)
