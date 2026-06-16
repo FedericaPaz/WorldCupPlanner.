@@ -70,20 +70,6 @@ builder.Services.AddScoped<ICrucesRepository, CrucesRepository>();
 builder.Services.AddScoped<ICruceQueryService, CruceService>();
 builder.Services.AddScoped<ICruceEditService, CruceService>();
 
-builder.Services.AddScoped<IGroupRepository, GroupRepository>();
-
-builder.Services.AddScoped<ILogRepository, LogRepository>();
-builder.Services.AddScoped<ILogService, LogService>();
-
-builder.Services.AddScoped<ICsvParser, CsvParser>();
-builder.Services.AddScoped<ITeamImportValidator, TeamImportValidator>();
-builder.Services.AddScoped<ITeamFactory, TeamFactory>();
-builder.Services.AddScoped<TeamImporter>();
-builder.Services.AddScoped<IImportService, ImportService>();
-
-builder.Services.AddScoped<TournamentConfig>();
-builder.Services.AddScoped<IConfigService, ConfigService>();
-
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
@@ -115,7 +101,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.Run();
