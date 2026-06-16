@@ -142,29 +142,25 @@ public class CruceService : ICruceEditService, ICruceQueryService
         if (!match.HomeGoals.HasValue || !match.AwayGoals.HasValue)
             return;
 
-        var homeTeam = match.HomeTeam;
-        var awayTeam = match.AwayTeam;
         var fase = match.GetTournamentPhase();
+        int prevHome = match.GetHomeRanking();
+        int prevAway = match.GetAwayRanking();
 
-        int prevHome = homeTeam.CurrentRanking;
-        int prevAway = awayTeam.CurrentRanking;
+        match.RecalcularRankings(fase);
 
-        homeTeam.RecalcularRanking(awayTeam.CurrentRanking, match.GetResultForHomeTeam(), fase);
-        awayTeam.RecalcularRanking(homeTeam.CurrentRanking, match.GetResultForAwayTeam(), fase);
-
-        _teamRepository.Update(homeTeam);
-        _teamRepository.Update(awayTeam);
+        _teamRepository.Update(match.HomeTeam);
+        _teamRepository.Update(match.AwayTeam);
 
         _logService.Register(
             "system", "Ranking", "RankingUpdated",
-            $"{homeTeam.Name}: {prevHome} -> {homeTeam.CurrentRanking}. " +
-            $"{awayTeam.Name}: {prevAway} -> {awayTeam.CurrentRanking}.");
+            $"{match.GetHomeTeamName()}: {prevHome} -> {match.GetHomeRanking()}. " +
+            $"{match.GetAwayTeamName()}: {prevAway} -> {match.GetAwayRanking()}.");
     }
 
     private (int homeGoals, int awayGoals) CalculateResult(Match match, int seed, ISimulationEngine engine)
     {
         var matchSeed = seed + match.IdMatch;
-        return engine.SimulateMatch(match.HomeTeam.CurrentRanking, match.AwayTeam.CurrentRanking, matchSeed);
+        return engine.SimulateMatch(match.GetHomeRanking(), match.GetAwayRanking(), matchSeed);
     }
 
     private List<Cruce> GenerateRoundOf32Internal(Fixture fixture, List<Stadium> estadios, int semilla, int startMatchId)
@@ -216,7 +212,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
         if (crucesAnteriores == null || crucesAnteriores.Count == 0)
             throw new ArgumentException("Se requieren cruces anteriores para generar la siguiente ronda.");
 
-        DateTime fechaUltimoPartido = crucesAnteriores.Max(c => c.Match.DateMatch);
+        DateTime fechaUltimoPartido = crucesAnteriores.Max(c => c.GetMatchDate());
 
         if (crucesAnteriores[0].Phase == TournamentPhase.SemiFinals)
             return GenerateSemiFinalsOutput(crucesAnteriores, estadios, semilla, fechaUltimoPartido);

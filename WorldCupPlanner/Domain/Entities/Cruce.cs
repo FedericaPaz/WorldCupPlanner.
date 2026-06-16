@@ -73,6 +73,12 @@ public class Cruce
         return Match.LoserMatch;
     }
 
+    public DateTime GetMatchDate() => Match.DateMatch;
+    public string GetHomeTeamName() => Match.GetHomeTeamName();
+    public string GetAwayTeamName() => Match.GetAwayTeamName();
+    public int? GetHomeGoals() => Match.HomeGoals;
+    public int? GetAwayGoals() => Match.AwayGoals;
+
     private bool IsValidNextPhase(TournamentPhase nextPhase)
     {
         return nextPhase == GetNextPhase();
