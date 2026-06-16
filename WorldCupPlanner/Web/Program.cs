@@ -95,7 +95,7 @@ builder.Services.AddScoped<ITeamPageFacade, TeamPageFacade>();
 
 builder.Services.AddScoped<ISimulationEngine, PureRandomSimulationEngine>();
 builder.Services.AddScoped<ISimulationEngine, ProbabilisticSimulationEngine>();
-builder.Services.AddScoped<ISimulationEngineFactory, Services.Simulation.DefaultSimulationEngineFactory>();
+builder.Services.AddScoped<ISimulationEngineFactory, DefaultSimulationEngineFactory>();
 
 Fixture.RegisterEngine("Aleatorio puro", () => new PureRandomSimulationEngine());
 Fixture.RegisterEngine("Probabilístico", () => new ProbabilisticSimulationEngine());
