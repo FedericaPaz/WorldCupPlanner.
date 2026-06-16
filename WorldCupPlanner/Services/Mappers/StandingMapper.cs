@@ -9,7 +9,7 @@ public class StandingMapper
     {
         return new StandingResponse
         {
-            TeamName = standing.TeamInGroup.Name,
+            TeamName = standing.GetTeamName(),
             Points = standing.PointsInGroup,
             GoalsFor = standing.GoalsFor,
             GoalsAgainst = standing.GoalsAgainst,
