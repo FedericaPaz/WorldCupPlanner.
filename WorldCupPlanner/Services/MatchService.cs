@@ -60,8 +60,11 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         
         bool yaTeníaResultado = match.HomeGoals.HasValue && match.AwayGoals.HasValue;
         if (yaTeníaResultado)
-            _rankingService.RevertRankingsAfterMatch(match);
-        
+            RevertRankingsAfterMatch(match);
+
+        if (match.Group == 'N' && request.homeGoals == request.awayGoals)
+            throw new ArgumentException("Los partidos eliminatorios no pueden terminar en empate.");
+
         match.ClearAllIncidents();
 
         AddCardIncidents(match, request);
