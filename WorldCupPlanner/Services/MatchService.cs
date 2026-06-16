@@ -64,7 +64,9 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         
         match.ClearAllIncidents();
 
-        AddCardIncidents(match, request);
+        var incidents = MatchResultMapper.ToIncidents(request, match);
+        foreach (var inc in incidents)
+            match.AddIncident(inc);
         match.UpdateMatchResult(request.homeGoals, request.awayGoals);
 
         _matchRepository.UpdateMatch(match);
@@ -137,17 +139,4 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         return new Match(id, request.dateMatch, stadium, homeTeam, awayTeam, request.group[0], _clock);
     }
 
-    private static void AddCardIncidents(Match match, MatchResultRequest request)
-    {
-        AddIncidentIfNeeded(match, IncidentType.YellowCard, match.HomeTeam, request.homeYellowCards);
-        AddIncidentIfNeeded(match, IncidentType.YellowCard, match.AwayTeam, request.awayYellowCards);
-        AddIncidentIfNeeded(match, IncidentType.RedCard, match.HomeTeam, request.homeRedCards);
-        AddIncidentIfNeeded(match, IncidentType.RedCard, match.AwayTeam, request.awayRedCards);
-    }
-
-    private static void AddIncidentIfNeeded(Match match, IncidentType type, Team team, int quantity)
-    {
-        if (quantity > 0)
-            match.AddIncident(new MatchIncident(type, team, quantity));
-    }
 }
