@@ -2,6 +2,7 @@ using Domain.Entities;
 using Domain.Import.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Domain.Import;
 
@@ -32,6 +33,7 @@ public class TeamImportValidator : ITeamImportValidator
         string name = row.GetValue(NameHeader);
         string confederationName = row.GetValue(ConfederationHeader);
         string rankingValue = row.GetValue(RankingHeader);
+        string flagData = row.GetValue(FlagHeader)?.Trim() ?? "";
 
         if (importedNames.Contains(name))
             errors.Add(new ImportError(row.RowNumber, "El nombre del equipo está duplicado."));
@@ -41,6 +43,18 @@ public class TeamImportValidator : ITeamImportValidator
 
         if (!int.TryParse(rankingValue, out int ranking) || ranking < Team.MinRanking || ranking > Team.MaxRanking)
             errors.Add(new ImportError(row.RowNumber, $"El ranking FIFA debe estar entre {Team.MinRanking} y {Team.MaxRanking}."));
+
+        if (!string.IsNullOrWhiteSpace(flagData))
+        {
+            try
+            {
+                Convert.FromBase64String(flagData);
+            }
+            catch
+            {
+                errors.Add(new ImportError(row.RowNumber, "El formato de la bandera en esta fila es inválido."));
+            }
+        }
 
         return errors;
     }

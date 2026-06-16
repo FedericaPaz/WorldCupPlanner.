@@ -30,16 +30,10 @@ public class ImportService : IImportService
 
     public ImportResponse ImportTeams(string csvContent)
     {
-        var validationErrors = ValidateBase64InCsv(csvContent);
-        if (validationErrors.Any())
-        {
-            return new ImportResponse { Success = false, Errors = validationErrors };
-        }
-        
         ImportResult result = _teamImporter.Import(csvContent);
-    
+
         if (!result.Success) return ImportMapper.ToResponse(result);
-    
+
         try
         {
             SaveImportedTeams(result.Teams);
@@ -49,36 +43,6 @@ public class ImportService : IImportService
             return new ImportResponse { Success = false, Errors = new List<ImportErrorResponse> { new ImportErrorResponse { RowNumber = 0, Message = ex.Message } } };
         }
         return ImportMapper.ToResponse(result);
-    }
-
-    private List<ImportErrorResponse> ValidateBase64InCsv(string csvContent)
-    {
-        var errors = new List<ImportErrorResponse>();
-        var lines = csvContent.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-        for (int i = 1; i < lines.Length; i++) 
-        {
-            var columns = lines[i].Split(',');
-            if (columns.Length < 4) continue;
-
-            string flagData = columns[3].Trim(); 
-
-            if (!string.IsNullOrWhiteSpace(flagData))
-            {
-                try
-                {
-                    Convert.FromBase64String(flagData.Replace("\r", "").Replace("\n", "").Trim());
-                }
-                catch
-                {
-                    errors.Add(new ImportErrorResponse { 
-                        RowNumber = i + 1, 
-                        Message = "El formato de la bandera en esta fila es inválido." 
-                    });
-                }
-            }
-        }
-        return errors;
     }
 
     private void SaveImportedTeams(IReadOnlyList<Team> teams)

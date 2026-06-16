@@ -26,14 +26,14 @@ public class TeamImporterTests
     {
         string csv = """
                      Nombre,Confederación,RankingFIFA,Bandera
-                     Uruguay,CONMEBOL,1800,flag-uy
+                     Uruguay,CONMEBOL,1800,
                      """;
         ImportResult result = importer.Import(csv);
         Assert.AreEqual(1, result.Teams.Count);
         Assert.AreEqual("Uruguay", result.Teams[0].Name);
         Assert.AreEqual("CONMEBOL", result.Teams[0].Confederation.Name);
         Assert.AreEqual(1800, result.Teams[0].FifaRanking);
-        Assert.AreEqual("flag-uy", result.Teams[0].FlagBase64);
+        Assert.AreEqual("", result.Teams[0].FlagBase64);
     }
     
     [TestMethod]
@@ -53,7 +53,7 @@ public class TeamImporterTests
     {
         string csv = """
                      Nombre,Confederación,RankingFIFA,Bandera
-                     Uruguay,AUF,1800,flag-uy
+                     Uruguay,AUF,1800,
                      """;
         ImportResult result = importer.Import(csv);
         Assert.IsFalse(result.Success);
@@ -66,8 +66,8 @@ public class TeamImporterTests
     {
         string csv = """
                      Nombre,Confederación,RankingFIFA,Bandera
-                     Uruguay,CONMEBOL,1800,flag-uy
-                     Uruguay,CONMEBOL,1700,flag-uy
+                     Uruguay,CONMEBOL,1800,
+                     Uruguay,CONMEBOL,1700,
                      """;
         ImportResult result = importer.Import(csv);
         Assert.IsFalse(result.Success);

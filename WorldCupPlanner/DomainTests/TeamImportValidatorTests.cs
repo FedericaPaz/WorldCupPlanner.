@@ -13,7 +13,8 @@ public class TeamImportValidatorTests
         {
             "Nombre",
             "Confederación",
-            "RankingFIFA"
+            "RankingFIFA",
+            "Bandera"
         };
         List<ImportError> errors = validator.ValidateHeaders(headers);
         Assert.AreEqual(0, errors.Count);
@@ -39,7 +40,8 @@ public class TeamImportValidatorTests
         {
             ["Nombre"] = "Uruguay",
             ["Confederación"] = "CONMEBOL",
-            ["RankingFIFA"] = "1800"
+            ["RankingFIFA"] = "1800",
+            ["Bandera"] = ""
         });
         var importedNames = new HashSet<string> { "Uruguay" };
         List<ImportError> errors = validator.ValidateRow(row, importedNames);
@@ -54,7 +56,8 @@ public class TeamImportValidatorTests
         {
             ["Nombre"] = "Uruguay",
             ["Confederación"] = "AUF",
-            ["RankingFIFA"] = "1800"
+            ["RankingFIFA"] = "1800",
+            ["Bandera"] = ""
         });
         List<ImportError> errors = validator.ValidateRow(row, new HashSet<string>());
         Assert.AreEqual(1, errors.Count);
@@ -66,7 +69,7 @@ public class TeamImportValidatorTests
         var validator = new TeamImportValidator();
         var row = new ParsedCsvRow(2, new Dictionary<string, string>
         {
-            ["Nombre"] = "Uruguay", ["Confederación"] = "CONMEBOL", ["RankingFIFA"] = "100"
+            ["Nombre"] = "Uruguay", ["Confederación"] = "CONMEBOL", ["RankingFIFA"] = "100", ["Bandera"] = ""
         });
         List<ImportError> errors = validator.ValidateRow(row, new HashSet<string>());
         Assert.AreEqual(1, errors.Count);
