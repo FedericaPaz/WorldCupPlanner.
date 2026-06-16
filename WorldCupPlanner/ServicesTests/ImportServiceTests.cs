@@ -135,7 +135,7 @@ public class ImportServiceTests
     public void ImportTeams_WithValidCsvButMoreThan48Teams_ShouldReturnError()
     {
         string csv = ImportCsvBuilder.CreateValidCsvWith48Teams();
-        string extraTeam = Environment.NewLine + "Equipo Extra,CONMEBOL,1200,";
+        string extraTeam = Environment.NewLine + "Equipo Extra,CONMEBOL,1200,,";
         csv += extraTeam;
         var response = _service.ImportTeams(csv);
         Assert.IsFalse(response.Success);
