@@ -86,10 +86,106 @@ public class CruceServiceTests
             _matchRepository.GetNextId(),
             new DateTime(2027, 6, 10),
             stadium,
-            home, away, 'N', _clock);
+            home,
+            away,
+            'N',
+            _clock);
+
         match.SimulateResult(homeGoals, awayGoals);
         _matchRepository.AddMatch(match);
+
         return match;
+    }
+
+    private Fixture CreateFixtureReadyForRoundOf32()
+    {
+        var fixture = new Fixture(_config);
+        fixture.InitializeGroups();
+
+        foreach (var group in Create12GroupsWithFinishedMatches())
+        {
+            var fixtureGroup = fixture.Groups.First(g => g.GroupLetter == group.GroupLetter);
+
+            foreach (var team in group.TeamsInGroup)
+                fixtureGroup.AddTeamToGroup(team);
+
+            foreach (var match in group.MatchesInGroup)
+            {
+                fixtureGroup.AddMatchToGroup(match);
+                _matchRepository.AddMatch(match);
+            }
+        }
+
+        fixture.AdvanceToPhase(TournamentPhase.GroupStage);
+        _fixtureRepository.AddFixture(fixture);
+
+        return fixture;
+    }
+
+    private List<Group> Create12GroupsWithFinishedMatches()
+    {
+        var groups = new List<Group>();
+
+        for (char letter = 'A'; letter <= 'L'; letter++)
+        {
+            var group = new Group(letter);
+
+            var team1 = CreateTeam($"Team{letter}1", "CONMEBOL", 1800);
+            var team2 = CreateTeam($"Team{letter}2", "UEFA", 1700);
+            var team3 = CreateTeam($"Team{letter}3", "CAF", 1600);
+            var team4 = CreateTeam($"Team{letter}4", "AFC", 1500);
+
+            group.AddTeamToGroup(team1);
+            group.AddTeamToGroup(team2);
+            group.AddTeamToGroup(team3);
+            group.AddTeamToGroup(team4);
+
+            AddFinishedGroupMatch(group, team1, team2, 3, 0);
+            AddFinishedGroupMatch(group, team1, team3, 2, 0);
+            AddFinishedGroupMatch(group, team1, team4, 1, 0);
+            AddFinishedGroupMatch(group, team2, team3, 2, 1);
+            AddFinishedGroupMatch(group, team2, team4, 1, 0);
+            AddFinishedGroupMatch(group, team3, team4, 1, 0);
+
+            groups.Add(group);
+        }
+
+        return groups;
+    }
+
+    private void AddFinishedGroupMatch(Group group, Team home, Team away, int homeGoals, int awayGoals)
+    {
+        var stadium = CreateStadium($"Estadio_{group.GroupLetter}_{_matchRepository.GetNextId()}");
+
+        var match = new Match(
+            _matchRepository.GetNextId(),
+            new DateTime(2027, 6, 10),
+            stadium,
+            home,
+            away,
+            group.GroupLetter,
+            _clock);
+
+        match.SimulateResult(homeGoals, awayGoals);
+        group.AddMatchToGroup(match);
+    }
+
+    private List<Cruce> CreateFinishedCruces(int count, TournamentPhase phase, string prefix)
+    {
+        var cruces = new List<Cruce>();
+
+        for (int i = 1; i <= count; i++)
+        {
+            var home = CreateTeam($"{prefix}Home{i}", "CONMEBOL", 1500 + i);
+            var away = CreateTeam($"{prefix}Away{i}", "UEFA", 1400 + i);
+            var stadium = CreateStadium($"{prefix}Stadium{i}");
+
+            var match = CreateMatchWithResult(home, away, stadium, 2, 1);
+
+            cruces.Add(new Cruce($"{prefix}{i}", match, phase));
+        }
+
+        return cruces;
     }
 
     [TestMethod]
@@ -195,10 +291,8 @@ public class CruceServiceTests
         var homeActualizado = _teamRepository.Get("Uruguay")!;
         var awayActualizado = _teamRepository.Get("Argentina")!;
 
-        Assert.AreNotEqual(rankingHomeAntes, homeActualizado.CurrentRanking,
-            "El ranking del equipo local debería haber cambiado.");
-        Assert.AreNotEqual(rankingAwayAntes, awayActualizado.CurrentRanking,
-            "El ranking del equipo visitante debería haber cambiado.");
+        Assert.AreNotEqual(rankingHomeAntes, homeActualizado.CurrentRanking);
+        Assert.AreNotEqual(rankingAwayAntes, awayActualizado.CurrentRanking);
     }
 
     [TestMethod]
@@ -217,8 +311,8 @@ public class CruceServiceTests
         _service.SimulateCruces();
 
         var logs = _logRepository.GetAll();
-        Assert.IsTrue(logs.Any(l => l.Category == "Ranking"),
-            "Se debería haber registrado un log de ranking.");
+
+        Assert.IsTrue(logs.Any(l => l.Category == "Ranking"));
     }
 
     [TestMethod]
@@ -237,5 +331,117 @@ public class CruceServiceTests
 
         Assert.AreEqual(2, match.HomeGoals);
         Assert.AreEqual(1, match.AwayGoals);
+    }
+
+    [TestMethod]
+    public void GenerateRoundOf32_WithCompletedGroupStage_ShouldGenerateCruces()
+    {
+        CreateFixtureReadyForRoundOf32();
+
+        for (int i = 1; i <= 4; i++)
+            CreateStadium($"EstadioExtra{i}");
+
+        _service.GenerateRoundOf32();
+
+        var cruces = _crucesRepository.GetAllCruces();
+
+        Assert.AreEqual(16, cruces.Count);
+        Assert.IsTrue(cruces.All(c => c.Phase == TournamentPhase.RoundOf32));
+    }
+
+    [TestMethod]
+    public void GenerateRoundOf32_WhenGroupsAreNotCompleted_ShouldThrowInvalidOperationException()
+    {
+        var fixture = new Fixture(_config);
+        fixture.InitializeGroups();
+        _fixtureRepository.AddFixture(fixture);
+
+        Assert.ThrowsException<InvalidOperationException>(() => _service.GenerateRoundOf32());
+    }
+
+    [TestMethod]
+    public void GenerateNextRound_WhenCurrentPhaseIsFinal_ShouldThrowInvalidOperationException()
+    {
+        var home = CreateTeam("FinalHome");
+        var away = CreateTeam("FinalAway", "UEFA");
+        var stadium = CreateStadium("FinalStadium");
+
+        var match = CreateMatchWithResult(home, away, stadium, 2, 1);
+
+        _crucesRepository.SetCruces(new List<Cruce>
+        {
+            new Cruce("F1", match, TournamentPhase.Final)
+        });
+
+        Assert.ThrowsException<InvalidOperationException>(() => _service.GenerateNextRound());
+    }
+
+    [TestMethod]
+    public void GenerateNextRound_FromRoundOf32_ShouldGenerateRoundOf16()
+    {
+        for (int i = 1; i <= 4; i++)
+            CreateStadium($"Round16Stadium{i}");
+
+        var cruces = new List<Cruce>();
+        cruces.AddRange(CreateFinishedCruces(8, TournamentPhase.RoundOf32, "A"));
+        cruces.AddRange(CreateFinishedCruces(8, TournamentPhase.RoundOf32, "B"));
+
+        _crucesRepository.SetCruces(cruces);
+
+        _service.GenerateNextRound();
+
+        var result = _crucesRepository.GetAllCruces();
+
+        Assert.IsTrue(result.Any(c => c.Phase == TournamentPhase.RoundOf16));
+    }
+
+    [TestMethod]
+    public void GenerateNextRound_FromQuarterFinals_ShouldGenerateSemiFinals()
+    {
+        for (int i = 1; i <= 4; i++)
+            CreateStadium($"SemiStadium{i}");
+
+        var cruces = CreateFinishedCruces(4, TournamentPhase.QuarterFinals, "D");
+        _crucesRepository.SetCruces(cruces);
+
+        _service.GenerateNextRound();
+
+        var result = _crucesRepository.GetAllCruces();
+
+        Assert.IsTrue(result.Any(c => c.Phase == TournamentPhase.SemiFinals));
+    }
+
+    [TestMethod]
+    public void GenerateNextRound_FromSemiFinals_ShouldGenerateFinalAndThirdPlace()
+    {
+        for (int i = 1; i <= 4; i++)
+            CreateStadium($"FinalStadium{i}");
+
+        var cruces = CreateFinishedCruces(2, TournamentPhase.SemiFinals, "S");
+        _crucesRepository.SetCruces(cruces);
+
+        _service.GenerateNextRound();
+
+        var result = _crucesRepository.GetAllCruces();
+
+        Assert.IsTrue(result.Any(c => c.Phase == TournamentPhase.Final));
+        Assert.IsTrue(result.Any(c => c.Phase == TournamentPhase.ThirdPlace));
+    }
+
+    [TestMethod]
+    public void GetAllCruces_WhenCrucesExist_ReturnsMappedCruces()
+    {
+        var home = CreateTeam("MappedHome");
+        var away = CreateTeam("MappedAway", "UEFA");
+        var stadium = CreateStadium("MappedStadium");
+
+        var match = CreateMatchWithResult(home, away, stadium, 2, 1);
+        var cruce = new Cruce("A1", match, TournamentPhase.RoundOf32);
+
+        _crucesRepository.SetCruces(new List<Cruce> { cruce });
+
+        var result = _service.GetAllCruces();
+
+        Assert.AreEqual(1, result.Count);
     }
 }

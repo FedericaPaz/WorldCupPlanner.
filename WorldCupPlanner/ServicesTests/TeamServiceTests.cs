@@ -312,4 +312,60 @@ public class TeamServiceTests
         Assert.AreEqual(8, result.Count(t => t.Confederation.Name == "AFC"));
         Assert.AreEqual(1, result.Count(t => t.Confederation.Name == "OFC"));
     }
+    
+    [TestMethod]
+public void GenerateMissingTeams_WhenSomeGeneratedNamesAlreadyExist_ShouldSkipDuplicatedNames()
+{
+    _teamRepository.Add(new Team("UEFA_01", new Confederation("UEFA"), 1000));
+
+    _teamService.GenerateMissingTeams();
+
+    var result = _teamRepository.GetAll();
+
+    Assert.AreEqual(48, result.Count);
+    Assert.AreEqual(16, result.Count(t => t.Confederation.Name == "UEFA"));
+    Assert.AreEqual(1, result.Count(t => t.Name == "UEFA_01"));
+    Assert.IsTrue(result.Any(t => t.Name == "UEFA_02"));
+}
+
+[TestMethod]
+public void GenerateMissingTeams_WhenRepositoryHasPartialConfederations_ShouldCompleteOnlyMissingTeams()
+{
+    _teamRepository.Add(new Team("UEFA_01", new Confederation("UEFA"), 1000));
+    _teamRepository.Add(new Team("UEFA_02", new Confederation("UEFA"), 1001));
+    _teamRepository.Add(new Team("CONMEBOL_01", new Confederation("CONMEBOL"), 1002));
+    _teamRepository.Add(new Team("AFC_01", new Confederation("AFC"), 1003));
+
+    _teamService.GenerateMissingTeams();
+
+    var result = _teamRepository.GetAll();
+
+    Assert.AreEqual(48, result.Count);
+    Assert.AreEqual(16, result.Count(t => t.Confederation.Name == "UEFA"));
+    Assert.AreEqual(7, result.Count(t => t.Confederation.Name == "CONMEBOL"));
+    Assert.AreEqual(7, result.Count(t => t.Confederation.Name == "CONCACAF"));
+    Assert.AreEqual(9, result.Count(t => t.Confederation.Name == "CAF"));
+    Assert.AreEqual(8, result.Count(t => t.Confederation.Name == "AFC"));
+    Assert.AreEqual(1, result.Count(t => t.Confederation.Name == "OFC"));
+}
+
+[TestMethod]
+public void GenerateMissingTeams_WhenConfederationAlreadyHasMoreThanLimit_ShouldNotRemoveExistingTeams()
+{
+    for (int i = 1; i <= 17; i++)
+    {
+        _teamRepository.Add(new Team($"UEFA_EXTRA_{i:D2}", new Confederation("UEFA"), 1000 + i));
+    }
+
+    _teamService.GenerateMissingTeams();
+
+    var result = _teamRepository.GetAll();
+
+    Assert.AreEqual(17, result.Count(t => t.Confederation.Name == "UEFA"));
+    Assert.AreEqual(7, result.Count(t => t.Confederation.Name == "CONMEBOL"));
+    Assert.AreEqual(7, result.Count(t => t.Confederation.Name == "CONCACAF"));
+    Assert.AreEqual(9, result.Count(t => t.Confederation.Name == "CAF"));
+    Assert.AreEqual(8, result.Count(t => t.Confederation.Name == "AFC"));
+    Assert.AreEqual(1, result.Count(t => t.Confederation.Name == "OFC"));
+}
 }

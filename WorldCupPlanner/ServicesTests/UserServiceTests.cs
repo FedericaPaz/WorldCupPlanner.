@@ -313,4 +313,129 @@ public class UserServiceTests
             _userService.UpdateUserWithoutPassword("Juan", "Gomez", "",
                 new DateTime(2000, 1, 1), UserTestHelper.GetValidRoles()));
     }
+    
+    [TestMethod]
+public void DeleteUser_WithCurrentUserEmail_WhenDeletingOtherUser_ShouldDeleteUser()
+{
+    _userService.CreateUser("Admin", "User", "admin@gmail.com",
+        new DateTime(1990, 1, 1), "Password1!",
+        new List<UserRole> { UserRole.SystemAdministrator });
+
+    _userService.CreateUser("Juan", "Perez", "juan.perez@gmail.com",
+        new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
+
+    _userService.DeleteUser("juan.perez@gmail.com", "admin@gmail.com");
+
+    Assert.IsNull(_userService.GetUser("juan.perez@gmail.com"));
+    Assert.IsNotNull(_userService.GetUser("admin@gmail.com"));
+}
+
+[TestMethod]
+public void DeleteUser_WithCurrentUserEmail_WhenDeletingSelf_ShouldThrowInvalidOperationException()
+{
+    _userService.CreateUser("Juan", "Perez", "juan.perez@gmail.com",
+        new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
+
+    Assert.ThrowsException<InvalidOperationException>(() =>
+        _userService.DeleteUser("juan.perez@gmail.com", "juan.perez@gmail.com"));
+}
+
+[TestMethod]
+public void DeleteUser_WithCurrentUserEmail_WhenDeletingSelfDifferentCase_ShouldThrowInvalidOperationException()
+{
+    _userService.CreateUser("Juan", "Perez", "juan.perez@gmail.com",
+        new DateTime(2000, 1, 1), "Password1!", UserTestHelper.GetValidRoles());
+
+    Assert.ThrowsException<InvalidOperationException>(() =>
+        _userService.DeleteUser("juan.perez@gmail.com", "JUAN.PEREZ@gmail.com"));
+}
+
+[TestMethod]
+public void DeleteUser_WithCurrentUserEmail_WhenTargetEmailIsEmpty_ShouldThrowArgumentException()
+{
+    Assert.ThrowsException<ArgumentException>(() =>
+        _userService.DeleteUser("", "admin@gmail.com"));
+}
+
+[TestMethod]
+public void DeleteUser_WithCurrentUserEmail_WhenCurrentUserEmailIsEmpty_ShouldThrowArgumentException()
+{
+    Assert.ThrowsException<ArgumentException>(() =>
+        _userService.DeleteUser("juan.perez@gmail.com", ""));
+}
+
+[TestMethod]
+public void DeleteUser_WithCurrentUserEmail_WhenTargetUserDoesNotExist_ShouldThrowInvalidOperationException()
+{
+    _userService.CreateUser("Admin", "User", "admin@gmail.com",
+        new DateTime(1990, 1, 1), "Password1!",
+        new List<UserRole> { UserRole.SystemAdministrator });
+
+    Assert.ThrowsException<InvalidOperationException>(() =>
+        _userService.DeleteUser("missing@gmail.com", "admin@gmail.com"));
+}
+
+[TestMethod]
+public void ResetPassword_WithNonExistingUser_ShouldThrowInvalidOperationException()
+{
+    Assert.ThrowsException<InvalidOperationException>(() =>
+        _userService.ResetPassword("missing@gmail.com"));
+}
+
+[TestMethod]
+public void ResetPassword_WithEmptyEmail_ShouldThrowArgumentException()
+{
+    Assert.ThrowsException<ArgumentException>(() =>
+        _userService.ResetPassword(""));
+}
+
+[TestMethod]
+public void ChangeOwnPassword_WithNonExistingUser_ShouldThrowInvalidOperationException()
+{
+    Assert.ThrowsException<InvalidOperationException>(() =>
+        _userService.ChangeOwnPassword("missing@gmail.com", "NewPassword1!"));
+}
+
+[TestMethod]
+public void ChangeOwnPassword_WithEmptyEmail_ShouldThrowArgumentException()
+{
+    Assert.ThrowsException<ArgumentException>(() =>
+        _userService.ChangeOwnPassword("", "NewPassword1!"));
+}
+
+[TestMethod]
+public void CanExport_WhenUserIsSystemAdministrator_ShouldReturnTrue()
+{
+    _userService.CreateUser("Admin", "User", "admin@gmail.com",
+        new DateTime(1990, 1, 1), "Password1!",
+        new List<UserRole> { UserRole.SystemAdministrator });
+
+    Assert.IsTrue(_userService.CanExport("admin@gmail.com"));
+}
+
+[TestMethod]
+public void CanExport_WhenUserIsJournalist_ShouldReturnTrue()
+{
+    _userService.CreateUser("Juan", "Periodista", "periodista@gmail.com",
+        new DateTime(1995, 1, 1), "Password1!",
+        new List<UserRole> { UserRole.Journalist });
+
+    Assert.IsTrue(_userService.CanExport("periodista@gmail.com"));
+}
+
+[TestMethod]
+public void CanExport_WhenUserIsEditor_ShouldReturnFalse()
+{
+    _userService.CreateUser("Editor", "User", "editor@gmail.com",
+        new DateTime(1995, 1, 1), "Password1!",
+        new List<UserRole> { UserRole.Editor });
+
+    Assert.IsFalse(_userService.CanExport("editor@gmail.com"));
+}
+
+[TestMethod]
+public void CanExport_WhenUserDoesNotExist_ShouldReturnFalse()
+{
+    Assert.IsFalse(_userService.CanExport("missing@gmail.com"));
+}
 }

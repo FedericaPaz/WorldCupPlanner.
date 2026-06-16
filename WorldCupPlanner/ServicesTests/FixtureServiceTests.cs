@@ -253,4 +253,120 @@ public class FixtureServiceTests
         foreach (var team in _teamRepository.GetAll())
             Assert.AreEqual(team.FifaRanking, team.CurrentRanking);
     }
+    
+    [TestMethod]
+public void GetFixtureEntity_WhenNoFixture_ThrowsInvalidOperationException()
+{
+    Assert.ThrowsException<InvalidOperationException>(() =>
+        _service.GetFixtureEntity());
+}
+
+[TestMethod]
+public void GetFixtureEntity_WhenFixtureExists_ReturnsFixture()
+{
+    Add48Teams();
+    Add4Stadiums();
+
+    _service.GenerateFixture("Probabilístico");
+
+    var fixture = _service.GetFixtureEntity();
+
+    Assert.IsNotNull(fixture);
+    Assert.AreEqual(12, fixture.Groups.Count);
+}
+
+[TestMethod]
+public void GetFixtureEntity_WhenFixtureExists_LoadsMatchesIntoGroups()
+{
+    Add48Teams();
+    Add4Stadiums();
+
+    _service.GenerateFixture("Probabilístico");
+
+    var fixture = _service.GetFixtureEntity();
+
+    var totalMatchesInGroups = fixture.Groups.Sum(g => g.MatchesInGroup.Count);
+
+    Assert.AreEqual(72, totalMatchesInGroups);
+}
+
+[TestMethod]
+public void GetStandingsForGroup_WhenFixtureExists_ReturnsStandingsForGroup()
+{
+    Add48Teams();
+    Add4Stadiums();
+
+    _service.GenerateFixture("Probabilístico");
+
+    var standings = _service.GetStandingsForGroup('A');
+
+    Assert.IsNotNull(standings);
+    Assert.AreEqual(4, standings.Count);
+}
+
+[TestMethod]
+public void GetStandingsForGroup_WhenGroupDoesNotExist_ThrowsArgumentException()
+{
+    Add48Teams();
+    Add4Stadiums();
+
+    _service.GenerateFixture("Probabilístico");
+
+    Assert.ThrowsException<ArgumentException>(() =>
+        _service.GetStandingsForGroup('Z'));
+}
+
+[TestMethod]
+public void GenerateFixture_WithDefaultEngineName_ShouldStoreFixture()
+{
+    Add48Teams();
+    Add4Stadiums();
+
+    _service.GenerateFixture();
+
+    Assert.IsTrue(_fixtureRepository.ContainsFixture());
+    Assert.AreEqual(72, _matchRepository.GetAllMatches().Count);
+}
+
+[TestMethod]
+public void GenerateFixture_WhenCalled_ShouldRemovePreviousCruces()
+{
+    Add48Teams();
+    Add4Stadiums();
+
+    _service.GenerateFixture("Probabilístico");
+
+    Assert.IsTrue(_crucesRepository.RemoveCalled);
+}
+
+[TestMethod]
+public void GenerateFixture_WhenCalled_ShouldClearPreviousMatches()
+{
+    Add48Teams();
+    Add4Stadiums();
+
+    _service.GenerateFixture("Probabilístico");
+
+    Assert.AreEqual(72, _matchRepository.GetAllMatches().Count);
+
+    _service.GenerateFixture("Probabilístico");
+
+    Assert.AreEqual(72, _matchRepository.GetAllMatches().Count);
+}
+
+[TestMethod]
+public void HasFixture_WhenExistingFixtureIsNoLongerValid_ShouldReturnFalseAndRemoveFixture()
+{
+    Add48Teams();
+    Add4Stadiums();
+
+    _service.GenerateFixture("Probabilístico");
+
+    _teamRepository.Clear();
+
+    var result = _service.HasFixture();
+
+    Assert.IsFalse(result);
+    Assert.IsFalse(_fixtureRepository.ContainsFixture());
+}
 }
