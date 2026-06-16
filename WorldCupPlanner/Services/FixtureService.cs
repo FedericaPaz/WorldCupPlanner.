@@ -115,20 +115,6 @@ public class FixtureService : IFixtureEditService, IFixtureQueryService
         _fixtureRepository.AddFixture(fixture);
     }
 
-    public void DeleteFixture(Fixture fixture)
-    {
-        _crucesRepository.RemoveCruces();
-        _matchRepository.ClearMatches();
-        _fixtureRepository.RemoveFixture(fixture);
-
-        var teams = _teamRepository.GetAll();
-        foreach (var team in teams)
-        {
-            team.ResetRankingToFifa();
-            _teamRepository.Update(team);
-        }
-    }
-
     private Fixture GenerateGroupsStageFixture()
     {
         var teams = _teamRepository.GetAll();
