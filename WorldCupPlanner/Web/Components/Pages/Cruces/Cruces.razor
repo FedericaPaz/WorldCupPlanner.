@@ -1,19 +1,10 @@
-﻿@page "/cruces"
+@page "/cruces"
 @using DTOs.Cruces
-@using IServices
-@using IServices.CrucesInterface
-@using IServices.FixtureInterfaces
-@using IServices.MatchInterfaces
+@using IServices.PageFacades
 @using Web.Services
-@inject ICruceQueryService CruceQueryService
-@inject ICruceEditService CruceEditService
-@inject IFixtureQueryService FixtureQueryService
-
-@inject IMatchQueryService MatchService
-@inject ILogService LogService
+@inject ICrucesPageFacade CrucesFacade
 @inject SessionService SessionService
 @inject NavigationManager Navigation
-@inject IConfigService ConfigService
 
 <div class="cruces-wrapper">
 
@@ -65,7 +56,7 @@
         </div>
     }
 
-    @if (!FixtureQueryService.HasFixture())
+    @if (!CrucesFacade.HasFixture())
     {
         <div class="empty-state">
             <div class="empty-icon">
@@ -353,14 +344,15 @@
             return;
         }
         CargarCruces();
-        CalcularEstadoFaseGrupos();
+        _partidosPendientes = CrucesFacade.GetPendingMatchCount();
+        _todosLosPartidosJugados = CrucesFacade.AllGroupMatchesPlayed();
     }
 
     private void CargarCruces()
     {
         try
         {
-            _todosLosCruces = CruceQueryService.GetAllCruces();
+            _todosLosCruces = CrucesFacade.GetAllCruces();
             _hayCruces = _todosLosCruces.Any();
             _mensajeError = null;
             _mensajeExito = null;
@@ -369,13 +361,6 @@
         {
             _mensajeError = $"Error al cargar cruces: {ex.Message}";
         }
-    }
-
-    private void CalcularEstadoFaseGrupos()
-    {
-        var partidos = MatchService.GetAllMatches();
-        _partidosPendientes = partidos.Count(m => !m.homeGoals.HasValue);
-        _todosLosPartidosJugados = _partidosPendientes == 0 && partidos.Any();
     }
 
     private void Generar32avos()
@@ -387,14 +372,7 @@
             _mensajeExito = null;
             StateHasChanged();
 
-            CruceEditService.GenerateRoundOf32();
-            
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Cruces",
-                "Sorteo",
-                $"Se realizó el sorteo de cruces de 32avos de final con semilla {ConfigService.GetConfig().SemillaCrucesFase}"
-            );
+            CrucesFacade.GenerateRoundOf32(GetCurrentUserEmail());
 
             _mensajeExito = "32avos de final generados correctamente.";
             CargarCruces();
@@ -419,14 +397,7 @@
             _mensajeExito = null;
             StateHasChanged();
 
-            CruceEditService.GenerateNextRound();
-
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Cruces",
-                "Sorteo",
-                $"Se realizó el sorteo de la siguiente ronda de cruces con semilla {ConfigService.GetConfig().SemillaCrucesFase}"
-            );
+            CrucesFacade.GenerateNextRound(GetCurrentUserEmail());
 
             _mensajeExito = "Siguiente ronda generada correctamente.";
             CargarCruces();
@@ -441,14 +412,7 @@
             StateHasChanged();
         }
     }
-    
-    private string GetCurrentUserEmail()
-    {
-        if (!SessionService.IsUserActive())
-        {
-            return "Sistema";
-        }
 
-        return SessionService.GetCurrentUser().Email;
-    }
+    private string GetCurrentUserEmail() =>
+        SessionService.IsUserActive() ? SessionService.GetCurrentUser().Email : "Sistema";
 }

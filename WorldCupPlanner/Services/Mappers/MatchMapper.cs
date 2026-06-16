@@ -5,7 +5,7 @@ using DTOs.Match;
 
 namespace Services.Mappers;
 
-public static class EntityMatchMapper
+public static class MatchMapper
 {
     public static MatchResponse ToResponse(this Match match)
     {

@@ -3,7 +3,7 @@ using DTOs.Team;
 
 namespace Services.Mappers;
 
-public class ConfederationXMappers
+public class ConfederationMapper
 {
     public static ConfederationDTO FromEntity(Confederation confederation)
     {

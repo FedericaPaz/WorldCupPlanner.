@@ -1,14 +1,10 @@
 ﻿@page "/teams"
 @using DTOs.Team
-@using IServices
-@using IServices.TeamInterfaces
+@using IServices.PageFacades
 @using Web.Services
-@inject ITeamQueryService TeamQueryService
-@inject ITeamEditService TeamEditService
-@inject ILogService LogService
+@inject ITeamPageFacade TeamFacade
 @inject SessionService SessionService
 @inject NavigationManager Navigation
-@inject IConfigService ConfigService
 
 <div class="row align-items-center mb-3">
     <div class="col">
@@ -108,9 +104,7 @@ else
     private string? _errorMessage;
 
     private string PageTitle =>
-        SessionService.IsJournalist()
-            ? "Equipos y rankings"
-            : "Gestión de equipos";
+        SessionService.IsJournalist() ? "Equipos y rankings" : "Gestión de equipos";
 
     protected override void OnInitialized()
     {
@@ -130,7 +124,7 @@ else
         try
         {
             _errorMessage = null;
-            _teams = TeamQueryService.GetAll();
+            _teams = TeamFacade.GetAll();
         }
         catch (Exception ex)
         {
@@ -138,41 +132,23 @@ else
         }
     }
 
-    private bool CanManageTeams()
-    {
-        return SessionService.IsSystemAdministrator() || SessionService.IsEditor();
-    }
+    private bool CanManageTeams() =>
+        SessionService.IsSystemAdministrator() || SessionService.IsEditor();
 
     private void GoToCreate()
     {
-        if (!CanManageTeams())
-        {
-            return;
-        }
-
+        if (!CanManageTeams()) return;
         Navigation.NavigateTo("/teamsCreate");
     }
 
     private void GoToGenerate()
     {
-        if (!CanManageTeams())
-        {
-            return;
-        }
+        if (!CanManageTeams()) return;
 
         try
         {
             _errorMessage = null;
-
-            TeamEditService.GenerateMissingTeams();
-
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Equipos",
-                "Generación automática",
-                $"Se generaron automáticamente los equipos faltantes con semilla {ConfigService.GetConfig().SemillaCompletar}"
-            );
-
+            TeamFacade.GenerateMissingTeams(GetCurrentUserEmail());
             LoadTeams();
         }
         catch (Exception ex)
@@ -183,34 +159,18 @@ else
 
     private void GoToEdit(string name)
     {
-        if (!CanManageTeams())
-        {
-            return;
-        }
-
+        if (!CanManageTeams()) return;
         Navigation.NavigateTo($"/teams/edit/{name}");
     }
 
     private void DeleteTeam(string name)
     {
-        if (!CanManageTeams())
-        {
-            return;
-        }
+        if (!CanManageTeams()) return;
 
         try
         {
             _errorMessage = null;
-
-            TeamEditService.Delete(name);
-
-            LogService.Register(
-                GetCurrentUserEmail(),
-                "Equipos",
-                "Eliminación",
-                $"Se eliminó el equipo {name}"
-            );
-
+            TeamFacade.Delete(name, GetCurrentUserEmail());
             LoadTeams();
         }
         catch (Exception ex)
@@ -219,13 +179,6 @@ else
         }
     }
 
-    private string GetCurrentUserEmail()
-    {
-        if (!SessionService.IsUserActive())
-        {
-            return "Sistema";
-        }
-
-        return SessionService.GetCurrentUser()!.Email;
-    }
+    private string GetCurrentUserEmail() =>
+        SessionService.IsUserActive() ? SessionService.GetCurrentUser()!.Email : "Sistema";
 }

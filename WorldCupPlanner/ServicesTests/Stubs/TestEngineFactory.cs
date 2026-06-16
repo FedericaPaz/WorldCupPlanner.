@@ -1,5 +1,5 @@
 using Domain.Interfaces;
-using Services.Simulation;
+using IServices;
 
 namespace ServicesTests.Stubs;
 

@@ -1,4 +1,10 @@
-# GRASP — Information Expert
+---
+name: grasp-information-expert
+description: >
+Aplica el principio GRASP Information Expert asignando cada responsabilidad a la clase que tiene la información necesaria para llevarla a cabo, evitando que servicios externos extraigan datos de entidades para hacer cómputos que le pertenecen a esas entidades.
+---
+
+#GRASP — Information Expert
 
 ## Qué es
 Information Expert dice: la responsabilidad de realizar una operación debe recaer sobre la clase que tiene la información necesaria para llevarla a cabo.

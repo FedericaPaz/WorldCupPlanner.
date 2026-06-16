@@ -1,13 +1,12 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using DTOs.Cruces;
 using IRepository;
 using IServices.CrucesInterface;
 using IServices;
-using IServices.FixtureInterfaces;
 using Services.Mappers;
-using Services.Simulation;
+using ISimulationEngineFactory = IServices.ISimulationEngineFactory;
 
 namespace Services;
 
@@ -22,7 +21,9 @@ public class CruceService : ICruceEditService, ICruceQueryService
     private readonly IMatchRepository _matchRepository;
     private readonly IFixtureRepository _fixtureRepository;
     private readonly IDateTimeMatch _clock;
-    private readonly Services.Simulation.ISimulationEngineFactory _engineFactory;
+    private readonly ISimulationEngineFactory _engineFactory;
+    private readonly ITeamRepository _teamRepository;
+    private readonly ILogService _logService;
 
     private int _nextMatchId = 1;
 
@@ -33,7 +34,9 @@ public class CruceService : ICruceEditService, ICruceQueryService
         IMatchRepository matchRepository,
         IFixtureRepository fixtureRepository,
         IDateTimeMatch clock,
-        Services.Simulation.ISimulationEngineFactory engineFactory)
+        ISimulationEngineFactory engineFactory,
+        ITeamRepository teamRepository,
+        ILogService logService)
     {
         _repository = repository;
         _stadiumRepository = stadiumRepository;
@@ -42,6 +45,8 @@ public class CruceService : ICruceEditService, ICruceQueryService
         _fixtureRepository = fixtureRepository;
         _clock = clock;
         _engineFactory = engineFactory ?? throw new ArgumentNullException(nameof(engineFactory));
+        _teamRepository = teamRepository;
+        _logService = logService;
     }
 
     public void GenerateRoundOf32()
@@ -50,7 +55,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
         {
             var fixture = _fixtureRepository.GetFixture()
                           ?? throw new InvalidOperationException("No hay fixture generado.");
-        
+
             fixture.CargarPartidos(_matchRepository.GetAllMatches());
 
             if (!fixture.CanAdvanceToPhase(TournamentPhase.RoundOf32))
@@ -110,7 +115,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
         ISimulationEngine engine = _engineFactory.Create(fixture.SimulationEngineName);
         SimulateCruces(engine);
     }
-    
+
     public void SimulateCruces(ISimulationEngine engine)
     {
         var cruces = _repository.GetAllCruces();
@@ -128,9 +133,34 @@ public class CruceService : ICruceEditService, ICruceQueryService
 
             match.SimulateResult(homeGoals, awayGoals);
             _matchRepository.UpdateMatch(match);
+            UpdateRankingsAfterMatch(match);
         }
     }
-    
+
+    private void UpdateRankingsAfterMatch(Match match)
+    {
+        if (!match.HomeGoals.HasValue || !match.AwayGoals.HasValue)
+            return;
+
+        var homeTeam = match.HomeTeam;
+        var awayTeam = match.AwayTeam;
+        var fase = match.GetTournamentPhase();
+
+        int prevHome = homeTeam.CurrentRanking;
+        int prevAway = awayTeam.CurrentRanking;
+
+        homeTeam.RecalcularRanking(awayTeam.CurrentRanking, match.GetResultForHomeTeam(), fase);
+        awayTeam.RecalcularRanking(homeTeam.CurrentRanking, match.GetResultForAwayTeam(), fase);
+
+        _teamRepository.Update(homeTeam);
+        _teamRepository.Update(awayTeam);
+
+        _logService.Register(
+            "system", "Ranking", "RankingUpdated",
+            $"{homeTeam.Name}: {prevHome} -> {homeTeam.CurrentRanking}. " +
+            $"{awayTeam.Name}: {prevAway} -> {awayTeam.CurrentRanking}.");
+    }
+
     private (int homeGoals, int awayGoals) CalculateResult(Match match, int seed, ISimulationEngine engine)
     {
         var matchSeed = seed + match.IdMatch;
@@ -191,9 +221,13 @@ public class CruceService : ICruceEditService, ICruceQueryService
         if (crucesAnteriores[0].Phase == TournamentPhase.SemiFinals)
             return GenerateSemiFinalsOutput(crucesAnteriores, estadios, semilla, fechaUltimoPartido);
 
-        var ganadores = ObtainWinners(crucesAnteriores);
         var siguienteFase = crucesAnteriores[0].GetNextPhase();
-        return CreateMatchesForNextPhase(ganadores, estadios, semilla, siguienteFase, fechaUltimoPartido);
+
+        if (siguienteFase == TournamentPhase.RoundOf16)
+            return CreateRoundOf16FromBrackets(crucesAnteriores, estadios, siguienteFase, fechaUltimoPartido);
+
+        var ganadores = ObtainWinners(crucesAnteriores);
+        return CreateMatchesConsecutive(ganadores, estadios, siguienteFase, fechaUltimoPartido);
     }
 
     private List<Cruce> PairAndCreateMatches(
@@ -255,19 +289,45 @@ public class CruceService : ICruceEditService, ICruceQueryService
         return grupo1 == grupo2;
     }
 
-    private List<Cruce> CreateMatchesForNextPhase(List<Team> ganadores, List<Stadium> estadios, int semilla, TournamentPhase fase, DateTime ultimaFecha)
+    private List<Cruce> CreateRoundOf16FromBrackets(List<Cruce> crucesRoundOf32, List<Stadium> estadios, TournamentPhase fase, DateTime ultimaFecha)
+    {
+        var aBracket = crucesRoundOf32
+            .Where(c => c.Name.StartsWith("A"))
+            .OrderBy(c => c.Name)
+            .ToList();
+        var bBracket = crucesRoundOf32
+            .Where(c => c.Name.StartsWith("B"))
+            .OrderBy(c => c.Name)
+            .ToList();
+
+        if (aBracket.Count != bBracket.Count)
+            throw new InvalidOperationException("Los brackets A y B deben tener la misma cantidad de cruces para generar octavos.");
+
+        var cruces = new List<Cruce>();
+        int indicePartidoGlobal = 0;
+
+        for (int i = 0; i < aBracket.Count; i++)
+        {
+            var ganadorA = (Team?)aBracket[i].GetWinner()
+                           ?? throw new InvalidOperationException($"El cruce {aBracket[i].Name} no tiene ganador.");
+            var ganadorB = (Team?)bBracket[i].GetWinner()
+                           ?? throw new InvalidOperationException($"El cruce {bBracket[i].Name} no tiene ganador.");
+
+            var estadio = estadios[indicePartidoGlobal % estadios.Count];
+            var partido = CreateMatch(ganadorA, ganadorB, estadio, indicePartidoGlobal, estadios.Count, ultimaFecha);
+            cruces.Add(new Cruce($"C{i + 1}", partido, fase));
+            indicePartidoGlobal++;
+        }
+        return cruces;
+    }
+
+    private List<Cruce> CreateMatchesConsecutive(List<Team> ganadores, List<Stadium> estadios, TournamentPhase fase, DateTime ultimaFecha)
     {
         if (ganadores.Count < 2)
             throw new ArgumentException("Se requieren al menos 2 ganadores para crear cruces.");
 
-        var ganadoresBarajados = _config.Shuffle(ganadores, semilla);
-        var cruces = new List<Cruce>();
-        int indicePartidoGlobal = 0;
-        int numeroCruce = 1;
-
         string prefijo = fase switch
         {
-            TournamentPhase.RoundOf16 => "C",
             TournamentPhase.QuarterFinals => "D",
             TournamentPhase.SemiFinals => "S",
             TournamentPhase.Final => "F",
@@ -275,10 +335,14 @@ public class CruceService : ICruceEditService, ICruceQueryService
             _ => "X"
         };
 
-        for (int i = 0; i + 1 < ganadoresBarajados.Count; i += 2)
+        var cruces = new List<Cruce>();
+        int indicePartidoGlobal = 0;
+        int numeroCruce = 1;
+
+        for (int i = 0; i + 1 < ganadores.Count; i += 2)
         {
             var estadio = estadios[indicePartidoGlobal % estadios.Count];
-            var partido = CreateMatch(ganadoresBarajados[i], ganadoresBarajados[i + 1], estadio, indicePartidoGlobal, estadios.Count, ultimaFecha);
+            var partido = CreateMatch(ganadores[i], ganadores[i + 1], estadio, indicePartidoGlobal, estadios.Count, ultimaFecha);
             cruces.Add(new Cruce($"{prefijo}{numeroCruce}", partido, fase));
             indicePartidoGlobal++;
             numeroCruce++;
