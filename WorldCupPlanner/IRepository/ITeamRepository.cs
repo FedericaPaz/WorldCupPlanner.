@@ -10,4 +10,7 @@ public interface ITeamRepository
     void Delete(Team team);
     List<Team> GetAll();
     void Clear();
+
+    // Replace a team name safely updating related FK references
+    void Rename(string oldName, Team newTeam);
 }

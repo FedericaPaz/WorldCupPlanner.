@@ -82,8 +82,7 @@ public class TeamService : ITeamQueryService, ITeamEditService
             if (_repository.Get(request.Name) is not null)
                 throw new ArgumentException($"Ya existe un equipo con el nombre '{request.Name}'.");
 
-            _repository.Delete(existingTeam);
-            _repository.Add(request.ToEntity());
+            _repository.Rename(currentName, request.ToEntity());
             return;
         }
 

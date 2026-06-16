@@ -34,6 +34,16 @@ public class TeamRepositoryStub : ITeamRepository
         _teams.Remove(team);
     }
 
+    public void Rename(string oldName, Team newTeam)
+    {
+        var existing = _teams.FirstOrDefault(t => t.Name == oldName)
+                       ?? throw new InvalidOperationException($"Team {oldName} does not exist.");
+
+        // For the in-memory stub, just replace the team in the list.
+        _teams.Remove(existing);
+        _teams.Add(newTeam);
+    }
+
     public List<Team> GetAll()
     {
         return new List<Team>(_teams);

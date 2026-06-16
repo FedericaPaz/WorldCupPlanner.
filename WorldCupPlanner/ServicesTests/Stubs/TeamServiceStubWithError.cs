@@ -37,4 +37,9 @@ public class TeamRepositoryStubWithError : ITeamRepository
     {
         throw new NotImplementedException();
     }
+
+    public void Rename(string oldName, Team newTeam)
+    {
+        throw new NotImplementedException();
+    }
 }
