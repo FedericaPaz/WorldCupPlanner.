@@ -1,9 +1,10 @@
 ﻿using Domain.Enums;
 using Domain.Entities;
+using Domain.Interfaces;
 
 namespace Domain.Calculators;
 
-public class RankingCalculator
+public class RankingCalculator : IRankingCalculator
 {
     private const int K = 30;
     private const double GroupPhaseMultiplier = 1.0;

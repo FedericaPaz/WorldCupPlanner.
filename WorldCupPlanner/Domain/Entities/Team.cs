@@ -15,6 +15,7 @@ public class Team : ITeam
     private int _fifaRanking;
     private int _currentRanking;
     private string _flagBase64 = string.Empty;
+    private readonly IRankingCalculator _rankingCalculator;
 
     public string Name => _name;
     public Confederation Confederation => _confederation;
@@ -29,9 +30,16 @@ public class Team : ITeam
 
     private Team()
     {
+        _rankingCalculator = new RankingCalculator();
     }
 
     public Team(string name, Confederation confederation, int fifaRanking, string flagBase64 = "")
+        : this(name, confederation, fifaRanking, flagBase64, new RankingCalculator())
+    {
+    }
+
+    // Constructor for dependency injection of the ranking calculator
+    public Team(string name, Confederation confederation, int fifaRanking, string flagBase64, IRankingCalculator rankingCalculator)
     {
         ValidateName(name);
         ValidateConfederation(confederation);
@@ -42,6 +50,7 @@ public class Team : ITeam
         _fifaRanking = fifaRanking;
         _currentRanking = fifaRanking;
         _flagBase64 = flagBase64;
+        _rankingCalculator = rankingCalculator ?? new RankingCalculator();
     }
 
     public void UpdateFifaRanking(int newRanking)
@@ -69,8 +78,7 @@ public class Team : ITeam
 
     public void RecalcularRanking(int rankingRival, double resultado, TournamentPhase fase)
     {
-        var calculator = new RankingCalculator();
-        int nuevoRanking = calculator.CalculateNewRanking(_currentRanking, rankingRival, resultado, fase);
+        int nuevoRanking = _rankingCalculator.CalculateNewRanking(_currentRanking, rankingRival, resultado, fase);
         UpdateCurrentRanking(nuevoRanking);
     }
 
