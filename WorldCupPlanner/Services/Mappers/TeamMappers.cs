@@ -3,7 +3,7 @@ using DTOs.Team;
 
 namespace Services.Mappers;
 
- public static class TeamXMappers
+ public static class TeamMappers
  {
      public static Team ToEntity(this TeamDTO request)
      {
