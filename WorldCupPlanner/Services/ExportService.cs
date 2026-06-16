@@ -84,8 +84,7 @@ public class ExportService : IExportService
                     row++;
                 }
             }
-
-            // Append cruces/eliminatorias if exist
+            
             if (_crucesRepository != null && _crucesRepository.HasCruces())
             {
                 var cruces = _crucesRepository.GetAllCruces();

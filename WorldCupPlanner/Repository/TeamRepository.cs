@@ -84,7 +84,6 @@ public class TeamRepository : ITeamRepository
         }
         else
         {
-            // In-memory provider: transactions are ignored, perform operations directly
             PerformRename(oldName, newTeam);
         }
     }
@@ -93,12 +92,10 @@ public class TeamRepository : ITeamRepository
     {
         var existing = _context.Teams.FirstOrDefault(t => t.Name == oldName)
                        ?? throw new InvalidOperationException($"Team {oldName} does not exist.");
-
-        // Add the new team entity
+        
         _context.Teams.Add(newTeam);
         _context.SaveChanges();
-
-        // Update Matches that reference the old team to reference the new team using FK properties
+        
         var matches = _context.Matches
         .Include(m => m.HomeTeam)
         .Include(m => m.AwayTeam)
@@ -121,8 +118,7 @@ public class TeamRepository : ITeamRepository
             if (match.LoserMatch != null && match.LoserMatch.Name == oldName)
                 _context.Entry(match).Property("LoserMatchName").CurrentValue = newTeam.Name;
         }
-
-        // Update MatchIncidents referencing the old team
+        
         var incidents = _context.MatchIncidents
             .Where(i => i.TeamName == oldName)
             .ToList();
@@ -133,8 +129,7 @@ public class TeamRepository : ITeamRepository
         }
 
         _context.SaveChanges();
-
-        // Remove old team
+        
         _context.Teams.Remove(existing);
         _context.SaveChanges();
     }

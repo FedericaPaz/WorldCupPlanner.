@@ -133,8 +133,7 @@ public class FixtureService : IFixtureEditService, IFixtureQueryService
     {
         var teams = _teamRepository.GetAll();
         var stadiums = _stadiumRepository.GetAllStadiums();
-
-        // Delegate generation and scheduling to a domain builder to improve cohesion.
+        
         var builder = new Domain.Factories.FixtureBuilder(_config, _clock);
         return builder.BuildGroupsStageFixture(teams, stadiums, ref _nextMatchId);
     }
