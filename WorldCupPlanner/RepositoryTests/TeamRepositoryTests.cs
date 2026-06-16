@@ -169,4 +169,20 @@ public class TeamRepositoryTests
 
         Assert.AreEqual(0, _teamRepository.GetAll().Count);
     }
+    
+    [TestMethod]
+    public void UpdateTeam_WhenFlagChanges_ShouldPersistNewFlag()
+    {
+        var team = new Team("Uruguay", new Confederation("CONMEBOL"), 1000, flagBase64: "bandera_vieja");
+        _teamRepository.Add(team);
+        
+        var updatedTeam = new Team("Uruguay", new Confederation("CONMEBOL"), 1000, flagBase64: "bandera_nueva");
+        
+        _teamRepository.Update(updatedTeam);
+        
+        var result = _teamRepository.Get("Uruguay");
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("bandera_nueva", result.FlagBase64); 
+    }
 }
