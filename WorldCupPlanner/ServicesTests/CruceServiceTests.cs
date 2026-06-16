@@ -6,6 +6,7 @@ using IRepository;
 using Services;
 using Services.Simulation;
 using ServicesTests.Stubs;
+using ISimulationEngineFactory = IServices.ISimulationEngineFactory;
 
 namespace ServicesTests;
 
