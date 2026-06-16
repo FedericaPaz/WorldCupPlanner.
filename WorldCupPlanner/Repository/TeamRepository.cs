@@ -40,6 +40,8 @@ public class TeamRepository : ITeamRepository
         existing.UpdateFifaRanking(team.FifaRanking);
         existing.UpdateCurrentRanking(team.CurrentRanking);
         existing.UpdateConfederation(team.Confederation);
+        
+        existing.UpdateFlag(team.FlagBase64); 
 
         _context.SaveChanges();
     }

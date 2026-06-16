@@ -103,4 +103,9 @@ public class Team : ITeam
         if (ranking < MinRanking || ranking > MaxRanking)
             throw new ArgumentException($"El ranking FIFA debe estar entre {MinRanking} y {MaxRanking}.");
     }
+    
+    public void UpdateFlag(string flagBase64)
+    {
+        _flagBase64 = flagBase64 ?? string.Empty;
+    }
 }
