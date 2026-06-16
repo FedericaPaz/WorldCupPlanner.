@@ -21,7 +21,7 @@ namespace Services.Mappers;
          return new TeamDTO
          {
              Name = team.Name,
-             ConfederationName = team.Confederation.Name,
+             ConfederationName = team.GetConfederationName(),
              FifaRanking = team.FifaRanking,
              FlagBase64 = team.FlagBase64,
              CurrentRanking = team.CurrentRanking
