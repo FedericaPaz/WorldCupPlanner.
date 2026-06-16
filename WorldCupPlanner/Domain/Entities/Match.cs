@@ -311,4 +311,26 @@ public class Match
     }
 
     public bool IsKnockoutPhase() => _group == 'N';
+
+    public string GetHomeTeamName() => _homeTeam.Name;
+    public string GetAwayTeamName() => _awayTeam.Name;
+    public string GetStadiumName() => _stadium.StadiumName;
+    public int GetHomeRanking() => _homeTeam.CurrentRanking;
+    public int GetAwayRanking() => _awayTeam.CurrentRanking;
+
+    public void RecalcularRankings(TournamentPhase fase)
+    {
+        int homeRanking = _homeTeam.CurrentRanking;
+        int awayRanking = _awayTeam.CurrentRanking;
+        _homeTeam.RecalcularRanking(awayRanking, GetResultForHomeTeam(), fase);
+        _awayTeam.RecalcularRanking(homeRanking, GetResultForAwayTeam(), fase);
+    }
+
+    public void RevertRankings(TournamentPhase fase)
+    {
+        int homeRanking = _homeTeam.CurrentRanking;
+        int awayRanking = _awayTeam.CurrentRanking;
+        _homeTeam.RecalcularRanking(awayRanking, GetResultForAwayTeam(), fase);
+        _awayTeam.RecalcularRanking(homeRanking, GetResultForHomeTeam(), fase);
+    }
 }
