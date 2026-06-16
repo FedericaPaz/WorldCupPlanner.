@@ -1,8 +1,6 @@
-using Domain.Entities;
 using Domain.Import;
 using Domain.Import.Interfaces;
 using IRepository;
-using IServices.TeamInterfaces;
 using Services;
 using ServicesTests.Stubs;
 using ServicesTests.TestHelpers;
@@ -13,7 +11,6 @@ namespace ServicesTests;
 public class ImportServiceTests
 {
     private ITeamRepository _teamRepository;
-    private ITeamEditService _teamService;
     private TeamImporter _teamImporter;
     private ImportService _service;
 
@@ -21,15 +18,8 @@ public class ImportServiceTests
     public void Setup()
     {
         _teamRepository = new TeamRepositoryStub();
-        _teamService = new TeamService(
-            _teamRepository,
-            new FixtureRepositoryStub(),
-            new MatchRepositoryStub(),
-            new CrucesRepositoryStub(),
-            new TournamentConfig()
-        );
         _teamImporter = new TeamImporter(new CsvParser(), new TeamImportValidator(), new TeamFactory());
-        _service = new ImportService(_teamRepository, _teamService, _teamImporter);
+        _service = new ImportService(_teamRepository, _teamImporter);
     }
 
     [TestMethod]
@@ -61,7 +51,7 @@ public class ImportServiceTests
     public void CreateImportService_WithNullRepository_ShouldThrowException()
     {
         Assert.ThrowsException<ArgumentNullException>(() =>
-            new ImportService(null, _teamService, _teamImporter));
+            new ImportService(null, _teamImporter));
     }
 
     [TestMethod]
@@ -77,17 +67,10 @@ public class ImportServiceTests
     }
 
     [TestMethod]
-    public void CreateImportService_WithNullTeamService_ShouldThrowException()
-    {
-        Assert.ThrowsException<ArgumentNullException>(() =>
-            new ImportService(_teamRepository, null, _teamImporter));
-    }
-
-    [TestMethod]
     public void CreateImportService_WithNullTeamImporter_ShouldThrowException()
     {
         Assert.ThrowsException<ArgumentNullException>(() =>
-            new ImportService(_teamRepository, _teamService, null));
+            new ImportService(_teamRepository, null));
     }
 
     [TestMethod]
@@ -153,7 +136,7 @@ public class ImportServiceTests
     public void ImportTeams_WhenRepositoryAddFails_ShouldReturnError()
     {
         var repoWithError = new TeamRepositoryStubWithError();
-        var service = new ImportService(repoWithError, _teamService, _teamImporter);
+        var service = new ImportService(repoWithError, _teamImporter);
         string csv = ImportCsvBuilder.CreateValidCsvWith48Teams();
         var response = service.ImportTeams(csv);
         Assert.IsFalse(response.Success);
