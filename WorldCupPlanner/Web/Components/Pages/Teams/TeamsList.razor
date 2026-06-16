@@ -62,13 +62,11 @@ else
                 <td>
                     @if (!string.IsNullOrWhiteSpace(team.FlagBase64))
                     {
-                        <img src="@team.FlagBase64"
-                             alt="Bandera de @team.Name"
-                             style="width: 40px; height: 28px; object-fit: cover; border-radius: 4px;" />
-                    }
-                    else
-                    {
-                        <span>-</span>
+                        var cleanBase64 = team.FlagBase64.Replace("\r", "").Replace("\n", "").Trim();
+        
+                        <img src="data:image/png;base64,@cleanBase64" 
+                             alt="Bandera de @team.Name" 
+                             style="width: 32px; height: 22px; object-fit: cover;" />
                     }
                 </td>
 

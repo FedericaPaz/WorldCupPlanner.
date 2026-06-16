@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Domain.Import.Interfaces;
 
+
 namespace Domain.Import;
 
 public class TeamImporter
@@ -9,26 +10,17 @@ public class TeamImporter
     private readonly ITeamImportValidator _validator;
     private readonly ITeamFactory _factory;
 
-    public TeamImporter(ICsvParser parser, ITeamImportValidator validatoR, ITeamFactory factory)
+    public TeamImporter(ICsvParser parser, ITeamImportValidator validator, ITeamFactory factory)
     {
-        if(parser == null)
-            throw new ArgumentNullException(nameof(parser));
-        if(validatoR == null)
-            throw new ArgumentNullException(nameof(validatoR));
-        if(factory == null)
-            throw new ArgumentNullException(nameof(factory));
-        
-        _parser = parser;
-        _validator = validatoR;
-        _factory = factory;
+        _parser = parser ?? throw new ArgumentNullException(nameof(parser));
+        _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        _factory = factory ?? throw new ArgumentNullException(nameof(factory));
     }
 
     public ImportResult Import(string csvContent)
     {
         ImportResult result = new ImportResult();
-
         ParsedCsv parsedCsv = _parser.Parse(csvContent);
-
         List<ImportError> headerErrors = _validator.ValidateHeaders(parsedCsv.Headers);
 
         foreach (ImportError error in headerErrors)
@@ -56,11 +48,12 @@ public class TeamImporter
             {
                 continue;
             }
-
+            
             Team team = _factory.CreateTeam(
                 row.GetValue("Nombre"),
                 row.GetValue("Confederación"),
-                row.GetValue("RankingFIFA"));
+                row.GetValue("RankingFIFA"),
+                row.GetValue("Bandera"));
 
             importedNames.Add(team.Name);
             result.AddTeam(team);

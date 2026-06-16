@@ -3,7 +3,6 @@
 @using IServices
 @using IServices.TeamInterfaces
 @using Web.Services
-@using Microsoft.AspNetCore.Components.Forms
 
 @inject ITeamEditService TeamEditService
 @inject ITeamQueryService TeamQueryService
@@ -78,7 +77,8 @@
 
                     @if (!string.IsNullOrWhiteSpace(_request.FlagBase64))
                     {
-                        <img src="@_request.FlagBase64"
+                        @* Se agrega "data:image/png;base64," dinámicamente *@
+                        <img src="data:image/png;base64,@_request.FlagBase64"
                              alt="Bandera del equipo"
                              style="max-width: 120px; margin-top: 10px;" />
                     }
@@ -176,14 +176,14 @@
     private async Task LoadFlag(InputFileChangeEventArgs e)
     {
         var file = e.File;
-
+        
         await using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024);
         using var memoryStream = new MemoryStream();
 
         await stream.CopyToAsync(memoryStream);
-
-        string base64 = Convert.ToBase64String(memoryStream.ToArray());
-
-        _request!.FlagBase64 = $"data:{file.ContentType};base64,{base64}";
+        
+        string rawBase64 = Convert.ToBase64String(memoryStream.ToArray());
+        
+        _request.FlagBase64 = rawBase64.Replace("\r", "").Replace("\n", "").Trim();
     }
 }

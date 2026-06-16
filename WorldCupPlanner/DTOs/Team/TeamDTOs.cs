@@ -15,5 +15,5 @@ public class TeamDTO
     [Range(300, 2500, ErrorMessage = "El ranking FIFA debe estar entre 300 y 2500.")]
     public int FifaRanking { get; set; }
     public int CurrentRanking { get; set; }
-    public string? FlagBase64 { get; set; }
+    public string FlagBase64 { get; set; } = string.Empty;
 }

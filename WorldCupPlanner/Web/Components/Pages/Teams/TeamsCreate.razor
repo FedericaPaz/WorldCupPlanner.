@@ -9,7 +9,6 @@
 @inject ILogService LogService
 @inject SessionService SessionService
 @inject NavigationManager Navigation
-@using Microsoft.AspNetCore.Components.Forms
 
 <div class="team-form-page">
     <div class="team-form-back">
@@ -152,14 +151,13 @@
     private async Task LoadFlag(InputFileChangeEventArgs e)
     {
         var file = e.File;
-
         await using var stream = file.OpenReadStream(maxAllowedSize: 1024 * 1024);
         using var memoryStream = new MemoryStream();
 
         await stream.CopyToAsync(memoryStream);
-
-        string base64 = Convert.ToBase64String(memoryStream.ToArray());
-
-        _request.FlagBase64 = $"data:{file.ContentType};base64,{base64}";
+        
+        string rawBase64 = Convert.ToBase64String(memoryStream.ToArray());
+        
+        _request.FlagBase64 = rawBase64.Replace("\r", "").Replace("\n", "").Trim();
     }
 }

@@ -1,5 +1,7 @@
 using Domain.Entities;
 using Domain.Import.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace Domain.Import;
 
@@ -8,13 +10,17 @@ public class TeamImportValidator : ITeamImportValidator
     private const string NameHeader = "Nombre";
     private const string ConfederationHeader = "Confederación";
     private const string RankingHeader = "RankingFIFA";
-
+    private const string FlagHeader = "Bandera"; 
     public List<ImportError> ValidateHeaders(IReadOnlyList<string> headers)
     {
         List<ImportError> errors = new List<ImportError>();
-        if (!headers.Contains(NameHeader) || !headers.Contains(ConfederationHeader) || !headers.Contains(RankingHeader))
+        
+        if (!headers.Contains(NameHeader) || 
+            !headers.Contains(ConfederationHeader) || 
+            !headers.Contains(RankingHeader) || 
+            !headers.Contains(FlagHeader))
         {
-            errors.Add(new ImportError(1, "El encabezado del CSV no es válido."));
+            errors.Add(new ImportError(1, "El encabezado del CSV no es válido. Debe contener Nombre, Confederación, RankingFIFA y Bandera."));
         }
         return errors;
     }

@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Domain.Calculators;
 using Domain.Entities;
 using Domain.Import;
 using Domain.Import.Interfaces;
@@ -75,6 +76,8 @@ builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddScoped<IRankingService, RankingService>();
 
 builder.Services.AddScoped<Services.Simulation.ISimulationEngineFactory, Services.Simulation.DefaultSimulationEngineFactory>();
+
+builder.Services.AddScoped<IRankingCalculator, RankingCalculator>();
 
 var app = builder.Build();
 

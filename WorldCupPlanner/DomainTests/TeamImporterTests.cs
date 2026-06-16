@@ -1,5 +1,6 @@
 using Domain.Import;
 using Domain.Import.Interfaces;
+using Domain.Interfaces;
 
 namespace DomainTests;
 
@@ -11,10 +12,12 @@ public class TeamImporterTests
     [TestInitialize]
     public void Initialize()
     {
-         importer = new TeamImporter(
+        var calculatorStub = new RankingCalculatorStub();
+
+        importer = new TeamImporter(
             new CsvParser(),           
             new TeamImportValidator(),
-            new TeamFactory()        
+            new TeamFactory(calculatorStub) 
         );
     }
     
@@ -22,21 +25,22 @@ public class TeamImporterTests
     public void Import_WithValidCsv_ShouldImportTeams()
     {
         string csv = """
-                     Nombre,Confederación,RankingFIFA
-                     Uruguay,CONMEBOL,1800
+                     Nombre,Confederación,RankingFIFA,Bandera
+                     Uruguay,CONMEBOL,1800,flag-uy
                      """;
         ImportResult result = importer.Import(csv);
         Assert.AreEqual(1, result.Teams.Count);
         Assert.AreEqual("Uruguay", result.Teams[0].Name);
         Assert.AreEqual("CONMEBOL", result.Teams[0].Confederation.Name);
         Assert.AreEqual(1800, result.Teams[0].FifaRanking);
+        Assert.AreEqual("flag-uy", result.Teams[0].FlagBase64);
     }
     
     [TestMethod]
     public void Import_WithInvalidHeaders_ShouldReturnErrors()
     {
         string csv = """
-                     Nombre,Confederacion,RankingFIFA
+                     Nombre,Confederación,RankingFIFA
                      Uruguay,CONMEBOL,1800
                      """;
         ImportResult result = importer.Import(csv);
@@ -48,8 +52,8 @@ public class TeamImporterTests
     public void Import_WithInvalidRow_ShouldReturnErrors()
     {
         string csv = """
-                     Nombre,Confederación,RankingFIFA
-                     Uruguay,AUF,1800
+                     Nombre,Confederación,RankingFIFA,Bandera
+                     Uruguay,AUF,1800,flag-uy
                      """;
         ImportResult result = importer.Import(csv);
         Assert.IsFalse(result.Success);
@@ -61,9 +65,9 @@ public class TeamImporterTests
     public void Import_WithDuplicatedTeamName_ShouldReturnErrors()
     {
         string csv = """
-                     Nombre,Confederación,RankingFIFA
-                     Uruguay,CONMEBOL,1800
-                     Uruguay,CONMEBOL,1700
+                     Nombre,Confederación,RankingFIFA,Bandera
+                     Uruguay,CONMEBOL,1800,flag-uy
+                     Uruguay,CONMEBOL,1700,flag-uy
                      """;
         ImportResult result = importer.Import(csv);
         Assert.IsFalse(result.Success);
