@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 using DTOs.Fixture;
@@ -93,7 +93,7 @@ public class FixtureService : IFixtureEditService, IFixtureQueryService
     {
         _crucesRepository.RemoveCruces();
         _matchRepository.ClearMatches();
-    
+
         if (_fixtureRepository.ContainsFixture())
             _fixtureRepository.RemoveFixture(_fixtureRepository.GetFixture());
 
@@ -267,12 +267,12 @@ public class FixtureService : IFixtureEditService, IFixtureQueryService
         var normalized = string.Concat(lower.Where(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c)));
         return string.Join(" ", normalized.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
     }
-    
+
     public void DeleteFixture()
     {
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
-    
+
         _crucesRepository.RemoveCruces();
         _matchRepository.ClearMatches();
         _fixtureRepository.RemoveFixture(fixture);
