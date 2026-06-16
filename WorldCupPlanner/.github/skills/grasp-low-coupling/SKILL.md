@@ -1,3 +1,10 @@
+---
+name: grasp-low-coupling
+description: >
+  Aplica el principio GRASP Low Coupling reduciendo dependencias entre clases, reemplazando implementaciones concretas por interfaces, inyectando dependencias por constructor y evitando que entidades de dominio conozcan clases de infraestructura o servicios.
+---
+
+
 # GRASP — Low Coupling
 
 ## Qué es
