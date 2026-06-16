@@ -135,19 +135,7 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
     private void SimulateMatchInternal(int matchId, int seed, ISimulationEngine engine)
     {
         var match = _matchRepository.GetMatchById(matchId);
-        var (homeGoals, awayGoals) = RunEngine(match, seed, engine);
-
-        match.ClearCardIncidents();
-        AddSimulatedCardIncidents(match, seed);
-
-        if (homeGoals == awayGoals)
-        {
-            var tiebreaker = new Random(seed + match.IdMatch * 31 + 1);
-            if (tiebreaker.NextDouble() > 0.5) homeGoals++;
-            else awayGoals++;
-        }
-
-        PersistMatchResult(match, homeGoals, awayGoals);
+        SimulateWithEngine(match, seed, engine, resolveTie: true);
     }
 
     private void SimulateGroupStageInternal(ISimulationEngine engine)
@@ -166,11 +154,23 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
     private void SimulateAndSetResult(Match match, int seed, ISimulationEngine engine)
     {
         if (match.HomeGoals.HasValue && match.AwayGoals.HasValue) return;
+        SimulateWithEngine(match, seed, engine, resolveTie: false);
+    }
 
+    private void SimulateWithEngine(Match match, int seed, ISimulationEngine engine, bool resolveTie)
+    {
         var (homeGoals, awayGoals) = RunEngine(match, seed, engine);
 
         match.ClearCardIncidents();
         AddSimulatedCardIncidents(match, seed);
+
+        if (resolveTie && homeGoals == awayGoals)
+        {
+            var tiebreaker = new Random(seed + match.IdMatch * 31 + 1);
+            if (tiebreaker.NextDouble() > 0.5) homeGoals++;
+            else awayGoals++;
+        }
+
         PersistMatchResult(match, homeGoals, awayGoals);
     }
 
