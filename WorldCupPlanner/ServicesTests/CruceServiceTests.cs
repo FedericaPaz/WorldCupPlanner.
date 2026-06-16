@@ -39,7 +39,7 @@ public class CruceServiceTests
         _logService = new LogService(_logRepository);
         _config = new TournamentConfig();
         _clock = new DateTimeMatchStub(new DateTime(2026, 1, 1));
-        _engineFactory = new DefaultSimulationEngineFactory(new List<ISimulationEngine>
+        _engineFactory = new SimulationEngineFactory(new List<ISimulationEngine>
         {
             new PureRandomSimulationEngine(),
             new ProbabilisticSimulationEngine()

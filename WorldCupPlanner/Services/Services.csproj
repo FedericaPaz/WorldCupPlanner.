@@ -17,8 +17,4 @@
         <PackageReference Include="ClosedXML" Version="0.104.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Simulation\" />
-    </ItemGroup>
-
 </Project>

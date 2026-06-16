@@ -1,9 +1,8 @@
+using Domain;
 using Domain.Entities;
-using Domain.Enums;
 using Domain.Interfaces;
 using DTOs.Fixture;
 using IRepository;
-using IServices;
 using IServices.FixtureInterfaces;
 using Services.Mappers;
 
@@ -120,7 +119,7 @@ public class FixtureService : IFixtureEditService, IFixtureQueryService
         var teams = _teamRepository.GetAll();
         var stadiums = _stadiumRepository.GetAllStadiums();
         
-        var builder = new Domain.Factories.FixtureBuilder(_config, _clock);
+        var builder = new FixtureBuilder(_config, _clock);
         return builder.BuildGroupsStageFixture(teams, stadiums, ref _nextMatchId);
     }
 
