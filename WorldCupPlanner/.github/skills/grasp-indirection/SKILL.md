@@ -1,3 +1,8 @@
+---
+name: grasp-indirection
+description: >
+  Aplica el principio GRASP Indirection introduciendo intermediarios (interfaces, fachadas, mappers, registros) entre clases que no deben conocerse directamente, para reducir acoplamiento entre capas o componentes.
+---
 # GRASP — Indirection
 
 ## Qué es

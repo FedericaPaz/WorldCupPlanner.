@@ -3,7 +3,6 @@ using Domain.Import;
 using DTOs.Import;
 using IRepository;
 using IServices;
-using IServices.TeamInterfaces;
 using Services.Mappers;
 
 namespace Services;
@@ -12,19 +11,15 @@ public class ImportService : IImportService
 {
     private readonly ITeamRepository _teamRepository;
     private readonly TeamImporter _teamImporter;
-    private readonly ITeamEditService _teamService;
 
-    public ImportService(ITeamRepository teamRepository, ITeamEditService teamService, TeamImporter teamImporter)
+    public ImportService(ITeamRepository teamRepository, TeamImporter teamImporter)
     {
         if (teamRepository == null)
             throw new ArgumentNullException(nameof(teamRepository));
-        if (teamService == null)
-            throw new ArgumentNullException(nameof(teamService));
         if (teamImporter == null)
             throw new ArgumentNullException(nameof(teamImporter));
 
         _teamRepository = teamRepository;
-        _teamService = teamService;
         _teamImporter = teamImporter;
     }
 

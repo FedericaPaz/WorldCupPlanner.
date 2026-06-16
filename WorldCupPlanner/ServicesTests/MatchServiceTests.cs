@@ -1,13 +1,10 @@
 using Domain.Entities;
 using Domain.Enums;
-using Domain.Interfaces;
 using DomainTests.Stubs;
 using DTOs.Match;
 using IRepository;
-using IServices;
 using Repository;
 using Services;
-using Services.Simulation; 
 using ServicesTests.Stubs;
 using ServicesTests.TestHelpers;
 
@@ -27,11 +24,9 @@ public class MatchServiceTests
     private DateTimeMatchStub _clock = null!;
     private LogRepositoryStub _logRepository = null!;
     private LogService _logService = null!;
-    private IRankingService _rankingService = null!;
     private FixtureRepositoryStub _fixtureRepository = null!;
-    private TournamentConfig _config = null!; 
-    //private SimulationService _simulationService = null!;
-    private NotificationServiceStub _notificationServiceStub = null!; 
+    private TournamentConfig _config = null!;
+
     [TestInitialize]
     public void Setup()
     {
@@ -51,18 +46,8 @@ public class MatchServiceTests
         _teamRepository = new TeamRepositoryStub();
         _stadiumRepository = new StadiumRepositoryStub();
         _clock = new DateTimeMatchStub(new DateTime(2027, 1, 1));
-        _rankingService = new RankingServiceStub();
         _fixtureRepository = new FixtureRepositoryStub();
-        _config = new TournamentConfig(); 
-        
-        _notificationServiceStub = new NotificationServiceStub();
-        /*_simulationService = new SimulationService(
-            _logService, 
-            _matchRepository, 
-            _rankingService, 
-            _fixtureRepository, 
-            _config,
-            _notificationServiceStub);*/
+        _config = new TournamentConfig();
 
         _service = new MatchService(
             _matchRepository,
@@ -70,8 +55,9 @@ public class MatchServiceTests
             _stadiumRepository,
             _clock,
             _notificationService,
-            _rankingService,
-            _config);                            
+            _logService,
+            _fixtureRepository,
+            _config);
     }
 
     [TestCleanup]

@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using ClosedXML.Excel;
-using Domain.Enums;
 using IRepository;
 using IServices;
 using IServices.UserInterfaces;
@@ -23,12 +22,12 @@ public class ExportService : IExportService
     public ExportService(IUserQueryService userQueryService, ILogService logService, IFixtureRepository fixtureRepository, IMatchRepository matchRepository, ICrucesRepository crucesRepository)
     {
         if (userQueryService is null) throw new ArgumentNullException(nameof(userQueryService));
+        if (logService is null) throw new ArgumentNullException(nameof(logService));
         if (fixtureRepository is null) throw new ArgumentNullException(nameof(fixtureRepository));
         if (matchRepository is null) throw new ArgumentNullException(nameof(matchRepository));
         if (crucesRepository is null) throw new ArgumentNullException(nameof(crucesRepository));
 
         _userQueryService = userQueryService;
-        _log_service_check(logService);
         _logService = logService;
         _fixtureRepository = fixtureRepository;
         _matchRepository = matchRepository;
@@ -84,7 +83,7 @@ public class ExportService : IExportService
                     row++;
                 }
             }
-            
+
             if (_crucesRepository != null && _crucesRepository.HasCruces())
             {
                 var cruces = _crucesRepository.GetAllCruces();

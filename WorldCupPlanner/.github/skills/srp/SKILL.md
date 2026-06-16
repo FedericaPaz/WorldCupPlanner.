@@ -1,3 +1,9 @@
+---
+name: srp-analyzer
+description: >
+  Analiza clases de servicio en C# para detectar violaciones del Principio de Responsabilidad Única (SRP): tanto clases sobrecargadas (más de una responsabilidad conceptual, demasiadas dependencias) como clases sobre-fragmentadas (varias clases pequeñas para el mismo concepto de dominio que siempre se usan juntas). Sugiere consolidaciones o divisiones con código refactorizado.
+---
+
 # Skill: Analizador de SRP para el Namespace de Servicios
 
 ## Descripción
