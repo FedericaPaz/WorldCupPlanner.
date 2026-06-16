@@ -1,134 +1,176 @@
 ---
 name: grasp-high-cohesion
-description: >
-   Analiza la cohesión de clases, servicios y módulos según el principio GRASP High Cohesion e identifica responsabilidades excesivas o mezcladas. Usalo cuando quieras revisar diseño orientado a objetos, distribución de responsabilidades o clases con demasiados motivos de cambio.
+description: Analiza la aplicación del principio GRASP Alta Cohesión. Identifica clases, servicios y componentes con responsabilidades excesivas o poco relacionadas, proponiendo mejoras sin modificar el comportamiento existente.
 ---
-
-# GRASP High Cohesion
+# GRASP - Alta Cohesión
 
 ## Cuando usar esta skill
 
-Cuando el usuario pida:
+Cuando el usuario quiera:
 
-* Revisar la aplicación del principio GRASP High Cohesion.
-* Analizar responsabilidades de clases o servicios.
-* Detectar clases con demasiadas funciones.
-* Revisar distribución de responsabilidades.
-* Identificar oportunidades para mejorar mantenibilidad.
-* Auditar el diseño antes de una entrega o refactorización.
-* Investigar problemas de acoplamiento originados por baja cohesión.
+* Revisar la cohesión de una clase o módulo.
+* Detectar servicios con demasiadas responsabilidades.
+* Analizar la distribución de responsabilidades.
+* Identificar clases con múltiples motivos de cambio.
+* Evaluar la mantenibilidad de una solución.
+* Preparar una entrega de Diseño.
+* Revisar observaciones relacionadas con cohesión.
+
+## Objetivo
+
+Evaluar exclusivamente la aplicación del principio:
+
+* GRASP Alta Cohesión.
+
+El análisis debe centrarse en las responsabilidades de cada clase y en qué tan relacionadas están entre sí.
+
+No evaluar otros principios GRASP ni principios SOLID salvo que sean estrictamente necesarios para justificar un hallazgo.
 
 ## Recordatorio del principio
 
-GRASP High Cohesion busca asignar responsabilidades de forma que cada clase, componente o módulo tenga un propósito claro y bien definido.
+Una clase presenta alta cohesión cuando:
 
-Una clase con alta cohesión:
+* Sus responsabilidades están relacionadas entre sí.
+* Tiene un propósito claro.
+* Sus métodos colaboran para cumplir un mismo objetivo.
+* Posee pocos motivos de cambio.
 
-* Tiene responsabilidades relacionadas entre sí.
-* Posee un objetivo claro dentro del sistema.
-* Es fácil de comprender.
-* Es fácil de mantener.
-* Tiene pocos motivos de cambio.
+Una clase presenta baja cohesión cuando:
 
-Una clase con baja cohesión suele:
-
-* Mezclar reglas de negocio diferentes.
-* Realizar tareas no relacionadas.
-* Acumular responsabilidades con el tiempo.
-* Volverse difícil de mantener y extender.
-
-No asumir que dividir una clase siempre es la solución correcta. Evaluar siempre el contexto funcional y arquitectónico.
+* Realiza demasiadas tareas distintas.
+* Mezcla responsabilidades no relacionadas.
+* Tiene múltiples motivos de cambio.
+* Contiene métodos que parecen pertenecer a otras clases.
+* Resulta difícil de comprender o mantener.
 
 ## Proceso
 
-1. Analizar el módulo, archivo o conjunto de archivos indicado por el usuario.
+### Paso 1 - Identificar responsabilidades
 
-2. Identificar:
+Para cada clase analizar:
 
-    * Clases.
-    * Servicios.
-    * Entidades.
-    * Repositorios.
-    * Generadores.
-    * Helpers.
-    * Componentes Razor.
+* Objetivo principal.
+* Responsabilidades funcionales.
+* Responsabilidades técnicas.
+* Responsabilidades de coordinación.
+* Responsabilidades de validación.
+* Responsabilidades de persistencia.
+* Responsabilidades de generación o cálculo.
 
-3. Para cada clase analizar:
+Registrar todas las responsabilidades detectadas.
 
-    * Responsabilidades principales.
-    * Métodos públicos.
-    * Métodos privados relevantes.
-    * Dependencias utilizadas.
-    * Datos que administra.
+### Paso 2 - Analizar cohesión
 
-4. Evaluar si las responsabilidades:
+Evaluar si:
 
-    * Están relacionadas entre sí.
-    * Persiguen un único objetivo general.
-    * Corresponden al mismo concepto del dominio.
-    * Podrían evolucionar juntas ante cambios del negocio.
+* Las responsabilidades están relacionadas.
+* Los métodos colaboran para cumplir un mismo propósito.
+* Existe un objetivo claramente definido.
+* La clase posee una única razón principal para cambiar.
+* Los datos administrados están alineados con las responsabilidades.
 
-5. Detectar señales de baja cohesión:
+### Paso 3 - Detectar señales de baja cohesión
 
-    * Métodos que trabajan sobre conceptos distintos.
-    * Servicios que coordinan demasiados casos de uso.
-    * Entidades que realizan tareas ajenas al dominio.
-    * Clases con múltiples motivos de cambio.
-    * Dependencias utilizadas únicamente por uno o dos métodos.
-    * Código agrupado artificialmente por conveniencia.
-    * Métodos que podrían pertenecer naturalmente a otra clase.
+Buscar especialmente:
 
-6. Analizar el impacto de la baja cohesión sobre:
+* Servicios que mezclen múltiples procesos de negocio.
+* Clases que coordinen tareas no relacionadas.
+* Métodos que podrían pertenecer naturalmente a otra clase.
+* Componentes que mezclen lógica funcional y técnica.
+* Clases con responsabilidades crecientes.
+* Clases con muchos motivos de cambio.
+* Servicios demasiado grandes para un único propósito.
 
-    * Mantenibilidad.
-    * Comprensión del código.
-    * Acoplamiento.
-    * Testabilidad.
-    * Evolución futura del sistema.
+### Paso 4 - Evaluar impacto
 
-7. Para cada problema encontrado:
+Determinar:
 
-    * Explicar por qué afecta la cohesión.
-    * Identificar responsabilidades mezcladas.
-    * Recomendar una mejora concreta.
-    * Justificar la recomendación utilizando exclusivamente GRASP High Cohesion.
+* Impacto en mantenibilidad.
+* Impacto en comprensión del código.
+* Impacto en evolución futura.
+* Impacto en reutilización.
+* Riesgo de errores al modificar la clase.
 
-8. Presentar los hallazgos ordenados por impacto arquitectónico.
+### Paso 5 - Proponer soluciones
+
+Para cada hallazgo:
+
+* Explicar claramente el problema.
+* Identificar las responsabilidades mezcladas.
+* Recomendar una mejora concreta.
+* Justificar cómo la mejora aumenta la cohesión.
+
+No implementar cambios.
 
 ## Formato de salida
 
-Para cada hallazgo utilizar el siguiente formato:
-
 ### Hallazgo
 
-**Clase analizada:** [Nombre]
+**Título:** [Nombre breve]
 
-**Ubicación:** [Archivo o módulo]
+**Prioridad:** Alta / Media / Baja
 
-**Nivel de cohesión:** Alto / Medio / Bajo
+**Ubicación:** [Clase o módulo]
 
 **Responsabilidades identificadas:**
 
-* Responsabilidad 1
-* Responsabilidad 2
-* Responsabilidad 3
+* ...
+* ...
+* ...
 
-**Justificación:**
-Explicar la evaluación utilizando GRASP High Cohesion.
+**Nivel de cohesión:**
 
-**Posible mejora:**
-Indicar qué responsabilidades podrían reorganizarse y por qué.
+Alta / Media / Baja
+
+**Descripción del problema:**
+
+Explicar qué responsabilidades están mezcladas o por qué la cohesión es insuficiente.
+
+**Por qué es un problema:**
+
+Generar un párrafo explicando:
+
+* Qué riesgos genera actualmente.
+* Cómo afecta la mantenibilidad.
+* Cómo afecta la comprensión del sistema.
+* Cómo afecta la evolución futura del código.
+
+**Solución recomendada:**
+
+Describir la mejora propuesta.
+
+No generar código.
+
+**Beneficios esperados:**
+
+Generar un párrafo explicando:
+
+* Cómo aumenta la cohesión.
+* Cómo mejora la claridad de responsabilidades.
+* Cómo facilita el mantenimiento.
+* Cómo reduce la complejidad futura.
 
 ---
 
-Finalizar siempre con:
-
 ### Resumen General
 
-* Fortalezas detectadas.
-* Problemas principales encontrados.
-* Nivel general de cohesión del módulo analizado.
-* Recomendaciones priorizadas.
+#### Fortalezas
+
+Aspectos positivos encontrados.
+
+#### Problemas Prioritarios
+
+Ordenados por impacto.
+
+#### Nivel General de Cohesión
+
+Alto / Medio / Bajo
+
+#### Recomendaciones Priorizadas
+
+1. ...
+2. ...
+3. ...
 
 ## Restricciones
 
@@ -137,35 +179,30 @@ Finalizar siempre con:
 * No aplicar refactorizaciones.
 * No crear Pull Requests.
 * No realizar cambios en archivos.
-* El objetivo principal es analizar y proponer mejoras.
+* No cambiar comportamiento funcional.
+* No alterar reglas de negocio.
+* El objetivo principal es analizar y recomendar mejoras.
 
 Si el usuario solicita implementar una recomendación:
 
-1. Explicar primero qué cambio se propone.
-2. Justificarlo utilizando GRASP High Cohesion.
-3. Esperar confirmación explícita antes de modificar código.
-4. Preservar toda la lógica de negocio existente.
-5. Mantener el comportamiento funcional actual.
-6. No alterar reglas de negocio.
-7. No romper tests existentes.
-8. Realizar cambios mínimos y localizados.
-9. Evitar mover responsabilidades sin justificación clara.
-10. Ante cualquier duda sobre comportamiento funcional o reglas de negocio, solicitar confirmación antes de realizar cambios.
+1. Explicar previamente el cambio.
+2. Justificarlo utilizando únicamente GRASP Alta Cohesión.
+3. Esperar confirmación explícita.
+4. Mantener exactamente el comportamiento funcional actual.
+5. Mantener compatibilidad con los tests existentes.
+6. Realizar cambios mínimos y localizados.
+7. Preservar todas las reglas de negocio existentes.
+8. Solicitar confirmación ante cualquier duda funcional.
 
 ## Prioridad de análisis
 
 Priorizar especialmente:
 
-* Servicios de aplicación.
-* Servicios de negocio.
-* Entidades de dominio.
-* Generadores de Fixture.
-* Importadores.
-* Managers.
-* Coordinadores de casos de uso.
-* Clases con gran cantidad de métodos.
-* Clases con muchas dependencias inyectadas.
+* Servicios con muchos métodos.
+* Servicios con múltiples responsabilidades.
+* Clases que coordinen varios procesos.
+* Componentes con lógica funcional y técnica mezcladas.
+* Clases con gran cantidad de código.
+* Servicios que hayan crecido durante el desarrollo del proyecto.
 
-Prestar especial atención a clases que mezclen validaciones, reglas de negocio, persistencia, generación de datos, notificaciones o coordinación de procesos, ya que suelen ser candidatas a presentar baja cohesión.
-
-La prioridad es detectar oportunidades de mejora de diseño sin comprometer la estabilidad funcional del sistema.
+La prioridad es detectar oportunidades de mejora en la distribución de responsabilidades sin comprometer la estabilidad funcional del sistema.

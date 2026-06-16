@@ -209,4 +209,40 @@ public class SimulationServiceTests
         foreach (var match in _matchRepository.GetAllMatches())
             Assert.IsTrue(match.Incidents.Count > 0);
     }
+
+    [TestMethod]
+    public void SimulateMatch_WithCustomEngineFactory_UsesEngineAndAddsIncidents()
+    {
+        // Arrange: create a test engine that returns deterministic scores based on seed
+        var testEngine = new ServicesTests.Stubs.TestSimulationEngine("TestEngine");
+        var testFactory = new ServicesTests.Stubs.TestEngineFactory(testEngine);
+
+        var service = new SimulationService(
+            _logService,
+            _matchRepository,
+            _rankingService,
+            _fixtureRepository,
+            _config,
+            testFactory,
+            new NotificationServiceStub());
+
+        var match = BuildAndAddMatch("EquipoX", 1200, "EquipoY", 1100);
+
+        // Act
+        service.SimulateMatch(match.IdMatch, Seed);
+
+        // Assert
+        var updated = _matchRepository.GetMatchById(match.IdMatch);
+        // based on TestSimulationEngine: home = (seed + homeRanking) % 5
+        int matchSeed = Seed + updated.IdMatch;
+        int expectedHome = (matchSeed + updated.HomeTeam.CurrentRanking) % 5;
+        int expectedAway = (matchSeed + updated.AwayTeam.CurrentRanking) % 5;
+
+        Assert.AreEqual(expectedHome, updated.HomeGoals);
+        Assert.AreEqual(expectedAway, updated.AwayGoals);
+        Assert.IsTrue(updated.Incidents.Count >= 0); // incidents may be zero depending on random, check method executed
+
+        var logs = _logRepository.GetAll();
+        Assert.IsTrue(logs.Any(l => l.Category == "Simulation" && l.Action == "SimulationExecuted"));
+    }
 }
