@@ -196,12 +196,6 @@ public class Match
             throw new ArgumentException("El equipo local y el equipo visitante deben ser diferentes.");
     }
 
-    private void EnsureMatchWasPlayed()
-    {
-        if (_clock.Now.ToUniversalTime() < DateMatch.ToUniversalTime())
-            throw new InvalidOperationException("El partido todavía no se jugó.");
-    }
-
     private void EnsureResultWasNotSet()
     {
         if (HomeGoals.HasValue || AwayGoals.HasValue)
@@ -318,19 +312,19 @@ public class Match
     public int GetHomeRanking() => _homeTeam.CurrentRanking;
     public int GetAwayRanking() => _awayTeam.CurrentRanking;
 
-    public void RecalculateRankings(TournamentPhase fase)
+    public void RecalculateRankings(TournamentPhase phase)
     {
         int homeRanking = _homeTeam.CurrentRanking;
         int awayRanking = _awayTeam.CurrentRanking;
-        _homeTeam.RecalcularRanking(awayRanking, GetResultForHomeTeam(), fase);
-        _awayTeam.RecalcularRanking(homeRanking, GetResultForAwayTeam(), fase);
+        _homeTeam.RecalculateRanking(awayRanking, GetResultForHomeTeam(), phase);
+        _awayTeam.RecalculateRanking(homeRanking, GetResultForAwayTeam(), phase);
     }
 
-    public void RevertRankings(TournamentPhase fase)
+    public void RevertRankings(TournamentPhase phase)
     {
         int homeRanking = _homeTeam.CurrentRanking;
         int awayRanking = _awayTeam.CurrentRanking;
-        _homeTeam.RecalcularRanking(awayRanking, GetResultForAwayTeam(), fase);
-        _awayTeam.RecalcularRanking(homeRanking, GetResultForHomeTeam(), fase);
+        _homeTeam.RecalculateRanking(awayRanking, GetResultForAwayTeam(), phase);
+        _awayTeam.RecalculateRanking(homeRanking, GetResultForHomeTeam(), phase);
     }
 }

@@ -11,9 +11,9 @@ public class Group
     private readonly List<Team> _teamsInGroup = new();
     private readonly List<Match> _matchesInGroup = new();
     
-    public int FixtureId { get; private set; }
+    public int FixtureId { get; }
 
-    public int Id { get; private set; }
+    public int Id { get; }
     
     public char GroupLetter
     {
@@ -72,8 +72,7 @@ public class Group
         if (_teamsInGroup.Contains(team))
             throw new InvalidOperationException("El equipo ya está en el grupo.");
     }
-
-
+    
     public void AddMatchToGroup(Match match)
     {
         EnsureMatchIsNotNull(match);
@@ -83,8 +82,7 @@ public class Group
         EnsureMatchIsNotAlreadyRegistered(match);
         _matchesInGroup.Add(match);
     }
-
-
+    
     private static void EnsureMatchIsNotNull(Match match)
     {
         if (match == null)
@@ -180,10 +178,6 @@ public class Group
             .ThenByDescending(s => s.GoalsFor)
             .ToList();
     }
-
-    public bool AllMatchesPlayed()
-        => _matchesInGroup.Count == MaxMatches
-           && _matchesInGroup.All(m => m.HomeGoals.HasValue && m.AwayGoals.HasValue);
 
     public IEnumerable<Match> GetPendingMatches()
         => _matchesInGroup.Where(m => !m.HomeGoals.HasValue && !m.AwayGoals.HasValue);
