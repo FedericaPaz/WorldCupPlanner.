@@ -15,7 +15,7 @@ public class Team : ITeam
     private int _fifaRanking;
     private int _currentRanking;
     private string _flagBase64 = string.Empty;
-    private readonly IRankingCalculator _rankingCalculator;
+    private readonly IRankingCalculator _rankingCalculator = new RankingCalculator();
 
     public string Name => _name;
     public Confederation Confederation => _confederation;
@@ -30,7 +30,7 @@ public class Team : ITeam
 
     private Team()
     {
-        _rankingCalculator = new RankingCalculator();
+        
     }
 
     public Team(string name, Confederation confederation, int fifaRanking, string flagBase64 = "")
