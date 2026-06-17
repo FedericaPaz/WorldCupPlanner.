@@ -1,3 +1,11 @@
+---
+name: grasp-polymorphism
+description: >
+  Revisa el diseño aplicando el patrón GRASP Polymorphism. Identifica lógica 
+  basada en tipos o condicionales (if/switch) y propone su reemplazo por 
+  invocación polimórfica para delegar el comportamiento a las clases específicas.
+---
+
 # GRASP Polymorphism Skill
 
 ## Objetivo

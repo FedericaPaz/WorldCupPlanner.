@@ -1,3 +1,11 @@
+---
+name: readme-writer
+description: >
+  Genera y actualiza el archivo README.md del proyecto asegurando calidad académica y técnica.
+  Analiza la estructura, tecnologías y funcionalidades para documentar el sistema sin 
+  modificar código fuente, tests o archivos de configuración.
+---
+
 # README Writer Skill
 
 ## Cuándo usar esta skill

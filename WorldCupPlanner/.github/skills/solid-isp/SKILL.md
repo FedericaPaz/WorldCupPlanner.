@@ -1,3 +1,8 @@
+---
+name: solid-isp
+description: Verifica el Principio de Segregación de Interfaces (ISP). Asegura que las  interfaces sean específicas y cohesivas, evitando que los clientes dependan de métodos que no utilizan o que las clases implementen métodos vacíos.
+---
+
 # SOLID — Interface Segregation Principle (ISP)
 
 ## Qué es

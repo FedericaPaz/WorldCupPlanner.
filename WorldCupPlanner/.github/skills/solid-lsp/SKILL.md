@@ -1,7 +1,6 @@
 ---
 name: solid-lsp
-description: >
-  Verifica y aplica el principio LSP (Liskov Substitution Principle) asegurando que las implementaciones de interfaces y subclases respeten el contrato completo de la abstracción — sin restricciones adicionales en entradas, sin garantías menores en salidas, sin excepciones inesperadas y sin métodos vacíos o con NotImplementedException.
+description: Verifica y aplica el principio LSP (Liskov Substitution Principle) asegurando que las implementaciones de interfaces y subclases respeten el contrato completo de la abstracción — sin restricciones adicionales en entradas, sin garantías menores en salidas, sin excepciones inesperadas y sin métodos vacíos o con NotImplementedException.
 ---
 
 # SOLID — Liskov Substitution Principle (LSP)

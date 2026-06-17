@@ -1,3 +1,11 @@
+---
+name: grasp-protected-variations
+description: >
+  Revisa el diseño aplicando el patrón Protected Variations. Identifica puntos 
+  de inestabilidad y sugiere abstracciones o encapsulamiento para proteger 
+  al sistema frente a cambios futuros sin introducir complejidad innecesaria.
+---
+
 # GRASP Protected Variations Skill
 
 ## Objetivo

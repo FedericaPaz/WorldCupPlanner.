@@ -1,3 +1,11 @@
+---
+name: grasp-controller
+description: >
+  Revisa el diseño aplicando el patrón GRASP Controller. Identifica la lógica 
+  de coordinación de casos de uso y asegura que esté correctamente centralizada 
+  en servicios, evitando que la capa UI o los repositorios contengan lógica de negocio.
+---
+
 # GRASP Controller Skill
 
 ## Objetivo
