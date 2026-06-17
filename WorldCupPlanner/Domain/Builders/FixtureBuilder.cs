@@ -2,7 +2,7 @@ using Domain.Entities;
 using Domain.Enums;
 using Domain.Interfaces;
 
-namespace Domain;
+namespace Domain.Builders;
 
 public class FixtureBuilder
 {
