@@ -30,7 +30,7 @@ public class Team : ITeam
 
     private Team()
     {
-        
+        _rankingCalculator = new RankingCalculator();
     }
 
     public Team(string name, Confederation confederation, int fifaRanking, string flagBase64 = "")
