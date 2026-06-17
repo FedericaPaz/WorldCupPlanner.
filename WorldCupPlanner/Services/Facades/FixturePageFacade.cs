@@ -45,20 +45,20 @@ public class FixturePageFacade : IFixturePageFacade
     {
         _fixtureEdit.GenerateFixture(engineName);
         _logService.Register(userEmail, "Fixture", "Generación",
-            $"Se generó el fixture del torneo con semilla {_configService.GetConfig().SemillaFixture}");
+            $"Se generó el fixture del torneo con semilla {_configService.GetConfig().FixtureSeed}");
     }
 
     public void RegenerateFixture(string engineName, string userEmail)
     {
         _fixtureEdit.GenerateFixture(engineName);
         _logService.Register(userEmail, "Fixture", "Generación",
-            $"Se regeneró el fixture del torneo con semilla {_configService.GetConfig().SemillaFixture}");
+            $"Se regeneró el fixture del torneo con semilla {_configService.GetConfig().FixtureSeed}");
     }
 
     public void DeleteFixture(string userEmail)
     {
         _fixtureEdit.DeleteFixture();
         _logService.Register(userEmail, "Fixture", "Generación",
-            $"Se elimino el fixture generado con:  {_configService.GetConfig().SemillaFixture}");
+            $"Se elimino el fixture generado con:  {_configService.GetConfig().FixtureSeed}");
     }
 }

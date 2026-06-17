@@ -52,6 +52,6 @@ public class TeamPageFacade : ITeamPageFacade
     {
         _teamEdit.GenerateMissingTeams();
         _logService.Register(userEmail, "Equipos", "Generación automática",
-            $"Se generaron automáticamente los equipos faltantes con semilla {_configService.GetConfig().SemillaCompletar}");
+            $"Se generaron automáticamente los equipos faltantes con semilla {_configService.GetConfig().FillingSeed}");
     }
 }
