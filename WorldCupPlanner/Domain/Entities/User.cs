@@ -64,10 +64,7 @@ public class User
         private set { _passwordHash = value; }
     }
 
-    public IReadOnlyList<UserRole> Roles
-    {
-        get { return _roles; }
-    }
+    public IReadOnlyList<UserRole> Roles => _roles;
 
     private User()
     {

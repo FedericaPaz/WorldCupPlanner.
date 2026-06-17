@@ -38,7 +38,7 @@ public class TeamRankingInjectionTests
         var stub = new StubRankingCalculator(1700);
         var team = new Team("Test", conf, 1500, string.Empty, stub);
 
-        team.RecalcularRanking(1400, 1.0, TournamentPhase.GroupStage);
+        team.RecalculateRanking(1400, 1.0, TournamentPhase.GroupStage);
 
         Assert.AreEqual(1700, team.CurrentRanking);
         // also verify stub received the expected parameters

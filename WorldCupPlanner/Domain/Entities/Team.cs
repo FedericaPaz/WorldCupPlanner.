@@ -75,9 +75,9 @@ public class Team : ITeam
         UpdateCurrentRanking(FifaRanking);
     }
 
-    public void RecalcularRanking(int rankingRival, double resultado, TournamentPhase fase)
+    public void RecalculateRanking(int rivalRanking, double result, TournamentPhase phase)
     {
-        int nuevoRanking = _rankingCalculator.CalculateNewRanking(_currentRanking, rankingRival, resultado, fase);
+        int nuevoRanking = _rankingCalculator.CalculateNewRanking(_currentRanking, rivalRanking, result, phase);
         UpdateCurrentRanking(nuevoRanking);
     }
 

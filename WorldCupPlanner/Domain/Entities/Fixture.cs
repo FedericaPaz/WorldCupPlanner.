@@ -23,7 +23,7 @@ public class Fixture
     }
     public string SimulationEngineName { get; private set; } = string.Empty;
     public IReadOnlyList<Group> Groups => _groups;
-    public int Id { get; private set; }
+    public int Id { get; }
 
     private Fixture()
     {
@@ -121,10 +121,10 @@ public class Fixture
         SimulationEngineName = name;
     }
 
-    public void LoadMatches(IEnumerable<Match> partidos)
+    public void LoadMatches(IEnumerable<Match> matches)
     {
         foreach (var group in _groups)
-            foreach (var match in partidos.Where(m => m.Group == group.GroupLetter))
+            foreach (var match in matches.Where(m => m.Group == group.GroupLetter))
                 group.LoadMatchFromRepository(match);
     }
 

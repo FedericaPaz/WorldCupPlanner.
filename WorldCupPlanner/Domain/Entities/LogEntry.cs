@@ -8,7 +8,7 @@ public class LogEntry
     private string _action = string.Empty;
     private string _detail = string.Empty;
 
-    public int Id { get; private set; }
+    public int Id { get; }
     
     public DateTime Timestamp
     {
