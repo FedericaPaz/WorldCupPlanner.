@@ -1,4 +1,4 @@
-@page "/cruces"
+﻿@page "/cruces"
 @using DTOs.Cruces
 @using IServices.PageFacades
 @using Web.Services
@@ -338,7 +338,7 @@
 
     protected override void OnInitialized()
     {
-        if (!SessionService.IsEditor() && !SessionService.IsJournalist())
+        if (!SessionService.IsEditor() && !SessionService.IsJournalist() &&!SessionService.IsSystemAdministrator())
         {
             Navigation.NavigateTo("/");
             return;

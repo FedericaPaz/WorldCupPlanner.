@@ -204,7 +204,7 @@ else
 
     protected override void OnInitialized()
     {
-        if (!SessionService.IsEditor() && !SessionService.IsJournalist())
+        if (!SessionService.IsEditor() && !SessionService.IsJournalist() &&!SessionService.IsSystemAdministrator())
         {
             Navigation.NavigateTo("/");
             return;

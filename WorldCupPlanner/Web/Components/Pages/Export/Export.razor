@@ -75,6 +75,14 @@ else
     private DateTime ToDate { get; set; } = DateTime.Today;
     private string Message { get; set; } = string.Empty;
     private string MessageCssClass { get; set; } = "alert alert-info";
+    
+    protected override void OnInitialized()
+    {
+        if (!SessionService.IsUserActive() || !CanAccess())
+        {
+            Navigation.NavigateTo("/", forceLoad: false);
+        }
+    }
 
     private bool CanAccess()
     {

@@ -96,7 +96,7 @@
 
     protected override void OnInitialized()
     {
-        if (!SessionService.IsEditor())
+        if (!SessionService.IsEditor() && !SessionService.IsSystemAdministrator())
         {
             Navigation.NavigateTo("/");
         }
