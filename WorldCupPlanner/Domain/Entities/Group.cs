@@ -8,8 +8,8 @@ public class Group
     private const char LastGroupLetter = 'L';
 
     private char _groupLetter;
-    private readonly List<Team> _teamsInGroup = new List<Team>();
-    private readonly List<Match> _matchesInGroup = new List<Match>();
+    private readonly List<Team> _teamsInGroup = new();
+    private readonly List<Match> _matchesInGroup = new();
     
     public int FixtureId { get; private set; }
 
@@ -64,7 +64,7 @@ public class Group
     private void EnsureGroupHasSpaceForTeam()
     {
         if (_teamsInGroup.Count >= MaxTeams)
-            throw new InvalidOperationException("El grupo ya tiene 4 equipos.");
+            throw new InvalidOperationException($"El grupo ya tiene {MaxTeams} equipos.");
     }
 
     private void EnsureTeamIsNotAlreadyInGroup(Team team)
@@ -146,7 +146,7 @@ public class Group
     
     public List<Standing> GetStandings()
     {
-        var equipos = _teamsInGroup.Any()
+        var teams = _teamsInGroup.Any()
             ? _teamsInGroup.Where(t => t != null).ToList()
             : _matchesInGroup
                 .SelectMany(m => new[] { m.HomeTeam, m.AwayTeam })
@@ -154,10 +154,10 @@ public class Group
                 .DistinctBy(t => t.Name)
                 .ToList();
 
-        if (!equipos.Any())
+        if (!teams.Any())
             return new List<Standing>();
 
-        var standings = equipos.ToDictionary(
+        var standings = teams.ToDictionary(
             t => t.Name,
             t => new Standing(t));
 
@@ -185,10 +185,6 @@ public class Group
         => _matchesInGroup.Count == MaxMatches
            && _matchesInGroup.All(m => m.HomeGoals.HasValue && m.AwayGoals.HasValue);
 
-    public Team? GetFirstPlace() => GetStandings().FirstOrDefault()?.TeamInGroup;
-    public Team? GetSecondPlace() => GetStandings().ElementAtOrDefault(1)?.TeamInGroup;
-    public Team? GetThirdPlace() => GetStandings().ElementAtOrDefault(2)?.TeamInGroup;
-    
     public IEnumerable<Match> GetPendingMatches()
         => _matchesInGroup.Where(m => !m.HomeGoals.HasValue && !m.AwayGoals.HasValue);
     

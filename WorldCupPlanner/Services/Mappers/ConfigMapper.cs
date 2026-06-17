@@ -9,13 +9,13 @@ public static class ConfigMapper
     {
         return new TournamentConfigDTO
         {
-            SemillaFixture = config.SemillaFixture,
-            SemillaCompletar = config.SemillaCompletar,
-            SemillaCrucesFase = config.SemillaCrucesFase,
-            SemillaSimulation = config.SemillaSimulation,
-            FechaInicioTorneo = config.FechaInicioTorneo,
-            MaxPartidosPorDia = config.MaxPartidosPorDia,
-            SeparacionEntreFechas = config.SeparacionEntreFechas
+            FixtureSeed = config.FixtureSeed,
+            FillingSeed = config.FillingSeed,
+            PhaseDrawSeed = config.PhaseDrawSeed,
+            SimulationSeed = config.SimulationSeed,
+            TournamentStartDate = config.TournamentStartDate,
+            MaxMatchesPerDay = config.MaxMatchesPerDay,
+            DaysBetweenMatchdays = config.DaysBetweenMatchdays
         };
     }
 }

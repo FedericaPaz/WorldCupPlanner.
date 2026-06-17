@@ -52,13 +52,13 @@ public class CrucesPageFacade : ICrucesPageFacade
     {
         _cruceEdit.GenerateRoundOf32();
         _logService.Register(userEmail, "Cruces", "Sorteo",
-            $"Se realizó el sorteo de cruces de 32avos de final con semilla {_configService.GetConfig().SemillaCrucesFase}");
+            $"Se realizó el sorteo de cruces de 32avos de final con semilla {_configService.GetConfig().PhaseDrawSeed}");
     }
 
     public void GenerateNextRound(string userEmail)
     {
         _cruceEdit.GenerateNextRound();
         _logService.Register(userEmail, "Cruces", "Sorteo",
-            $"Se realizó el sorteo de la siguiente ronda de cruces con semilla {_configService.GetConfig().SemillaCrucesFase}");
+            $"Se realizó el sorteo de la siguiente ronda de cruces con semilla {_configService.GetConfig().PhaseDrawSeed}");
     }
 }

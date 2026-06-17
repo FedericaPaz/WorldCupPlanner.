@@ -16,37 +16,25 @@ public class FixtureRepository : IFixtureRepository
     public void AddFixture(Fixture fixture)
     {
         if (fixture == null)
-        {
             throw new ArgumentNullException(nameof(fixture));
-        }
+        
+        var existingFixtures = _context.Fixtures.ToList(); 
 
-        var existing = _context.Fixtures.ToList();
-        if (existing.Any())
+        if (existingFixtures.Any())
         {
-            foreach (var f in existing)
-            {
-                foreach (var g in f.Groups)
-                {
-                    var matches = _context.Matches
-                        .Where(m => m.Group == g.GroupLetter)
-                        .ToList();
-                    _context.Matches.RemoveRange(matches);
-                }
-                _context.Groups.RemoveRange(f.Groups);
-            }
-            _context.Fixtures.RemoveRange(existing);
+            _context.Fixtures.RemoveRange(existingFixtures);
             _context.SaveChanges();
         }
-        
+    
         _context.Fixtures.Add(fixture);
+    
         try
         {
             _context.SaveChanges();
         }
-        catch (Exception ex)
+        catch (DbUpdateException ex)
         {
-            Console.WriteLine($"Inner: {ex.InnerException?.Message}");
-            throw;
+            throw new InvalidOperationException("An error occurred while saving the fixture to the database.", ex);
         }
     }
 

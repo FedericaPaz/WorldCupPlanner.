@@ -66,8 +66,8 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
 
         var match = _matchRepository.GetMatchById(matchId);
 
-        bool yaTeníaResultado = match.HomeGoals.HasValue && match.AwayGoals.HasValue;
-        if (yaTeníaResultado)
+        bool alreadyHadResult = match.HomeGoals.HasValue && match.AwayGoals.HasValue;
+        if (alreadyHadResult)
             RevertRankingsAfterMatch(match);
 
         if (match.Group == 'N' && request.homeGoals == request.awayGoals)
@@ -143,12 +143,12 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
-        fixture.CargarPartidos(_matchRepository.GetAllMatches());
+        fixture.LoadMatches(_matchRepository.GetAllMatches());
         EnsureValidEngine(engine);
 
         foreach (var group in fixture.Groups)
             foreach (var match in group.GetPendingMatches())
-                SimulateAndSetResult(match, _config.SemillaSimulation, engine);
+                SimulateAndSetResult(match, _config.SimulationSeed, engine);
     }
 
     private void SimulateAndSetResult(Match match, int seed, ISimulationEngine engine)
@@ -218,11 +218,11 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         if (!match.HomeGoals.HasValue || !match.AwayGoals.HasValue)
             throw new InvalidOperationException("El partido no tiene resultado.");
 
-        var fase = match.GetTournamentPhase();
+        var phase = match.GetTournamentPhase();
         int prevHome = match.GetHomeRanking();
         int prevAway = match.GetAwayRanking();
 
-        match.RecalcularRankings(fase);
+        match.RecalculateRankings(phase);
 
         _teamRepository.Update(match.HomeTeam);
         _teamRepository.Update(match.AwayTeam);
@@ -235,8 +235,8 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
 
     private void RevertRankingsAfterMatch(Match match)
     {
-        var fase = match.GetTournamentPhase();
-        match.RevertRankings(fase);
+        var phase = match.GetTournamentPhase();
+        match.RevertRankings(phase);
         _teamRepository.Update(match.HomeTeam);
         _teamRepository.Update(match.AwayTeam);
     }

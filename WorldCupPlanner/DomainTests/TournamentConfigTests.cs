@@ -9,13 +9,13 @@ public class TournamentConfigTests
     public void Constructor_WithNoParameters_SetsDefaultValues()
     {
         var config = new TournamentConfig();
-        Assert.AreEqual(12345, config.SemillaFixture);
-        Assert.AreEqual(67890, config.SemillaCompletar);
-        Assert.AreEqual(13579, config.SemillaCrucesFase);
-        Assert.AreEqual(24680, config.SemillaSimulation);
-        Assert.AreEqual(new DateTime(2026, 6, 20), config.FechaInicioTorneo); //revisar
-        Assert.AreEqual(3, config.MaxPartidosPorDia);
-        Assert.AreEqual(3, config.SeparacionEntreFechas);
+        Assert.AreEqual(12345, config.FixtureSeed);
+        Assert.AreEqual(67890, config.FillingSeed);
+        Assert.AreEqual(13579, config.PhaseDrawSeed);
+        Assert.AreEqual(24680, config.SimulationSeed);
+        Assert.AreEqual(new DateTime(2026, 6, 20), config.TournamentStartDate); //revisar
+        Assert.AreEqual(3, config.MaxMatchesPerDay);
+        Assert.AreEqual(3, config.DaysBetweenMatchdays);
     }
 
     [TestMethod]
@@ -23,22 +23,22 @@ public class TournamentConfigTests
     {
         var customDate = new DateTime(2026, 6, 1);
         var config = new TournamentConfig(
-            semillaFixture: 99999,
-            semillaCompletar: 88888,
-            semillaCrucesFase: 77777,
-            semillaSimulation: 66666,
-            fechaInicioTorneo: customDate,
-            maxPartidosPorDia: 4,
-            separacionEntreFechas: 2
+            fixtureSeed: 99999,
+            fillingSeed: 88888,
+            phaseDrawSeed: 77777,
+            simulationSeed: 66666,
+            tournamentStartDate: customDate,
+            maxMatchesPerDay: 4,
+            daysBetweenMatchdays: 2
         );
         
-        Assert.AreEqual(99999, config.SemillaFixture);
-        Assert.AreEqual(88888, config.SemillaCompletar);
-        Assert.AreEqual(77777, config.SemillaCrucesFase);
-        Assert.AreEqual(66666, config.SemillaSimulation);
-        Assert.AreEqual(customDate, config.FechaInicioTorneo);
-        Assert.AreEqual(4, config.MaxPartidosPorDia);
-        Assert.AreEqual(2, config.SeparacionEntreFechas);
+        Assert.AreEqual(99999, config.FixtureSeed);
+        Assert.AreEqual(88888, config.FillingSeed);
+        Assert.AreEqual(77777, config.PhaseDrawSeed);
+        Assert.AreEqual(66666, config.SimulationSeed);
+        Assert.AreEqual(customDate, config.TournamentStartDate);
+        Assert.AreEqual(4, config.MaxMatchesPerDay);
+        Assert.AreEqual(2, config.DaysBetweenMatchdays);
     }
     
     [TestMethod]

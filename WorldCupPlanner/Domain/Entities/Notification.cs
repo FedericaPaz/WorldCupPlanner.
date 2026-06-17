@@ -1,6 +1,6 @@
 namespace Domain.Entities;
 
-using Domain.Interfaces;
+using Interfaces;
 
 public class Notification
 {

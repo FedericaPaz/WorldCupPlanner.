@@ -45,13 +45,13 @@ public class ImportService : IImportService
         if (teams.Count != 48)
             throw new InvalidOperationException($"El CSV debe contener exactamente 48 equipos.");
 
-        var porConfederacion = teams.GroupBy(t => t.Confederation.Name);
-        foreach (var grupo in porConfederacion)
+        var byConfederation = teams.GroupBy(t => t.Confederation.Name);
+        foreach (var group in byConfederation)
         {
-            var conf = new Confederation(grupo.Key);
-            if (grupo.Count() > conf.MaxTeams)
+            var conf = new Confederation(group.Key);
+            if (group.Count() > conf.MaxTeams)
                 throw new InvalidOperationException(
-                    $"La confederación '{grupo.Key}' excede su límite de {conf.MaxTeams} equipos. Se encontraron {grupo.Count()}.");
+                    $"La confederación '{group.Key}' excede su límite de {conf.MaxTeams} equipos. Se encontraron {group.Count()}.");
         }
 
         _teamRepository.Clear();

@@ -1,6 +1,4 @@
-﻿using Domain.Interfaces;
-
-namespace IServices.CrucesInterface;
+﻿namespace IServices.CrucesInterface;
 
 public interface ICruceEditService
 {

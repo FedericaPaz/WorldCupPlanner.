@@ -30,7 +30,7 @@ public class Team : ITeam
 
     private Team()
     {
-        _rankingCalculator = new RankingCalculator();
+        
     }
 
     public Team(string name, Confederation confederation, int fifaRanking, string flagBase64 = "")
@@ -38,7 +38,7 @@ public class Team : ITeam
     {
     }
     
-    public Team(string name, Confederation confederation, int fifaRanking, string flagBase64, IRankingCalculator rankingCalculator)
+    public Team(string name, Confederation confederation, int fifaRanking, string flagBase64, IRankingCalculator? rankingCalculator)
     {
         ValidateName(name);
         ValidateConfederation(confederation);
@@ -103,7 +103,7 @@ public class Team : ITeam
             throw new ArgumentException($"El ranking FIFA debe estar entre {MinRanking} y {MaxRanking}.");
     }
     
-    public void UpdateFlag(string flagBase64)
+    public void UpdateFlag(string? flagBase64)
     {
         _flagBase64 = flagBase64 ?? string.Empty;
     }

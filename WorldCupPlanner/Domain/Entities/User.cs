@@ -8,6 +8,7 @@ namespace Domain.Entities;
 public class User
 {
     private const int MinPasswordLength = 8;
+    private const int DefaultPasswordLength = 10;
 
     private string _firstName = string.Empty;
     private string _lastName = string.Empty;
@@ -128,6 +129,7 @@ public class User
             throw new ArgumentException(message);
         }
     }
+    
     private static void EnsureValidEmail(string email)
     {
         EnsureRequiredText(email, "El email no puede estar vacío.");
@@ -137,7 +139,6 @@ public class User
             throw new ArgumentException("El formato del email no es válido.");
         }
     }
-
     
     private void EnsureValidBirthDate(DateTime birthDate)
     {
@@ -190,7 +191,6 @@ public class User
             throw new ArgumentException("La contraseña debe contener al menos un número.");
         }
     }
-
     
     private static void EnsurePasswordHasSpecialCharacter(string password)
     {
@@ -241,7 +241,7 @@ public class User
 
         var rnd = new Random();
         var all = upper + lower + digits + specials;
-        var pwd = new char[10];
+        var pwd = new char[DefaultPasswordLength];
 
         pwd[0] = upper[rnd.Next(upper.Length)];
         pwd[1] = lower[rnd.Next(lower.Length)];

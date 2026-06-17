@@ -89,8 +89,7 @@ public class MatchRepository : IMatchRepository
             throw new ArgumentNullException(nameof(match));
         
         var incidentsToAdd = match.Incidents.ToList();
-    
-        Console.WriteLine($"Incidents capturados: {incidentsToAdd.Count}");
+        
 
         var existing = _context.Matches
                            .Include(m => m.Incidents)
@@ -108,9 +107,6 @@ public class MatchRepository : IMatchRepository
 
             existing.AddIncident(new MatchIncident(incident.Type, trackedTeam, incident.Quantity, match.IdMatch));
         }
-
-        Console.WriteLine($"Incidents en existing antes de SaveChanges: {existing.Incidents.Count}");
-    
         _context.SaveChanges();
     }
 

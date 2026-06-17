@@ -130,10 +130,4 @@ public class TeamService : ITeamQueryService, ITeamEditService
         if (string.IsNullOrWhiteSpace(request.ConfederationName))
             throw new ArgumentException("La confederación del equipo no puede estar vacía.");
     }
-
-    private int CountConfederation(string confederationName)
-    {
-        return _repository.GetAll()
-            .Count(t => t.GetConfederationName() == confederationName);
-    }
 }
