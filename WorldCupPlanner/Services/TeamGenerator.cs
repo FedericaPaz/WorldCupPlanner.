@@ -7,7 +7,7 @@ public static class TeamGenerator
 {
     public static void GenerateMissingTeams(ITeamRepository repository, TournamentConfig config)
     {
-        var random = new Random(config.SemillaCompletar);
+        var random = new Random(config.FillingSeed);
 
         var confederations = new List<(string name, int limit)>
         {

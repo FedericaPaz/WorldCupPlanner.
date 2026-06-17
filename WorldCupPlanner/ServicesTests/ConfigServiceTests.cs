@@ -33,62 +33,62 @@ public class ConfigServiceTests
     public void GetConfig_ReturnsSemillaFixture()
     {
         var result = _service.GetConfig();
-        Assert.AreEqual(_config.SemillaFixture, result.SemillaFixture);
+        Assert.AreEqual(_config.FixtureSeed, result.SemillaFixture);
     }
 
     [TestMethod]
     public void GetConfig_ReturnsSemillaCompletar()
     {
         var result = _service.GetConfig();
-        Assert.AreEqual(_config.SemillaCompletar, result.SemillaCompletar);
+        Assert.AreEqual(_config.FillingSeed, result.SemillaCompletar);
     }
 
     [TestMethod]
     public void GetConfig_ReturnsSemillaCrucesFase()
     {
         var result = _service.GetConfig();
-        Assert.AreEqual(_config.SemillaCrucesFase, result.SemillaCrucesFase);
+        Assert.AreEqual(_config.PhaseDrawSeed, result.SemillaCrucesFase);
     }
 
     [TestMethod]
     public void GetConfig_ReturnsSemillaSimulation()
     {
         var result = _service.GetConfig();
-        Assert.AreEqual(_config.SemillaSimulation, result.SemillaSimulation);
+        Assert.AreEqual(_config.SimulationSeed, result.SemillaSimulation);
     }
 
     [TestMethod]
     public void GetConfig_ReturnsFechaInicioTorneo()
     {
         var result = _service.GetConfig();
-        Assert.AreEqual(_config.FechaInicioTorneo, result.FechaInicioTorneo);
+        Assert.AreEqual(_config.TournamentStartDate, result.FechaInicioTorneo);
     }
 
     [TestMethod]
     public void GetConfig_ReturnsMaxPartidosPorDia()
     {
         var result = _service.GetConfig();
-        Assert.AreEqual(_config.MaxPartidosPorDia, result.MaxPartidosPorDia);
+        Assert.AreEqual(_config.MaxMatchesPerDay, result.MaxPartidosPorDia);
     }
 
     [TestMethod]
     public void GetConfig_ReturnsSeparacionEntreFechas()
     {
         var result = _service.GetConfig();
-        Assert.AreEqual(_config.SeparacionEntreFechas, result.SeparacionEntreFechas);
+        Assert.AreEqual(_config.DaysBetweenMatchdays, result.SeparacionEntreFechas);
     }
 
     [TestMethod]
     public void GetConfig_WithCustomConfig_ReturnsCorrectValues()
     {
         var customConfig = new TournamentConfig(
-            semillaFixture: 111,
-            semillaCompletar: 222,
-            semillaCrucesFase: 333,
-            semillaSimulation: 444,
-            fechaInicioTorneo: new DateTime(2026, 7, 1),
-            maxPartidosPorDia: 5,
-            separacionEntreFechas: 4);
+            fixtureSeed: 111,
+            fillingSeed: 222,
+            phaseDrawSeed: 333,
+            simulationSeed: 444,
+            tournamentStartDate: new DateTime(2026, 7, 1),
+            maxMatchesPerDay: 5,
+            daysBetweenMatchdays: 4);
 
         var service = new ConfigService(customConfig);
         var result = service.GetConfig();

@@ -10,77 +10,77 @@ public class TournamentConfig
     private const int DefaultMaxPartidosPorDia = 3;
     private const int DefaultSeparacionEntreFechas = 3;
 
-    private int _semillaFixture;
-    private int _semillaCompletar;
-    private int _semillaCrucesFase;
-    private int _semillaSimulation;
-    private DateTime _fechaInicioTorneo;
-    private int _maxPartidosPorDia;
-    private int _separacionEntreFechas;
+    private int _fixtureSeed;
+    private int _fillingSeed;
+    private int _phaseDrawSeed;
+    private int _simulationSeed;
+    private DateTime _tournamentStartDate;
+    private int _maxMatchesPerDay;
+    private int _daysBetweenMatchdays;
 
-    public int SemillaFixture
+    public int FixtureSeed
     {
-        get { return _semillaFixture; }
+        get { return _fixtureSeed; }
         set
         {
-            EnsureNonNegative(value, nameof(SemillaFixture));
-            _semillaFixture = value;
+            EnsureNonNegative(value, nameof(FixtureSeed));
+            _fixtureSeed = value;
         }
     }
 
-    public int SemillaCompletar
+    public int FillingSeed
     {
-        get { return _semillaCompletar; }
+        get { return _fillingSeed; }
         set
         {
-            EnsureNonNegative(value, nameof(SemillaCompletar));
-            _semillaCompletar = value;
+            EnsureNonNegative(value, nameof(FillingSeed));
+            _fillingSeed = value;
         }
     }
 
-    public int SemillaCrucesFase
+    public int PhaseDrawSeed
     {
-        get { return _semillaCrucesFase; }
+        get { return _phaseDrawSeed; }
         set
         {
-            EnsureNonNegative(value, nameof(SemillaCrucesFase));
-            _semillaCrucesFase = value;
+            EnsureNonNegative(value, nameof(PhaseDrawSeed));
+            _phaseDrawSeed = value;
         }
     }
 
-    public int SemillaSimulation
+    public int SimulationSeed
     {
-        get { return _semillaSimulation; }
+        get { return _simulationSeed; }
         set
         {
-            EnsureNonNegative(value, nameof(SemillaSimulation));
-            _semillaSimulation = value;
+            EnsureNonNegative(value, nameof(SimulationSeed));
+            _simulationSeed = value;
         }
     }
 
-    public DateTime FechaInicioTorneo
+    public DateTime TournamentStartDate
     {
-        get { return _fechaInicioTorneo; }
-        set { _fechaInicioTorneo = value; }
+        get { return _tournamentStartDate; }
+        set { _tournamentStartDate = value; }
     }
 
-    public int MaxPartidosPorDia
+    public int MaxMatchesPerDay
     {
-        get { return _maxPartidosPorDia; }
+        get { return _maxMatchesPerDay; }
         set
         {
-            EnsurePositive(value, nameof(MaxPartidosPorDia));
-            _maxPartidosPorDia = value;
+            EnsurePositive(value, nameof(MaxMatchesPerDay));
+            _maxMatchesPerDay = value;
         }
     }
 
-    public int SeparacionEntreFechas
+    public int DaysBetweenMatchdays
     {
-        get { return _separacionEntreFechas; }
+        get { return _daysBetweenMatchdays; }
         set
         {
-            EnsureNonNegative(value, nameof(SeparacionEntreFechas));
-            _separacionEntreFechas = value;
+            EnsureNonNegative(value, nameof(DaysBetweenMatchdays));
+            _daysBetweenMatchdays = value;
         }
     }
 
@@ -96,21 +96,21 @@ public class TournamentConfig
     }
 
     public TournamentConfig(
-        int semillaFixture,
-        int semillaCompletar,
-        int semillaCrucesFase,
-        int semillaSimulation,
-        DateTime fechaInicioTorneo,
-        int maxPartidosPorDia,
-        int separacionEntreFechas)
+        int fixtureSeed,
+        int fillingSeed,
+        int phaseDrawSeed,
+        int simulationSeed,
+        DateTime tournamentStartDate,
+        int maxMatchesPerDay,
+        int daysBetweenMatchdays)
     {
-        SemillaFixture = semillaFixture;
-        SemillaCompletar = semillaCompletar;
-        SemillaCrucesFase = semillaCrucesFase;
-        SemillaSimulation = semillaSimulation;
-        FechaInicioTorneo = fechaInicioTorneo;
-        MaxPartidosPorDia = maxPartidosPorDia;
-        SeparacionEntreFechas = separacionEntreFechas;
+        FixtureSeed = fixtureSeed;
+        FillingSeed = fillingSeed;
+        PhaseDrawSeed = phaseDrawSeed;
+        SimulationSeed = simulationSeed;
+        TournamentStartDate = tournamentStartDate;
+        MaxMatchesPerDay = maxMatchesPerDay;
+        DaysBetweenMatchdays = daysBetweenMatchdays;
     }
 
     public List<T> Shuffle<T>(List<T> list, int seed)

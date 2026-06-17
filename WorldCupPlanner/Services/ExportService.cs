@@ -63,7 +63,7 @@ public class ExportService : IExportService
 
             var fixture = _fixtureRepository.GetFixture();
             var matches = _matchRepository.GetAllMatches();
-            fixture.CargarPartidos(matches);
+            fixture.LoadMatches(matches);
 
             var row = 2;
             foreach (var group in fixture.Groups)
@@ -195,7 +195,7 @@ public class ExportService : IExportService
     {
         var fixture = _fixtureRepository.GetFixture();
         var matches = _matchRepository.GetAllMatches();
-        fixture.CargarPartidos(matches);
+        fixture.LoadMatches(matches);
 
         var sb = new StringBuilder();
         sb.AppendLine("Fase,Grupo,Fecha,Estadio,Equipo local,Goles local,Equipo visitante,Goles visitante,Estado");

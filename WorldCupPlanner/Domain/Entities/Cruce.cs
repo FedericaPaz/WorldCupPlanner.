@@ -10,9 +10,9 @@ public class Cruce
     private TournamentPhase _phase;
     private Cruce? _nextCruce;
 
-    public int Id { get; private set; }
+    public int Id { get; }
     public int MatchId { get; private set; }
-    public Match Match { get; private set; } = null!;
+    public Match Match { get; } = null!;
 
     public string Name
     {
@@ -34,8 +34,7 @@ public class Cruce
 
     private Cruce()
     {
-        _name = string.Empty;
-        _match = null!;
+        
     }
 
     public Cruce(string name, Match match, TournamentPhase phase)
@@ -84,7 +83,7 @@ public class Cruce
         return nextPhase == GetNextPhase();
     }
 
-    private static readonly Domain.Interfaces.IPhaseTransitionPolicy _defaultPhasePolicy = new Domain.Policies.DefaultPhaseTransitionPolicy();
+    private static readonly IPhaseTransitionPolicy _defaultPhasePolicy = new Policies.DefaultPhaseTransitionPolicy();
 
     public TournamentPhase GetNextPhase()
     {

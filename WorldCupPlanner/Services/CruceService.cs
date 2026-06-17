@@ -56,7 +56,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
             var fixture = _fixtureRepository.GetFixture()
                           ?? throw new InvalidOperationException("No hay fixture generado.");
 
-            fixture.CargarPartidos(_matchRepository.GetAllMatches());
+            fixture.LoadMatches(_matchRepository.GetAllMatches());
 
             if (!fixture.CanAdvanceToPhase(TournamentPhase.RoundOf32))
                 throw new InvalidOperationException("Todos los partidos de la fase de grupos deben estar jugados antes de generar los cruces.");
@@ -65,7 +65,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
 
             List<Stadium> estadios = _stadiumRepository.GetAllStadiums();
             int nextMatchId = _matchRepository.GetNextId();
-            List<Cruce> cruces = GenerateRoundOf32Internal(fixture, estadios, _config.SemillaCrucesFase, nextMatchId);
+            List<Cruce> cruces = GenerateRoundOf32Internal(fixture, estadios, _config.PhaseDrawSeed, nextMatchId);
 
             _repository.RemoveCruces();
             foreach (var cruce in cruces)
@@ -95,7 +95,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
             throw new InvalidOperationException("Todos los cruces de la ronda actual deben tener resultado antes de generar la siguiente.");
 
         int nextMatchId = _matchRepository.GetNextId();
-        List<Cruce> nuevos = GenerateNextRoundInternal(ultimaRonda, _stadiumRepository.GetAllStadiums(), _config.SemillaCrucesFase, nextMatchId);
+        List<Cruce> nuevos = GenerateNextRoundInternal(ultimaRonda, _stadiumRepository.GetAllStadiums(), _config.PhaseDrawSeed, nextMatchId);
 
         foreach (var cruce in nuevos)
             _matchRepository.AddMatch(cruce.Match);
@@ -122,11 +122,11 @@ public class CruceService : ICruceEditService, ICruceQueryService
         foreach (var cruce in cruces.Where(c => c.GetWinner() == null))
         {
             var match = cruce.Match;
-            var (homeGoals, awayGoals) = CalculateResult(match, _config.SemillaSimulation, engine);
+            var (homeGoals, awayGoals) = CalculateResult(match, _config.SimulationSeed, engine);
 
             if (homeGoals == awayGoals)
             {
-                var tiebreaker = new Random(_config.SemillaSimulation + match.IdMatch * 31 + 1);
+                var tiebreaker = new Random(_config.SimulationSeed + match.IdMatch * 31 + 1);
                 if (tiebreaker.NextDouble() > 0.5) homeGoals++;
                 else awayGoals++;
             }
@@ -146,7 +146,7 @@ public class CruceService : ICruceEditService, ICruceQueryService
         int prevHome = match.GetHomeRanking();
         int prevAway = match.GetAwayRanking();
 
-        match.RecalcularRankings(fase);
+        match.RecalculateRankings(fase);
 
         _teamRepository.Update(match.HomeTeam);
         _teamRepository.Update(match.AwayTeam);
@@ -169,9 +169,9 @@ public class CruceService : ICruceEditService, ICruceQueryService
         ValidateInputs(fixture.Groups.ToList(), estadios);
 
         var equipoAGrupo = fixture.GetTeamToGroupMap();
-        var primeros = fixture.GetPrimeros();
-        var segundos = fixture.GetSegundos();
-        var mejoresTerceros = fixture.GetTerceros().Take(8).ToList();
+        var primeros = fixture.GetGroupWinners();
+        var segundos = fixture.GetGroupRunnersUp();
+        var mejoresTerceros = fixture.GetThirdPlacedTeams().Take(8).ToList();
 
         var cruces = new List<Cruce>();
         int indicePartidoGlobal = 0;
@@ -349,13 +349,13 @@ public class CruceService : ICruceEditService, ICruceQueryService
     private Match CreateMatch(Team local, Team visitante, Stadium estadio, int indicePartidoGlobal, int cantEstadios, DateTime? ultimaFecha = null)
     {
         int slotIndex = indicePartidoGlobal / cantEstadios;
-        int slotEnDia = slotIndex % _config.MaxPartidosPorDia;
-        int diaOffset = slotIndex / _config.MaxPartidosPorDia;
+        int slotEnDia = slotIndex % _config.MaxMatchesPerDay;
+        int diaOffset = slotIndex / _config.MaxMatchesPerDay;
         int hour = StartHour + slotEnDia * HoursBetweenMatches;
 
         DateTime startDate = ultimaFecha.HasValue
-            ? ultimaFecha.Value.Date.AddDays(_config.SeparacionEntreFechas)
-            : _config.FechaInicioTorneo.AddDays(21).Date;
+            ? ultimaFecha.Value.Date.AddDays(_config.DaysBetweenMatchdays)
+            : _config.TournamentStartDate.AddDays(21).Date;
 
         var matchDate = startDate.AddDays(diaOffset).AddHours(hour);
         return new Match(_nextMatchId++, matchDate, estadio, local, visitante, 'N', _clock);

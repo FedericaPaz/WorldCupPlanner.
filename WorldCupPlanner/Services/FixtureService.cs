@@ -49,7 +49,7 @@ public class FixtureService : IFixtureEditService, IFixtureQueryService
             return new FixtureResponse();
 
         var fixture = _fixtureRepository.GetFixture();
-        fixture.CargarPartidos(_matchRepository.GetAllMatches());
+        fixture.LoadMatches(_matchRepository.GetAllMatches());
         return fixture.ToEntity();
     }
 
@@ -59,7 +59,7 @@ public class FixtureService : IFixtureEditService, IFixtureQueryService
             throw new InvalidOperationException("No hay fixture generado.");
 
         var fixture = _fixtureRepository.GetFixture();
-        fixture.CargarPartidos(_matchRepository.GetAllMatches());
+        fixture.LoadMatches(_matchRepository.GetAllMatches());
         return fixture;
     }
 

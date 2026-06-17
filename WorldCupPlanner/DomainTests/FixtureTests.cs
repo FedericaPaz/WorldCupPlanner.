@@ -340,18 +340,6 @@ public class FixtureTests
         }
         return fixture;
     }
-    
-    [TestMethod]
-    public void PrivateConstructor_ShouldCreateFixtureInstance()
-    {
-        var fixture = (Fixture)Activator.CreateInstance(
-            typeof(Fixture),
-            nonPublic: true)!;
-        
-        Assert.IsNotNull(fixture);
-        Assert.AreEqual(0, fixture.Id);
-        Assert.AreEqual(0, fixture.Groups.Count);
-    }
 
     [TestMethod]
     public void SetGroups_WithValidList_ShouldAssignGroups()

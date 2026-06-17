@@ -143,12 +143,12 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         var fixture = _fixtureRepository.GetFixture()
                       ?? throw new InvalidOperationException("No hay fixture generado.");
 
-        fixture.CargarPartidos(_matchRepository.GetAllMatches());
+        fixture.LoadMatches(_matchRepository.GetAllMatches());
         EnsureValidEngine(engine);
 
         foreach (var group in fixture.Groups)
             foreach (var match in group.GetPendingMatches())
-                SimulateAndSetResult(match, _config.SemillaSimulation, engine);
+                SimulateAndSetResult(match, _config.SimulationSeed, engine);
     }
 
     private void SimulateAndSetResult(Match match, int seed, ISimulationEngine engine)
@@ -222,7 +222,7 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         int prevHome = match.GetHomeRanking();
         int prevAway = match.GetAwayRanking();
 
-        match.RecalcularRankings(fase);
+        match.RecalculateRankings(fase);
 
         _teamRepository.Update(match.HomeTeam);
         _teamRepository.Update(match.AwayTeam);

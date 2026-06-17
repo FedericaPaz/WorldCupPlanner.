@@ -14,10 +14,7 @@ public class Standing
     private int _draws;
     private int _losses;
 
-    public Team TeamInGroup
-    {
-        get { return _team; }
-    }
+    public Team TeamInGroup => _team;
 
     public int PointsInGroup
     {
@@ -37,10 +34,7 @@ public class Standing
         private set { _goalsAgainst = value; }
     }
 
-    public int GoalDifference
-    {
-        get { return GoalsFor - GoalsAgainst; }
-    }
+    public int GoalDifference => GoalsFor - GoalsAgainst;
 
     public int MatchesPlayed
     {

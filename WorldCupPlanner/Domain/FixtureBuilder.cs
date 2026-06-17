@@ -51,7 +51,7 @@ public class FixtureBuilder
         foreach (var rankingGroup in groupedByRanking)
         {
             var tied = rankingGroup.ToList();
-            var shuffled = tied.Count > 1 ? _config.Shuffle(tied, _config.SemillaFixture) : tied;
+            var shuffled = tied.Count > 1 ? _config.Shuffle(tied, _config.FixtureSeed) : tied;
             result.AddRange(shuffled);
         }
         return result;
@@ -138,8 +138,8 @@ public class FixtureBuilder
         int positionInBatch = groupIndex % GroupsPerBatch;
 
         DateTime round1Date = CalculateRoundDate(batchIndex, roundOffset: 0, positionInBatch);
-        DateTime round2Date = CalculateRoundDate(batchIndex, roundOffset: _config.SeparacionEntreFechas, positionInBatch);
-        DateTime round3Date = CalculateRoundDate(batchIndex, roundOffset: _config.SeparacionEntreFechas * 2, positionInBatch);
+        DateTime round2Date = CalculateRoundDate(batchIndex, roundOffset: _config.DaysBetweenMatchdays, positionInBatch);
+        DateTime round3Date = CalculateRoundDate(batchIndex, roundOffset: _config.DaysBetweenMatchdays * 2, positionInBatch);
 
         return new[] { round1Date, round1Date, round2Date, round2Date, round3Date, round3Date };
     }
@@ -147,8 +147,8 @@ public class FixtureBuilder
     private DateTime CalculateRoundDate(int batchIndex, int roundOffset, int positionInBatch)
     {
         int daysFromStart = batchIndex + roundOffset;
-        int hour = StartHour + (positionInBatch % _config.MaxPartidosPorDia) * HoursBetweenMatches;
-        return _config.FechaInicioTorneo.Date.AddDays(daysFromStart).AddHours(hour);
+        int hour = StartHour + (positionInBatch % _config.MaxMatchesPerDay) * HoursBetweenMatches;
+        return _config.TournamentStartDate.Date.AddDays(daysFromStart).AddHours(hour);
     }
 
     private static string NormalizeName(string name)

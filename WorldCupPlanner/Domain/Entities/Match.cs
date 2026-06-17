@@ -318,7 +318,7 @@ public class Match
     public int GetHomeRanking() => _homeTeam.CurrentRanking;
     public int GetAwayRanking() => _awayTeam.CurrentRanking;
 
-    public void RecalcularRankings(TournamentPhase fase)
+    public void RecalculateRankings(TournamentPhase fase)
     {
         int homeRanking = _homeTeam.CurrentRanking;
         int awayRanking = _awayTeam.CurrentRanking;

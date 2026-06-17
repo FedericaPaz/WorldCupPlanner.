@@ -12,7 +12,7 @@ public class Fixture
 
     private const int ExpectedGroups = 12;
     private const int TeamsPerGroup = 4;
-    private const int MatchesPerGroup = 6;
+    private const int TotalTeams = 48;
 
     private static readonly Dictionary<string, Func<ISimulationEngine>> _engines = new();
 
@@ -27,8 +27,7 @@ public class Fixture
 
     private Fixture()
     {
-        _groups = new List<Group>();
-        _eliminatoryMatches = new List<Match>();
+  
     }
 
     public Fixture(TournamentConfig config)
@@ -100,7 +99,7 @@ public class Fixture
 
     public bool IsStillValid(List<ITeam> existingTeams, List<IStadium> existingStadiums)
     {
-        return _groups.Count == ExpectedGroups && existingStadiums.Count >= 4 && existingTeams.Count == 48;
+        return _groups.Count == ExpectedGroups && existingStadiums.Count >= TeamsPerGroup && existingTeams.Count == TotalTeams;
     }
 
     public void AddEliminatoryMatch(Match match)
@@ -122,18 +121,11 @@ public class Fixture
         SimulationEngineName = name;
     }
 
-    public void CargarPartidos(IEnumerable<Match> partidos)
+    public void LoadMatches(IEnumerable<Match> partidos)
     {
         foreach (var group in _groups)
             foreach (var match in partidos.Where(m => m.Group == group.GroupLetter))
                 group.LoadMatchFromRepository(match);
-    }
-
-    public void ResetRankings()
-    {
-        foreach (var group in _groups)
-            foreach (var team in group.TeamsInGroup)
-                team.ResetRankingToFifa();
     }
 
     public void LockGroupMatches()
@@ -150,21 +142,21 @@ public class Fixture
             .ToDictionary(x => x.name, x => x.GroupLetter);
     }
 
-    public List<Team> GetPrimeros()
+    public List<Team> GetGroupWinners()
         => SortAndBreakTies(_groups
             .Select(g => g.GetStandings().FirstOrDefault())
             .Where(s => s != null)
             .Cast<Standing>()
             .ToList());
 
-    public List<Team> GetSegundos()
+    public List<Team> GetGroupRunnersUp()
         => SortAndBreakTies(_groups
             .Select(g => g.GetStandings().ElementAtOrDefault(1))
             .Where(s => s != null)
             .Cast<Standing>()
             .ToList());
 
-    public List<Team> GetTerceros()
+    public List<Team> GetThirdPlacedTeams()
         => SortAndBreakTies(_groups
             .Select(g => g.GetStandings().ElementAtOrDefault(2))
             .Where(s => s != null)
@@ -173,32 +165,32 @@ public class Fixture
     
     private List<Team> SortAndBreakTies(List<Standing> standings)
     {
-        var ordenados = standings
+        var sortedStandings = standings
             .OrderByDescending(s => s.PointsInGroup)
             .ThenByDescending(s => s.GoalDifference)
             .ThenByDescending(s => s.GoalsFor)
             .ToList();
 
-        var resultado = new List<Standing>();
-        var rng = new Random(_config.SemillaCrucesFase);
+        var result = new List<Standing>();
+        var rng = new Random(_config.PhaseDrawSeed);
         int i = 0;
 
-        while (i < ordenados.Count)
+        while (i < sortedStandings.Count)
         {
             int j = i + 1;
-            while (j < ordenados.Count
-                   && ordenados[j].PointsInGroup == ordenados[i].PointsInGroup
-                   && ordenados[j].GoalDifference == ordenados[i].GoalDifference
-                   && ordenados[j].GoalsFor == ordenados[i].GoalsFor)
+            while (j < sortedStandings.Count
+                   && sortedStandings[j].PointsInGroup == sortedStandings[i].PointsInGroup
+                   && sortedStandings[j].GoalDifference == sortedStandings[i].GoalDifference
+                   && sortedStandings[j].GoalsFor == sortedStandings[i].GoalsFor)
                 j++;
 
-            var empatados = ordenados.Skip(i).Take(j - i).ToList();
+            var empatados = sortedStandings.Skip(i).Take(j - i).ToList();
             if (empatados.Count > 1) empatados = ApplyFisherYates(empatados, rng);
 
-            resultado.AddRange(empatados);
+            result.AddRange(empatados);
             i = j;
         }
-        return resultado.Select(s => s.TeamInGroup).ToList();
+        return result.Select(s => s.TeamInGroup).ToList();
     }
 
     private static List<T> ApplyFisherYates<T>(List<T> list, Random rng)
