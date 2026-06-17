@@ -18,11 +18,6 @@ public class FixtureService : IFixtureEditService, IFixtureQueryService
     private readonly TournamentConfig _config;
     private readonly IDateTimeMatch _clock;
 
-    private const int TeamsPerGroup = 4;
-    private const int StartHour = 14;
-    private const int HoursBetweenMatches = 4;
-    private const int GroupsPerBatch = 6;
-
     private int _nextMatchId = 1;
 
     public FixtureService(
@@ -106,9 +101,9 @@ public class FixtureService : IFixtureEditService, IFixtureQueryService
         _nextMatchId = _matchRepository.GetNextId();
         var fixture = GenerateGroupsStageFixture();
 
-        foreach (var grupo in fixture.Groups)
-        foreach (var partido in grupo.MatchesInGroup)
-            _matchRepository.AddMatch(partido);
+        foreach (var group in fixture.Groups)
+        foreach (var match in group.MatchesInGroup)
+            _matchRepository.AddMatch(match);
 
         fixture.SetSimulationEngine(simulationEngineName);
         _fixtureRepository.AddFixture(fixture);
@@ -136,13 +131,6 @@ public class FixtureService : IFixtureEditService, IFixtureQueryService
         {
             _fixtureRepository.RemoveFixture(fixture);
         }
-    }
-
-    private static string NormalizeName(string name)
-    {
-        var lower = name.ToLowerInvariant();
-        var normalized = string.Concat(lower.Where(c => char.IsLetterOrDigit(c) || char.IsWhiteSpace(c)));
-        return string.Join(" ", normalized.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
     }
 
     public void DeleteFixture()

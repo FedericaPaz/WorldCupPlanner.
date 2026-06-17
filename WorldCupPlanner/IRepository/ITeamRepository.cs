@@ -10,6 +10,5 @@ public interface ITeamRepository
     void Delete(Team team);
     List<Team> GetAll();
     void Clear();
-    
     void Rename(string oldName, Team newTeam);
 }

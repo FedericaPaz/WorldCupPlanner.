@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using ClosedXML.Excel;
+using Domain.Entities;
 using IRepository;
 using IServices;
 using IServices.UserInterfaces;
@@ -50,7 +51,6 @@ public class ExportService : IExportService
 
         return SaveWorkbook(FixtureExportName, "xlsx", ws =>
         {
-            // Header
             ws.Cell(1, 1).Value = "Fase";
             ws.Cell(1, 2).Value = "Grupo";
             ws.Cell(1, 3).Value = "Fecha";
@@ -102,7 +102,6 @@ public class ExportService : IExportService
                     row++;
                 }
             }
-
             ws.Columns().AdjustToContents();
         });
     }
@@ -145,7 +144,6 @@ public class ExportService : IExportService
 
         return SaveWorkbook(LogsExportName, "xlsx", ws =>
         {
-            // Header
             ws.Cell(1, 1).Value = "Timestamp";
             ws.Cell(1, 2).Value = "UserEmail";
             ws.Cell(1, 3).Value = "Category";
@@ -165,11 +163,6 @@ public class ExportService : IExportService
 
             ws.Columns().AdjustToContents();
         });
-    }
-
-    private void _log_service_check(ILogService logService)
-    {
-        if (logService is null) throw new ArgumentNullException(nameof(logService));
     }
 
     private void ValidateCanExport(string userEmail)
@@ -199,43 +192,33 @@ public class ExportService : IExportService
 
         var sb = new StringBuilder();
         sb.AppendLine("Fase,Grupo,Fecha,Estadio,Equipo local,Goles local,Equipo visitante,Goles visitante,Estado");
+        
+        string FormatearFilaCsv(string fase, string grupo, Match m)
+        {
+            var date = m.DateMatch.ToString("yyyy-MM-dd HH:mm");
+            var stadium = EscapeCsv(m.Stadium?.StadiumName ?? string.Empty);
+            var home = EscapeCsv(m.HomeTeam?.Name ?? string.Empty);
+            var away = EscapeCsv(m.AwayTeam?.Name ?? string.Empty);
+            var homeGoals = m.HomeGoals?.ToString() ?? string.Empty;
+            var awayGoals = m.AwayGoals?.ToString() ?? string.Empty;
+            var state = (m.HomeGoals.HasValue && m.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
 
+            return $"{EscapeCsv(fase)},{grupo},{date},{stadium},{home},{homeGoals},{away},{awayGoals},{state}";
+        }
+        
         foreach (var group in fixture.Groups)
         {
-            var orderedMatches = group.MatchesInGroup.OrderBy(m => m.DateMatch);
-            foreach (var match in orderedMatches)
+            foreach (var match in group.MatchesInGroup.OrderBy(m => m.DateMatch))
             {
-                var fase = "Grupos";
-                var grupo = group.GroupLetter.ToString();
-                var fecha = match.DateMatch.ToString("yyyy-MM-dd HH:mm");
-                var estadio = EscapeCsv(match.Stadium?.StadiumName ?? string.Empty);
-                var home = EscapeCsv(match.HomeTeam?.Name ?? string.Empty);
-                var away = EscapeCsv(match.AwayTeam?.Name ?? string.Empty);
-                var homeGoals = match.HomeGoals.HasValue ? match.HomeGoals.Value.ToString() : string.Empty;
-                var awayGoals = match.AwayGoals.HasValue ? match.AwayGoals.Value.ToString() : string.Empty;
-                var estado = (match.HomeGoals.HasValue && match.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
-
-                sb.AppendLine($"{EscapeCsv(fase)},{grupo},{fecha},{estadio},{home},{homeGoals},{away},{awayGoals},{estado}");
+                sb.AppendLine(FormatearFilaCsv("Grupos", group.GroupLetter.ToString(), match));
             }
         }
-
+        
         if (_crucesRepository != null && _crucesRepository.HasCruces())
         {
-            var cruces = _crucesRepository.GetAllCruces();
-            foreach (var cruce in cruces)
+            foreach (var cruce in _crucesRepository.GetAllCruces())
             {
-                var match = cruce.Match;
-                var fase = cruce.Name;
-                var grupo = string.Empty;
-                var fecha = match.DateMatch.ToString("yyyy-MM-dd HH:mm");
-                var estadio = EscapeCsv(match.Stadium?.StadiumName ?? string.Empty);
-                var home = EscapeCsv(match.HomeTeam?.Name ?? string.Empty);
-                var away = EscapeCsv(match.AwayTeam?.Name ?? string.Empty);
-                var homeGoals = match.HomeGoals.HasValue ? match.HomeGoals.Value.ToString() : string.Empty;
-                var awayGoals = match.AwayGoals.HasValue ? match.AwayGoals.Value.ToString() : string.Empty;
-                var estado = (match.HomeGoals.HasValue && match.AwayGoals.HasValue) ? "Finalizado" : "Pendiente";
-
-                sb.AppendLine($"{EscapeCsv(fase)},{grupo},{fecha},{estadio},{home},{homeGoals},{away},{awayGoals},{estado}");
+                sb.AppendLine(FormatearFilaCsv(cruce.Name, string.Empty, cruce.Match));
             }
         }
 

@@ -1,5 +1,4 @@
-﻿
-namespace IServices;
+﻿namespace IServices;
 
 public interface ISimulationService
 {

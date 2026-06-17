@@ -35,8 +35,7 @@ public class TeamRepository : ITeamRepository
             throw new ArgumentNullException(nameof(team));
 
         var existing = _context.Teams.FirstOrDefault(t => t.Name == team.Name)
-                       ?? throw new InvalidOperationException($"Team {team.Name} does not exist.");
-
+                       ?? throw new InvalidOperationException($"El equipo {team.Name} does not existno existe");
         existing.UpdateFifaRanking(team.FifaRanking);
         existing.UpdateCurrentRanking(team.CurrentRanking);
         existing.UpdateConfederation(team.Confederation);
@@ -52,7 +51,7 @@ public class TeamRepository : ITeamRepository
             throw new ArgumentNullException(nameof(team));
 
         var existing = _context.Teams.FirstOrDefault(t => t.Name == team.Name)
-                       ?? throw new InvalidOperationException($"Team {team.Name} does not exist.");
+                       ?? throw new InvalidOperationException($"El equipo {team.Name} no existe.");
 
         _context.Teams.Remove(existing);
         _context.SaveChanges();
@@ -61,7 +60,7 @@ public class TeamRepository : ITeamRepository
     public void Rename(string oldName, Team newTeam)
     {
         if (string.IsNullOrWhiteSpace(oldName))
-            throw new ArgumentException("oldName cannot be empty", nameof(oldName));
+            throw new ArgumentException("El nombre anterior no puede ser vacio", nameof(oldName));
         if (newTeam is null)
             throw new ArgumentNullException(nameof(newTeam));
 
@@ -91,7 +90,7 @@ public class TeamRepository : ITeamRepository
     private void PerformRename(string oldName, Team newTeam)
     {
         var existing = _context.Teams.FirstOrDefault(t => t.Name == oldName)
-                       ?? throw new InvalidOperationException($"Team {oldName} does not exist.");
+                       ?? throw new InvalidOperationException($"El eequipo {oldName} no existe.");
         
         _context.Teams.Add(newTeam);
         _context.SaveChanges();

@@ -66,8 +66,8 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
 
         var match = _matchRepository.GetMatchById(matchId);
 
-        bool yaTeníaResultado = match.HomeGoals.HasValue && match.AwayGoals.HasValue;
-        if (yaTeníaResultado)
+        bool alreadyHadResult = match.HomeGoals.HasValue && match.AwayGoals.HasValue;
+        if (alreadyHadResult)
             RevertRankingsAfterMatch(match);
 
         if (match.Group == 'N' && request.homeGoals == request.awayGoals)
@@ -218,11 +218,11 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
         if (!match.HomeGoals.HasValue || !match.AwayGoals.HasValue)
             throw new InvalidOperationException("El partido no tiene resultado.");
 
-        var fase = match.GetTournamentPhase();
+        var phase = match.GetTournamentPhase();
         int prevHome = match.GetHomeRanking();
         int prevAway = match.GetAwayRanking();
 
-        match.RecalculateRankings(fase);
+        match.RecalculateRankings(phase);
 
         _teamRepository.Update(match.HomeTeam);
         _teamRepository.Update(match.AwayTeam);
@@ -235,8 +235,8 @@ public class MatchService : IMatchQueryService, IMatchEditService, IMatchCreateS
 
     private void RevertRankingsAfterMatch(Match match)
     {
-        var fase = match.GetTournamentPhase();
-        match.RevertRankings(fase);
+        var phase = match.GetTournamentPhase();
+        match.RevertRankings(phase);
         _teamRepository.Update(match.HomeTeam);
         _teamRepository.Update(match.AwayTeam);
     }

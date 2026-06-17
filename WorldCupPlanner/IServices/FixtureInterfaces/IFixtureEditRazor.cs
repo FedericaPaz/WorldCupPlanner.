@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace IServices.FixtureInterfaces;
+﻿namespace IServices.FixtureInterfaces;
 
 public interface IFixtureEditService
 {
