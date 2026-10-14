@@ -571,3 +571,7 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains,csharp,rider,dotnetcore.DS_Store
+
+.idea/
+*.txt
+WorldCupPlanner/Web/wwwroot/exports/
