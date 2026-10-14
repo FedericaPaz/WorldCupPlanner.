@@ -104,5 +104,5 @@ The project includes **650+ unit tests** written with MSTest:
 Developed by a team of three students at Universidad ORT Uruguay:
 
 - Federica Paz Vitale – [GitHub](https://github.com/YOUR-USERNAME) · [LinkedIn](https://linkedin.com/in/federica-paz-vitale)
-- Teammate name
-- Teammate name
+- Sasha Yeye Reffi
+- Santiago Delfino
